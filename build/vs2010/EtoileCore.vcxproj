@@ -31,7 +31,7 @@
     <ClInclude Include="..\..\core\geometry\Primitive.h" />
     <ClInclude Include="..\..\core\geometry\Ray.h" />
     <ClInclude Include="..\..\core\geometry\RegularBspTree.h" />
-    <ClInclude Include="..\..\core\geometry\Renderer.h" />
+    <ClInclude Include="..\..\core\geometry\RenderManager.h" />
     <ClInclude Include="..\..\core\geometry\RenderObject.h" />
     <ClInclude Include="..\..\core\geometry\Scene.h" />
     <ClInclude Include="..\..\core\geometry\SceneManager.h" />
@@ -70,7 +70,7 @@
     <ClCompile Include="..\..\core\geometry\Octree.cpp" />
     <ClCompile Include="..\..\core\geometry\Plane.cpp" />
     <ClCompile Include="..\..\core\geometry\Primitive.cpp" />
-    <ClCompile Include="..\..\core\geometry\Renderer.cpp" />
+    <ClCompile Include="..\..\core\geometry\RenderManager.cpp" />
     <ClCompile Include="..\..\core\geometry\Scene.cpp" />
     <ClCompile Include="..\..\core\geometry\SceneManager.cpp" />
   </ItemGroup>
