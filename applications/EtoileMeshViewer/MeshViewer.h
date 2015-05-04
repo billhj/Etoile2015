@@ -18,17 +18,10 @@
 #include "geometry/Mesh.h"
 #include "geometry/RenderManager.h"
 #include "renderer/OpenGL/GLTexture2D.h"
-#include "renderer/OpenGL/UniformBufferObject.h"
 #include "renderer/OpenGL/ImmediateMeshRenderer.h"
-#include "util/ImageLoader/ReadImage.h"
-#include "renderer/OpenGL/GLMeshRenderPass.h"
 #include "renderer/OpenGL/LightController.h"
-#include "GpuProgramInit.h"
-#include "RendererInit.h"
-#include "LightInit.h"
-#include "util/SamplesGenerator.h"
 #include "math/Vectors.h"
-#include "util/Dir.h"
+
 using namespace Etoile;
 class MeshViewer : public QGLViewer
 {
@@ -71,7 +64,6 @@ public:
 		glEnable(GL_MULTISAMPLE);
 
 		QString str = QDir::currentPath();
-		const std::string dir = Dir::getCurrentDirectory();
 	}
 
 	void readMeshFile()
@@ -126,31 +118,20 @@ public:
 			{
 				GLTexture2D* t = new GLTexture2D(textureName);
 				t->create(image.getWidth(), image.getHeight(),1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT ,(float*)&image.getData()[0], false);
-				
+
+
+			}
+			float emptyMap[16] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
+			float checkboard[64] = {0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
+				1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0,  
+				0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
+				1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0};
+			GLTexture2D* t = new GLTexture2D("emptyMap");
+			t->create(2, 2, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &emptyMap[0], false);
+			GLTexture2D* t2 = new GLTexture2D("checkBoardMap");
+			t2->create(4, 4, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &checkboard[0], false);
 
 		}
-		float emptyMap[16] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
-		float checkboard[64] = {0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
-			1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0,  
-			0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
-			1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0};
-		GLTexture2D* t = new GLTexture2D("emptyMap");
-		t->create(2, 2, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &emptyMap[0], false);
-		GLTexture2D* t2 = new GLTexture2D("checkBoardMap");
-		t2->create(4, 4, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &checkboard[0], false);
-
-	}
-
-	void updateLight()
-	{
-		/*std::vector<Resource*> lights = _pRenderman->getLightManager()->getAll();
-		for(unsigned int i = 0; i < lights.size(); ++i)
-		{
-			Light* light = (Light*)lights[i];
-			LightController controller;
-			controller.bindLight(light);
-			controller.use();
-		}*/
 	}
 
 	public slots:
@@ -168,7 +149,5 @@ public:
 			}
 			_pRenderman->addRenderPass(rp);
 		}
-
-private:
 
 };
