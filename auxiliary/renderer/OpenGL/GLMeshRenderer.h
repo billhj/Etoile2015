@@ -9,6 +9,7 @@
 #pragma once
 #include "renderer/MeshRenderer.h"
 #include "glhead.h"
+#include "geometry/Entity.h"
 
 namespace Etoile
 {
@@ -29,7 +30,9 @@ namespace Etoile
 		virtual void drawMesh()
 		{
 			if(p_mesh == NULL) return;
-			
+			Matrix4f modelM = p_mesh->getEntity()->getTransformation()->getGLModelMatrix();
+			glPushMatrix();
+			glLoadMatrixf(&modelM[0][0]);
 			const std::vector<SubMesh*>& submeshlist = p_mesh->getSubMeshList();
 
 			for(unsigned int i = 0; i < submeshlist.size(); ++i)
@@ -39,6 +42,7 @@ namespace Etoile
 			}
 			
 			drawAABB();
+			glPopMatrix();
 		}
 
 		virtual void drawSubMesh(SubMesh* submesh)
@@ -52,9 +56,9 @@ namespace Etoile
 			if(material != NULL)
 			{
 				applyMaterial(material);
-				Matrix4f modelM = submesh->getGLModelMatrix() * p_mesh->getGLModelMatrix();
+				/*Matrix4f modelM = submesh->getGLModelMatrix() * p_mesh->getGLModelMatrix();
 				glPushMatrix();
-				glLoadMatrixf(&modelM[0][0]);
+				glLoadMatrixf(&modelM[0][0]);*/
 				Texture* t = material->getDiffuseTexture();
 				if(t != NULL)
 				{
@@ -74,7 +78,7 @@ namespace Etoile
 				{
 					t->unUse();
 				}
-				glPopMatrix();
+				
 			}
 			else
 			{
@@ -84,7 +88,7 @@ namespace Etoile
 
 		
 
-		void drawAABB(AxisAlignedBoundingBoxf* aabb, Matrix4f world)
+		void drawAABB(AxisAlignedBoundingBoxf* aabb)
 		{
 			Vec4f minV = Vec4f(aabb->minimum().x(), aabb->minimum().y(), aabb->minimum().z(), 1);
 			Vec4f maxV = Vec4f(aabb->maximum().x(), aabb->maximum().y(), aabb->maximum().z(), 1);
@@ -92,9 +96,6 @@ namespace Etoile
 			Vec3f max = Vec3f(maxV.x(), maxV.y(), maxV.z());
 			glLineWidth(2.5); 
 			glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec4f(0, 0, 1, 1)[0]);
-			glPushMatrix();
-			world.transpose();
-			glMultMatrixf(&(world[0][0]));
 			glBegin(GL_LINE_STRIP);
 			glVertex3f(min.x(),min.y(),min.z());
 			glVertex3f(min.x(),min.y(),max.z());
@@ -122,7 +123,6 @@ namespace Etoile
 			glVertex3f(max.x(),min.y(),min.z());
 			glVertex3f(max.x(),max.y(),min.z());
 			glEnd();
-			glPopMatrix();
 		}
 
 		void drawAABB()
@@ -134,8 +134,7 @@ namespace Etoile
 				for(unsigned int i = 0; i < submeshlist.size(); ++i)
 				{
 					SubMesh* submesh = submeshlist[i];
-					Matrix4f& model = submesh->getModelMatrix();
-					drawAABB(submesh->getAABB(), p_mesh->getModelMatrix() * model);
+					drawAABB(submesh->getAABB());
 				}
 			}
 		}
