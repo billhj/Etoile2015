@@ -18,9 +18,10 @@
 #include "geometry/Mesh.h"
 #include "geometry/RenderManager.h"
 #include "renderer/OpenGL/GLTexture2D.h"
-#include "renderer/OpenGL/ImmediateMeshRenderer.h"
+//#include "renderer/OpenGL/ImmediateMeshRenderer.h"
 #include "renderer/OpenGL/LightController.h"
 #include "math/Vectors.h"
+#include "meshloader/OBJMeshLoader.h"
 
 using namespace Etoile;
 class MeshViewer : public QGLViewer
@@ -77,11 +78,11 @@ public:
 		Mesh* _pMesh = new Mesh("mesh");
 		objloader.loadFromFile(name.toStdString(), _pMesh);
 		std::map<std::string, std::string> txtPath = objloader.getTexturePathMap();
-		std::vector<Material>& mats = objloader.getMaterials();
+		std::vector<Material*>& mats = objloader.getMaterials();
 		for(unsigned int i = 0; i < mats.size(); ++i){
 			//_pRenderman->getMaterialManager()->addMaterial(new Material(mats[i]));
 		}
-		loadTextures(txtPath);
+		//loadTextures(txtPath);
 		std::cout<<"loading time: "<<qtime.elapsed()<<" msc"<<std::endl;
 
 		std::vector<SubMesh*> submeshes = _pMesh->getSubMeshList();
@@ -98,46 +99,46 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	}
 
-	void loadTextures(std::map<std::string, std::string>& txtPath)
-	{
-		std::map<std::string, std::string>::iterator itor;
-		for(itor = txtPath.begin(); itor != txtPath.end(); ++itor)
-		{
-			std::string textureName = itor->first;
-			std::string texturePath = itor->second;
+	//void loadTextures(std::map<std::string, std::string>& txtPath)
+	//{
+	//	std::map<std::string, std::string>::iterator itor;
+	//	for(itor = txtPath.begin(); itor != txtPath.end(); ++itor)
+	//	{
+	//		std::string textureName = itor->first;
+	//		std::string texturePath = itor->second;
 
-			Image image;
-			bool b_image = ReadImage::loadImageFromFile(texturePath, image);
+	//		Image image;
+	//		bool b_image = ReadImage::loadImageFromFile(texturePath, image);
 
-			if(b_image != true)
-			{
-				std::cout<<"can not load texture : "<<textureName<<std::endl;
-				//assert(!qimage.isNull());
-			}
-			else
-			{
-				GLTexture2D* t = new GLTexture2D(textureName);
-				t->create(image.getWidth(), image.getHeight(),1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT ,(float*)&image.getData()[0], false);
+	//		if(b_image != true)
+	//		{
+	//			std::cout<<"can not load texture : "<<textureName<<std::endl;
+	//			//assert(!qimage.isNull());
+	//		}
+	//		else
+	//		{
+	//			GLTexture2D* t = new GLTexture2D(textureName);
+	//			t->create(image.getWidth(), image.getHeight(),1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT ,(float*)&image.getData()[0], false);
 
 
-			}
-			float emptyMap[16] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
-			float checkboard[64] = {0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
-				1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0,  
-				0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
-				1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0};
-			GLTexture2D* t = new GLTexture2D("emptyMap");
-			t->create(2, 2, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &emptyMap[0], false);
-			GLTexture2D* t2 = new GLTexture2D("checkBoardMap");
-			t2->create(4, 4, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &checkboard[0], false);
+	//		}
+	//		float emptyMap[16] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
+	//		float checkboard[64] = {0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
+	//			1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0,  
+	//			0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
+	//			1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0};
+	//		GLTexture2D* t = new GLTexture2D("emptyMap");
+	//		t->create(2, 2, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &emptyMap[0], false);
+	//		GLTexture2D* t2 = new GLTexture2D("checkBoardMap");
+	//		t2->create(4, 4, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &checkboard[0], false);
 
-		}
-	}
+	//	}
+	//}
 
 	public slots:
 		void setBasicRenderer()
 		{
-			_pRenderman->clear();
+			/*_pRenderman->clear();
 			std::vector<Resource*> meshes = _pRenderman->getMeshManager()->getAll();
 			GLMeshRenderPass* rp = new GLMeshRenderPass("empty");
 			for(unsigned int i = 0 ; i < meshes.size(); ++i)
@@ -147,7 +148,7 @@ public:
 				_organizer->setMesh(_pMesh);
 				rp->addRenderUnit(_organizer);
 			}
-			_pRenderman->addRenderPass(rp);
+			_pRenderman->addRenderPass(rp);*/
 		}
 
 };
