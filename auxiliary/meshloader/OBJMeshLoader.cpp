@@ -720,7 +720,6 @@ namespace Etoile
 		_pMesh->cleanEmptySubMesh();
 		meshToUnitCube();
 		//_pMesh->buildRuntimeData();
-		_pMesh->initSkin();
 		_pMesh->computeAABB();
 		return true;
 	}
