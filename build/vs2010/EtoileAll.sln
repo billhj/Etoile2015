@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "..\..\extern\tinyxml\tinyxml.vcxproj", "{868F7093-3E21-465E-A93B-61D1B2F94170}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileCore", "EtoileCore.vcxproj", "{523007EE-FB65-4458-BCB3-E8270D6281F5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QGLViewer", "..\..\extern\QGLViewer\QGLViewer.vcxproj", "{9C3F4B22-8E85-3905-BE93-6712C48D4BAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{868F7093-3E21-465E-A93B-61D1B2F94170}.Debug|Win32.ActiveCfg = Debug|Win32
+		{868F7093-3E21-465E-A93B-61D1B2F94170}.Debug|Win32.Build.0 = Debug|Win32
+		{868F7093-3E21-465E-A93B-61D1B2F94170}.Release|Win32.ActiveCfg = Release|Win32
+		{868F7093-3E21-465E-A93B-61D1B2F94170}.Release|Win32.Build.0 = Release|Win32
+		{523007EE-FB65-4458-BCB3-E8270D6281F5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{523007EE-FB65-4458-BCB3-E8270D6281F5}.Debug|Win32.Build.0 = Debug|Win32
+		{523007EE-FB65-4458-BCB3-E8270D6281F5}.Release|Win32.ActiveCfg = Release|Win32
+		{523007EE-FB65-4458-BCB3-E8270D6281F5}.Release|Win32.Build.0 = Release|Win32
+		{9C3F4B22-8E85-3905-BE93-6712C48D4BAD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9C3F4B22-8E85-3905-BE93-6712C48D4BAD}.Debug|Win32.Build.0 = Debug|Win32
+		{9C3F4B22-8E85-3905-BE93-6712C48D4BAD}.Release|Win32.ActiveCfg = Release|Win32
+		{9C3F4B22-8E85-3905-BE93-6712C48D4BAD}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		QtVersion = $(DefaultQtVersion)
+		Qt5Version = 4.8.5
+	EndGlobalSection
+EndGlobal
