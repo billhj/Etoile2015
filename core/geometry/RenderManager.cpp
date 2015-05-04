@@ -1,28 +1,28 @@
 /**
 * Copyright(C) 2009-2012                
 * @author Jing HUANG
-* @file Renderer.cpp
+* @file RenderManager.cpp
 * @brief 
 * @date 1/2/2011
 */
 
-#include "Renderer.h"
+#include "RenderManager.h"
 #include "Scene.h"
-#include "RenderObject.h"
+#include "ObjectRenderer.h"
 
 namespace Etoile
 {
-	Renderer::Renderer(const std::string& name): m_name(name)
+	RenderManager::RenderManager(const std::string& name): m_name(name)
 	{
 	}
 
-	Renderer::~Renderer()
+	RenderManager::~RenderManager()
 	{
 		
 		clear();
 	}
 
-	void Renderer::clear()
+	void RenderManager::clear()
 	{
 		for(unsigned int i = 0; i < m_renderObjList.size(); ++i)
 		{
@@ -31,37 +31,37 @@ namespace Etoile
 		m_renderObjList.clear();
 	}
 	
-	void Renderer::renderOneFrame()
+	void RenderManager::renderOneFrame()
 	{
 		for(unsigned int i = 0; i < m_renderObjList.size(); ++i)
 		{
-			RenderObject* obj = m_renderObjList[i];
+			ObjectRenderer* obj = m_renderObjList[i];
 			obj->draw();
 		}
 	}
 
-	void Renderer::addRenderObject(RenderObject* obj)
+	void RenderManager::addObjectRenderer(ObjectRenderer* obj)
 	{
 		m_renderObjList.push_back(obj);
 	}
 
-	void Renderer::updateRenderObjectList(Scene* scene)
+	void RenderManager::updateObjectRendererList(Scene* scene)
 	{
 		m_renderObjList.clear();
 		const std::vector<Entity*>& entities = scene->getEntities();
 		for(unsigned int i = 0; i < entities.size(); ++i)
 		{
 			Entity* entity = entities[i];
-			RenderObject* ro = entity->getRenderObject();
-			this->addRenderObject(ro);
+			ObjectRenderer* ro = entity->getObjectRenderer();
+			this->addObjectRenderer(ro);
 		}
 	}
 
-	void Renderer::addIntoRenderObjectList(RenderObject* cobj)
+	void RenderManager::addIntoObjectRendererList(ObjectRenderer* cobj)
 	{
 		for(unsigned int i = 0; i < m_renderObjList.size(); ++i)
 		{
-			RenderObject* obj = m_renderObjList[i];
+			ObjectRenderer* obj = m_renderObjList[i];
 			if(cobj == obj)
 			{
 				return;
@@ -70,11 +70,11 @@ namespace Etoile
 		m_renderObjList.push_back(cobj);
 	}
 
-	void Renderer::removeFromRenderObjectList(RenderObject* cobj)
+	void RenderManager::removeFromObjectRendererList(ObjectRenderer* cobj)
 	{
 		for(unsigned int i = 0; i < m_renderObjList.size(); ++i)
 		{
-			RenderObject* obj = m_renderObjList[i];
+			ObjectRenderer* obj = m_renderObjList[i];
 			if(cobj == obj)
 			{
 				m_renderObjList.erase(m_renderObjList.begin()+i);

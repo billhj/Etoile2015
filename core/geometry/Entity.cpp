@@ -1,5 +1,5 @@
 #include "Entity.h"
-#include "RenderObject.h"
+#include "ObjectRenderer.h"
 
 namespace Etoile
 {
@@ -21,8 +21,8 @@ namespace Etoile
 		m_components.insert(m_components.begin() + type, c);
 	}
 
-	RenderObject* Entity::getRenderObject()
+	ObjectRenderer* Entity::getObjectRenderer()
 	{
-		return (RenderObject*)(m_components[ComponentType::RENDER_OBJECT_COMPONENT]);
+		return (ObjectRenderer*)(m_components[ComponentType::RENDER_OBJECT_COMPONENT]);
 	}
 }

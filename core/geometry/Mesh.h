@@ -11,6 +11,7 @@
 #include <vector>
 #include "math/MathHead.h"
 #include "SubMesh.h"
+#include "Component.h"
 
 #ifdef USING_BOOST
 #include <boost/serialization/serialization.hpp>
@@ -23,10 +24,10 @@
 
 namespace Etoile
 {
-	class Mesh
+	class Mesh : public Component
 	{
 	public:
-		Mesh(const std::string& name): m_name(name), m_numberOfFaces(0)
+		Mesh(const std::string& name): m_name(name), m_numberOfFaces(0), Component(MESH_COMPONENT)
 		{
 		}
 		void setDeviceID(long id)
@@ -36,7 +37,7 @@ namespace Etoile
 
 		long getDeviceID(){return m_deviceID;}
 
-		Mesh(Mesh& m)
+		Mesh(Mesh& m): Component(MESH_COMPONENT)
 		{
 			m_name = m.m_name;
 			m_subMeshList = m.m_subMeshList;
