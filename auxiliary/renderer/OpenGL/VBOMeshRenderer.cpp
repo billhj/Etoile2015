@@ -41,10 +41,6 @@ namespace Etoile
 		for(unsigned int i = 0; i < submeshlist.size(); ++i)
 		{
 			SubMesh* submesh = submeshlist[i];
-			if(submesh->getSkin()._updated)
-			{
-				updateVBO(submesh, i);
-			}
 			drawSubMesh(submesh, i);
 		}
 		drawAABB();
@@ -134,23 +130,22 @@ namespace Etoile
 			SubMesh* submesh = submeshlist[i];
 
 			SubMeshVBOUnit* info = new SubMeshVBOUnit();
-			submesh->getSkin()._updated = false;
 			size_t sizeComponent = submesh->getOriginalVertices().size();
 			size_t sizeTextureCord = submesh->getOriginalTextureCoords().size();
 	
-			VBO* normalVBO = new VBO(sizeComponent * 3, &(submesh->getSkin()._ndata[0][0]), usage);
+			VBO* normalVBO = new VBO(sizeComponent * 3, &(submesh->getOriginalNormals()[0][0]), usage);
 			info->m_normalVBO._pVBO = normalVBO;
 			info->m_normalVBO._attributeName = "In_Normal";
 			info->m_normalVBO._numberComponents = 3;
 			info->m_normalVBO._primitive = GL_TRIANGLES;
 
-			VBO* texCoordVBO = new VBO(sizeTextureCord * 2, &(submesh->getSkin()._tdata[0][0]), usage);
+			VBO* texCoordVBO = new VBO(sizeTextureCord * 2, &(submesh->getOriginalTextureCoords()[0][0]), usage);
 			info->m_texCoordVBO._pVBO = texCoordVBO;
 			info->m_texCoordVBO._attributeName = "In_TextureCoord";
 			info->m_texCoordVBO._numberComponents = 2;
 			info->m_texCoordVBO._primitive = GL_TRIANGLES;
 
-			VBO* vertexVBO = new VBO(sizeComponent * 3, &(submesh->getSkin()._vdata[0][0]), usage);
+			VBO* vertexVBO = new VBO(sizeComponent * 3, &(submesh->getOriginalVertices()[0][0]), usage);
 			info->m_vertexVBO._pVBO = vertexVBO;
 			info->m_vertexVBO._attributeName = "In_Vertex";
 			info->m_vertexVBO._numberComponents = 3;
@@ -164,7 +159,7 @@ namespace Etoile
 		}
 	}
 
-	void VBOMeshRenderer::updateVBO(Mesh* mesh)
+	/*void VBOMeshRenderer::updateVBO(Mesh* mesh)
 	{
 		const std::vector<SubMesh*>& submeshlist = mesh->getSubMeshList();
 
@@ -185,7 +180,7 @@ namespace Etoile
 			info->m_normalVBO._pVBO->write(0, size, &submesh->getSkin()._ndata[0][0]);
 			submesh->getSkin()._updated = false;
 		}
-	}
+	}*/
 
 	int VBOMeshRenderer::getVBOUnitIndexByName(const std::string& name)
 	{

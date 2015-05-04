@@ -10,6 +10,7 @@
 #include <fstream>
 #include "math/Vectors.h"
 #include <map>
+#include "Texture.h"
 
 #ifdef USING_BOOST
 #include <boost/serialization/serialization.hpp>
@@ -23,7 +24,6 @@
 namespace Etoile
 {
 	class GpuProgram;
-	class Texture;
 	class Material
 	{
 	public:

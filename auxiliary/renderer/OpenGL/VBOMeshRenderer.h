@@ -42,8 +42,8 @@ namespace Etoile
 		virtual void drawMesh() override;
 		virtual void drawSubMesh(SubMesh* submesh, int idx);
 		virtual void setMesh(Mesh* mesh) override;
-		virtual void updateVBO(Mesh* mesh);
-		virtual void updateVBO(SubMesh* submesh, int idx);
+		//virtual void updateVBO(Mesh* mesh);
+		//virtual void updateVBO(SubMesh* submesh, int idx);
 	protected:
 		int getVBOUnitIndexByName(const std::string& name);
 		virtual void createVBO(Mesh* mesh, GLenum usage = GL_STATIC_DRAW_ARB);

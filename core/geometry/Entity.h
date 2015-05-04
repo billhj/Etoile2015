@@ -14,6 +14,7 @@
 namespace Etoile
 {
 	class ObjectRenderer;
+	class ModelTransform;
 	class Entity
 	{
 	public:
@@ -24,6 +25,7 @@ namespace Etoile
 		void setComponent(ComponentType type, Component*);
 		Component* getComponent(ComponentType type){return m_components[type];}
 		ObjectRenderer* getObjectRenderer();
+		ModelTransform* getTransformation();
 	private:
 		std::vector<Component*> m_components;
 		int m_id;
