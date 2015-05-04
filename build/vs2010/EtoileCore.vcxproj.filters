@@ -112,9 +112,6 @@
     <ClInclude Include="..\..\core\geometry\RegularBspTree.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\geometry\RenderObject.h">
-      <Filter>geometry</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\geometry\Scene.h">
       <Filter>geometry</Filter>
     </ClInclude>
@@ -143,6 +140,9 @@
       <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\geometry\RenderManager.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\geometry\ObjectRenderer.h">
       <Filter>geometry</Filter>
     </ClInclude>
   </ItemGroup>

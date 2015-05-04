@@ -32,7 +32,7 @@
     <ClInclude Include="..\..\core\geometry\Ray.h" />
     <ClInclude Include="..\..\core\geometry\RegularBspTree.h" />
     <ClInclude Include="..\..\core\geometry\RenderManager.h" />
-    <ClInclude Include="..\..\core\geometry\RenderObject.h" />
+    <ClInclude Include="..\..\core\geometry\ObjectRenderer.h" />
     <ClInclude Include="..\..\core\geometry\Scene.h" />
     <ClInclude Include="..\..\core\geometry\SceneManager.h" />
     <ClInclude Include="..\..\core\geometry\SubMesh.h" />
