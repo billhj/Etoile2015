@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenMeshCore", "..\..\exter
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileRenderer", "EtoileRenderer.vcxproj", "{200D5D6A-A8C6-496C-9D73-DEBE61EA4B48}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileMeshViewer", "..\..\applications\EtoileMeshViewer\EtoileMeshViewer.vcxproj", "{B1652291-E150-488C-8F12-352AFA194E92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -37,6 +39,10 @@ Global
 		{200D5D6A-A8C6-496C-9D73-DEBE61EA4B48}.Debug|Win32.Build.0 = Debug|Win32
 		{200D5D6A-A8C6-496C-9D73-DEBE61EA4B48}.Release|Win32.ActiveCfg = Release|Win32
 		{200D5D6A-A8C6-496C-9D73-DEBE61EA4B48}.Release|Win32.Build.0 = Release|Win32
+		{B1652291-E150-488C-8F12-352AFA194E92}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B1652291-E150-488C-8F12-352AFA194E92}.Debug|Win32.Build.0 = Debug|Win32
+		{B1652291-E150-488C-8F12-352AFA194E92}.Release|Win32.ActiveCfg = Release|Win32
+		{B1652291-E150-488C-8F12-352AFA194E92}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
