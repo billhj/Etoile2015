@@ -24,10 +24,10 @@
 
 namespace Etoile
 {
-	class Mesh : public Component
+	class Mesh
 	{
 	public:
-		Mesh(const std::string& name = ""): m_name(name), m_numberOfFaces(0), Component(MESH_COMPONENT)
+		Mesh(const std::string& name = ""): m_name(name), m_numberOfFaces(0)
 		{
 		}
 		void setDeviceID(long id)
@@ -37,7 +37,7 @@ namespace Etoile
 
 		long getDeviceID(){return m_deviceID;}
 
-		Mesh(Mesh& m): Component(MESH_COMPONENT)
+		Mesh(Mesh& m)
 		{
 			m_name = m.m_name;
 			m_subMeshList = m.m_subMeshList;

@@ -31,7 +31,7 @@ namespace Etoile
 		{
 			if(p_mesh == NULL) return;
 			Matrix4f modelM;
-			ModelTransform* t = p_mesh->getEntity()->getTransformation();
+			ModelTransform* t = this->getEntity()->getTransformation();
 			useTransform(t);
 			const std::vector<SubMesh*>& submeshlist = p_mesh->getSubMeshList();
 

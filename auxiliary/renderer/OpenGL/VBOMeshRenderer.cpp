@@ -189,7 +189,7 @@ namespace Etoile
 			GLSLGpuProgram* gpuprogram = (GLSLGpuProgram*)material->getGpuProgram();
 
 			Matrix4f modelM;
-			ModelTransform* t = p_mesh->getEntity()->getTransformation();
+			ModelTransform* t = this->getEntity()->getTransformation();
 			if(t)
 			{
 				modelM = t->getGLModelMatrix();
@@ -283,7 +283,7 @@ namespace Etoile
 
 			if(gpuprogram != NULL)
 			{
-				gpuprogram->setUniformVariable("In_WorldMatrix",  p_mesh->getEntity()->getTransformation()->getGLModelMatrix());
+				gpuprogram->setUniformVariable("In_WorldMatrix",  this->getEntity()->getTransformation()->getGLModelMatrix());
 				std::map<std::string, Texture*>& idxs = material->getTextures();
 				std::map<std::string, Texture*>::iterator itor;
 

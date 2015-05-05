@@ -69,10 +69,8 @@ public:
 		glEnable(GL_MULTISAMPLE);
 
 		QString str = QDir::currentPath();
-		Entity* entity = new Entity();
 
 		Triangle* triangle = new Triangle("triangle");
-		entity->setComponent(ComponentType::MESH_COMPONENT, triangle);
 		VBOMeshRenderer* renderer = new VBOMeshRenderer("triangle");
 		renderer->setMesh(triangle);
 		manager = new RenderManager("render");
