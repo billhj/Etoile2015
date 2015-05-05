@@ -18,18 +18,22 @@
 #include "geometry/Mesh.h"
 #include "geometry/RenderManager.h"
 #include "renderer/OpenGL/GLTexture2D.h"
-//#include "renderer/OpenGL/ImmediateMeshRenderer.h"
+#include "renderer/OpenGL/VBOMeshRenderer.h"
 #include "renderer/OpenGL/LightController.h"
 #include "math/Vectors.h"
 #include "meshloader/OBJMeshLoader.h"
+#include "geometry/Primitive.h"
 
 using namespace Etoile;
 class MeshViewer : public QGLViewer
 {
 	Q_OBJECT
+
+		RenderManager* manager;
 public:
 	MeshViewer()
 	{
+		
 	}
 
 	~MeshViewer()
@@ -65,6 +69,15 @@ public:
 		glEnable(GL_MULTISAMPLE);
 
 		QString str = QDir::currentPath();
+		Entity* entity = new Entity();
+
+		Triangle* triangle = new Triangle("triangle");
+		entity->setComponent(ComponentType::MESH_COMPONENT, triangle);
+		VBOMeshRenderer* renderer = new VBOMeshRenderer("triangle");
+		renderer->setMesh(triangle);
+		manager = new RenderManager("render");
+		manager->addIntoObjectRendererList(renderer);
+		
 	}
 
 	void readMeshFile()
@@ -97,6 +110,7 @@ public:
 	void draw()
 	{
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+		manager->renderOneFrame();
 	}
 
 	//void loadTextures(std::map<std::string, std::string>& txtPath)

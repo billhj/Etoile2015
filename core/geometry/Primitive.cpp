@@ -82,6 +82,10 @@ namespace Etoile
 		submesh->getOriginalNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
 		submesh->getOriginalNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
 		submesh->getOriginalNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
+
+		submesh->getOriginalVertexIndexForFaces().push_back(0);
+		submesh->getOriginalVertexIndexForFaces().push_back(1);
+		submesh->getOriginalVertexIndexForFaces().push_back(2);
 	}
 
 	void Plane::init()

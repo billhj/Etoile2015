@@ -23,7 +23,7 @@ namespace Etoile
 	class SubMesh
 	{
 	public:
-		SubMesh(const std::string& name): m_name(name), m_nbVerticesPerFace(3)
+		SubMesh(const std::string& name = ""): m_name(name), m_nbVerticesPerFace(3)
 		{
 			p_material = NULL;
 		}

@@ -27,7 +27,7 @@ namespace Etoile
 	class Mesh : public Component
 	{
 	public:
-		Mesh(const std::string& name): m_name(name), m_numberOfFaces(0), Component(MESH_COMPONENT)
+		Mesh(const std::string& name = ""): m_name(name), m_numberOfFaces(0), Component(MESH_COMPONENT)
 		{
 		}
 		void setDeviceID(long id)

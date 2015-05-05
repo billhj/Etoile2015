@@ -30,9 +30,9 @@ namespace Etoile
 		virtual void drawMesh()
 		{
 			if(p_mesh == NULL) return;
-			Matrix4f modelM = p_mesh->getEntity()->getTransformation()->getGLModelMatrix();
-			glPushMatrix();
-			glLoadMatrixf(&modelM[0][0]);
+			Matrix4f modelM;
+			ModelTransform* t = p_mesh->getEntity()->getTransformation();
+			useTransform(t);
 			const std::vector<SubMesh*>& submeshlist = p_mesh->getSubMeshList();
 
 			for(unsigned int i = 0; i < submeshlist.size(); ++i)
@@ -42,7 +42,25 @@ namespace Etoile
 			}
 			
 			drawAABB();
-			glPopMatrix();
+			unUseTransform(t);
+		}
+
+		void useTransform(ModelTransform* t)
+		{
+			if(t)
+			{
+				Matrix4f modelM = t->getGLModelMatrix();
+				glPushMatrix();
+				glLoadMatrixf(&modelM[0][0]);
+			}
+		}
+
+		void unUseTransform(ModelTransform* t)
+		{
+			if(t)
+			{
+				glPopMatrix();
+			}
 		}
 
 		virtual void drawSubMesh(SubMesh* submesh)

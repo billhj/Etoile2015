@@ -36,10 +36,8 @@ namespace Etoile
 	class VBOMeshRenderer : public GLMeshRenderer
 	{
 	public:
-		VBOMeshRenderer(const std::string& name);
+		VBOMeshRenderer(const std::string& name = "");
 		~VBOMeshRenderer();
-		virtual void draw() override;
-		virtual void drawMesh() override;
 		virtual void drawSubMesh(SubMesh* submesh, int idx);
 		virtual void setMesh(Mesh* mesh) override;
 		//virtual void updateVBO(Mesh* mesh);
@@ -55,14 +53,14 @@ namespace Etoile
 	class GPUBasedVBOMeshRenderer : public VBOMeshRenderer
 	{
 	public:
-		GPUBasedVBOMeshRenderer(const std::string& name);
+		GPUBasedVBOMeshRenderer(const std::string& name = "");
 		virtual void drawSubMesh(SubMesh* submesh, int idx);
 	};
 
 	class AvancedGPUBasedVBOMeshRenderer : public GPUBasedVBOMeshRenderer
 	{
 	public:
-		AvancedGPUBasedVBOMeshRenderer(const std::string& name);
+		AvancedGPUBasedVBOMeshRenderer(const std::string& name = "");
 		virtual void drawSubMesh(SubMesh* submesh, int idx);
 	};
 }

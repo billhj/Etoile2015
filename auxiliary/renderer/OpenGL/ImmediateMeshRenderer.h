@@ -15,7 +15,7 @@ namespace Etoile
 	class ImmediateMeshRenderer : public GLMeshRenderer
 	{
 	public:
-		ImmediateMeshRenderer(const std::string& name);
+		ImmediateMeshRenderer(const std::string& name = "");
 		virtual void draw() override;
 	};
 
@@ -23,7 +23,7 @@ namespace Etoile
 	class DisplayListMeshRenderer : public GLMeshRenderer
 	{
 	public:
-		DisplayListMeshRenderer(const std::string& name);
+		DisplayListMeshRenderer(const std::string& name = "");
 		~DisplayListMeshRenderer(){  if(glIsList(_calllist)){glDeleteLists(_calllist, 1);} }
 		virtual void draw() override;
 		virtual void setMesh(Mesh* mesh);

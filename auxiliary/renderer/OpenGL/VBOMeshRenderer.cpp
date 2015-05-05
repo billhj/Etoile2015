@@ -26,28 +26,6 @@ namespace Etoile
 		_vboUnitIndex.clear();
 	}
 
-	void VBOMeshRenderer::draw()
-	{
-
-		drawMesh();
-	}
-
-
-	void VBOMeshRenderer::drawMesh()
-	{
-		if(p_mesh == NULL) return;
-		Matrix4f modelM = p_mesh->getEntity()->getTransformation()->getGLModelMatrix();
-		glPushMatrix();
-		glLoadMatrixf(&modelM[0][0]);
-		const std::vector<SubMesh*>& submeshlist = p_mesh->getSubMeshList();
-		for(unsigned int i = 0; i < submeshlist.size(); ++i)
-		{
-			SubMesh* submesh = submeshlist[i];
-			drawSubMesh(submesh, i);
-		}
-		drawAABB();
-		glPopMatrix();
-	}
 
 	void VBOMeshRenderer::drawSubMesh(SubMesh* submesh, int idx)
 	{
@@ -210,7 +188,12 @@ namespace Etoile
 			applyMaterial(material);
 			GLSLGpuProgram* gpuprogram = (GLSLGpuProgram*)material->getGpuProgram();
 
-			Matrix4f modelM = p_mesh->getEntity()->getTransformation()->getGLModelMatrix();
+			Matrix4f modelM;
+			ModelTransform* t = p_mesh->getEntity()->getTransformation();
+			if(t)
+			{
+				modelM = t->getGLModelMatrix();
+			}
 			if(gpuprogram != NULL)
 			{
 				gpuprogram->setUniformVariable("In_WorldMatrix",  modelM);
