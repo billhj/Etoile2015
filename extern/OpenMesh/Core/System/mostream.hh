@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -180,7 +180,7 @@ protected:
     if (!buffer_.empty())
     {
       if (enabled_) multiplex();
-#if defined(OM_CC_GCC) || OM_CC_VERSION < 30000
+#if defined( OM_CC_GCC ) && OM_CC_VERSION < 30000
       buffer_ = ""; // member clear() not available!
 #else
       buffer_.clear();

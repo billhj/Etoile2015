@@ -1,13 +1,13 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
- *---------------------------------------------------------------------------* 
+ *---------------------------------------------------------------------------*
  *  This file is part of OpenMesh.                                           *
  *                                                                           *
- *  OpenMesh is free software: you can redistribute it and/or modify         * 
+ *  OpenMesh is free software: you can redistribute it and/or modify         *
  *  it under the terms of the GNU Lesser General Public License as           *
  *  published by the Free Software Foundation, either version 3 of           *
  *  the License, or (at your option) any later version with the              *
@@ -30,12 +30,12 @@
  *  License along with OpenMesh.  If not,                                    *
  *  see <http://www.gnu.org/licenses/>.                                      *
  *                                                                           *
-\*===========================================================================*/ 
+\*===========================================================================*/
 
 /*===========================================================================*\
- *                                                                           *             
- *   $Revision: 221 $                                                         *
- *   $Date: 2009-11-17 14:54:16 +0100 (Di, 17. Nov 2009) $                   *
+ *                                                                           *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -74,8 +74,8 @@ namespace IO {
 //=== IMPLEMENTATION ==========================================================
 
 
-/** 
-    Implementation of the OFF format writer. This class is singleton'ed by 
+/**
+    Implementation of the OFF format writer. This class is singleton'ed by
     SingletonT to OFFWriter.
 
     By passing Options to the write function you can manipulate the writing behavoir.
@@ -89,7 +89,7 @@ namespace IO {
     ColorAlpha
 
 */
-class _OFFWriter_ : public BaseWriter
+class OPENMESHDLLEXPORT _OFFWriter_ : public BaseWriter
 {
 public:
 
@@ -100,9 +100,9 @@ public:
   std::string get_description() const { return "no description"; }
   std::string get_extensions() const  { return "off"; }
 
-  bool write(const std::string&, BaseExporter&, Options) const;
-  
-  bool write(std::ostream&, BaseExporter&, Options) const;
+  bool write(const std::string&, BaseExporter&, Options, std::streamsize _precision = 6) const;
+
+  bool write(std::ostream&, BaseExporter&, Options, std::streamsize _precision = 6) const;
 
   size_t binary_size(BaseExporter& _be, Options _opt) const;
 
@@ -122,7 +122,7 @@ protected:
 
 /// Declare the single entity of the OFF writer.
 extern _OFFWriter_  __OFFWriterInstance;
-_OFFWriter_& OFFWriter();
+OPENMESHDLLEXPORT _OFFWriter_& OFFWriter();
 
 
 //=============================================================================

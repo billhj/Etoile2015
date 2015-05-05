@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -85,7 +85,6 @@
 #    define OM_PARTIAL_SPECIALIZATION      1
 #    define OM_INCLUDE_TEMPLATES           1
 #  elif (_MSC_VER >= 1400) // settings for .NET 2005 (NOTE: not fully tested)
-#    pragma warning(disable : 4996)
 #    define OM_TYPENAME
 #    define OM_OUT_OF_CLASS_TEMPLATE       1
 #    define OM_PARTIAL_SPECIALIZATION      1

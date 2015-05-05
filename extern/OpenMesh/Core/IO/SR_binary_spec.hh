@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -200,11 +200,11 @@ SIMPLE_BINARY(unsigned long);
    VECTORT_BINARY( Vec##N##f  ); \
    VECTORT_BINARY( Vec##N##d  );
 
-VECTORTS_BINARY( 1 );
-VECTORTS_BINARY( 2 );
-VECTORTS_BINARY( 3 );
-VECTORTS_BINARY( 4 );
-VECTORTS_BINARY( 6 );
+VECTORTS_BINARY( 1 )
+VECTORTS_BINARY( 2 )
+VECTORTS_BINARY( 3 )
+VECTORTS_BINARY( 4 )
+VECTORTS_BINARY( 6 )
 
 #undef VECTORTS_BINARY
 #undef VECTORT_BINARY
@@ -228,7 +228,7 @@ template <> struct binary< std::string > {
     if (_v.size() < std::numeric_limits<length_t>::max() )
 #endif
     {
-      length_t len = _v.size();
+      length_t len = length_t(_v.size());
 
       if (_swap) reverse_byte_order(len);
 

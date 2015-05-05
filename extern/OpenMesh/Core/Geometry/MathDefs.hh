@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,16 +34,16 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
 #ifndef MATHDEFS_HH
 #define MATHDEFS_HH
 
-#include <math.h>
-#include <float.h>
+#include <cmath>
+#include <cfloat>
 
 #ifndef M_PI
   #define M_PI      3.14159265359
@@ -159,6 +159,6 @@ inline T rad_to_deg(const T& _angle)
 inline double log_(double _value)
 { return log(_value); }
 
-};//namespace OpenMesh
+}//namespace OpenMesh
 
 #endif//MATHDEFS_HH

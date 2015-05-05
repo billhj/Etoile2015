@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -64,6 +64,7 @@ OpenMesh::mostream& omlog()
 #ifdef NDEBUG
     mystream.disable();
 #endif
+    initialized = true;
   }
   return mystream;
 }
@@ -73,7 +74,11 @@ OpenMesh::mostream& omout()
 {
   static bool initialized = false;
   static OpenMesh::mostream mystream;
-  if (!initialized) mystream.connect(std::cout);
+  if (!initialized)
+  {
+    mystream.connect(std::cout);
+    initialized = true;
+  }
   return mystream;
 }
 
@@ -82,7 +87,11 @@ OpenMesh::mostream& omerr()
 {
   static bool initialized = false;
   static OpenMesh::mostream mystream;
-  if (!initialized) mystream.connect(std::cerr);
+  if (!initialized)
+  {
+    mystream.connect(std::cerr);
+    initialized = true;
+  }
   return mystream;
 }
 

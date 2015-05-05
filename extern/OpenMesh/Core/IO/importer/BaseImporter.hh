@@ -1,13 +1,13 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
- *---------------------------------------------------------------------------* 
+ *---------------------------------------------------------------------------*
  *  This file is part of OpenMesh.                                           *
  *                                                                           *
- *  OpenMesh is free software: you can redistribute it and/or modify         * 
+ *  OpenMesh is free software: you can redistribute it and/or modify         *
  *  it under the terms of the GNU Lesser General Public License as           *
  *  published by the Free Software Foundation, either version 3 of           *
  *  the License, or (at your option) any later version with the              *
@@ -30,12 +30,12 @@
  *  License along with OpenMesh.  If not,                                    *
  *  see <http://www.gnu.org/licenses/>.                                      *
  *                                                                           *
-\*===========================================================================*/ 
+\*===========================================================================*/
 
 /*===========================================================================*\
- *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *                                                                           *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -78,7 +78,7 @@ namespace IO {
  *   structure. This is basically a wrapper providing virtual versions
  *   for the required mesh functions.
  */
-class BaseImporter
+class OPENMESHDLLEXPORT BaseImporter
 {
 public:
 
@@ -88,6 +88,9 @@ public:
 
   // add a vertex with coordinate \c _point
   virtual VertexHandle add_vertex(const Vec3f& _point) = 0;
+
+  // add a vertex without coordinate. Use set_point to set the position deferred
+  virtual VertexHandle add_vertex() = 0;
 
   // add a face with indices _indices refering to vertices
   typedef std::vector<VertexHandle> VHandles;
@@ -99,6 +102,9 @@ public:
   // Set the texture index for a face
   virtual void set_face_texindex( FaceHandle _fh, int _texId ) = 0;
 
+  // Set coordinate of the given vertex. Use this function, if you created a vertex without coordinate
+  virtual void set_point(VertexHandle _vh, const Vec3f& _point) = 0;
+
   // set vertex normal
   virtual void set_normal(VertexHandle _vh, const Vec3f& _normal) = 0;
 
@@ -108,11 +114,29 @@ public:
   // set vertex color
   virtual void set_color(VertexHandle _vh, const Vec4uc& _color) = 0;
 
+  // set vertex color
+  virtual void set_color(VertexHandle _vh, const Vec3f& _color) = 0;
+
+  // set vertex color
+  virtual void set_color(VertexHandle _vh, const Vec4f& _color) = 0;
+
   // set vertex texture coordinate
   virtual void set_texcoord(VertexHandle _vh, const Vec2f& _texcoord) = 0;
 
   // set vertex texture coordinate
   virtual void set_texcoord(HalfedgeHandle _heh, const Vec2f& _texcoord) = 0;
+
+  // set edge color
+  virtual void set_color(EdgeHandle _eh, const Vec3uc& _color) = 0;
+
+  // set edge color
+  virtual void set_color(EdgeHandle _eh, const Vec4uc& _color) = 0;
+
+  // set edge color
+  virtual void set_color(EdgeHandle _eh, const Vec3f& _color) = 0;
+
+  // set edge color
+  virtual void set_color(EdgeHandle _eh, const Vec4f& _color) = 0;
 
   // set face normal
   virtual void set_normal(FaceHandle _fh, const Vec3f& _normal) = 0;
@@ -122,6 +146,12 @@ public:
 
   // set face color
   virtual void set_color(FaceHandle _fh, const Vec4uc& _color) = 0;
+
+  // set face color
+  virtual void set_color(FaceHandle _fh, const Vec3f& _color) = 0;
+
+  // set face color
+  virtual void set_color(FaceHandle _fh, const Vec4f& _color) = 0;
 
   // Store a property in the mesh mapping from an int to a texture file
   // Use set_face_texindex to set the index for each face

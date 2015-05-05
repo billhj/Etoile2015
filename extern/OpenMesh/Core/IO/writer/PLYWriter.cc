@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------*
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *
- *   $Revision: 221 $                                                         *
- *   $Date: 2009-11-17 14:54:16 +0100 (Di, 17. Nov 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -78,7 +78,7 @@ _PLYWriter_::_PLYWriter_() { IOManager().register_module(this); }
 
 bool
 _PLYWriter_::
-write(const std::string& _filename, BaseExporter& _be, Options _opt) const
+write(const std::string& _filename, BaseExporter& _be, Options _opt, std::streamsize _precision) const
 {
   // check exporter features
   if ( !check( _be, _opt ) )
@@ -86,8 +86,21 @@ write(const std::string& _filename, BaseExporter& _be, Options _opt) const
 
 
   // check writer features
-  if ( _opt.check(Options::FaceNormal) || _opt.check(Options::FaceColor) ) // not supported yet
-    return false;
+  if ( _opt.check(Options::FaceNormal) ) {
+    // Face normals are not supported
+    // Uncheck these options and output message that
+    // they are not written out even though they were requested
+    _opt.unset(Options::FaceNormal);
+    omerr() << "[PLYWriter] : Warning: Face normals are not supported and thus not exported! " << std::endl;
+  }
+
+  if ( _opt.check(Options::FaceColor) ) {
+    // Face normals are not supported
+    // Uncheck these options and output message that
+    // they are not written out even though they were requested
+    _opt.unset(Options::FaceColor);
+    omerr() << "[PLYWriter] : Warning: Face colors are not supported and thus not exported! " << std::endl;
+  }
 
   options_ = _opt;
 
@@ -101,6 +114,9 @@ write(const std::string& _filename, BaseExporter& _be, Options _opt) const
     << std::endl;
     return false;
   }
+
+  if (!_opt.check(Options::Binary))
+    out.precision(_precision);
 
   // write to file
   bool result = (_opt.check(Options::Binary) ?
@@ -117,7 +133,7 @@ write(const std::string& _filename, BaseExporter& _be, Options _opt) const
 
 bool
 _PLYWriter_::
-write(std::ostream& _os, BaseExporter& _be, Options _opt) const
+write(std::ostream& _os, BaseExporter& _be, Options _opt, std::streamsize _precision) const
 {
   // check exporter features
   if ( !check( _be, _opt ) )
@@ -130,13 +146,16 @@ write(std::ostream& _os, BaseExporter& _be, Options _opt) const
 
   options_ = _opt;
 
-                                                        
+
   if (!_os.good())
   {
     omerr() << "[PLYWriter] : cannot write to stream "
     << std::endl;
     return false;
   }
+
+  if (!_opt.check(Options::Binary))
+    _os.precision(_precision);
 
   // write to file
   bool result = (_opt.check(Options::Binary) ?
@@ -150,56 +169,98 @@ write(std::ostream& _os, BaseExporter& _be, Options _opt) const
 //-----------------------------------------------------------------------------
 
 
+void _PLYWriter_::write_header(std::ostream& _out, BaseExporter& _be, Options& _opt) const {
+  //writing header
+  _out << "ply" << std::endl;
+
+  if (_opt.is_binary()) {
+    _out << "format ";
+    if ( options_.check(Options::MSB) )
+      _out << "binary_big_endian ";
+    else
+      _out << "binary_little_endian ";
+    _out << "1.0" << std::endl;
+  } else
+    _out << "format ascii 1.0" << std::endl;
+
+  _out << "element vertex " << _be.n_vertices() << std::endl;
+
+  _out << "property float x" << std::endl;
+  _out << "property float y" << std::endl;
+  _out << "property float z" << std::endl;
+
+  if ( _opt.vertex_has_normal() ){
+    _out << "property float nx" << std::endl;
+    _out << "property float ny" << std::endl;
+    _out << "property float nz" << std::endl;
+  }
+
+  if ( _opt.vertex_has_texcoord() ){
+    _out << "property float u" << std::endl;
+    _out << "property float v" << std::endl;
+  }
+
+  if ( _opt.vertex_has_color() ){
+    if ( _opt.color_is_float() ) {
+      _out << "property float red" << std::endl;
+      _out << "property float green" << std::endl;
+      _out << "property float blue" << std::endl;
+
+      if ( _opt.color_has_alpha() )
+        _out << "property float alpha" << std::endl;
+    } else {
+      _out << "property uchar red" << std::endl;
+      _out << "property uchar green" << std::endl;
+      _out << "property uchar blue" << std::endl;
+
+      if ( _opt.color_has_alpha() )
+        _out << "property uchar alpha" << std::endl;
+    }
+  }
+
+  _out << "element face " << _be.n_faces() << std::endl;
+  _out << "property list uchar int vertex_indices" << std::endl;
+  _out << "end_header" << std::endl;
+}
+
+
+//-----------------------------------------------------------------------------
+
+
 bool
 _PLYWriter_::
 write_ascii(std::ostream& _out, BaseExporter& _be, Options _opt) const
 {
-  omlog() << "[PLYWriter] : write ascii file\n";
-
-
-  unsigned int i, j, nV, nF;
+  
+  unsigned int i, nV, nF;
   Vec3f v, n;
-  OpenMesh::Vec3f c;
-  OpenMesh::Vec4f cA;
+  OpenMesh::Vec3ui c;
+  OpenMesh::Vec4ui cA;
+  OpenMesh::Vec3f cf;
+  OpenMesh::Vec4f cAf;
   OpenMesh::Vec2f t;
   VertexHandle vh;
   std::vector<VertexHandle> vhandles;
 
-  //writing header
-  _out << "ply" << std::endl;
-  _out << "format ascii 1.0" << std::endl;
-  _out << "element vertex " << _be.n_vertices() << std::endl;
+  write_header(_out, _be, _opt);
 
-  _out << "property float32 x" << std::endl;
-  _out << "property float32 y" << std::endl;
-  _out << "property float32 z" << std::endl;
-
-  if ( _opt.vertex_has_texcoord() ){
-    _out << "property float32 u" << std::endl;
-    _out << "property float32 v" << std::endl;
-  }
-
-  if ( _opt.vertex_has_color() ){
-    _out << "property int32 red" << std::endl;
-    _out << "property int32 green" << std::endl;
-    _out << "property int32 blue" << std::endl;
-
-    if ( _opt.color_has_alpha() )
-      _out << "property int32 alpha" << std::endl;
-  }
-
-  _out << "element face " << _be.n_faces() << std::endl;
-  _out << "property list uint8 int32 vertex_indices" << std::endl;
-  _out << "end_header" << std::endl;
+  if (_opt.color_is_float())
+    _out << std::fixed;
 
   // vertex data (point, normals, colors, texcoords)
-  for (i=0, nV=_be.n_vertices(); i<nV; ++i)
+  for (i=0, nV=int(_be.n_vertices()); i<nV; ++i)
   {
     vh = VertexHandle(i);
     v  = _be.point(vh);
 
     //Vertex
     _out << v[0] << " " << v[1] << " " << v[2];
+
+    // Vertex Normals
+    if ( _opt.vertex_has_normal() ){
+      n = _be.normal(vh);
+      _out << " " << n[0] << " " << n[1] << " " << n[2];
+    }
 
     // Vertex TexCoords
     if ( _opt.vertex_has_texcoord() ) {
@@ -211,12 +272,22 @@ write_ascii(std::ostream& _out, BaseExporter& _be, Options _opt) const
     if ( _opt.vertex_has_color() ) {
       //with alpha
       if ( _opt.color_has_alpha() ){
-        cA  = _be.colorA(vh);
-        _out << " " << cA[0] << " " << cA[1] << " " << cA[2] << " " << cA[3];
+        if (_opt.color_is_float()) {
+          cAf = _be.colorAf(vh);
+          _out << " " << cAf;
+        } else {
+          cA  = _be.colorAi(vh);
+          _out << " " << cA;
+        }
       }else{
         //without alpha
-        c  = _be.color(vh);
-        _out << " " << c[0] << " " << c[1] << " " << c[2];
+        if (_opt.color_is_float()) {
+          cf = _be.colorf(vh);
+          _out << " " << cf;
+        } else {
+          c  = _be.colori(vh);
+          _out << " " << c;
+        }
       }
     }
 
@@ -226,7 +297,7 @@ write_ascii(std::ostream& _out, BaseExporter& _be, Options _opt) const
   // faces (indices starting at 0)
   if (_be.is_triangle_mesh())
   {
-    for (i=0, nF=_be.n_faces(); i<nF; ++i)
+    for (i=0, nF=int(_be.n_faces()); i<nF; ++i)
     {
       _be.get_vhandles(FaceHandle(i), vhandles);
       _out << 3 << " ";
@@ -251,11 +322,11 @@ write_ascii(std::ostream& _out, BaseExporter& _be, Options _opt) const
   }
   else
   {
-    for (i=0, nF=_be.n_faces(); i<nF; ++i)
+    for (i=0, nF=int(_be.n_faces()); i<nF; ++i)
     {
       nV = _be.get_vhandles(FaceHandle(i), vhandles);
       _out << nV << " ";
-      for (j=0; j<vhandles.size(); ++j)
+      for (size_t j=0; j<vhandles.size(); ++j)
          _out << vhandles[j].idx() << " ";
 
 //       //face color
@@ -346,52 +417,19 @@ bool
 _PLYWriter_::
 write_binary(std::ostream& _out, BaseExporter& _be, Options _opt) const
 {
-  omlog() << "[PLYWriter] : write binary file\n";
-
-  unsigned int i, j, nV, nF;
+  
+  unsigned int i, nV, nF;
   Vec3f v, n;
   Vec2f t;
-  OpenMesh::Vec4f c;
+  OpenMesh::Vec4uc c;
+  OpenMesh::Vec4f cf;
   VertexHandle vh;
   std::vector<VertexHandle> vhandles;
 
-  //writing header
-  _out << "ply" << std::endl;
-  _out << "format ";
-
-  if ( options_.check(Options::MSB) )
-    _out << "binary_big_endian ";
-  else
-    _out << "binary_little_endian ";
-
-  _out << "1.0" << std::endl;
-
-  _out << "element vertex " << _be.n_vertices() << std::endl;
-
-  _out << "property float32 x" << std::endl;
-  _out << "property float32 y" << std::endl;
-  _out << "property float32 z" << std::endl;
-
-  if ( _opt.vertex_has_texcoord() ){
-    _out << "property float32 u" << std::endl;
-    _out << "property float32 v" << std::endl;
-  }
-
-  if ( _opt.vertex_has_color() ){
-    _out << "property int32 red" << std::endl;
-    _out << "property int32 green" << std::endl;
-    _out << "property int32 blue" << std::endl;
-
-    if ( _opt.color_has_alpha() )
-      _out << "property int32 alpha" << std::endl;
-  }
-
-  _out << "element face " << _be.n_faces() << std::endl;
-  _out << "property list uchar int32 vertex_indices" << std::endl;
-  _out << "end_header" << std::endl;
+  write_header(_out, _be, _opt);
 
   // vertex data (point, normals, texcoords)
-  for (i=0, nV=_be.n_vertices(); i<nV; ++i)
+  for (i=0, nV=int(_be.n_vertices()); i<nV; ++i)
   {
     vh = VertexHandle(i);
     v  = _be.point(vh);
@@ -400,6 +438,14 @@ write_binary(std::ostream& _out, BaseExporter& _be, Options _opt) const
     writeValue(ValueTypeFLOAT, _out, v[0]);
     writeValue(ValueTypeFLOAT, _out, v[1]);
     writeValue(ValueTypeFLOAT, _out, v[2]);
+
+    // Vertex Normal
+    if ( _opt.vertex_has_normal() ){
+      n = _be.normal(vh);
+      writeValue(ValueTypeFLOAT, _out, n[0]);
+      writeValue(ValueTypeFLOAT, _out, n[1]);
+      writeValue(ValueTypeFLOAT, _out, n[2]);
+    }
 
     // Vertex TexCoords
     if ( _opt.vertex_has_texcoord() ) {
@@ -410,20 +456,30 @@ write_binary(std::ostream& _out, BaseExporter& _be, Options _opt) const
 
     // vertex color
     if ( _opt.vertex_has_color() ) {
-        c  = _be.colorA(vh);
-        writeValue(ValueTypeINT32, _out, (int)c[0]);
-        writeValue(ValueTypeINT32, _out, (int)c[1]);
-        writeValue(ValueTypeINT32, _out, (int)c[2]);
+        if ( _opt.color_is_float() ) {
+          cf  = _be.colorAf(vh);
+          writeValue(ValueTypeFLOAT, _out, cf[0]);
+          writeValue(ValueTypeFLOAT, _out, cf[1]);
+          writeValue(ValueTypeFLOAT, _out, cf[2]);
 
-        if ( _opt.color_has_alpha() )
-          writeValue(ValueTypeINT32, _out, (int)c[3]);
+          if ( _opt.color_has_alpha() )
+            writeValue(ValueTypeFLOAT, _out, cf[3]);
+        } else {
+          c  = _be.colorA(vh);
+          writeValue(ValueTypeUCHAR, _out, (int)c[0]);
+          writeValue(ValueTypeUCHAR, _out, (int)c[1]);
+          writeValue(ValueTypeUCHAR, _out, (int)c[2]);
+
+          if ( _opt.color_has_alpha() )
+            writeValue(ValueTypeUCHAR, _out, (int)c[3]);
+        }
     }
   }
 
   // faces (indices starting at 0)
   if (_be.is_triangle_mesh())
   {
-    for (i=0, nF=_be.n_faces(); i<nF; ++i)
+    for (i=0, nF=int(_be.n_faces()); i<nF; ++i)
     {
       //face
       _be.get_vhandles(FaceHandle(i), vhandles);
@@ -446,12 +502,12 @@ write_binary(std::ostream& _out, BaseExporter& _be, Options _opt) const
   }
   else
   {
-    for (i=0, nF=_be.n_faces(); i<nF; ++i)
+    for (i=0, nF=int(_be.n_faces()); i<nF; ++i)
     {
       //face
       nV = _be.get_vhandles(FaceHandle(i), vhandles);
       writeValue(ValueTypeUINT8, _out, nV);
-      for (j=0; j<vhandles.size(); ++j)
+      for (size_t j=0; j<vhandles.size(); ++j)
         writeValue(ValueTypeINT32, _out, vhandles[j].idx() );
 
 //       //face color
@@ -479,7 +535,6 @@ binary_size(BaseExporter& _be, Options _opt) const
 {
   size_t header(0);
   size_t data(0);
-  size_t _3longs(3*sizeof(long));
   size_t _3floats(3*sizeof(float));
   size_t _3ui(3*sizeof(unsigned int));
   size_t _4ui(4*sizeof(unsigned int));
@@ -488,6 +543,9 @@ binary_size(BaseExporter& _be, Options _opt) const
     return 0;
   else
   {
+
+    size_t _3longs(3*sizeof(long));
+
     header += 11;                             // 'OFF BINARY\n'
     header += _3longs;                        // #V #F #E
     data   += _be.n_vertices() * _3floats;    // vertex data
@@ -519,13 +577,12 @@ binary_size(BaseExporter& _be, Options _opt) const
   }
   else
   {
-    unsigned int i, nV, nF;
+    unsigned int i, nF;
     std::vector<VertexHandle> vhandles;
 
-    for (i=0, nF=_be.n_faces(); i<nF; ++i)
+    for (i=0, nF=int(_be.n_faces()); i<nF; ++i)
     {
-      nV = _be.get_vhandles(FaceHandle(i), vhandles);
-      data += nV * sizeof(unsigned int);
+      data += _be.get_vhandles(FaceHandle(i), vhandles) * sizeof(unsigned int);
 
     }
   }

@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -71,14 +71,15 @@ namespace Attributes {
  */
 enum StatusBits {
 
-  DELETED  = 1,   ///< Item has been deleted
-  LOCKED   = 2,   ///< Item is locked.
-  SELECTED = 4,   ///< Item is selected.
-  HIDDEN   = 8,   ///< Item is hidden.
-  FEATURE  = 16,  ///< Item is a feature or belongs to a feature.
-  TAGGED   = 32,  ///< Item is tagged.
-  TAGGED2  = 64,  ///< Alternate bit for tagging an item.
-  UNUSED   = 128  ///<
+  DELETED               = 1,    ///< Item has been deleted
+  LOCKED                = 2,    ///< Item is locked.
+  SELECTED              = 4,    ///< Item is selected.
+  HIDDEN                = 8,    ///< Item is hidden.
+  FEATURE               = 16,   ///< Item is a feature or belongs to a feature.
+  TAGGED                = 32,   ///< Item is tagged.
+  TAGGED2               = 64,   ///< Alternate bit for tagging an item.
+  FIXEDNONMANIFOLD      = 128,  ///< Item was non-two-manifold and had to be fixed
+  UNUSED                = 256   ///< Unused
 };
 
 
@@ -136,6 +137,12 @@ public:
   bool tagged2() const  { return is_bit_set(TAGGED2); }
   /// set tagged
   void set_tagged2(bool _b) { change_bit(TAGGED2, _b); }
+  
+  
+  /// is fixed non-manifold ?
+  bool fixed_nonmanifold() const  { return is_bit_set(FIXEDNONMANIFOLD); }
+  /// set fixed non-manifold
+  void set_fixed_nonmanifold(bool _b) { change_bit(FIXEDNONMANIFOLD, _b); }
 
 
   /// return whole status

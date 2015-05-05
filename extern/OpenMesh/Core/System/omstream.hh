@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -60,16 +60,15 @@
     This file provides the streams omlog, omout, and omerr.
 */
 
-//@{
-/** These stream provide replacements for clog, cout, and cerr. They have
+/** \name stream replacements
+    These stream provide replacements for clog, cout, and cerr. They have
     the advantage that they can easily be multiplexed.
     \see OpenMesh::mostream
 */
-
-OpenMesh::mostream& omlog();
-OpenMesh::mostream& omout();
-OpenMesh::mostream& omerr();
-
+//@{
+OPENMESHDLLEXPORT OpenMesh::mostream& omlog();
+OPENMESHDLLEXPORT OpenMesh::mostream& omout();
+OPENMESHDLLEXPORT OpenMesh::mostream& omerr();
 //@}
 
 //=============================================================================

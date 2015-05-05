@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -78,7 +78,7 @@ enum AttributeBits
 {
   None          = 0,  ///< Clear all attribute bits
   Normal        = 1,  ///< Add normals to mesh item (vertices/faces)
-  Color         = 2,  ///< Add colors to mesh item (vertices/faces)
+  Color         = 2,  ///< Add colors to mesh item (vertices/faces/edges)
   PrevHalfedge  = 4,  ///< Add storage for previous halfedge (halfedges). The bit is set by default in the DefaultTraits.
   Status        = 8,  ///< Add status to mesh item (all items)
   TexCoord1D    = 16, ///< Add 1D texture coordinates (vertices, halfedges)

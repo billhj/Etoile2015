@@ -1,13 +1,13 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
- *---------------------------------------------------------------------------* 
+ *---------------------------------------------------------------------------*
  *  This file is part of OpenMesh.                                           *
  *                                                                           *
- *  OpenMesh is free software: you can redistribute it and/or modify         * 
+ *  OpenMesh is free software: you can redistribute it and/or modify         *
  *  it under the terms of the GNU Lesser General Public License as           *
  *  published by the Free Software Foundation, either version 3 of           *
  *  the License, or (at your option) any later version with the              *
@@ -30,12 +30,12 @@
  *  License along with OpenMesh.  If not,                                    *
  *  see <http://www.gnu.org/licenses/>.                                      *
  *                                                                           *
-\*===========================================================================*/ 
+\*===========================================================================*/
 
 /*===========================================================================*\
- *                                                                           *             
- *   $Revision: 229 $                                                         *
- *   $Date: 2009-11-18 16:39:22 +0100 (Mi, 18. Nov 2009) $                   *
+ *                                                                           *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -79,38 +79,27 @@ _STLWriter_::_STLWriter_() { IOManager().register_module(this); }
 
 bool
 _STLWriter_::
-write(const std::string& _filename, BaseExporter& _be, Options _opt) const
+write(const std::string& _filename, BaseExporter& _be, Options _opt, std::streamsize _precision) const
 {
-  // check exporter features
-  if (!check(_be, _opt)) return false;
-
-
-  // check writer features
-  if (_opt.check(Options::VertexNormal)   ||
-      _opt.check(Options::VertexTexCoord) ||
-      _opt.check(Options::FaceColor))
-    return false;
-
-
   // binary or ascii ?
   if (_filename.rfind(".stla") != std::string::npos)
   {
     _opt -= Options::Binary;
-    return write_stla(_filename, _be, _opt);
   }
   else if (_filename.rfind(".stlb") != std::string::npos)
   {
     _opt += Options::Binary;
-    return write_stlb(_filename, _be, _opt);
-  }
-  else if (_filename.rfind(".stl") != std::string::npos)
-  {
-    return (_opt.check( Options::Binary ) 
-	    ? write_stlb(_filename, _be, _opt)
-	    : write_stla(_filename, _be, _opt) );
   }
 
-  return false;
+  // open file
+  std::fstream out(_filename.c_str(), (_opt.check(Options::Binary) ? std::ios_base::binary | std::ios_base::out
+                                                                   : std::ios_base::out) );
+
+  bool result = write(out, _be, _opt, _precision);
+
+  out.close();
+
+  return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -118,9 +107,25 @@ write(const std::string& _filename, BaseExporter& _be, Options _opt) const
 
 bool
 _STLWriter_::
-write(std::ostream& _os, BaseExporter& _be, Options _opt) const
+write(std::ostream& _os, BaseExporter& _be, Options _opt, std::streamsize _precision) const
 {
-  omerr() << "[STLWriter] : STL Streams are not supported " << std::endl;
+  // check exporter features
+  if (!check(_be, _opt)) return false;
+
+  // check writer features
+  if (_opt.check(Options::VertexNormal)   ||
+      _opt.check(Options::VertexTexCoord) ||
+      _opt.check(Options::FaceColor))
+    return false;
+
+  if (!_opt.check(Options::Binary))
+    _os.precision(_precision);
+
+  if (_opt & Options::Binary)
+    return write_stlb(_os, _be, _opt);
+  else
+    return write_stla(_os, _be, _opt);
+
   return false;
 }
 
@@ -147,7 +152,7 @@ write_stla(const std::string& _filename, BaseExporter& _be, Options /* _opt */) 
 
 
 
-  unsigned int i, nF(_be.n_faces()), nV;
+  int i, nF(int(_be.n_faces())), nV;
   Vec3f  a, b, c, n;
   std::vector<VertexHandle> vhandles;
   FaceHandle fh;
@@ -183,13 +188,65 @@ write_stla(const std::string& _filename, BaseExporter& _be, Options /* _opt */) 
     fprintf(out, "\nendloop\nendfacet\n");
   }
 
-
+  fprintf(out, "endsolid\n");
 
   fclose(out);
 
   return true;
 }
 
+
+//-----------------------------------------------------------------------------
+
+
+bool
+_STLWriter_::
+write_stla(std::ostream& _out, BaseExporter& _be, Options /* _opt */, std::streamsize _precision) const
+{
+  omlog() << "[STLWriter] : write ascii file\n";
+
+  int i, nF(int(_be.n_faces())), nV;
+  Vec3f  a, b, c, n;
+  std::vector<VertexHandle> vhandles;
+  FaceHandle fh;
+  _out.precision(_precision);
+
+
+  // header
+  _out << "solid\n";
+
+
+  // write face set
+  for (i=0; i<nF; ++i)
+  {
+    fh = FaceHandle(i);
+    nV = _be.get_vhandles(fh, vhandles);
+
+    if (nV == 3)
+    {
+      a = _be.point(vhandles[0]);
+      b = _be.point(vhandles[1]);
+      c = _be.point(vhandles[2]);
+      n = (_be.has_face_normals() ?
+     _be.normal(fh) :
+     ((c-b) % (a-b)).normalize());
+
+      _out << "facet normal " << n[0] << " " << n[1] << " " << n[2] << "\nouter loop\n";
+      _out.precision(10);
+      _out << "vertex " << a[0] << " " << a[1] << " " << a[2] << "\n";
+      _out << "vertex " << b[0] << " " << b[1] << " " << b[2] << "\n";
+      _out << "vertex " << c[0] << " " << c[1] << " " << c[2] << "\n";
+    } else {
+      omerr() << "[STLWriter] : Warning non-triangle data!\n";
+    }
+
+    _out << "\nendloop\nendfacet\n";
+  }
+
+  _out << "endsolid\n";
+
+  return true;
+}
 
 //-----------------------------------------------------------------------------
 
@@ -210,7 +267,7 @@ write_stlb(const std::string& _filename, BaseExporter& _be, Options /* _opt */) 
   }
 
 
-  unsigned int i, nF(_be.n_faces()), nV;
+  int i, nF(int(_be.n_faces())), nV;
   Vec3f  a, b, c, n;
   std::vector<VertexHandle> vhandles;
   FaceHandle fh;
@@ -224,7 +281,7 @@ write_stlb(const std::string& _filename, BaseExporter& _be, Options /* _opt */) 
 
 
   // number of faces
-  write_int(_be.n_faces(), out);
+  write_int( int(_be.n_faces()), out);
 
 
   // write face set
@@ -272,6 +329,77 @@ write_stlb(const std::string& _filename, BaseExporter& _be, Options /* _opt */) 
   return true;
 }
 
+//-----------------------------------------------------------------------------
+
+bool
+_STLWriter_::
+write_stlb(std::ostream& _out, BaseExporter& _be, Options /* _opt */, std::streamsize _precision) const
+{
+  omlog() << "[STLWriter] : write binary file\n";
+
+
+  int i, nF(int(_be.n_faces())), nV;
+  Vec3f  a, b, c, n;
+  std::vector<VertexHandle> vhandles;
+  FaceHandle fh;
+  _out.precision(_precision);
+
+
+   // write header
+  const char header[80] =
+    "binary stl file"
+    "                                                                ";
+  _out.write(header, 80);
+
+
+  // number of faces
+  write_int(int(_be.n_faces()), _out);
+
+
+  // write face set
+  for (i=0; i<nF; ++i)
+  {
+    fh = FaceHandle(i);
+    nV = _be.get_vhandles(fh, vhandles);
+
+    if (nV == 3)
+    {
+      a = _be.point(vhandles[0]);
+      b = _be.point(vhandles[1]);
+      c = _be.point(vhandles[2]);
+      n = (_be.has_face_normals() ?
+     _be.normal(fh) :
+     ((c-b) % (a-b)).normalize());
+
+      // face normal
+      write_float(n[0], _out);
+      write_float(n[1], _out);
+      write_float(n[2], _out);
+
+      // face vertices
+      write_float(a[0], _out);
+      write_float(a[1], _out);
+      write_float(a[2], _out);
+
+      write_float(b[0], _out);
+      write_float(b[1], _out);
+      write_float(b[2], _out);
+
+      write_float(c[0], _out);
+      write_float(c[1], _out);
+      write_float(c[2], _out);
+
+      // space filler
+      write_short(0, _out);
+    }
+    else
+      omerr() << "[STLWriter] : Warning: Skipped non-triangle data!\n";
+  }
+
+
+  return true;
+}
+
 
 //-----------------------------------------------------------------------------
 
@@ -287,7 +415,7 @@ binary_size(BaseExporter& _be, Options /* _opt */) const
   bytes += 4;  // #faces
 
 
-  unsigned int i, nF(_be.n_faces());
+  int i, nF(int(_be.n_faces()));
   std::vector<VertexHandle> vhandles;
 
   for (i=0; i<nF; ++i)

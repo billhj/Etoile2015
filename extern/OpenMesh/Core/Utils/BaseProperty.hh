@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 190 $                                                         *
- *   $Date: 2009-08-10 12:50:34 +0200 (Mo, 10. Aug 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -55,7 +55,7 @@ namespace OpenMesh {
     Abstract class defining the basic interface of a dynamic property.
 **/
 
-class BaseProperty
+class OPENMESHDLLEXPORT BaseProperty
 {
 public:
 
@@ -106,6 +106,9 @@ public: // synchronized array interface
   /// Let two elements swap their storage place.
   virtual void swap(size_t _i0, size_t _i1) = 0;
 
+  /// Copy one element to another
+  virtual void copy(size_t _io, size_t _i1) = 0;
+  
   /// Return a deep copy of self.
   virtual BaseProperty* clone () const = 0;
 

@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------*
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *
- *   $Revision: 191 $                                                         *
- *   $Date: 2009-08-11 08:32:28 +0200 (Di, 11. Aug 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -317,8 +317,9 @@ namespace OMFormat {
       case Chunk::Entity_Edge:     C += _hdr.n_edges_;    break;
       case Chunk::Entity_Mesh:     C  = 1;                break;
       default:
-	std::cerr << "Invalid value in _chunk_hdr.entity_\n";
-	assert( false );
+        std::cerr << "Invalid value in _chunk_hdr.entity_\n";
+        assert( false );
+        break;
     }
 
     return C * vector_size( _chunk_hdr );
@@ -384,17 +385,6 @@ namespace OMFormat {
   // calc minimum (power-of-2) number of bits needed
   Chunk::Integer_Size needed_bits( size_t s );
 
-
-  // Return the storage type (Chunk::Header::bits_)
-  template <typename T>
-  inline
-  unsigned int bits(const T& val)
-  {
-    return is_integer(val)
-      ? (static_cast<unsigned int>(integer_size(val)))
-      : (static_cast<unsigned int>(float_size(val)));
-  }
-
   // Convert size of type to Integer_Size
 #ifdef NDEBUG
   template <typename T> Chunk::Integer_Size integer_size(const T&)
@@ -410,6 +400,10 @@ namespace OMFormat {
       case  2: return OMFormat::Chunk::Integer_16;
       case  4: return OMFormat::Chunk::Integer_32;
       case  8: return OMFormat::Chunk::Integer_64;
+      default:
+        std::cerr << "Invalid value in integer_size\n";
+        assert( false );
+        break;
     }
     return Chunk::Integer_Size(0);
   }
@@ -429,8 +423,22 @@ namespace OMFormat {
       case  4: return OMFormat::Chunk::Float_32;
       case  8: return OMFormat::Chunk::Float_64;
       case 16: return OMFormat::Chunk::Float_128;
+      default:
+        std::cerr << "Invalid value in float_size\n";
+        assert( false );
+        break;
     }
     return Chunk::Float_Size(0);
+  }
+
+  // Return the storage type (Chunk::Header::bits_)
+  template <typename T>
+  inline
+  unsigned int bits(const T& val)
+  {
+    return is_integer(val)
+      ? (static_cast<unsigned int>(integer_size(val)))
+      : (static_cast<unsigned int>(float_size(val)));
   }
 
   // -------------------- create/read version
@@ -496,8 +504,8 @@ namespace OMFormat {
 
   // -------------------- (re-)store integer with wanted number of bits (bytes)
 
-  typedef GenProg::True  t_signed;
-  typedef GenProg::False t_unsigned;
+  typedef GenProg::TrueType  t_signed;
+  typedef GenProg::FalseType t_unsigned;
 
   // helper to store a an integer
   template< typename T >

@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,10 +34,26 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1194 $                                                         *
+ *   $Date: 2015-01-14 14:13:14 +0100 (Mi, 14 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
+
+// Set template keywords and class names properly when
+// parsing with doxygen. This only seems to work this way since
+// the scope of preprocessor defines is limited to one file in doxy.
+#ifdef DOXYGEN
+
+// Only used for correct doxygen parsing
+#define OPENMESH_VECTOR_HH
+
+#define DIM               N
+#define TEMPLATE_HEADER   template <typename Scalar, int N>
+#define CLASSNAME         VectorT
+#define DERIVED           VectorDataT<Scalar,N>
+#define unroll(expr)      for (int i=0; i<N; ++i) expr(i)
+
+#endif
 
 #if defined( OPENMESH_VECTOR_HH )
 
@@ -79,39 +95,44 @@ public:
     vectorize(v);
   }
 
+#if DIM == 2
   /// special constructor for 2D vectors
-  inline VectorT(const Scalar& v0, const Scalar& v1) {
-    assert(DIM==2);
+  inline VectorT(const Scalar v0, const Scalar v1) {
     Base::values_[0] = v0; Base::values_[1] = v1;
   }
+#endif
 
+#if DIM == 3
   /// special constructor for 3D vectors
-  inline VectorT(const Scalar& v0, const Scalar& v1, const Scalar& v2) {
-    assert(DIM==3);
+  inline VectorT(const Scalar v0, const Scalar v1, const Scalar v2) {
     Base::values_[0]=v0; Base::values_[1]=v1; Base::values_[2]=v2;
   }
+#endif
 
+#if DIM == 4
   /// special constructor for 4D vectors
-  inline VectorT(const Scalar& v0, const Scalar& v1,
-     const Scalar& v2, const Scalar& v3) {
-    assert(DIM==4);
+  inline VectorT(const Scalar v0, const Scalar v1,
+     const Scalar v2, const Scalar v3) {
     Base::values_[0]=v0; Base::values_[1]=v1; Base::values_[2]=v2; Base::values_[3]=v3;
   }
+#endif
 
+#if DIM == 5
   /// special constructor for 5D vectors
-  inline VectorT(const Scalar& v0, const Scalar& v1, const Scalar& v2,
-     const Scalar& v3, const Scalar& v4) {
-    assert(DIM==5);
+  inline VectorT(const Scalar v0, const Scalar v1, const Scalar v2,
+     const Scalar v3, const Scalar v4) {
     Base::values_[0]=v0; Base::values_[1]=v1;Base::values_[2]=v2; Base::values_[3]=v3; Base::values_[4]=v4;
   }
+#endif
 
+#if DIM == 6
   /// special constructor for 6D vectors
-  inline VectorT(const Scalar& v0, const Scalar& v1, const Scalar& v2,
-     const Scalar& v3, const Scalar& v4, const Scalar& v5) {
-    assert(DIM==6);
+  inline VectorT(const Scalar v0, const Scalar v1, const Scalar v2,
+     const Scalar v3, const Scalar v4, const Scalar v5) {
     Base::values_[0]=v0; Base::values_[1]=v1; Base::values_[2]=v2;
     Base::values_[3]=v3; Base::values_[4]=v4; Base::values_[5]=v5;
   }
+#endif
 
   /// construct from a value array (explicit)
   explicit inline VectorT(const Scalar _values[DIM]) {
@@ -400,7 +421,6 @@ public:
 #undef expr
 #endif
   }
-  //@}
 
   /** normalize vector, return normalized vector
   */
@@ -411,6 +431,14 @@ public:
     return *this;
   }
   
+  /** return normalized vector
+  */
+
+  inline const vector_type normalized() const
+  {
+    return *this / norm();
+  }
+
   /** normalize vector, return normalized vector and avoids div by zero 
   */
   inline vector_type& normalize_cond() 
@@ -422,9 +450,42 @@ public:
     }
     return *this;
   }
+  
+  //@}
 
+  //------------------------------------------------------------ euclidean norm
+
+  /// \name Non-Euclidean norm calculations
+  //@{
+  
+  /// compute L1 (Manhattan) norm
+  inline Scalar l1_norm() const
+  {
+#if DIM==N
+    Scalar s(0);
+#define expr(i) s += std::abs(Base::values_[i]);
+    unroll(expr);
+#undef expr
+    return s;
+#else
+#define expr(i) std::abs(Base::values_[i])
+    return (unroll_comb(expr, +));
+#undef expr
+#endif
+  }
+
+  /// compute l8_norm
+  inline Scalar l8_norm() const
+  {
+    return max_abs();
+  }
+
+  //@}
 
   //------------------------------------------------------------ max, min, mean
+
+  /// \name Minimum maximum and mean
+  //@{
 
   /// return the maximal component
   inline Scalar max() const 
@@ -434,11 +495,32 @@ public:
     return m;
   }
 
+  /// return the maximal absolute component
+  inline Scalar max_abs() const
+  {
+    Scalar m(std::abs(Base::values_[0]));
+    for(int i=1; i<DIM; ++i) 
+      if(std::abs(Base::values_[i])>m)
+        m=std::abs(Base::values_[i]);
+    return m;
+  }
+
+
   /// return the minimal component
   inline Scalar min() const 
   {
     Scalar m(Base::values_[0]);
     for(int i=1; i<DIM; ++i) if(Base::values_[i]<m) m=Base::values_[i];
+    return m;
+  }
+
+  /// return the minimal absolute component
+  inline Scalar min_abs() const 
+  {
+    Scalar m(std::abs(Base::values_[0]));
+    for(int i=1; i<DIM; ++i) 
+      if(std::abs(Base::values_[i])<m)
+        m=std::abs(Base::values_[i]);
     return m;
   }
 
@@ -449,34 +531,59 @@ public:
     return m/Scalar(DIM);
   }
 
+  /// return absolute arithmetic mean
+  inline Scalar mean_abs() const {
+    Scalar m(std::abs(Base::values_[0]));
+    for(int i=1; i<DIM; ++i) m+=std::abs(Base::values_[i]);
+    return m/Scalar(DIM);
+  }
+
+
   /// minimize values: same as *this = min(*this, _rhs), but faster
-  inline vector_type minimize(const vector_type& _rhs) {
+  inline vector_type& minimize(const vector_type& _rhs) {
 #define expr(i) if (_rhs[i] < Base::values_[i]) Base::values_[i] = _rhs[i];
     unroll(expr);
 #undef expr
     return *this;
   }
 
+  /// minimize values and signalize coordinate minimization
+  inline bool minimized(const vector_type& _rhs) {
+    bool result(false);
+#define expr(i) if (_rhs[i] < Base::values_[i]) { Base::values_[i] = _rhs[i]; result = true; }
+    unroll(expr);
+#undef expr
+    return result;
+  }
+
   /// maximize values: same as *this = max(*this, _rhs), but faster
-  inline vector_type maximize(const vector_type& _rhs) {
+  inline vector_type& maximize(const vector_type& _rhs) {
 #define expr(i) if (_rhs[i] > Base::values_[i]) Base::values_[i] = _rhs[i];
     unroll(expr);
 #undef expr
     return *this;
   }
 
+  /// maximize values and signalize coordinate maximization
+  inline bool maximized(const vector_type& _rhs) {
+    bool result(false);
+#define expr(i) if (_rhs[i] > Base::values_[i]) { Base::values_[i] =_rhs[i]; result = true; }
+    unroll(expr);
+#undef expr
+    return result;
+  }
+
   /// component-wise min
-  inline vector_type min(const vector_type& _rhs) {
+  inline vector_type min(const vector_type& _rhs) const {
     return vector_type(*this).minimize(_rhs);
   }
 
   /// component-wise max
-  inline vector_type max(const vector_type& _rhs) {
+  inline vector_type max(const vector_type& _rhs) const {
     return vector_type(*this).maximize(_rhs);
   }
 
-
-
+  //@}
 
   //------------------------------------------------------------ misc functions
 

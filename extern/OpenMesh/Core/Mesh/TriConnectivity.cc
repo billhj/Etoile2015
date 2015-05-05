@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -49,7 +49,7 @@ namespace OpenMesh
 {
 
 TriConnectivity::FaceHandle
-TriConnectivity::add_face(const VertexHandle* _vertex_handles, uint _vhs_size)
+TriConnectivity::add_face(const VertexHandle* _vertex_handles, size_t _vhs_size)
 {
   // need at least 3 vertices
   if (_vhs_size < 3) return InvalidFaceHandle;
@@ -82,8 +82,29 @@ TriConnectivity::add_face(const VertexHandle* _vertex_handles, uint _vhs_size)
 }
 
 //-----------------------------------------------------------------------------
+
+FaceHandle TriConnectivity::add_face(const std::vector<VertexHandle>& _vhandles)
+{
+  return add_face(&_vhandles.front(), _vhandles.size());
+}
+
+//-----------------------------------------------------------------------------
+
+
+FaceHandle TriConnectivity::add_face(VertexHandle _vh0, VertexHandle _vh1, VertexHandle _vh2)
+{
+  VertexHandle vhs[3] = { _vh0, _vh1, _vh2 };
+  return PolyConnectivity::add_face(vhs, 3);
+}
+
+//-----------------------------------------------------------------------------
+
 bool TriConnectivity::is_collapse_ok(HalfedgeHandle v0v1)
 {
+  // is the edge already deleted?
+  if ( status(edge_handle(v0v1)).deleted() )
+    return false;
+
   HalfedgeHandle  v1v0(opposite_halfedge_handle(v0v1));
   VertexHandle    v0(to_vertex_handle(v1v0));
   VertexHandle    v1(to_vertex_handle(v0v1));
@@ -92,19 +113,19 @@ bool TriConnectivity::is_collapse_ok(HalfedgeHandle v0v1)
   if (status(v0).deleted() || status(v1).deleted())
     return false;
 
-
   VertexHandle    vl, vr;
   HalfedgeHandle  h1, h2;
-
 
   // the edges v1-vl and vl-v0 must not be both boundary edges
   if (!is_boundary(v0v1))
   {
-    vl = to_vertex_handle(next_halfedge_handle(v0v1));
 
     h1 = next_halfedge_handle(v0v1);
     h2 = next_halfedge_handle(h1);
-    if (is_boundary(opposite_halfedge_handle(h1)) && 
+
+    vl = to_vertex_handle(h1);
+
+    if (is_boundary(opposite_halfedge_handle(h1)) &&
         is_boundary(opposite_halfedge_handle(h2)))
     {
       return false;
@@ -115,34 +136,32 @@ bool TriConnectivity::is_collapse_ok(HalfedgeHandle v0v1)
   // the edges v0-vr and vr-v1 must not be both boundary edges
   if (!is_boundary(v1v0))
   {
-    vr = to_vertex_handle(next_halfedge_handle(v1v0));
 
     h1 = next_halfedge_handle(v1v0);
     h2 = next_halfedge_handle(h1);
+
+    vr = to_vertex_handle(h1);
+
     if (is_boundary(opposite_halfedge_handle(h1)) &&
         is_boundary(opposite_halfedge_handle(h2)))
       return false;
   }
 
-
   // if vl and vr are equal or both invalid -> fail
   if (vl == vr) return false;
 
-
   VertexVertexIter  vv_it;
 
-
   // test intersection of the one-rings of v0 and v1
-  for (vv_it = vv_iter(v0); vv_it; ++vv_it)
-    status(vv_it).set_tagged(false);
+  for (vv_it = vv_iter(v0); vv_it.is_valid(); ++vv_it)
+    status(*vv_it).set_tagged(false);
 
-  for (vv_it = vv_iter(v1); vv_it; ++vv_it)
-    status(vv_it).set_tagged(true);
+  for (vv_it = vv_iter(v1); vv_it.is_valid(); ++vv_it)
+    status(*vv_it).set_tagged(true);
 
-  for (vv_it = vv_iter(v0); vv_it; ++vv_it)
-    if (status(vv_it).tagged() && vv_it.handle() != vl && vv_it.handle() != vr)
+  for (vv_it = vv_iter(v0); vv_it.is_valid(); ++vv_it)
+    if (status(*vv_it).tagged() && *vv_it != vl && *vv_it != vr)
       return false;
-
 
 
   // edge between two boundary vertices should be a boundary edge
@@ -260,8 +279,8 @@ TriConnectivity::insert_edge(VertexHandle _vh, HalfedgeHandle _h0, HalfedgeHandl
 
 
   // halfedge -> vertex
-  for (VertexIHalfedgeIter vih_it(vih_iter(v0)); vih_it; ++vih_it)
-    set_vertex_handle(vih_it.handle(), v0);
+  for (VertexIHalfedgeIter vih_it(vih_iter(v0)); vih_it.is_valid(); ++vih_it)
+    set_vertex_handle(*vih_it, v0);
 
 
   // halfedge -> face
@@ -304,8 +323,8 @@ bool TriConnectivity::is_flip_ok(EdgeHandle _eh) const
   if (ah == bh)   // this is generally a bad sign !!!
     return false;
 
-  for (ConstVertexVertexIter vvi(*this, ah); vvi; ++vvi)
-    if (vvi.handle() == bh)
+  for (ConstVertexVertexIter vvi(*this, ah); vvi.is_valid(); ++vvi)
+    if (*vvi == bh)
       return false;
 
   return true;
@@ -363,6 +382,7 @@ void TriConnectivity::flip(EdgeHandle _eh)
 
 
 //-----------------------------------------------------------------------------
+
 void TriConnectivity::split(EdgeHandle _eh, VertexHandle _vh)
 {
   HalfedgeHandle h0 = halfedge_handle(_eh, 0);
@@ -456,6 +476,19 @@ void TriConnectivity::split(EdgeHandle _eh, VertexHandle _vh)
 
   if (halfedge_handle(v2) == h0)
     set_halfedge_handle(v2, t1);
+}
+
+//-----------------------------------------------------------------------------
+
+void TriConnectivity::split_copy(EdgeHandle _eh, VertexHandle _vh)
+{
+  // Split the halfedge ( handle will be preserved)
+  split(_eh, _vh);
+
+  // Copy the properties of the original edge to all neighbor edges that
+  // have been created
+  for(VEIter ve_it = ve_iter(_vh); ve_it.is_valid(); ++ve_it)
+    copy_all_properties(_eh, *ve_it);
 }
 
 }// namespace OpenMesh

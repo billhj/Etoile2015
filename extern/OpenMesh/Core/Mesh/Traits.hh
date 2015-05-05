@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -215,8 +215,8 @@ template <class _Traits1, class _Traits2> struct MergeTraits
 /**
     Macro for merging two traits classes _S1 and _S2 into one traits class _D.
     Note that in case of ambiguities class _S1 overrides _S2, especially
-    the point/normal/color/texcoord type to be used is taken from _S1::Point/
-    _S1::Normal/_S1::Color/_S1::TexCoord.
+    the point/normal/color/texcoord type to be used is taken from _S1::Point /
+    _S1::Normal / _S1::Color / _S1::TexCoord
 */
 #define OM_Merge_Traits(_S1, _S2, _D) \
   typedef OpenMesh::MergeTraits<_S1, _S2>::Result _D;

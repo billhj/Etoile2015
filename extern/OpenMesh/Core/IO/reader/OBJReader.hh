@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------*
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *
- *   $Revision: 221 $                                                         *
- *   $Date: 2009-11-17 14:54:16 +0100 (Di, 17. Nov 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -79,7 +79,7 @@ namespace IO {
 /**
     Implementation of the OBJ format reader.
 */
-class _OBJReader_ : public BaseReader
+class OPENMESHDLLEXPORT _OBJReader_ : public BaseReader
 {
 public:
 
@@ -176,7 +176,7 @@ private:
 
 
 extern _OBJReader_  __OBJReaderInstance;
-_OBJReader_& OBJReader();
+OPENMESHDLLEXPORT _OBJReader_& OBJReader();
 
 
 //=============================================================================

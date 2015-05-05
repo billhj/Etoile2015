@@ -1,13 +1,13 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
- *---------------------------------------------------------------------------* 
+ *---------------------------------------------------------------------------*
  *  This file is part of OpenMesh.                                           *
  *                                                                           *
- *  OpenMesh is free software: you can redistribute it and/or modify         * 
+ *  OpenMesh is free software: you can redistribute it and/or modify         *
  *  it under the terms of the GNU Lesser General Public License as           *
  *  published by the Free Software Foundation, either version 3 of           *
  *  the License, or (at your option) any later version with the              *
@@ -30,12 +30,12 @@
  *  License along with OpenMesh.  If not,                                    *
  *  see <http://www.gnu.org/licenses/>.                                      *
  *                                                                           *
-\*===========================================================================*/ 
+\*===========================================================================*/
 
 /*===========================================================================*\
- *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *                                                                           *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -76,31 +76,47 @@ namespace IO {
 /**
    Base class for exporter modules.
    The exporter modules provide an interface between the writer modules and
-   the target data structure. 
+   the target data structure.
 */
 
-class BaseExporter
+class OPENMESHDLLEXPORT BaseExporter
 {
 public:
 
   virtual ~BaseExporter() { }
-   
+
 
   // get vertex data
   virtual Vec3f  point(VertexHandle _vh)    const = 0;
   virtual Vec3f  normal(VertexHandle _vh)   const = 0;
   virtual Vec3uc color(VertexHandle _vh)    const = 0;
   virtual Vec4uc colorA(VertexHandle _vh)   const = 0;
+  virtual Vec3ui colori(VertexHandle _vh)    const = 0;
+  virtual Vec4ui colorAi(VertexHandle _vh)   const = 0;
+  virtual Vec3f colorf(VertexHandle _vh)    const = 0;
+  virtual Vec4f colorAf(VertexHandle _vh)   const = 0;
   virtual Vec2f  texcoord(VertexHandle _vh) const = 0;
 
-  
+
   // get face data
-  virtual unsigned int 
-  get_vhandles(FaceHandle _fh, 
+  virtual unsigned int
+  get_vhandles(FaceHandle _fh,
 	       std::vector<VertexHandle>& _vhandles) const=0;
   virtual Vec3f  normal(FaceHandle _fh)      const = 0;
   virtual Vec3uc color (FaceHandle _fh)      const = 0;
-  virtual Vec4uc colorA(FaceHandle _fh)      const = 0;  
+  virtual Vec4uc colorA(FaceHandle _fh)      const = 0;
+  virtual Vec3ui colori(FaceHandle _fh)    const = 0;
+  virtual Vec4ui colorAi(FaceHandle _fh)   const = 0;
+  virtual Vec3f colorf(FaceHandle _fh)    const = 0;
+  virtual Vec4f colorAf(FaceHandle _fh)   const = 0;
+
+  // get edge data
+  virtual Vec3uc color(EdgeHandle _eh)    const = 0;
+  virtual Vec4uc colorA(EdgeHandle _eh)   const = 0;
+  virtual Vec3ui colori(EdgeHandle _eh)    const = 0;
+  virtual Vec4ui colorAi(EdgeHandle _eh)   const = 0;
+  virtual Vec3f colorf(EdgeHandle _eh)    const = 0;
+  virtual Vec4f colorAf(EdgeHandle _eh)   const = 0;
 
   // get reference to base kernel
   virtual const BaseKernel* kernel() { return 0; }
@@ -116,7 +132,8 @@ public:
   virtual bool is_triangle_mesh()     const { return false; }
   virtual bool has_vertex_normals()   const { return false; }
   virtual bool has_vertex_colors()    const { return false; }
-  virtual bool has_vertex_texcoords() const { return false; }      
+  virtual bool has_vertex_texcoords() const { return false; }
+  virtual bool has_edge_colors()      const { return false; }
   virtual bool has_face_normals()     const { return false; }
   virtual bool has_face_colors()      const { return false; }
 };

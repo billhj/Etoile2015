@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -87,15 +87,10 @@ namespace IO {
 function body which will result in a linker error */
 
 template < size_t N > inline
-void _reverse_byte_order_N(uint8_t* _val)
-{
-  assert_compile(false);
-//   compile_time_error__only_for_fundamental_types(_val);
-}
-
+void _reverse_byte_order_N(uint8_t* _val);
 
 template <> inline
-void _reverse_byte_order_N<1>(uint8_t* /*_val*/) { };
+void _reverse_byte_order_N<1>(uint8_t* /*_val*/) { }
 
 
 template <> inline
@@ -150,15 +145,11 @@ void _reverse_byte_order_N<16>(uint8_t* _val)
 // reverting pointers makes no sense, hence forbid it.
 /** this does not compile for g++3.4 and higher, hence we comment the
 function body which will result in a linker error */
-template <typename T> inline T* reverse_byte_order(T* t)
-{
-  // Should never reach this point. If so, then some operator were not
-  // overloaded. Especially check for IO::binary<> specialization on
-  // custom data types.
-//   compile_time_error__cannot_do_that(a);
-  assert_compile(false);
-  return t;
-}
+template <typename T> inline T* reverse_byte_order(T* t);
+// Should never reach this point. If so, then some operator were not
+// overloaded. Especially check for IO::binary<> specialization on
+// custom data types.
+
 
 inline void compile_time_error__no_fundamental_type()
 {
@@ -189,22 +180,22 @@ template <> inline uchar& reverse_byte_order(uchar& _t) { return _t; }
    return _t; \
   }
 
-// REVERSE_FUNDAMENTAL_TYPE(bool);
-// REVERSE_FUNDAMENTAL_TYPE(char);
-// REVERSE_FUNDAMENTAL_TYPE(uchar);
-REVERSE_FUNDAMENTAL_TYPE(int16_t);
-REVERSE_FUNDAMENTAL_TYPE(uint16_t);
-// REVERSE_FUNDAMENTAL_TYPE(int);
-// REVERSE_FUNDAMENTAL_TYPE(uint);
+// REVERSE_FUNDAMENTAL_TYPE(bool)
+// REVERSE_FUNDAMENTAL_TYPE(char)
+// REVERSE_FUNDAMENTAL_TYPE(uchar)
+REVERSE_FUNDAMENTAL_TYPE(int16_t)
+REVERSE_FUNDAMENTAL_TYPE(uint16_t)
+// REVERSE_FUNDAMENTAL_TYPE(int)
+// REVERSE_FUNDAMENTAL_TYPE(uint)
 
-REVERSE_FUNDAMENTAL_TYPE(unsigned long);
-REVERSE_FUNDAMENTAL_TYPE(int32_t);
-REVERSE_FUNDAMENTAL_TYPE(uint32_t);
-REVERSE_FUNDAMENTAL_TYPE(int64_t);
-REVERSE_FUNDAMENTAL_TYPE(uint64_t);
-REVERSE_FUNDAMENTAL_TYPE(float);
-REVERSE_FUNDAMENTAL_TYPE(double);
-REVERSE_FUNDAMENTAL_TYPE(long double);
+REVERSE_FUNDAMENTAL_TYPE(unsigned long)
+REVERSE_FUNDAMENTAL_TYPE(int32_t)
+REVERSE_FUNDAMENTAL_TYPE(uint32_t)
+REVERSE_FUNDAMENTAL_TYPE(int64_t)
+REVERSE_FUNDAMENTAL_TYPE(uint64_t)
+REVERSE_FUNDAMENTAL_TYPE(float)
+REVERSE_FUNDAMENTAL_TYPE(double)
+REVERSE_FUNDAMENTAL_TYPE(long double)
 
 #undef REVERSE_FUNDAMENTAL_TYPE
 

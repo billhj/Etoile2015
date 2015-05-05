@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------*
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *
- *   $Revision: 221 $                                                         *
- *   $Date: 2009-11-17 14:54:16 +0100 (Di, 17. Nov 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -47,6 +47,7 @@
 #include <map>
 
 #include <float.h>
+#include <fstream>
 
 // OpenMesh
 #include <OpenMesh/Core/System/config.h>
@@ -114,14 +115,14 @@ read(const std::string& _filename, BaseImporter& _bi, Options& _opt)
   {
     case STLA:
     {
-      result = read_stla(_filename, _bi);
+      result = read_stla(_filename, _bi, _opt);
       _opt -= Options::Binary;
       break;
     }
 
     case STLB:
     {
-      result = read_stlb(_filename, _bi);
+      result = read_stlb(_filename, _bi, _opt);
       _opt += Options::Binary;
       break;
     }
@@ -143,9 +144,14 @@ _STLReader_::read(std::istream& _is,
 		 Options& _opt)
 {
 
-    omerr() << "[OMReader] : STL Streams are not supported " << std::endl;
+  bool result = false;
 
-  return false;
+  if (_opt & Options::Binary)
+    result = read_stlb(_is, _bi, _opt);
+  else
+    result = read_stla(_is, _bi, _opt);
+
+  return result;
 }
 
 
@@ -182,14 +188,26 @@ private:
 
 //-----------------------------------------------------------------------------
 
+void trimStdString( std::string& _string) {
+  // Trim Both leading and trailing spaces
+
+  size_t start = _string.find_first_not_of(" \t\r\n");
+  size_t end   = _string.find_last_not_of(" \t\r\n");
+
+  if(( std::string::npos == start ) || ( std::string::npos == end))
+    _string = "";
+  else
+    _string = _string.substr( start, end-start+1 );
+}
+
+//-----------------------------------------------------------------------------
 
 bool
 _STLReader_::
-read_stla(const std::string& _filename, BaseImporter& _bi) const
+read_stla(const std::string& _filename, BaseImporter& _bi, Options& _opt) const
 {
-  omlog() << "[STLReader] : read ascii file\n";
+  std::fstream in( _filename.c_str(), std::ios_base::in );
 
-  FILE*  in = fopen(_filename.c_str(), "r");
   if (!in)
   {
     omerr() << "[STLReader] : cannot not open file "
@@ -198,73 +216,130 @@ read_stla(const std::string& _filename, BaseImporter& _bi) const
     return false;
   }
 
+  bool res = read_stla(in, _bi, _opt);
 
+  if (in)
+    in.close();
 
-  char                       line[100], *p;
+  return res;
+}
+
+//-----------------------------------------------------------------------------
+
+bool
+_STLReader_::
+read_stla(std::istream& _in, BaseImporter& _bi, Options& _opt) const
+{
+
   unsigned int               i;
   OpenMesh::Vec3f            v;
-  unsigned int               cur_idx(0);
+  OpenMesh::Vec3f            n;
   BaseImporter::VHandles     vhandles;
 
   CmpVec comp(eps_);
   std::map<Vec3f, VertexHandle, CmpVec>            vMap(comp);
   std::map<Vec3f, VertexHandle, CmpVec>::iterator  vMapIt;
 
+  std::string line;
 
-  while (in && !feof(in) && fgets(line, 100, in))
-  {
-    for (p=line; isspace(*p) && *p!='\0'; ++p) {}; // skip white-space
+  bool facet_normal(false);
 
-    if ((strncmp(p, "outer", 5) == 0) || (strncmp(p, "OUTER", 5) == 0))
-    {
+  while( _in && !_in.eof() ) {
+
+    // Get one line
+    std::getline(_in, line);
+    if ( _in.bad() ){
+      omerr() << "  Warning! Could not read stream properly!\n";
+      return false;
+    }
+
+    // Trim Both leading and trailing spaces
+    trimStdString(line);
+
+    // Normal found?
+    if (line.find("facet normal") != std::string::npos) {
+      std::stringstream strstream(line);
+
+      std::string garbage;
+
+      // facet
+      strstream >> garbage;
+
+      // normal
+      strstream >> garbage;
+
+      strstream >> n[0];
+      strstream >> n[1];
+      strstream >> n[2];
+
+      facet_normal = true;
+    }
+
+    // Detected a triangle
+    if ( (line.find("outer") != std::string::npos) ||  (line.find("OUTER") != std::string::npos ) ) {
+
       vhandles.clear();
 
-      for (i=0; i<3; ++i)
-      {
- 	fgets(line, 100, in);
-	for (p=line; isspace(*p) && *p!='\0'; ++p) {}; // skip white-space
- 	sscanf(p+6, "%f %f %f", &v[0], &v[1], &v[2]);
+      for (i=0; i<3; ++i) {
+        // Get one vertex
+        std::getline(_in, line);
+        trimStdString(line);
 
-	// has vector been referenced before?
-	if ((vMapIt=vMap.find(v)) == vMap.end())
-	{
-	  // No : add vertex and remember idx/vector mapping
-	  _bi.add_vertex(v);
-	  vhandles.push_back(VertexHandle(cur_idx));
-	  vMap[v] = VertexHandle(cur_idx++);
-	}
-	else
-	  // Yes : get index from map
-	  vhandles.push_back(vMapIt->second);
+        std::stringstream strstream(line);
+
+        std::string garbage;
+        strstream >> garbage;
+
+        strstream >> v[0];
+        strstream >> v[1];
+        strstream >> v[2];
+
+        // has vector been referenced before?
+        if ((vMapIt=vMap.find(v)) == vMap.end())
+        {
+          // No : add vertex and remember idx/vector mapping
+          VertexHandle handle = _bi.add_vertex(v);
+          vhandles.push_back(handle);
+          vMap[v] = handle;
+        }
+        else
+          // Yes : get index from map
+          vhandles.push_back(vMapIt->second);
+
       }
 
       // Add face only if it is not degenerated
       if ((vhandles[0] != vhandles[1]) &&
-	  (vhandles[0] != vhandles[2]) &&
-	  (vhandles[1] != vhandles[2]))
-	_bi.add_face(vhandles);
+          (vhandles[0] != vhandles[2]) &&
+          (vhandles[1] != vhandles[2])) {
+
+
+        FaceHandle fh = _bi.add_face(vhandles);
+
+        // set the normal if requested
+        // if a normal was requested but could not be found we unset the option
+        if (facet_normal) {
+          if (fh.is_valid() && _opt.face_has_normal())
+            _bi.set_normal(fh, n);
+        } else
+          _opt -= Options::FaceNormal;
+      }
+
+      facet_normal = false;
     }
   }
 
-
-  fclose(in);
-
-
-  // In general a file has data, there the number of vertices cannot be 0.
-  return _bi.n_vertices() != 0;
+  return true;
 }
-
 
 //-----------------------------------------------------------------------------
 
-
 bool
 _STLReader_::
-read_stlb(const std::string& _filename, BaseImporter& _bi) const
+read_stlb(const std::string& _filename, BaseImporter& _bi, Options& _opt) const
 {
-  omlog() << "[STLReader] : read binary file\n";
+  std::fstream in( _filename.c_str(), std::ios_base::in | std::ios_base::binary);
 
-  FILE*  in = fopen(_filename.c_str(), "rb");
   if (!in)
   {
     omerr() << "[STLReader] : cannot not open file "
@@ -273,12 +348,24 @@ read_stlb(const std::string& _filename, BaseImporter& _bi) const
     return false;
   }
 
+  bool res = read_stlb(in, _bi, _opt);
 
+  if (in)
+    in.close();
+
+  return res;
+}
+
+//-----------------------------------------------------------------------------
+
+bool
+_STLReader_::
+read_stlb(std::istream& _in, BaseImporter& _bi, Options& _opt) const
+{
   char                       dummy[100];
   bool                       swapFlag;
   unsigned int               i, nT;
-  OpenMesh::Vec3f            v;
-  unsigned int               cur_idx(0);
+  OpenMesh::Vec3f            v, n;
   BaseImporter::VHandles     vhandles;
 
   std::map<Vec3f, VertexHandle, CmpVec>  vMap;
@@ -297,54 +384,58 @@ read_stlb(const std::string& _filename, BaseImporter& _bi) const
   swapFlag = (endian_test.c[3] == 1);
 
   // read number of triangles
-  fread(dummy, 1, 80, in);
-  nT = read_int(in, swapFlag);
+  _in.read(dummy, 80);
+  nT = read_int(_in, swapFlag);
 
   // read triangles
   while (nT)
   {
     vhandles.clear();
 
-    // skip triangle normal
-    fread(dummy, 1, 12, in);
+    // read triangle normal
+    n[0] = read_float(_in, swapFlag);
+    n[1] = read_float(_in, swapFlag);
+    n[2] = read_float(_in, swapFlag);
 
     // triangle's vertices
     for (i=0; i<3; ++i)
     {
-      v[0] = read_float(in, swapFlag);
-      v[1] = read_float(in, swapFlag);
-      v[2] = read_float(in, swapFlag);
+      v[0] = read_float(_in, swapFlag);
+      v[1] = read_float(_in, swapFlag);
+      v[2] = read_float(_in, swapFlag);
 
       // has vector been referenced before?
       if ((vMapIt=vMap.find(v)) == vMap.end())
       {
-	// No : add vertex and remember idx/vector mapping
-	_bi.add_vertex(v);
-	vhandles.push_back(VertexHandle(cur_idx));
-	vMap[v] = VertexHandle(cur_idx++);
+        // No : add vertex and remember idx/vector mapping
+        VertexHandle handle = _bi.add_vertex(v);
+        vhandles.push_back(handle);
+        vMap[v] = handle;
       }
       else
-	// Yes : get index from map
-	vhandles.push_back(vMapIt->second);
+        // Yes : get index from map
+        vhandles.push_back(vMapIt->second);
     }
 
 
     // Add face only if it is not degenerated
     if ((vhandles[0] != vhandles[1]) &&
 	(vhandles[0] != vhandles[2]) &&
-	(vhandles[1] != vhandles[2]))
-      _bi.add_face(vhandles);
+	(vhandles[1] != vhandles[2])) {
+      FaceHandle fh = _bi.add_face(vhandles);
 
-    fread(dummy, 1, 2, in);
+      if (fh.is_valid() && _opt.face_has_normal())
+        _bi.set_normal(fh, n);
+    }
+
+    _in.read(dummy, 2);
     --nT;
   }
 
   return true;
 }
 
-
 //-----------------------------------------------------------------------------
-
 
 _STLReader_::STL_Type
 _STLReader_::
@@ -368,15 +459,15 @@ check_stl_type(const std::string& _filename) const
   // read number of triangles
   char dummy[100];
   fread(dummy, 1, 80, in);
-  unsigned int nT = read_int(in, swapFlag);
+  size_t nT = read_int(in, swapFlag);
 
 
   // compute file size from nT
-  unsigned int binary_size = 84 + nT*50;
+  size_t binary_size = 84 + nT*50;
 
 
   // get actual file size
-  unsigned int file_size(0);
+  size_t file_size(0);
   rewind(in);
   while (!feof(in))
     file_size += fread(dummy, 1, 100, in);

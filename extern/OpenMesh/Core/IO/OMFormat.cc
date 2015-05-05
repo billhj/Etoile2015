@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -62,14 +62,14 @@ namespace OMFormat {
 
   Chunk::Integer_Size needed_bits( size_t s )
   {
-    if (s <= 0x000100)   return Chunk::Integer_8;
+    if (s <= 0x000100) return Chunk::Integer_8;
     if (s <= 0x010000) return Chunk::Integer_16;
 
 #if 0
     // !Not tested yet! This most probably won't work!
     // NEED a 64bit system!
     if ( (sizeof( size_t ) == 8) && (s >= 0x100000000) )
-	return Chunk::Integer_64;
+      return Chunk::Integer_64;
 #endif
 
     return Chunk::Integer_32;    

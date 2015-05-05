@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,12 +34,12 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
-/** \file QuadricT.hh
+/** \file Core/Geometry/QuadricT.hh
 
  */
 
@@ -68,7 +68,7 @@ namespace Geometry { //BEGIN_NS_GEOMETRY
 //== CLASS DEFINITION =========================================================
 
 
-/** /class QuadricT QuadricT.hh <OSG/Geometry/Types/QuadricT.hh>
+/** /class QuadricT Geometry/QuadricT.hh
 
     Stores a quadric as a 4x4 symmetrix matrix. Used by the
     error quadric based mesh decimation algorithms.

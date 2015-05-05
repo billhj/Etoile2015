@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------*
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *
- *   $Revision: 221 $                                                         *
- *   $Date: 2009-11-17 14:54:16 +0100 (Di, 17. Nov 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -78,7 +78,7 @@ namespace IO {
    Base class for all writer modules. The module should register itself at
    the IOManager by calling the register_module function.
 */
-class BaseWriter
+class OPENMESHDLLEXPORT BaseWriter
 {
 public:
 
@@ -96,15 +96,27 @@ public:
   /// Returns true if writer can parse _filename (checks extension)
   virtual bool can_u_write(const std::string& _filename) const;
 
-  /// Write to file _filename. Data source specified by BaseExporter _be.
+  /** Write to a file
+   * @param _filename write to file with the given filename
+   * @param _be BaseExporter, which specifies the data source
+   * @param _opt writing options
+   * @param _precision can be used to specify the precision of the floating point notation.
+   */
   virtual bool write(const std::string& _filename,
 		     BaseExporter& _be,
-             Options _opt) const = 0;
+                     Options _opt,
+                     std::streamsize _precision = 6) const = 0;
 
-  /// Write to std::ostream  _os. Data source specified by BaseExporter _be.
+  /** Write to a std::ostream
+   * @param _os write to std::ostream
+   * @param _be BaseExporter, which specifies the data source
+   * @param _opt writing options
+   * @param _precision can be used to specify the precision of the floating point notation.
+   */
   virtual bool write(std::ostream& _os,
 		     BaseExporter& _be,
-             Options _opt) const = 0;
+                     Options _opt,
+                     std::streamsize _precision = 6) const = 0;
 
   /// Returns expected size of file if binary format is supported else 0.
   virtual size_t binary_size(BaseExporter&, Options) const { return 0; }

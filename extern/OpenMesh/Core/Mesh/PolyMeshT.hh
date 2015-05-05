@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 207 $                                                         *
- *   $Date: 2009-09-24 11:46:58 +0200 (Do, 24. Sep 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -57,6 +57,7 @@
 #include <OpenMesh/Core/System/config.h>
 #include <OpenMesh/Core/Geometry/MathDefs.hh>
 #include <OpenMesh/Core/Mesh/PolyConnectivity.hh>
+#include <OpenMesh/Core/Mesh/FinalMeshItemsT.hh>
 #include <vector>
 
 
@@ -64,7 +65,6 @@
 
 
 namespace OpenMesh {
-
 
 //== CLASS DEFINITION =========================================================
 
@@ -192,7 +192,7 @@ public:
   inline VertexHandle new_vertex(const Point& _p)
   {
     VertexHandle vh(Kernel::new_vertex());
-    set_point(vh, _p);
+    this->set_point(vh, _p);
     return vh;
   }
 
@@ -205,45 +205,109 @@ public:
   */
   //@{
 
-  /** Calls update_face_normals() and update_vertex_normals() if
-      these normals (i.e. the properties) exist */
+  /** \brief Compute normals for all primitives
+   *
+   * Calls update_face_normals() , update_halfedge_normals()  and update_vertex_normals() if
+   * the normals (i.e. the properties) exist.
+   *
+   * \note Face normals are required to compute vertex and halfedge normals!
+   */
   void update_normals();
 
   /// Update normal for face _fh
   void update_normal(FaceHandle _fh)
-  { set_normal(_fh, calc_face_normal(_fh)); }
+  { this->set_normal(_fh, calc_face_normal(_fh)); }
 
-  /** Update normal vectors for all faces.
-      \attention Needs the Attributes::Normal attribute for faces. */
+  /** \brief Update normal vectors for all faces.
+   *
+   * \attention Needs the Attributes::Normal attribute for faces.
+   *            Call request_face_normals() before using it!
+   */
   void update_face_normals();
 
   /** Calculate normal vector for face _fh. */
-  Normal calc_face_normal(FaceHandle _fh) const;
+  virtual Normal calc_face_normal(FaceHandle _fh) const;
 
   /** Calculate normal vector for face (_p0, _p1, _p2). */
   Normal calc_face_normal(const Point& _p0, const Point& _p1,
                                             const Point& _p2) const;
-  // calculates the average of the vertices defining _fh
-  void calc_face_centroid(FaceHandle _fh, Point& _pt) const;
+  /// calculates the average of the vertices defining _fh
+  void calc_face_centroid(FaceHandle _fh, Point& _pt) const {
+      _pt = calc_face_centroid(_fh);
+  }
+
+  /// Computes and returns the average of the vertices defining _gh
+  Point calc_face_centroid(FaceHandle _fh) const;
+
+  /// Update normal for halfedge _heh
+  void update_normal(HalfedgeHandle _heh, const double _feature_angle = 0.8)
+  { this->set_normal(_heh, calc_halfedge_normal(_heh)); }
+
+  /** \brief Update normal vectors for all halfedges.
+   *
+   * Uses the existing face normals to compute halfedge normals
+   *
+   * \note Face normals have to be computed first!
+   *
+   * \attention Needs the Attributes::Normal attribute for faces and halfedges.
+   *            Call request_face_normals() and request_halfedge_normals() before using it!
+   */
+  void update_halfedge_normals(const double _feature_angle = 0.8);
+
+  /** \brief Calculate halfedge normal for one specific halfedge
+   *
+   * Calculate normal vector for halfedge _heh.
+   *
+   * \note Face normals have to be computed first!
+   *
+   * \attention Needs the Attributes::Normal attribute for faces and vertices.
+   *            Call request_face_normals() and request_halfedge_normals() before using it!
+   *
+   * @param _heh Handle of the halfedge
+   * @param _feature_angle If the dihedral angle across this edge is greater than this value, the edge is considered as a feature edge (angle in radians) 
+   */
+  virtual Normal calc_halfedge_normal(HalfedgeHandle _heh, const double _feature_angle = 0.8) const;
+
+
+  /** identifies feature edges w.r.t. the minimal dihedral angle for feature edges (in radians) */
+  /** and the status feature tag */
+  bool is_estimated_feature_edge(HalfedgeHandle _heh, const double _feature_angle) const;
+
   /// Update normal for vertex _vh
   void update_normal(VertexHandle _vh)
-  { set_normal(_vh, calc_vertex_normal(_vh)); }
+  { this->set_normal(_vh, calc_vertex_normal(_vh)); }
 
-  /** Update normal vectors for all vertices. \attention Needs the
-      Attributes::Normal attribute for faces and vertices. */
+  /** \brief Update normal vectors for all vertices.
+   *
+   * Uses existing face normals to calculate new vertex normals.
+   *
+   * \note Face normals have to be computed first!
+   *
+   * \attention Needs the Attributes::Normal attribute for faces and vertices.
+   *            Call request_face_normals() and request_vertex_normals() before using it!
+   */
   void update_vertex_normals();
 
-  /** Calculate normal vector for vertex _vh by averaging normals
-      of adjacent faces. Face normals have to be computed first.
-      \attention Needs the Attributes::Normal attribute for faces. */
+  /** \brief Calculate vertex normal for one specific vertex
+   *
+   * Calculate normal vector for vertex _vh by averaging normals
+   * of adjacent faces.
+   *
+   * \note Face normals have to be computed first!
+   *
+   * \attention Needs the Attributes::Normal attribute for faces and vertices.
+   *            Call request_face_normals() and request_vertex_normals() before using it!
+   *
+   * @param _vh Handle of the vertex
+   */
   Normal calc_vertex_normal(VertexHandle _vh) const;
 
   /** Different methods for calculation of the normal at _vh:
-      - -"-_fast    - the default one - the same as calc vertex_normal()
+      - ..._fast    - the default one - the same as calc vertex_normal()
                     - needs the Attributes::Normal attribute for faces
-      - -"-_correct - works properly for non-triangular meshes
+      - ..._correct - works properly for non-triangular meshes
                     - does not need any attributes
-      - -"-_loop    - calculates loop surface normals
+      - ..._loop    - calculates loop surface normals
                     - does not need any attributes */
   void calc_vertex_normal_fast(VertexHandle _vh, Normal& _n) const;
   void calc_vertex_normal_correct(VertexHandle _vh, Normal& _n) const;
@@ -257,19 +321,35 @@ public:
   /** Calculates the edge vector as the vector defined by
       the halfedge with id #0 (see below)  */
   void calc_edge_vector(EdgeHandle _eh, Normal& _edge_vec) const
-  { calc_edge_vector(halfedge_handle(_eh,0), _edge_vec); }
+  {
+    _edge_vec = calc_edge_vector(_eh);
+  }
+
+  /** Calculates the edge vector as the vector defined by
+      the halfedge with id #0 (see below)  */
+  Normal calc_edge_vector(EdgeHandle _eh) const
+  {
+    return calc_edge_vector(this->halfedge_handle(_eh,0));
+  }
 
   /** Calculates the edge vector as the difference of the
       the points defined by to_vertex_handle() and from_vertex_handle() */
   void calc_edge_vector(HalfedgeHandle _heh, Normal& _edge_vec) const
   {
-    _edge_vec = point(to_vertex_handle(_heh));
-    _edge_vec -= point(from_vertex_handle(_heh));
+    _edge_vec = calc_edge_vector(_heh);
+  }
+
+  /** Calculates the edge vector as the difference of the
+      the points defined by to_vertex_handle() and from_vertex_handle() */
+  Normal calc_edge_vector(HalfedgeHandle _heh) const
+  {
+    return this->point(this->to_vertex_handle(_heh)) -
+            this->point(this->from_vertex_handle(_heh));
   }
 
   // Calculates the length of the edge _eh
   Scalar calc_edge_length(EdgeHandle _eh) const
-  { return calc_edge_length(halfedge_handle(_eh,0)); }
+  { return calc_edge_length(this->halfedge_handle(_eh,0)); }
 
   /** Calculates the length of the edge _heh
   */
@@ -277,7 +357,7 @@ public:
   { return (Scalar)sqrt(calc_edge_sqr_length(_heh)); }
 
   Scalar calc_edge_sqr_length(EdgeHandle _eh) const
-  { return calc_edge_sqr_length(halfedge_handle(_eh,0)); }
+  { return calc_edge_sqr_length(this->halfedge_handle(_eh,0)); }
 
   Scalar calc_edge_sqr_length(HalfedgeHandle _heh) const
   {
@@ -292,8 +372,8 @@ public:
       _vec0 and _vec1 are resp. the first and the second vectors defining the sector */
   void calc_sector_vectors(HalfedgeHandle _in_heh, Normal& _vec0, Normal& _vec1) const
   {
-    calc_edge_vector(next_halfedge_handle(_in_heh), _vec0);//p2 - p1
-    calc_edge_vector(opposite_halfedge_handle(_in_heh), _vec1);//p0 - p1
+    calc_edge_vector(this->next_halfedge_handle(_in_heh), _vec0);//p2 - p1
+    calc_edge_vector(this->opposite_halfedge_handle(_in_heh), _vec1);//p0 - p1
   }
 
   /** calculates the sector angle.\n
@@ -310,10 +390,10 @@ public:
     {
       return 0;
     }
-    Scalar cos_a = (v0 | v1) / denom;
-    if (is_boundary(_in_heh))
+    Scalar cos_a = dot(v0 , v1) / denom;
+    if (this->is_boundary(_in_heh))
     {//determine if the boundary sector is concave or convex
-      FaceHandle fh(face_handle(opposite_halfedge_handle(_in_heh)));
+      FaceHandle fh(this->face_handle(this->opposite_halfedge_handle(_in_heh)));
       Normal f_n(calc_face_normal(fh));//this normal is (for convex fh) OK
       Scalar sign_a = dot(cross(v0, v1), f_n);
       return angle(cos_a, sign_a);
@@ -367,13 +447,15 @@ public:
       \attention Needs the Attributes::Normal attribute for faces */
   Scalar calc_dihedral_angle_fast(HalfedgeHandle _heh) const
   {
-    CHECK(Kernel::has_face_normals());
-    if (is_boundary(edge_handle(_heh)))
+    // Make sure that we have face normals on the mesh
+    assert(Kernel::has_face_normals());
+
+    if (this->is_boundary(this->edge_handle(_heh)))
     {//the dihedral angle at a boundary edge is 0
       return 0;
     }
-    const Normal& n0 = normal(face_handle(_heh));
-    const Normal& n1 = normal(face_handle(opposite_halfedge_handle(_heh)));
+    const Normal& n0 = this->normal(this->face_handle(_heh));
+    const Normal& n1 = this->normal(this->face_handle(this->opposite_halfedge_handle(_heh)));
     Normal he;
     calc_edge_vector(_heh, he);
     Scalar da_cos = dot(n0, n1);
@@ -385,18 +467,18 @@ public:
   /** calculates the dihedral angle on the edge _eh
       \attention Needs the Attributes::Normal attribute for faces */
   Scalar calc_dihedral_angle_fast(EdgeHandle _eh) const
-  { return calc_dihedral_angle_fast(halfedge_handle(_eh,0)); }
+  { return calc_dihedral_angle_fast(this->halfedge_handle(_eh,0)); }
 
   // calculates the dihedral angle on the halfedge _heh
   Scalar calc_dihedral_angle(HalfedgeHandle _heh) const
   {
-    if (is_boundary(edge_handle(_heh)))
+    if (this->is_boundary(this->edge_handle(_heh)))
     {//the dihedral angle at a boundary edge is 0
       return 0;
     }
     Normal n0, n1, he;
     calc_sector_normal(_heh, n0);
-    calc_sector_normal(opposite_halfedge_handle(_heh), n1);
+    calc_sector_normal(this->opposite_halfedge_handle(_heh), n1);
     calc_edge_vector(_heh, he);
     Scalar denom = n0.norm()*n1.norm();
     if (denom == Scalar(0))
@@ -411,11 +493,11 @@ public:
 
   // calculates the dihedral angle on the edge _eh
   Scalar calc_dihedral_angle(EdgeHandle _eh) const
-  { return calc_dihedral_angle(halfedge_handle(_eh,0)); }
+  { return calc_dihedral_angle(this->halfedge_handle(_eh,0)); }
 
   /** tags an edge as a feature if its dihedral angle is larger than _angle_tresh
       returns the number of the found feature edges, requires edge_status property*/
-  uint find_feature_edges(Scalar _angle_tresh = OpenMesh::deg_to_rad(44.0));
+  unsigned int find_feature_edges(Scalar _angle_tresh = OpenMesh::deg_to_rad(44.0));
   // --- misc ---
 
   /// Face split (= 1-to-n split)
@@ -426,11 +508,57 @@ public:
   { Kernel::split(_fh, _vh); }
 
   inline void split(EdgeHandle _eh, const Point& _p)
-  { Kernel::split(_eh, add_vertex(_p)); }
+  { Kernel::split_edge(_eh, add_vertex(_p)); }
 
   inline void split(EdgeHandle _eh, VertexHandle _vh)
-  { Kernel::split(_eh, _vh); }
+  { Kernel::split_edge(_eh, _vh); }
+  
 };
+
+/**
+ * @brief Cast a mesh with different but identical traits into each other.
+ *
+ * Example:
+ * @code{.cpp}
+ * struct TriTraits1 : public OpenMesh::DefaultTraits {
+ *   typedef Vec3d Point;
+ * };
+ * struct TriTraits2 : public OpenMesh::DefaultTraits {
+ *   typedef Vec3d Point;
+ * };
+ * struct TriTraits3 : public OpenMesh::DefaultTraits {
+ *   typedef Vec3f Point;
+ * };
+ *
+ * TriMesh_ArrayKernelT<TriTraits1> a;
+ * TriMesh_ArrayKernelT<TriTraits2> &b = mesh_cast<TriMesh_ArrayKernelT<TriTraits2>&>(a); // OK
+ * TriMesh_ArrayKernelT<TriTraits3> &c = mesh_cast<TriMesh_ArrayKernelT<TriTraits3>&>(a); // ERROR
+ * @endcode
+ *
+ * @see MeshCast
+ *
+ * @param rhs
+ * @return
+ */
+template<typename LHS, typename KERNEL>
+LHS mesh_cast(PolyMeshT<KERNEL> &rhs) {
+    return MeshCast<LHS, PolyMeshT<KERNEL>&>::cast(rhs);
+}
+
+template<typename LHS, typename KERNEL>
+LHS mesh_cast(PolyMeshT<KERNEL> *rhs) {
+    return MeshCast<LHS, PolyMeshT<KERNEL>*>::cast(rhs);
+}
+
+template<typename LHS, typename KERNEL>
+const LHS mesh_cast(const PolyMeshT<KERNEL> &rhs) {
+    return MeshCast<LHS, const PolyMeshT<KERNEL>&>::cast(rhs);
+}
+
+template<typename LHS, typename KERNEL>
+const LHS mesh_cast(const PolyMeshT<KERNEL> *rhs) {
+    return MeshCast<LHS, const PolyMeshT<KERNEL>*>::cast(rhs);
+}
 
 
 //=============================================================================

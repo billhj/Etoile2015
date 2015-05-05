@@ -1,13 +1,13 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
- *---------------------------------------------------------------------------* 
+ *---------------------------------------------------------------------------*
  *  This file is part of OpenMesh.                                           *
  *                                                                           *
- *  OpenMesh is free software: you can redistribute it and/or modify         * 
+ *  OpenMesh is free software: you can redistribute it and/or modify         *
  *  it under the terms of the GNU Lesser General Public License as           *
  *  published by the Free Software Foundation, either version 3 of           *
  *  the License, or (at your option) any later version with the              *
@@ -30,12 +30,12 @@
  *  License along with OpenMesh.  If not,                                    *
  *  see <http://www.gnu.org/licenses/>.                                      *
  *                                                                           *
-\*===========================================================================*/ 
+\*===========================================================================*/
 
 /*===========================================================================*\
- *                                                                           *             
- *   $Revision: 221 $                                                         *
- *   $Date: 2009-11-17 14:54:16 +0100 (Di, 17. Nov 2009) $                   *
+ *                                                                           *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -77,31 +77,33 @@ namespace IO {
 //=== IMPLEMENTATION ==========================================================
 
 
-/** 
-    Implementation of the STL format writer. This class is singleton'ed by 
+/**
+    Implementation of the STL format writer. This class is singleton'ed by
     SingletonT to STLWriter.
 */
-class _STLWriter_ : public BaseWriter
+class OPENMESHDLLEXPORT _STLWriter_ : public BaseWriter
 {
 public:
-  
+
   _STLWriter_();
 
   /// Destructor
   virtual ~_STLWriter_() {};
-  
+
   std::string get_description() const { return "Stereolithography Format"; }
   std::string get_extensions()  const { return "stla stlb"; }
-  
-  bool write(const std::string&, BaseExporter&, Options) const;
-  
-  bool write(std::ostream&, BaseExporter&, Options) const;
-  
+
+  bool write(const std::string&, BaseExporter&, Options, std::streamsize _precision = 6) const;
+
+  bool write(std::ostream&, BaseExporter&, Options, std::streamsize _precision = 6) const;
+
   size_t binary_size(BaseExporter&, Options) const;
 
 private:
   bool write_stla(const std::string&, BaseExporter&, Options) const;
+  bool write_stla(std::ostream&, BaseExporter&, Options, std::streamsize _precision = 6) const;
   bool write_stlb(const std::string&, BaseExporter&, Options) const;
+  bool write_stlb(std::ostream&, BaseExporter&, Options, std::streamsize _precision = 6) const;
 };
 
 
@@ -110,7 +112,7 @@ private:
 
 // Declare the single entity of STL writer.
 extern _STLWriter_  __STLWriterInstance;
-_STLWriter_& STLWriter();
+OPENMESHDLLEXPORT _STLWriter_& STLWriter();
 
 
 //=============================================================================

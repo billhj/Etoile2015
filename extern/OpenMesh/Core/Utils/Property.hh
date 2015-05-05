@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 190 $                                                         *
- *   $Date: 2009-08-10 12:50:34 +0200 (Mo, 10. Aug 2009) $                   *
+ *   $Revision: 1196 $                                                         *
+ *   $Date: 2015-01-14 16:41:22 +0100 (Mi, 14 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -113,6 +113,8 @@ public: // inherited from BaseProperty
   virtual void push_back()        { data_.push_back(T()); }
   virtual void swap(size_t _i0, size_t _i1)
   { std::swap(data_[_i0], data_[_i1]); }
+  virtual void copy(size_t _i0, size_t _i1)
+  { data_[_i1] = data_[_i0]; }
 
 public:
 
@@ -133,7 +135,7 @@ public:
   {
     if (element_size() != IO::UnknownSize)
       return this->BaseProperty::size_of(n_elements());
-    return std::accumulate(data_.begin(), data_.end(), 0, plus());
+    return std::accumulate(data_.begin(), data_.end(), size_t(0), plus());
   }
 
   virtual size_t size_of(size_t _n_elem) const
@@ -172,7 +174,11 @@ public: // data access interface
 
   /// Get reference to property vector (be careful, improper usage, e.g. resizing, may crash OpenMesh!!!)
   vector_type& data_vector() {
+    return data_;
+  }
 
+  /// Const access to property vector
+  const vector_type& data_vector() const {
     return data_;
   }
 
@@ -206,10 +212,9 @@ private:
 //-----------------------------------------------------------------------------
 
 
-/** \class PropertyT<bool> Property.hh <OpenMesh/Core/Utils/PropertyT.hh>
+/** Property specialization for bool type. 
 
-  Property specialization for bool type. The data will be stored as
-  a bitset.
+  The data will be stored as a bitset.
  */
 template <>
 class PropertyT<bool> : public BaseProperty
@@ -235,6 +240,8 @@ public: // inherited from BaseProperty
   virtual void push_back()        { data_.push_back(bool()); }
   virtual void swap(size_t _i0, size_t _i1)
   { bool t(data_[_i0]); data_[_i0]=data_[_i1]; data_[_i1]=t; }
+  virtual void copy(size_t _i0, size_t _i1)
+  { data_[_i1] = data_[_i0]; }
 
 public:
 
@@ -333,6 +340,16 @@ public:
 
 public:
 
+  /// Get reference to property vector (be careful, improper usage, e.g. resizing, may crash OpenMesh!!!)
+  vector_type& data_vector() {
+    return data_;
+  }
+
+  /// Const access to property vector
+  const vector_type& data_vector() const {
+    return data_;
+  }
+
   /// Access the i'th element. No range check is performed!
   reference operator[](int _idx)
   {
@@ -364,9 +381,7 @@ private:
 //-----------------------------------------------------------------------------
 
 
-/** \class PropertyT<std::string> Property.hh <OpenMesh/Core/Utils/PropertyT.hh>
-
-  Property specialization for std::string type.
+/** Property specialization for std::string type.
 */
 template <>
 class PropertyT<std::string> : public BaseProperty
@@ -394,6 +409,8 @@ public: // inherited from BaseProperty
   virtual void swap(size_t _i0, size_t _i1) {
     std::swap(data_[_i0], data_[_i1]);
   }
+  virtual void copy(size_t _i0, size_t _i1)
+  { data_[_i1] = data_[_i0]; }
 
 public:
 
@@ -440,8 +457,6 @@ public:
     PropertyT<value_type>* p = new PropertyT<value_type>( *this );
     return p;
   }
-
-
 private:
 
   vector_type data_;

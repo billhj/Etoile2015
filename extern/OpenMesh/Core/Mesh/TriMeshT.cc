@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -65,6 +65,21 @@ namespace OpenMesh {
 
 
 //== IMPLEMENTATION ==========================================================
+
+template <class Kernel>
+typename TriMeshT<Kernel>::Normal
+TriMeshT<Kernel>::
+calc_face_normal(FaceHandle _fh) const
+{
+  assert(this->halfedge_handle(_fh).is_valid());
+  ConstFaceVertexIter fv_it(this->cfv_iter(_fh));
+
+  const Point& p0(this->point(*fv_it));  ++fv_it;
+  const Point& p1(this->point(*fv_it));  ++fv_it;
+  const Point& p2(this->point(*fv_it));
+
+  return PolyMesh::calc_face_normal(p0, p1, p2);
+}
 
 //=============================================================================
 } // namespace OpenMesh

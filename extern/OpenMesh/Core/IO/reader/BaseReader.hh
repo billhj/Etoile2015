@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 221 $                                                         *
- *   $Date: 2009-11-17 14:54:16 +0100 (Di, 17. Nov 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -57,6 +57,8 @@
 // STD C++
 #include <iostream>
 #include <string>
+#include <cctype>
+#include <functional>
 
 // OpenMesh
 #include <OpenMesh/Core/System/config.h>
@@ -81,7 +83,7 @@ namespace IO {
    data structure by the means of a BaseImporter derivative.
    All reader modules must be derived from this class.
 */
-class BaseReader
+class OPENMESHDLLEXPORT BaseReader
 {
 public:
 
@@ -113,7 +115,9 @@ public:
 		
  /** Reads a mesh given by a std::stream. This method usually uses the same stream reading method
     that read uses. Options can be passed via _opt. After execution _opt contains the Options
-      that were available
+      that were available.
+
+      Please make sure that if _is is std::ifstream, the correct std::ios_base::openmode flags are set. 
   */
   virtual bool read(std::istream& _is, 
 		    BaseImporter& _bi,
@@ -130,6 +134,43 @@ protected:
   bool check_extension(const std::string& _fname, 
 		       const std::string& _ext) const;
 };
+
+
+/** \brief Trim left whitespace
+ *
+ * Removes whitespace at the beginning of the string
+ *
+ * @param _string input string
+ * @return trimmed string
+ */
+static inline std::string &left_trim(std::string &_string) {
+  _string.erase(_string.begin(), std::find_if(_string.begin(), _string.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+  return _string;
+}
+
+/** \brief Trim right whitespace
+ *
+ * Removes whitespace at the end of the string
+ *
+ * @param _string input string
+ * @return trimmed string
+ */
+static inline std::string &right_trim(std::string &_string) {
+  _string.erase(std::find_if(_string.rbegin(), _string.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), _string.end());
+  return _string;
+}
+
+/** \brief Trim whitespace
+ *
+ * Removes whitespace at the beginning and end of the string
+ *
+ * @param _string input string
+ * @return trimmed string
+ */
+static inline std::string &trim(std::string &_string) {
+  return left_trim(right_trim(_string));
+}
+
 
 
 //=============================================================================

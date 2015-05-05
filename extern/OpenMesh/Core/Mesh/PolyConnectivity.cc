@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -51,14 +51,15 @@ const PolyConnectivity::EdgeHandle      PolyConnectivity::InvalidEdgeHandle;
 const PolyConnectivity::FaceHandle      PolyConnectivity::InvalidFaceHandle;
 
 //-----------------------------------------------------------------------------
+
 PolyConnectivity::HalfedgeHandle
 PolyConnectivity::find_halfedge(VertexHandle _start_vh, VertexHandle _end_vh ) const
 {
   assert(_start_vh.is_valid() && _end_vh.is_valid());
 
-  for (ConstVertexVertexIter vvIt=cvv_iter(_start_vh); vvIt; ++vvIt)
-    if (vvIt.handle() == _end_vh)
-      return vvIt.current_halfedge_handle();
+  for (ConstVertexOHalfedgeIter voh_it = cvoh_iter(_start_vh); voh_it.is_valid(); ++voh_it)
+    if (to_vertex_handle(*voh_it) == _end_vh)
+      return *voh_it;
 
   return InvalidHalfedgeHandle;
 }
@@ -66,14 +67,14 @@ PolyConnectivity::find_halfedge(VertexHandle _start_vh, VertexHandle _end_vh ) c
 
 bool PolyConnectivity::is_boundary(FaceHandle _fh, bool _check_vertex) const
 {
-  for (ConstFaceEdgeIter cfeit = cfe_iter( _fh ); cfeit; ++cfeit)
-      if (is_boundary( cfeit.handle() ) )
+  for (ConstFaceEdgeIter cfeit = cfe_iter( _fh ); cfeit.is_valid(); ++cfeit)
+      if (is_boundary( *cfeit ) )
         return true;
 
   if (_check_vertex)
   {
-      for (ConstFaceVertexIter cfvit = cfv_iter( _fh ); cfvit; ++cfvit)
-        if (is_boundary( cfvit.handle() ) )
+      for (ConstFaceVertexIter cfvit = cfv_iter( _fh ); cfvit.is_valid(); ++cfvit)
+        if (is_boundary( *cfvit ) )
             return true;
   }
   return false;
@@ -88,9 +89,9 @@ bool PolyConnectivity::is_manifold(VertexHandle _vh) const
     boundary halfedge, the vertex is non-manifold. */
 
   ConstVertexOHalfedgeIter vh_it(*this, _vh);
-  if (vh_it)
-    for (++vh_it; vh_it; ++vh_it)
-        if (is_boundary(vh_it.handle()))
+  if (vh_it.is_valid())
+    for (++vh_it; vh_it.is_valid(); ++vh_it)
+        if (is_boundary(*vh_it))
           return false;
   return true;
 }
@@ -98,51 +99,37 @@ bool PolyConnectivity::is_manifold(VertexHandle _vh) const
 //-----------------------------------------------------------------------------
 void PolyConnectivity::adjust_outgoing_halfedge(VertexHandle _vh)
 {
-  for (ConstVertexOHalfedgeIter vh_it=cvoh_iter(_vh); vh_it; ++vh_it)
+  for (ConstVertexOHalfedgeIter vh_it=cvoh_iter(_vh); vh_it.is_valid(); ++vh_it)
   {
-    if (is_boundary(vh_it.handle()))
+    if (is_boundary(*vh_it))
     {
-      set_halfedge_handle(_vh, vh_it.handle());
+      set_halfedge_handle(_vh, *vh_it);
       break;
     }
   }
 }
 
 //-----------------------------------------------------------------------------
-namespace
-{
-template <class _Handle>
-struct NextCacheEntryT : public std::pair<_Handle, _Handle>
-{
-  typedef std::pair<_Handle, _Handle> Base;
-
-  NextCacheEntryT(_Handle _heh0, _Handle _heh1)
-    : Base(_heh0, _heh1)
-  {
-    assert(_heh0.is_valid());
-    assert(_heh1.is_valid());
-  }
-};
-}
 
 PolyConnectivity::FaceHandle
-PolyConnectivity::add_face(const VertexHandle* _vertex_handles, uint _vhs_size)
+PolyConnectivity::add_face(const VertexHandle* _vertex_handles, size_t _vhs_size)
 {
   VertexHandle                   vh;
-  uint                           i, ii, n(_vhs_size), id;
-  std::vector<HalfedgeHandle>    halfedge_handles(n);
-  std::vector<bool>              is_new(n), needs_adjust(n, false);
+  size_t                         i, ii, n(_vhs_size);
   HalfedgeHandle                 inner_next, inner_prev,
                                  outer_next, outer_prev,
                                  boundary_next, boundary_prev,
                                  patch_start, patch_end;
 
-  // cache for set_next_halfedge and vertex' set_halfedge
-  typedef NextCacheEntryT<HalfedgeHandle>   NextCacheEntry;
-  typedef std::vector<NextCacheEntry>       NextCache;
 
-  NextCache    next_cache;
-  next_cache.reserve(3*n);
+  // Check sufficient working storage available
+  if (edgeData_.size() < n)
+  {
+    edgeData_.resize(n);
+    next_cache_.resize(6*n);
+  }
+  next_cache_count_ = 0;
+
   // don't allow degenerated faces
   assert (n > 2);
 
@@ -155,11 +142,13 @@ PolyConnectivity::add_face(const VertexHandle* _vertex_handles, uint _vhs_size)
       return InvalidFaceHandle;
     }
 
-    halfedge_handles[i] = find_halfedge(_vertex_handles[i],
-                                        _vertex_handles[ii]);
-    is_new[i] = !halfedge_handles[i].is_valid();
+    // Initialise edge attributes
+    edgeData_[i].halfedge_handle = find_halfedge(_vertex_handles[i],
+                                                 _vertex_handles[ii]);
+    edgeData_[i].is_new = !edgeData_[i].halfedge_handle.is_valid();
+    edgeData_[i].needs_adjust = false;
 
-    if (!is_new[i] && !is_boundary(halfedge_handles[i]))
+    if (!edgeData_[i].is_new && !is_boundary(edgeData_[i].halfedge_handle))
     {
       omerr() << "PolyMeshT::add_face: complex edge\n";
       return InvalidFaceHandle;
@@ -169,10 +158,11 @@ PolyConnectivity::add_face(const VertexHandle* _vertex_handles, uint _vhs_size)
   // re-link patches if necessary
   for (i=0, ii=1; i<n; ++i, ++ii, ii%=n)
   {
-    if (!is_new[i] && !is_new[ii])
+    if (!edgeData_[i].is_new && !edgeData_[ii].is_new)
     {
-      inner_prev = halfedge_handles[i];
-      inner_next = halfedge_handles[ii];
+      inner_prev = edgeData_[i].halfedge_handle;
+      inner_next = edgeData_[ii].halfedge_handle;
+
 
       if (next_halfedge_handle(inner_prev) != inner_next)
       {
@@ -201,51 +191,66 @@ PolyConnectivity::add_face(const VertexHandle* _vertex_handles, uint _vhs_size)
         patch_start = next_halfedge_handle(inner_prev);
         patch_end   = prev_halfedge_handle(inner_next);
 
+        assert(boundary_prev.is_valid());
+        assert(patch_start.is_valid());
+        assert(patch_end.is_valid());
+        assert(boundary_next.is_valid());
+        assert(inner_prev.is_valid());
+        assert(inner_next.is_valid());
+
         // relink
-        next_cache.push_back(NextCacheEntry(boundary_prev, patch_start));
-        next_cache.push_back(NextCacheEntry(patch_end, boundary_next));
-        next_cache.push_back(NextCacheEntry(inner_prev, inner_next));
+        next_cache_[next_cache_count_++] = std::make_pair(boundary_prev, patch_start);
+        next_cache_[next_cache_count_++] = std::make_pair(patch_end, boundary_next);
+        next_cache_[next_cache_count_++] = std::make_pair(inner_prev, inner_next);
       }
     }
   }
 
   // create missing edges
   for (i=0, ii=1; i<n; ++i, ++ii, ii%=n)
-    if (is_new[i])
-      halfedge_handles[i] = new_edge(_vertex_handles[i], _vertex_handles[ii]);
+    if (edgeData_[i].is_new)
+      edgeData_[i].halfedge_handle = new_edge(_vertex_handles[i], _vertex_handles[ii]);
 
   // create the face
   FaceHandle fh(new_face());
-  set_halfedge_handle(fh, halfedge_handles[n-1]);
+  set_halfedge_handle(fh, edgeData_[n-1].halfedge_handle);
 
   // setup halfedges
   for (i=0, ii=1; i<n; ++i, ++ii, ii%=n)
   {
     vh         = _vertex_handles[ii];
-    inner_prev = halfedge_handles[i];
-    inner_next = halfedge_handles[ii];
 
-    id = 0;
-    if (is_new[i])  id |= 1;
-    if (is_new[ii]) id |= 2;
+    inner_prev = edgeData_[i].halfedge_handle;
+    inner_next = edgeData_[ii].halfedge_handle;
+    assert(inner_prev.is_valid());
+    assert(inner_next.is_valid());
+
+    size_t id = 0;
+    if (edgeData_[i].is_new)  id |= 1;
+    if (edgeData_[ii].is_new) id |= 2;
+
 
     if (id)
     {
       outer_prev = opposite_halfedge_handle(inner_next);
       outer_next = opposite_halfedge_handle(inner_prev);
+      assert(outer_prev.is_valid());
+      assert(outer_next.is_valid());
 
       // set outer links
       switch (id)
       {
         case 1: // prev is new, next is old
           boundary_prev = prev_halfedge_handle(inner_next);
-          next_cache.push_back(NextCacheEntry(boundary_prev, outer_next));
+          assert(boundary_prev.is_valid());
+          next_cache_[next_cache_count_++] = std::make_pair(boundary_prev, outer_next);
           set_halfedge_handle(vh, outer_next);
           break;
 
         case 2: // next is new, prev is old
           boundary_next = next_halfedge_handle(inner_prev);
-          next_cache.push_back(NextCacheEntry(outer_prev, boundary_next));
+          assert(boundary_next.is_valid());
+          next_cache_[next_cache_count_++] = std::make_pair(outer_prev, boundary_next);
           set_halfedge_handle(vh, boundary_next);
           break;
 
@@ -253,38 +258,195 @@ PolyConnectivity::add_face(const VertexHandle* _vertex_handles, uint _vhs_size)
           if (!halfedge_handle(vh).is_valid())
           {
             set_halfedge_handle(vh, outer_next);
-            next_cache.push_back(NextCacheEntry(outer_prev, outer_next));
+            next_cache_[next_cache_count_++] = std::make_pair(outer_prev, outer_next);
           }
           else
           {
             boundary_next = halfedge_handle(vh);
             boundary_prev = prev_halfedge_handle(boundary_next);
-            next_cache.push_back(NextCacheEntry(boundary_prev, outer_next));
-            next_cache.push_back(NextCacheEntry(outer_prev, boundary_next));
+            assert(boundary_prev.is_valid());
+            assert(boundary_next.is_valid());
+            next_cache_[next_cache_count_++] = std::make_pair(boundary_prev, outer_next);
+            next_cache_[next_cache_count_++] = std::make_pair(outer_prev, boundary_next);
           }
           break;
       }
 
       // set inner link
-      next_cache.push_back(NextCacheEntry(inner_prev, inner_next));
+      next_cache_[next_cache_count_++] = std::make_pair(inner_prev, inner_next);
     }
-    else needs_adjust[ii] = (halfedge_handle(vh) == inner_next);
+    else edgeData_[ii].needs_adjust = (halfedge_handle(vh) == inner_next);
+
 
     // set face handle
-    set_face_handle(halfedge_handles[i], fh);
+    set_face_handle(edgeData_[i].halfedge_handle, fh);
   }
 
   // process next halfedge cache
-  NextCache::const_iterator  ncIt(next_cache.begin()), ncEnd(next_cache.end());
-  for (; ncIt != ncEnd; ++ncIt)
-    set_next_halfedge_handle(ncIt->first, ncIt->second);
+  for (i = 0; i < next_cache_count_; ++i)
+    set_next_halfedge_handle(next_cache_[i].first, next_cache_[i].second);
+
 
   // adjust vertices' halfedge handle
   for (i=0; i<n; ++i)
-    if (needs_adjust[i])
+    if (edgeData_[i].needs_adjust)
       adjust_outgoing_halfedge(_vertex_handles[i]);
 
   return fh;
+}
+
+//-----------------------------------------------------------------------------
+
+FaceHandle PolyConnectivity::add_face(VertexHandle _vh0, VertexHandle _vh1, VertexHandle _vh2, VertexHandle _vh3)
+{
+  VertexHandle vhs[4] = { _vh0, _vh1, _vh2, _vh3 };
+  return add_face(vhs, 4);
+}
+
+//-----------------------------------------------------------------------------
+
+FaceHandle PolyConnectivity::add_face(VertexHandle _vh0, VertexHandle _vh1, VertexHandle _vh2)
+{
+  VertexHandle vhs[3] = { _vh0, _vh1, _vh2 };
+  return add_face(vhs, 3);
+}
+
+//-----------------------------------------------------------------------------
+
+FaceHandle PolyConnectivity::add_face(const std::vector<VertexHandle>& _vhandles)
+{ return add_face(&_vhandles.front(), _vhandles.size()); }
+
+
+//-----------------------------------------------------------------------------
+bool PolyConnectivity::is_collapse_ok(HalfedgeHandle v0v1)
+{
+  //is edge already deleteed?
+  if (status(edge_handle(v0v1)).deleted())
+  {
+    return false;
+  }
+
+  HalfedgeHandle v1v0(opposite_halfedge_handle(v0v1));
+  VertexHandle v0(to_vertex_handle(v1v0));
+  VertexHandle v1(to_vertex_handle(v0v1));  
+
+  bool v0v1_triangle = false;
+  bool v1v0_triangle = false;
+  
+  if (!is_boundary(v0v1))
+    v0v1_triangle = valence(face_handle(v0v1)) == 3;
+  
+  if (!is_boundary(v1v0))
+    v1v0_triangle = valence(face_handle(v1v0)) == 3;
+
+  //in a quadmesh we dont have the "next" or "previous" vhandle, so we need to look at previous and next on both sides
+  //VertexHandle v_01_p = from_vertex_handle(prev_halfedge_handle(v0v1));
+  VertexHandle v_01_n = to_vertex_handle(next_halfedge_handle(v0v1));  
+
+  //VertexHandle v_10_p = from_vertex_handle(prev_halfedge_handle(v1v0));
+  VertexHandle v_10_n = to_vertex_handle(next_halfedge_handle(v1v0));
+
+  //are the vertices already deleted ?
+  if (status(v0).deleted() || status(v1).deleted())
+  {
+    return false;
+  }
+
+  //the edges v1-vl and vl-v0 must not be both boundary edges
+  //this test makes only sense in a polymesh if the side face is a triangle
+  if (!is_boundary(v0v1))
+  {
+    if (v0v1_triangle)
+    {
+      //VertexHandle vl = to_vertex_handle(next_halfedge_handle(v0v1));
+
+      HalfedgeHandle h1 = next_halfedge_handle(v0v1);
+      HalfedgeHandle h2 = next_halfedge_handle(h1);
+      if (is_boundary(opposite_halfedge_handle(h1)) && is_boundary(opposite_halfedge_handle(h2)))
+        return false;
+    }
+  }
+
+  //the edges v0-vr and vr-v1 must not be both boundary edges
+  //this test makes only sense in a polymesh if the side face is a triangle
+  if (!is_boundary(v1v0))
+  {
+    if (v1v0_triangle)
+    {
+      //VertexHandle vr = to_vertex_handle(next_halfedge_handle(v1v0));
+
+      HalfedgeHandle h1 = next_halfedge_handle(v1v0);
+      HalfedgeHandle h2 = next_halfedge_handle(h1);
+      if (is_boundary(opposite_halfedge_handle(h1)) && is_boundary(opposite_halfedge_handle(h2)))
+        return false;
+    }
+  }
+
+  // edge between two boundary vertices should be a boundary edge
+  if ( is_boundary(v0) && is_boundary(v1) && !is_boundary(v0v1) && !is_boundary(v1v0))
+    return false;
+  
+  VertexVertexIter vv_it;
+  // test intersection of the one-rings of v0 and v1
+  for (vv_it = vv_iter(v0); vv_it.is_valid(); ++vv_it)
+  {
+    status(*vv_it).set_tagged(false);
+  }
+
+  for (vv_it = vv_iter(v1); vv_it.is_valid(); ++vv_it)
+  {
+    status(*vv_it).set_tagged(true);
+  }
+
+  for (vv_it = vv_iter(v0); vv_it.is_valid(); ++vv_it)
+  {
+    if (status(*vv_it).tagged() &&
+      !(*vv_it == v_01_n && v0v1_triangle) &&
+      !(*vv_it == v_10_n && v1v0_triangle)
+      )
+    {
+      return false;
+    }
+  }
+  
+  //test for a face on the backside/other side that might degenerate
+  if (v0v1_triangle)
+  {
+    HalfedgeHandle one, two;
+    one = next_halfedge_handle(v0v1);
+    two = next_halfedge_handle(one);
+    
+    one = opposite_halfedge_handle(one);
+    two = opposite_halfedge_handle(two);
+    
+    if (face_handle(one) == face_handle(two) && valence(face_handle(one)) != 3)
+    {
+      return false;
+    }
+  }
+  
+  if (v1v0_triangle)
+  {
+    HalfedgeHandle one, two;
+    one = next_halfedge_handle(v1v0);
+    two = next_halfedge_handle(one);
+    
+    one = opposite_halfedge_handle(one);
+    two = opposite_halfedge_handle(two);
+    
+    if (face_handle(one) == face_handle(two) && valence(face_handle(one)) != 3)
+    {
+      return false;
+    }
+  }
+
+  if (status(*vv_it).tagged() && v_01_n == v_10_n && v0v1_triangle && v1v0_triangle)
+  {
+    return false;
+  }
+
+  // passed all tests
+  return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -294,8 +456,8 @@ void PolyConnectivity::delete_vertex(VertexHandle _vh, bool _delete_isolated_ver
   // store incident faces
   std::vector<FaceHandle> face_handles;
   face_handles.reserve(8);
-  for (VFIter vf_it(vf_iter(_vh)); vf_it; ++vf_it)
-    face_handles.push_back(vf_it.handle());
+  for (VFIter vf_it(vf_iter(_vh)); vf_it.is_valid(); ++vf_it)
+    face_handles.push_back(*vf_it);
 
 
   // delete collected faces
@@ -317,6 +479,22 @@ void PolyConnectivity::delete_edge(EdgeHandle _eh, bool _delete_isolated_vertice
 
   if (fh0.is_valid())  delete_face(fh0, _delete_isolated_vertices);
   if (fh1.is_valid())  delete_face(fh1, _delete_isolated_vertices);
+
+  // If there is no face, we delete the edge
+  // here
+  if ( ! fh0.is_valid() && !fh1.is_valid()) {
+    // mark edge deleted if the mesh has a edge status
+    if ( has_edge_status() )
+      status(_eh).set_deleted(true);
+
+    // mark corresponding halfedges as deleted
+    // As the deleted edge is boundary,
+    // all corresponding halfedges will also be deleted.
+    if ( has_halfedge_status() ) {
+      status(halfedge_handle(_eh, 0)).set_deleted(true);
+      status(halfedge_handle(_eh, 1)).set_deleted(true);
+    }
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -346,9 +524,9 @@ void PolyConnectivity::delete_face(FaceHandle _fh, bool _delete_isolated_vertice
   //   2) collect all boundary halfedges, set them deleted
   //   3) store vertex handles
   HalfedgeHandle hh;
-  for (FaceHalfedgeIter fh_it(fh_iter(_fh)); fh_it; ++fh_it)
+  for (FaceHalfedgeIter fh_it(fh_iter(_fh)); fh_it.is_valid(); ++fh_it)
   {
-    hh = fh_it.handle();
+    hh = *fh_it;
 
     set_boundary(hh);//set_face_handle(hh, InvalidFaceHandle);
 
@@ -360,6 +538,7 @@ void PolyConnectivity::delete_face(FaceHandle _fh, bool _delete_isolated_vertice
 
 
   // delete all collected (half)edges
+  // these edges were all boundary
   // delete isolated vertices (if _delete_isolated_vertices is true)
   if (!deleted_edges.empty())
   {
@@ -384,8 +563,18 @@ void PolyConnectivity::delete_face(FaceHandle _fh, bool _delete_isolated_vertice
       set_next_halfedge_handle(prev0, next1);
       set_next_halfedge_handle(prev1, next0);
 
-      // mark edge deleted
-      status(*del_it).set_deleted(true);
+      // mark edge deleted if the mesh has a edge status
+      if ( has_edge_status() )
+    	 status(*del_it).set_deleted(true);
+
+
+      // mark corresponding halfedges as deleted
+      // As the deleted edge is boundary,
+      // all corresponding halfedges will also be deleted.
+      if ( has_halfedge_status() ) {
+        status(h0).set_deleted(true);
+        status(h1).set_deleted(true);
+      }
 
       // update v0
       if (halfedge_handle(v0) == h1)
@@ -420,6 +609,102 @@ void PolyConnectivity::delete_face(FaceHandle _fh, bool _delete_isolated_vertice
                                       v_end(vhandles.end());
   for (; v_it!=v_end; ++v_it)
     adjust_outgoing_halfedge(*v_it);
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::VertexIter PolyConnectivity::vertices_begin()
+{
+  return VertexIter(*this, VertexHandle(0));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::ConstVertexIter PolyConnectivity::vertices_begin() const
+{
+  return ConstVertexIter(*this, VertexHandle(0));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::VertexIter PolyConnectivity::vertices_end()
+{
+  return VertexIter(*this, VertexHandle( int(n_vertices() ) ));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::ConstVertexIter PolyConnectivity::vertices_end() const
+{
+  return ConstVertexIter(*this, VertexHandle( int(n_vertices()) ));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::HalfedgeIter PolyConnectivity::halfedges_begin()
+{
+  return HalfedgeIter(*this, HalfedgeHandle(0));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::ConstHalfedgeIter PolyConnectivity::halfedges_begin() const
+{
+  return ConstHalfedgeIter(*this, HalfedgeHandle(0));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::HalfedgeIter PolyConnectivity::halfedges_end()
+{
+  return HalfedgeIter(*this, HalfedgeHandle(int(n_halfedges())));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::ConstHalfedgeIter PolyConnectivity::halfedges_end() const
+{
+  return ConstHalfedgeIter(*this, HalfedgeHandle(int(n_halfedges())));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::EdgeIter PolyConnectivity::edges_begin()
+{
+  return EdgeIter(*this, EdgeHandle(0));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::ConstEdgeIter PolyConnectivity::edges_begin() const
+{
+  return ConstEdgeIter(*this, EdgeHandle(0));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::EdgeIter PolyConnectivity::edges_end()
+{
+  return EdgeIter(*this, EdgeHandle(int(n_edges())));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::ConstEdgeIter PolyConnectivity::edges_end() const
+{
+  return ConstEdgeIter(*this, EdgeHandle(int(n_edges())));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::FaceIter PolyConnectivity::faces_begin()
+{
+  return FaceIter(*this, FaceHandle(0));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::ConstFaceIter PolyConnectivity::faces_begin() const
+{
+  return ConstFaceIter(*this, FaceHandle(0));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::FaceIter PolyConnectivity::faces_end()
+{
+  return FaceIter(*this, FaceHandle(int(n_faces())));
+}
+
+//-----------------------------------------------------------------------------
+PolyConnectivity::ConstFaceIter PolyConnectivity::faces_end() const
+{
+  return ConstFaceIter(*this, FaceHandle(int(n_faces())));
 }
 
 //-----------------------------------------------------------------------------
@@ -460,8 +745,8 @@ void PolyConnectivity::collapse_edge(HalfedgeHandle _hh)
 
 
   // halfedge -> vertex
-  for (VertexIHalfedgeIter vih_it(vih_iter(vo)); vih_it; ++vih_it)
-    set_vertex_handle(vih_it.handle(), vh);
+  for (VertexIHalfedgeIter vih_it(vih_iter(vo)); vih_it.is_valid(); ++vih_it)
+    set_vertex_handle(*vih_it, vh);
 
 
   // halfedge -> halfedge
@@ -540,7 +825,7 @@ bool PolyConnectivity::is_simple_link(EdgeHandle _eh) const
   HalfedgeHandle heh0 = halfedge_handle(_eh, 0);
   HalfedgeHandle heh1 = halfedge_handle(_eh, 1);
   
-  FaceHandle fh0 = face_handle(heh0);//fh0 or fh1 might be a invalid,
+  //FaceHandle fh0 = face_handle(heh0);//fh0 or fh1 might be a invalid,
   FaceHandle fh1 = face_handle(heh1);//i.e., representing the boundary
   
   HalfedgeHandle next_heh = next_halfedge_handle(heh0);
@@ -559,11 +844,11 @@ bool PolyConnectivity::is_simple_link(EdgeHandle _eh) const
 bool PolyConnectivity::is_simply_connected(FaceHandle _fh) const
 {
   std::set<FaceHandle> nb_fhs;
-  for (ConstFaceFaceIter cff_it = cff_iter(_fh); cff_it; ++cff_it)
+  for (ConstFaceFaceIter cff_it = cff_iter(_fh); cff_it.is_valid(); ++cff_it)
   {
-    if (nb_fhs.find(cff_it) == nb_fhs.end())
+    if (nb_fhs.find(*cff_it) == nb_fhs.end())
     {
-      nb_fhs.insert(cff_it);
+      nb_fhs.insert(*cff_it);
     }
     else
     {//there is more than one link
@@ -625,9 +910,9 @@ PolyConnectivity::remove_edge(EdgeHandle _eh)
   {//rem_fh is the face at heh1
     set_halfedge_handle(rem_fh, prev_heh0);
   }
-  for (FaceHalfedgeIter fh_it = fh_iter(rem_fh); fh_it; ++fh_it)
+  for (FaceHalfedgeIter fh_it = fh_iter(rem_fh); fh_it.is_valid(); ++fh_it)
   {//set the face handle of the halfedges of del_fh to point to rem_fh
-    set_face_handle(fh_it, rem_fh);  
+    set_face_handle(*fh_it, rem_fh);
   } 
   
   status(_eh).set_deleted(true);  
@@ -667,9 +952,9 @@ void PolyConnectivity::reinsert_edge(EdgeHandle _eh)
   set_next_halfedge_handle(prev_heh1, heh1);
   set_prev_halfedge_handle(next_heh1, heh1);
   
-  for (FaceHalfedgeIter fh_it = fh_iter(del_fh); fh_it; ++fh_it)
+  for (FaceHalfedgeIter fh_it = fh_iter(del_fh); fh_it.is_valid(); ++fh_it)
   {//reassign halfedges to del_fh  
-    set_face_handle(fh_it, del_fh);
+    set_face_handle(*fh_it, del_fh);
   }
    
   if (face_handle(halfedge_handle(rem_fh)) == del_fh)
@@ -707,9 +992,9 @@ PolyConnectivity::insert_edge(HalfedgeHandle _prev_heh, HalfedgeHandle _next_heh
   //now set the face handles - the new face is assigned to heh0
   FaceHandle new_fh = new_face();
   set_halfedge_handle(new_fh, heh0);
-  for (FaceHalfedgeIter fh_it = fh_iter(new_fh); fh_it; ++fh_it)
+  for (FaceHalfedgeIter fh_it = fh_iter(new_fh); fh_it.is_valid(); ++fh_it)
   {
-    set_face_handle(fh_it, new_fh);
+    set_face_handle(*fh_it, new_fh);
   }  
   FaceHandle old_fh = face_handle(next_prev_heh);
   set_face_handle(heh1, old_fh);   
@@ -776,22 +1061,12 @@ void PolyConnectivity::triangulate()
   */
   FaceIter f_it(faces_begin()), f_end(faces_end());
   for (; f_it!=f_end; ++f_it)
-    triangulate(f_it);
+    triangulate(*f_it);
 }
 
 //-----------------------------------------------------------------------------
 void PolyConnectivity::split(FaceHandle fh, VertexHandle vh)
 {
-  /*
-    Split an arbitrary face into triangles by connecting
-    each vertex of fh to vh.
-
-    - fh will remain valid (it will become one of the
-      triangles)
-    - the halfedge handles of the new triangles will
-      point to the old halfeges
-  */
-
   HalfedgeHandle hend = halfedge_handle(fh);
   HalfedgeHandle hh   = next_halfedge_handle(hend);
 
@@ -832,11 +1107,22 @@ void PolyConnectivity::split(FaceHandle fh, VertexHandle vh)
   set_halfedge_handle(vh, hold);
 }
 
+
+void PolyConnectivity::split_copy(FaceHandle fh, VertexHandle vh) {
+
+  // Split the given face (fh will still be valid)
+  split(fh, vh);
+
+  // Copy the property of the original face to all new faces
+  for(VertexFaceIter vf_it =  vf_iter(vh); vf_it.is_valid(); ++vf_it)
+    copy_all_properties(fh, *vf_it);
+}
+
 //-----------------------------------------------------------------------------
 uint PolyConnectivity::valence(VertexHandle _vh) const
 {
   uint count(0);
-  for (ConstVertexVertexIter vv_it=cvv_iter(_vh); vv_it; ++vv_it)
+  for (ConstVertexVertexIter vv_it=cvv_iter(_vh); vv_it.is_valid(); ++vv_it)
     ++count;
   return count;
 }
@@ -845,10 +1131,88 @@ uint PolyConnectivity::valence(VertexHandle _vh) const
 uint PolyConnectivity::valence(FaceHandle _fh) const
 {
   uint count(0);
-  for (ConstFaceVertexIter fv_it=cfv_iter(_fh); fv_it; ++fv_it)
+  for (ConstFaceVertexIter fv_it=cfv_iter(_fh); fv_it.is_valid(); ++fv_it)
     ++count;
   return count;
 }
 
-}//namespace OpenMesh
+//-----------------------------------------------------------------------------
+void PolyConnectivity::split_edge(EdgeHandle _eh, VertexHandle _vh)
+{
+  HalfedgeHandle h0 = halfedge_handle(_eh, 0);
+  HalfedgeHandle h1 = halfedge_handle(_eh, 1);
+  
+  VertexHandle vfrom = from_vertex_handle(h0);
+
+  HalfedgeHandle ph0 = prev_halfedge_handle(h0);
+  //HalfedgeHandle ph1 = prev_halfedge_handle(h1);
+  
+  //HalfedgeHandle nh0 = next_halfedge_handle(h0);
+  HalfedgeHandle nh1 = next_halfedge_handle(h1);
+  
+  bool boundary0 = is_boundary(h0);
+  bool boundary1 = is_boundary(h1);
+  
+  //add the new edge
+  HalfedgeHandle new_e = new_edge(from_vertex_handle(h0), _vh);
+  
+  //fix the vertex of the opposite halfedge
+  set_vertex_handle(h1, _vh);
+  
+  //fix the halfedge connectivity
+  set_next_halfedge_handle(new_e, h0);
+  set_next_halfedge_handle(h1, opposite_halfedge_handle(new_e));
+  
+  set_next_halfedge_handle(ph0, new_e);
+  set_next_halfedge_handle(opposite_halfedge_handle(new_e), nh1);
+  
+//  set_prev_halfedge_handle(new_e, ph0);
+//  set_prev_halfedge_handle(opposite_halfedge_handle(new_e), h1);
+  
+//  set_prev_halfedge_handle(nh1, opposite_halfedge_handle(new_e));
+//  set_prev_halfedge_handle(h0, new_e);
+  
+  if (!boundary0)
+  {
+    set_face_handle(new_e, face_handle(h0));
+  }
+  else
+  {
+    set_boundary(new_e);
+  }
+  
+  if (!boundary1)
+  {
+    set_face_handle(opposite_halfedge_handle(new_e), face_handle(h1));
+  }
+  else
+  {
+    set_boundary(opposite_halfedge_handle(new_e));
+  }
+
+  set_halfedge_handle( _vh, h0 );
+  adjust_outgoing_halfedge( _vh );
+  
+  if (halfedge_handle(vfrom) == h0)
+  {
+    set_halfedge_handle(vfrom, new_e);
+    adjust_outgoing_halfedge( vfrom );
+  }
+}
+
+//-----------------------------------------------------------------------------
+
+void PolyConnectivity::split_edge_copy(EdgeHandle _eh, VertexHandle _vh)
+{
+  // Split the edge (handle is kept!)
+  split_edge(_eh, _vh);
+
+  // Navigate to the new edge
+  EdgeHandle eh0 = edge_handle( next_halfedge_handle( halfedge_handle(_eh, 1) ) );
+
+  // Copy the property from the original to the new edge
+  copy_all_properties(_eh, eh0);
+}
+
+} // namespace OpenMesh
 

@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,15 +34,15 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
 #ifndef LOOPSCHEMEMASKT_HH
 #define LOOPSCHEMEMASKT_HH
 
-#include <math.h>
+#include <cmath>
 #include <vector>
 
 #include <OpenMesh/Core/System/config.h>
@@ -182,7 +182,7 @@ public:
 typedef LoopSchemeMaskT<double, 100>        LoopSchemeMaskDouble;
 typedef SingletonT<LoopSchemeMaskDouble>    LoopSchemeMaskDoubleSingleton;
 
-};//namespace OpenMesh
+}//namespace OpenMesh
 
 #endif//LOOPSCHEMEMASKT_HH
 

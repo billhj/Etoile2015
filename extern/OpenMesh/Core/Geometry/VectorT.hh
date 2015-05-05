@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1193 $                                                         *
+ *   $Date: 2015-01-14 14:11:23 +0100 (Mi, 14 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -46,6 +46,12 @@
 //
 //=============================================================================
 
+// Don't parse this header file with doxygen since
+// for some reason (obviously due to a bug in doxygen,
+// bugreport: https://bugzilla.gnome.org/show_bug.cgi?id=629182)
+// macro expansion and preprocessor defines
+// don't work properly.
+#ifndef DOXYGEN
 
 #ifndef OPENMESH_VECTOR_HH
 #define OPENMESH_VECTOR_HH
@@ -56,8 +62,9 @@
 
 #include <OpenMesh/Core/System/config.h>
 #include <iostream>
-#include <assert.h>
-#include <math.h>
+#include <cmath>
+#include <cassert>
+#include <cstring>
 
 #if defined(__GNUC__) && defined(__SSE__)
 #include <xmmintrin.h>
@@ -171,7 +178,27 @@ template <> struct VectorDataT<float, 4>
 #undef  unroll
 #undef  unroll_comb
 #undef  unroll_csv
+    
+#define DIM                    5
+#define unroll(expr)           expr(0) expr(1) expr(2) expr(3) expr(4)
+#define unroll_comb(expr, op)  expr(0) op expr(1) op expr(2) op expr(3) op expr(4)
+#define unroll_csv(expr)       expr(0), expr(1), expr(2), expr(3), expr(4)
+#include "VectorT_inc.hh"
+#undef  DIM
+#undef  unroll
+#undef  unroll_comb
+#undef  unroll_csv
 
+#define DIM                    6
+#define unroll(expr)           expr(0) expr(1) expr(2) expr(3) expr(4) expr(5)
+#define unroll_comb(expr, op)  expr(0) op expr(1) op expr(2) op expr(3) op expr(4) op expr(5)
+#define unroll_csv(expr)       expr(0), expr(1), expr(2), expr(3), expr(4), expr(5)
+#include "VectorT_inc.hh"
+#undef  DIM
+#undef  unroll
+#undef  unroll_comb
+#undef  unroll_csv
+    
 
 #undef  TEMPLATE_HEADER
 #undef  CLASSNAME
@@ -182,8 +209,6 @@ template <> struct VectorDataT<float, 4>
 
 //== FULL TEMPLATE SPECIALIZATIONS ============================================
 #else
-
-#  ifndef DOXY_IGNORE_THIS
 
 /// cross product for Vec3f
 template<>
@@ -207,8 +232,6 @@ VectorT<double,3>::operator%(const VectorT<double,3>& _rhs) const
 		     values_[2]*_rhs.values_[0]-values_[0]*_rhs.values_[2],
 		     values_[0]*_rhs.values_[1]-values_[1]*_rhs.values_[0]);
 }
-
-#  endif // DOXY_IGNORE_THIS
 
 #endif
 
@@ -297,6 +320,8 @@ typedef VectorT<unsigned int,3> Vec3ui;
 typedef VectorT<float,3> Vec3f;
 /** 3-double vector */
 typedef VectorT<double,3> Vec3d;
+/** 3-bool vector */
+typedef VectorT<bool,3> Vec3b;
 
 /** 4-byte signed vector */
 typedef VectorT<signed char,4> Vec4c;
@@ -314,6 +339,23 @@ typedef VectorT<unsigned int,4> Vec4ui;
 typedef VectorT<float,4> Vec4f;
 /** 4-double vector */
 typedef VectorT<double,4> Vec4d;
+
+/** 5-byte signed vector */
+typedef VectorT<signed char, 5> Vec5c;
+/** 5-byte unsigned vector */
+typedef VectorT<unsigned char, 5> Vec5uc;
+/** 5-short signed vector */
+typedef VectorT<signed short int, 5> Vec5s;
+/** 5-short unsigned vector */
+typedef VectorT<unsigned short int, 5> Vec5us;
+/** 5-int signed vector */
+typedef VectorT<signed int, 5> Vec5i;
+/** 5-int unsigned vector */
+typedef VectorT<unsigned int, 5> Vec5ui;
+/** 5-float vector */
+typedef VectorT<float, 5> Vec5f;
+/** 5-double vector */
+typedef VectorT<double, 5> Vec5d;
 
 /** 6-byte signed vector */
 typedef VectorT<signed char,6> Vec6c;
@@ -338,3 +380,4 @@ typedef VectorT<double,6> Vec6d;
 //=============================================================================
 #endif // OPENMESH_VECTOR_HH defined
 //=============================================================================
+#endif // DOXYGEN

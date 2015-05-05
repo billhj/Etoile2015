@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------* 
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *             
- *   $Revision: 137 $                                                         *
- *   $Date: 2009-06-04 10:46:29 +0200 (Do, 04. Jun 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -121,6 +121,94 @@ struct FinalMeshItemsT
   typedef typename Traits::template HalfedgeT<ITraits, Refs>    HalfedgeData;
   typedef typename Traits::template EdgeT<ITraits, Refs>        EdgeData;
   typedef typename Traits::template FaceT<ITraits, Refs>        FaceData;
+};
+
+
+#ifndef DOXY_IGNORE_THIS
+namespace {
+namespace TM {
+template<typename Lhs, typename Rhs> struct TypeEquality;
+template<typename Lhs> struct TypeEquality<Lhs, Lhs> {};
+
+template<typename LhsTraits, typename RhsTraits> struct ItemsEquality {
+    TypeEquality<typename LhsTraits::Point, typename RhsTraits::Point> te1;
+    TypeEquality<typename LhsTraits::Scalar, typename RhsTraits::Scalar> te2;
+    TypeEquality<typename LhsTraits::Normal, typename RhsTraits::Normal> te3;
+    TypeEquality<typename LhsTraits::Color, typename RhsTraits::Color> te4;
+    TypeEquality<typename LhsTraits::TexCoord1D, typename RhsTraits::TexCoord1D> te5;
+    TypeEquality<typename LhsTraits::TexCoord2D, typename RhsTraits::TexCoord2D> te6;
+    TypeEquality<typename LhsTraits::TexCoord3D, typename RhsTraits::TexCoord3D> te7;
+    TypeEquality<typename LhsTraits::TextureIndex, typename RhsTraits::TextureIndex> te8;
+};
+
+} /* namespace TM */
+} /* anonymous namespace */
+#endif
+
+/**
+ * @brief Cast a mesh with different but identical traits into each other.
+ *
+ * Note that there exists a syntactically more convenient global method
+ * mesh_cast().
+ *
+ * Example:
+ * @code{.cpp}
+ * struct TriTraits1 : public OpenMesh::DefaultTraits {
+ *   typedef Vec3d Point;
+ * };
+ * struct TriTraits2 : public OpenMesh::DefaultTraits {
+ *   typedef Vec3d Point;
+ * };
+ * struct TriTraits3 : public OpenMesh::DefaultTraits {
+ *   typedef Vec3f Point;
+ * };
+ *
+ * TriMesh_ArrayKernelT<TriTraits1> a;
+ * TriMesh_ArrayKernelT<TriTraits2> &b = MeshCast<TriMesh_ArrayKernelT<TriTraits2>&, TriMesh_ArrayKernelT<TriTraits1>&>::cast(a); // OK
+ * TriMesh_ArrayKernelT<TriTraits3> &c = MeshCast<TriMesh_ArrayKernelT<TriTraits3>&, TriMesh_ArrayKernelT<TriTraits1>&>::cast(a); // ERROR
+ * @endcode
+ *
+ * @see mesh_cast()
+ *
+ * @param rhs
+ * @return
+ */
+template<typename LhsMeshT, typename RhsMeshT> struct MeshCast;
+
+template<typename LhsMeshT, typename RhsMeshT>
+struct MeshCast<LhsMeshT&, RhsMeshT&> {
+    static LhsMeshT &cast(RhsMeshT &rhs) {
+        (void)sizeof(TM::ItemsEquality<typename LhsMeshT::MeshItemsT, typename RhsMeshT::MeshItemsT>);
+        (void)sizeof(TM::TypeEquality<typename LhsMeshT::ConnectivityT, typename RhsMeshT::ConnectivityT>);
+        return reinterpret_cast<LhsMeshT&>(rhs);
+    }
+};
+
+template<typename LhsMeshT, typename RhsMeshT>
+struct MeshCast<const LhsMeshT&, const RhsMeshT&> {
+    static const LhsMeshT &cast(const RhsMeshT &rhs) {
+        (void)sizeof(TM::ItemsEquality<typename LhsMeshT::MeshItemsT, typename RhsMeshT::MeshItemsT>);
+        (void)sizeof(TM::TypeEquality<typename LhsMeshT::ConnectivityT, typename RhsMeshT::ConnectivityT>);
+        return reinterpret_cast<const LhsMeshT&>(rhs);
+    }
+};
+
+template<typename LhsMeshT, typename RhsMeshT>
+struct MeshCast<LhsMeshT*, RhsMeshT*> {
+    static LhsMeshT *cast(RhsMeshT *rhs) {
+        (void)sizeof(TM::ItemsEquality<typename LhsMeshT::MeshItemsT, typename RhsMeshT::MeshItemsT>);
+        (void)sizeof(TM::TypeEquality<typename LhsMeshT::ConnectivityT, typename RhsMeshT::ConnectivityT>);
+        return reinterpret_cast<LhsMeshT*>(rhs);
+    }
+};
+
+template<typename LhsMeshT, typename RhsMeshT>
+struct MeshCast<const LhsMeshT*, const RhsMeshT*> {
+    static const LhsMeshT *cast(const RhsMeshT *rhs) {
+        (void)sizeof(TM::ItemsEquality<typename LhsMeshT::MeshItemsT, typename RhsMeshT::MeshItemsT>);
+        (void)sizeof(TM::TypeEquality<typename LhsMeshT::ConnectivityT, typename RhsMeshT::ConnectivityT>);
+        return reinterpret_cast<const LhsMeshT*>(rhs);
+    }
 };
 
 

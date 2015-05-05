@@ -1,7 +1,7 @@
 /*===========================================================================*\
  *                                                                           *
  *                               OpenMesh                                    *
- *      Copyright (C) 2001-2009 by Computer Graphics Group, RWTH Aachen      *
+ *      Copyright (C) 2001-2015 by Computer Graphics Group, RWTH Aachen      *
  *                           www.openmesh.org                                *
  *                                                                           *
  *---------------------------------------------------------------------------*
@@ -34,8 +34,8 @@
 
 /*===========================================================================*\
  *                                                                           *
- *   $Revision: 221 $                                                         *
- *   $Date: 2009-11-17 14:54:16 +0100 (Di, 17. Nov 2009) $                   *
+ *   $Revision: 1188 $                                                         *
+ *   $Date: 2015-01-05 16:34:10 +0100 (Mo, 05 Jan 2015) $                   *
  *                                                                           *
 \*===========================================================================*/
 
@@ -89,7 +89,7 @@ class BaseImporter;
 
 */
 
-class _PLYReader_ : public BaseReader
+class OPENMESHDLLEXPORT _PLYReader_ : public BaseReader
 {
 public:
 
@@ -100,38 +100,56 @@ public:
   std::string get_magic()       const { return "PLY"; }
 
   bool read(const std::string& _filename,
-	    BaseImporter& _bi,
-	    Options& _opt);
+        BaseImporter& _bi,
+        Options& _opt);
 
   bool read(std::istream& _is,
-		    BaseImporter& _bi,
-		    Options& _opt);
+            BaseImporter& _bi,
+            Options& _opt);
 
   bool can_u_read(const std::string& _filename) const;
 
   enum ValueType {
-    Unsupported ,
+    Unsupported,
+    ValueTypeINT8, ValueTypeCHAR,
+    ValueTypeUINT8, ValueTypeUCHAR,
+    ValueTypeINT16, ValueTypeSHORT,
+    ValueTypeUINT16, ValueTypeUSHORT,
+    ValueTypeINT32, ValueTypeINT,
+    ValueTypeUINT32, ValueTypeUINT,
     ValueTypeFLOAT32, ValueTypeFLOAT,
-    ValueTypeUINT8, ValueTypeINT32, ValueTypeINT ,
-    ValueTypeUCHAR
+    ValueTypeFLOAT64, ValueTypeDOUBLE
   };
 
 private:
 
   bool can_u_read(std::istream& _is) const;
 
-  bool read_ascii(std::istream& _in, BaseImporter& _bi) const;
-  bool read_binary(std::istream& _in, BaseImporter& _bi, bool swap) const;
+  bool read_ascii(std::istream& _in, BaseImporter& _bi, const Options& _opt) const;
+  bool read_binary(std::istream& _in, BaseImporter& _bi, bool swap, const Options& _opt) const;
 
   float readToFloatValue(ValueType _type , std::fstream& _in) const;
+  void readCustomProperty(std::istream& _in, BaseImporter& _bi, VertexHandle _vh, const std::string& _propName, const ValueType _valueType) const;
 
   void readValue(ValueType _type , std::istream& _in, float& _value) const;
+  void readValue(ValueType _type, std::istream& _in, double& _value) const;
   void readValue(ValueType _type , std::istream& _in, unsigned int& _value) const;
   void readValue(ValueType _type , std::istream& _in, int& _value) const;
 
-  //available options for reading
+  void readInteger(ValueType _type, std::istream& _in, int& _value) const;
+  void readInteger(ValueType _type, std::istream& _in, unsigned int& _value) const;
+
+  /// Read unsupported properties in PLY file
+  void consume_input(std::istream& _in, int _count) const {
+	  _in.read(reinterpret_cast<char*>(&buff[0]), _count);
+  }
+
+  mutable unsigned char buff[8];
+
+  /// Available per file options for reading
   mutable Options options_;
-  //options that the user wants to read
+
+  /// Options that the user wants to read
   mutable Options userOptions_;
 
   mutable unsigned int vertexCount_;
@@ -147,13 +165,25 @@ private:
     XCOORD,YCOORD,ZCOORD,
     TEXX,TEXY,
     COLORRED,COLORGREEN,COLORBLUE,COLORALPHA,
+    XNORM,YNORM,ZNORM, CUSTOM_PROP,
     UNSUPPORTED
   };
 
+  /// Stores sizes of property types
+  mutable std::map<ValueType, int> scalar_size_;
 
-  // number of vertex properties
+  // Number of vertex properties
   mutable unsigned int vertexPropertyCount_;
-  mutable std::map< int , std::pair< VertexProperty, ValueType> > vertexPropertyMap_;
+  struct VertexPropertyInfo
+  {
+    VertexProperty property;
+    ValueType      value;
+    std::string    name;//for custom properties
+    VertexPropertyInfo():property(UNSUPPORTED),value(Unsupported),name(""){}
+    VertexPropertyInfo(VertexProperty _p, ValueType _v):property(_p),value(_v),name(""){}
+    VertexPropertyInfo(VertexProperty _p, ValueType _v, const std::string& _n):property(_p),value(_v),name(_n){}
+  };
+  mutable std::map< int , VertexPropertyInfo > vertexPropertyMap_;
 
 };
 
@@ -163,7 +193,7 @@ private:
 
 /// Declare the single entity of the PLY reader
 extern _PLYReader_  __PLYReaderInstance;
-_PLYReader_&  PLYReader();
+OPENMESHDLLEXPORT _PLYReader_&  PLYReader();
 
 
 //=============================================================================
