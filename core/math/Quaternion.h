@@ -125,10 +125,10 @@ namespace Etoile
 
 		Quaternion &operator =(const Quaternion &q)		
 		{ 
-			this->m_q[0] = m_q[0]; 
-			this->m_q[1] = m_q[1]; 
-			this->m_q[2] = m_q[2];  
-			this->m_q[3] = m_q[3];
+			this->m_q[0] = q.m_q[0]; 
+			this->m_q[1] = q.m_q[1]; 
+			this->m_q[2] = q.m_q[2];  
+			this->m_q[3] = q.m_q[3];
 			return *this; 
 		}
 
@@ -309,7 +309,24 @@ namespace Etoile
 
 
 
-		Vec3<T> rotate(const Vec3<T> & v) const{
+		Vec3<T> rotate(const Vec3<T> & v) const
+		{
+			/*const T q00 = 2.0l * m_q[0] * m_q[0];
+			const T q11 = 2.0l * m_q[1] * m_q[1];
+			const T q22 = 2.0l * m_q[2] * m_q[2];
+
+			const T q01 = 2.0l * m_q[0] * m_q[1];
+			const T q02 = 2.0l * m_q[0] * m_q[2];
+			const T q03 = 2.0l * m_q[0] * m_q[3];
+
+			const T q12 = 2.0l * m_q[1] * m_q[2];
+			const T q13 = 2.0l * m_q[1] * m_q[3];
+
+			const T q23 = 2.0l * m_q[2] * m_q[3];
+
+			return Vec3<T>((1.0 - q11 - q22)*v[0] + (      q01 - q23)*v[1] + (      q02 + q13)*v[2],
+				(      q01 + q23)*v[0] + (1.0 - q22 - q00)*v[1] + (      q12 - q03)*v[2],
+				(      q02 - q13)*v[0] + (      q12 + q03)*v[1] + (1.0 - q11 - q00)*v[2] );*/
 			Vec3<T> vn(v);
 			Quaternion vecQuat, resQuat;
 			vecQuat[0] = vn.x();
@@ -396,7 +413,7 @@ namespace Etoile
 			const T  q13 = 2.0 * m_q[1] * m_q[3];
 
 			const T  q23 = 2.0 * m_q[2] * m_q[3];
-			
+
 			m[0][0] = 1.0 - q11 - q22;
 			m[0][1] =        q01 - q23;
 			m[0][2] =        q02 + q13;
@@ -721,7 +738,7 @@ namespace Etoile
 			Vec3<T> b_2 = q1 * b_original;
 			b_2.normalize();
 			Quaternion q2;
-			
+
 			Vec3<T> n_b2 = a.cross3(b_2);
 			Vec3<T> n_b = a.cross3(b);
 			Vec3<T> axis_n = n_b2.cross3(n_b);

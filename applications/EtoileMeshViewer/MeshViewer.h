@@ -23,13 +23,15 @@
 #include "math/Vectors.h"
 #include "meshloader/OBJMeshLoader.h"
 #include "geometry/Primitive.h"
+#include "geometry/Camera.h"
 
 using namespace Etoile;
 class MeshViewer : public QGLViewer
 {
 	Q_OBJECT
 
-		RenderManager* manager;
+	RenderManager* manager;
+	Camera* p_camera;
 public:
 	MeshViewer()
 	{
@@ -69,12 +71,16 @@ public:
 		glEnable(GL_MULTISAMPLE);
 
 		QString str = QDir::currentPath();
-
+		
 		Triangle* triangle = new Triangle("triangle");
 		VBOMeshRenderer* renderer = new VBOMeshRenderer("triangle");
+		Entity* entity = new Entity();
+		entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
 		renderer->setRenderMesh(triangle);
 		manager = new RenderManager("render");
 		manager->addIntoObjectRendererList(renderer);
+		p_camera = new Camera(Vec3f(0,0,-1), Vec3f(0,1,0), Vec3f(0,0,2));
+		//p_camera->getTransform()->setPosition(Vec3f(0,0,2));
 		
 	}
 
@@ -108,6 +114,10 @@ public:
 	void draw()
 	{
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+		p_camera->computeModelViewMatrix();
+		float* modelv = p_camera->getGLModelViewMatrix();
+		glLoadMatrixf(modelv);
 		manager->renderOneFrame();
 	}
 

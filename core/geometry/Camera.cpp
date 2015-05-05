@@ -28,6 +28,8 @@ namespace Etoile
 		Camera::Camera(const Vec3f& position, const Quaternionf& orientation): Entity()
 		{
 			reset();
+			p_transform->setPosition(position);
+			p_transform->setOrientation(orientation);
 		}
 
 		Camera::Camera(const Vec3f& direction, const Vec3f& up, const Vec3f& position): Entity()
@@ -187,7 +189,8 @@ namespace Etoile
 			const Quaternionf q = p_transform->getOrientation();
 			q.getMatrix(m_modelviewMatrix);      
 			m_modelviewMatrix.transpose(); //inverse matrix for camera that is modelview for obj
-			Vec3f t = q.inverseRotate(p_transform->getPosition());  // distance in project space  
+			Vec3f pos = p_transform->getPosition();
+			Vec3f t = q.inverseRotate(pos);  // distance in project space  
 			m_modelviewMatrix[0][3] = -t[0];
 			m_modelviewMatrix[1][3] = -t[1];
 			m_modelviewMatrix[2][3] = -t[2];
