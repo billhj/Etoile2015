@@ -1,7 +1,7 @@
 /**
 * Copyright(C) 2009-2012                
 * @author Jing HUANG
-* @file MeshRenderPass.h
+* @file RenderMeshRenderPass.h
 * @brief 
 * @date 1/2/2011
 */
@@ -26,7 +26,7 @@ namespace Etoile
 		DisplayListMeshRenderer(const std::string& name = "");
 		~DisplayListMeshRenderer(){  if(glIsList(_calllist)){glDeleteLists(_calllist, 1);} }
 		virtual void draw() override;
-		virtual void setMesh(Mesh* mesh);
+		virtual void setRenderMesh(RenderMesh* mesh);
 	protected:
 		void generateCallList();
 		GLuint _calllist;

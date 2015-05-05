@@ -94,9 +94,6 @@
     <ClInclude Include="..\..\core\geometry\Material.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\geometry\Mesh.h">
-      <Filter>geometry</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\core\geometry\ModelTransform.h">
       <Filter>geometry</Filter>
     </ClInclude>
@@ -116,9 +113,6 @@
       <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\geometry\SceneManager.h">
-      <Filter>geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\core\geometry\SubMesh.h">
       <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\geometry\Texture.h">
@@ -143,6 +137,12 @@
       <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\core\geometry\ObjectRenderer.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\geometry\RenderSubMesh.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\geometry\RenderMesh.h">
       <Filter>geometry</Filter>
     </ClInclude>
   </ItemGroup>

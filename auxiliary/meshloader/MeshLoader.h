@@ -9,7 +9,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "geometry/Mesh.h"
+#include "geometry/RenderMesh.h"
 #include "TextureLoader.h"
 namespace Etoile
 {
@@ -18,8 +18,8 @@ namespace Etoile
 	public:
 		MeshLoader(){ _scale = Vec3f(1,1,1); }
 		~MeshLoader(){}
-		virtual bool loadFromFile(const std::string& fileName, Mesh* mesh) = 0;
-		Mesh* getMesh(){return _pMesh;};
+		virtual bool loadFromFile(const std::string& fileName, RenderMesh* mesh) = 0;
+		RenderMesh* getMesh(){return _pMesh;};
 		void setTextureLoader(TextureLoader  * loader){_pTextureLoader = loader;}
 		TextureLoader * getTextureLoader(){return _pTextureLoader;}
 		std::vector<Material*>& getMaterials(){return _materials;}
@@ -34,7 +34,7 @@ namespace Etoile
 		Vec3f _scale;
 		Vec3f _translate;
 		Quaternionf _rotate;
-		Mesh* _pMesh;
+		RenderMesh* _pMesh;
 		TextureLoader * _pTextureLoader;
 	};
 

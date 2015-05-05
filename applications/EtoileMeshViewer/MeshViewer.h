@@ -15,7 +15,7 @@
 #include <QMessageBox>
 #include <QDir>
 
-#include "geometry/Mesh.h"
+#include "geometry/RenderMesh.h"
 #include "geometry/RenderManager.h"
 #include "renderer/OpenGL/GLTexture2D.h"
 #include "renderer/OpenGL/VBOMeshRenderer.h"
@@ -72,7 +72,7 @@ public:
 
 		Triangle* triangle = new Triangle("triangle");
 		VBOMeshRenderer* renderer = new VBOMeshRenderer("triangle");
-		renderer->setMesh(triangle);
+		renderer->setRenderMesh(triangle);
 		manager = new RenderManager("render");
 		manager->addIntoObjectRendererList(renderer);
 		
@@ -86,7 +86,7 @@ public:
 		QTime qtime;
 		qtime.start();
 
-		Mesh* _pMesh = new Mesh("mesh");
+		RenderMesh* _pMesh = new RenderMesh("mesh");
 		objloader.loadFromFile(name.toStdString(), _pMesh);
 		std::map<std::string, std::string> txtPath = objloader.getTexturePathMap();
 		std::vector<Material*>& mats = objloader.getMaterials();
@@ -96,10 +96,10 @@ public:
 		//loadTextures(txtPath);
 		std::cout<<"loading time: "<<qtime.elapsed()<<" msc"<<std::endl;
 
-		std::vector<SubMesh*> submeshes = _pMesh->getSubMeshList();
+		std::vector<RenderSubMesh*> submeshes = _pMesh->getRenderSubMeshList();
 		for(unsigned int i = 0; i < submeshes.size(); ++i)
 		{
-			SubMesh* sub = submeshes[i];
+			RenderSubMesh* sub = submeshes[i];
 		}
 
 		//setGPUProgramRenderer();

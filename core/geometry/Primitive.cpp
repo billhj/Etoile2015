@@ -25,10 +25,10 @@ namespace Etoile
 
 	void Quad::init()
 	{
-		SubMesh* submesh = new SubMesh("Quad");
+		RenderSubMesh* submesh = new RenderSubMesh("Quad");
 		submesh->setMaterial(new Material("empty"));
 		submesh->getMaterial()->setDiffuse(Vec4f(0,0,1,1));
-		this->addSubMesh(submesh);
+		this->addRenderSubMesh(submesh);
 		
 		submesh->getOriginalVertices().push_back(Vec3f(  1.0, -1.0, -1));
 		submesh->getOriginalVertices().push_back(Vec3f( -1.0, -1.0, -1));
@@ -66,10 +66,10 @@ namespace Etoile
 
 	void Triangle::init()
 	{
-		SubMesh* submesh = new SubMesh("Triangle");
+		RenderSubMesh* submesh = new RenderSubMesh("Triangle");
 		submesh->setMaterial(new Material("empty"));
 		submesh->getMaterial()->setDiffuse(Vec4f(0,0,1,1));
-		this->addSubMesh(submesh);
+		this->addRenderSubMesh(submesh);
 		
 		submesh->getOriginalVertices().push_back(Vec3f(-1.0, -1.0, 0.0));
 		submesh->getOriginalVertices().push_back(Vec3f( 1.0, -1.0, 0.0));
@@ -90,10 +90,10 @@ namespace Etoile
 
 	void Plane::init()
 	{
-		SubMesh* submesh = new SubMesh("Plane");
+		RenderSubMesh* submesh = new RenderSubMesh("Plane");
 		submesh->setMaterial(new Material("empty"));
 		submesh->getMaterial()->setDiffuse(Vec4f(0.9,0.9,0.9,1));
-		this->addSubMesh(submesh);
+		this->addRenderSubMesh(submesh);
 		int index = 0;
 		for(int i = -m_line; i < m_line; ++i)
 		{
@@ -148,7 +148,7 @@ namespace Etoile
 
 	void Plane::reinit()
 	{
-		SubMesh* submesh = this->getSubMesh(0);
+		RenderSubMesh* submesh = this->getRenderSubMesh(0);
 		submesh->getOriginalTextureCoords().clear();
 		submesh->getOriginalNormals().clear();
 		submesh->getOriginalVertexIndexForFaces().clear();

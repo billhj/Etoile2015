@@ -1,7 +1,7 @@
 /**
 * Copyright(C) 2009-2012                
 * @author Jing HUANG
-* @file GLMeshRenderer.h
+* @file GLRenderMeshRenderer.h
 * @brief 
 * @date 1/2/2011
 */
@@ -27,18 +27,18 @@ namespace Etoile
 			m_drawAABBs = b;
 		}
 
-		virtual void drawMesh()
+		virtual void drawRenderMesh()
 		{
 			if(p_mesh == NULL) return;
 			Matrix4f modelM;
 			ModelTransform* t = this->getEntity()->getTransformation();
 			useTransform(t);
-			const std::vector<SubMesh*>& submeshlist = p_mesh->getSubMeshList();
+			const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
 
 			for(unsigned int i = 0; i < submeshlist.size(); ++i)
 			{
-				SubMesh* submesh = submeshlist[i];
-				drawSubMesh(submesh);
+				RenderSubMesh* submesh = submeshlist[i];
+				drawRenderSubMesh(submesh);
 			}
 			
 			drawAABB();
@@ -63,7 +63,7 @@ namespace Etoile
 			}
 		}
 
-		virtual void drawSubMesh(SubMesh* submesh)
+		virtual void drawRenderSubMesh(RenderSubMesh* submesh)
 		{
 			const std::vector<Vec3f>& vertices = submesh->getOriginalVertices();
 			const std::vector<Vec3f>& normals = submesh->getOriginalNormals();
@@ -100,7 +100,7 @@ namespace Etoile
 			}
 			else
 			{
-				assert(0 && "GLMeshRenderer: no material");
+				assert(0 && "GLRenderMeshRenderer: no material");
 			}
 		}
 
@@ -146,12 +146,12 @@ namespace Etoile
 		void drawAABB()
 		{
 			if(p_mesh == NULL) return;
-			const std::vector<SubMesh*>& submeshlist = p_mesh->getSubMeshList();
+			const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
 			if(m_drawAABBs)
 			{
 				for(unsigned int i = 0; i < submeshlist.size(); ++i)
 				{
-					SubMesh* submesh = submeshlist[i];
+					RenderSubMesh* submesh = submeshlist[i];
 					drawAABB(submesh->getAABB());
 				}
 			}

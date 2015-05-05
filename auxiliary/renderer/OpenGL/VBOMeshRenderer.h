@@ -13,20 +13,20 @@
 
 namespace Etoile
 {
-	struct SubMeshVBOUnit
+	struct RenderSubMeshVBOUnit
 	{
 		VBOUnit m_vertexVBO;
 		VBOUnit m_normalVBO;
 		VBOUnit m_texCoordVBO;
 		IndexVBO* p_indexVBO;
-		SubMeshVBOUnit()
+		RenderSubMeshVBOUnit()
 		{
 			m_vertexVBO._pVBO = NULL;
 			m_normalVBO._pVBO = NULL;
 			m_texCoordVBO._pVBO = NULL;
 			p_indexVBO = NULL;
 		}
-		~SubMeshVBOUnit()
+		~RenderSubMeshVBOUnit()
 		{
 			if(p_indexVBO != NULL)
 				delete p_indexVBO;
@@ -38,14 +38,14 @@ namespace Etoile
 	public:
 		VBOMeshRenderer(const std::string& name = "");
 		~VBOMeshRenderer();
-		virtual void drawSubMesh(SubMesh* submesh, int idx);
-		virtual void setMesh(Mesh* mesh) override;
-		//virtual void updateVBO(Mesh* mesh);
-		//virtual void updateVBO(SubMesh* submesh, int idx);
+		virtual void drawRenderSubMesh(RenderSubMesh* submesh, int idx);
+		virtual void setRenderMesh(RenderMesh* mesh) override;
+		//virtual void updateVBO(RenderMesh* mesh);
+		//virtual void updateVBO(RenderSubMesh* submesh, int idx);
 	protected:
 		int getVBOUnitIndexByName(const std::string& name);
-		virtual void createVBO(Mesh* mesh, GLenum usage = GL_STATIC_DRAW_ARB);
-		std::vector<SubMeshVBOUnit*> _vboUnitList;
+		virtual void createVBO(RenderMesh* mesh, GLenum usage = GL_STATIC_DRAW_ARB);
+		std::vector<RenderSubMeshVBOUnit*> _vboUnitList;
 		std::map<std::string, int> _vboUnitIndex;
 	};
 
@@ -54,13 +54,13 @@ namespace Etoile
 	{
 	public:
 		GPUBasedVBOMeshRenderer(const std::string& name = "");
-		virtual void drawSubMesh(SubMesh* submesh, int idx);
+		virtual void drawRenderSubMesh(RenderSubMesh* submesh, int idx);
 	};
 
 	class AvancedGPUBasedVBOMeshRenderer : public GPUBasedVBOMeshRenderer
 	{
 	public:
 		AvancedGPUBasedVBOMeshRenderer(const std::string& name = "");
-		virtual void drawSubMesh(SubMesh* submesh, int idx);
+		virtual void drawRenderSubMesh(RenderSubMesh* submesh, int idx);
 	};
 }

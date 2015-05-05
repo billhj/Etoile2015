@@ -8,16 +8,16 @@
 
 #pragma once
 #include <vector>
-#include "Mesh.h"
+#include "RenderMesh.h"
 
 namespace Etoile
 {
-	class Primitive : public Mesh
+	class Primitive : public RenderMesh
 	{
 	public:
-		Primitive(const std::string& name) : Mesh(name){}
-		Material* getMaterial(){return getSubMesh(0)->getMaterial();}
-		void setMaterial(Material* material){getSubMesh(0)->setMaterial(material);}
+		Primitive(const std::string& name) : RenderMesh(name){}
+		Material* getMaterial(){return getRenderSubMesh(0)->getMaterial();}
+		void setMaterial(Material* material){getRenderSubMesh(0)->setMaterial(material);}
 	};
 
 

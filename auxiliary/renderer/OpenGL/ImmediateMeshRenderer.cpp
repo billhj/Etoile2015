@@ -17,7 +17,7 @@ namespace Etoile
 
 	void ImmediateMeshRenderer::draw()
 	{
-		drawMesh();
+		drawRenderMesh();
 	}
 
 	DisplayListMeshRenderer::DisplayListMeshRenderer(const std::string& name) : GLMeshRenderer(name)
@@ -31,7 +31,7 @@ namespace Etoile
 	}
 
 
-	void DisplayListMeshRenderer::setMesh(Mesh* mesh)
+	void DisplayListMeshRenderer::setRenderMesh(RenderMesh* mesh)
 	{
 		p_mesh = mesh;
 		generateCallList();
@@ -41,7 +41,7 @@ namespace Etoile
 	{
 		_calllist = glGenLists(1);
 		glNewList(_calllist, GL_COMPILE);
-		drawMesh();
+		drawRenderMesh();
 		glEndList();
 	}
 

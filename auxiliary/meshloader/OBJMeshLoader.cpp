@@ -21,7 +21,7 @@
 namespace Etoile
 {
 
-	bool OBJMeshLoader::loadFromFile(const std::string& fileName, Mesh* mesh)
+	bool OBJMeshLoader::loadFromFile(const std::string& fileName, RenderMesh* mesh)
 	{
 		_fileName = fileName;
 		_pMesh = mesh;
@@ -625,13 +625,13 @@ namespace Etoile
 			"Normal count : " <<_normals.size()<<" "<<
 			"Face count : " <<_faces.size()<<std::endl;
 
-		std::vector<Etoile::SubMesh*> submeshes;
+		std::vector<Etoile::RenderSubMesh*> submeshes;
 
 		for( unsigned int i = 0; i < _materials.size() + 1; ++i)
 		{
 			if(i==0)
 			{
-				SubMesh* submesh = _pMesh->creatNewSubMesh("empty");
+				RenderSubMesh* submesh = _pMesh->creatNewRenderSubMesh("empty");
 				submeshes.push_back(submesh);
 				Material* mat = new Material("empty");
 				mat->setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
@@ -640,7 +640,7 @@ namespace Etoile
 			}
 			else
 			{
-				SubMesh* submesh =  _pMesh->creatNewSubMesh(_materials[i - 1]->getName());
+				RenderSubMesh* submesh =  _pMesh->creatNewRenderSubMesh(_materials[i - 1]->getName());
 				submesh->setMaterial(_materials[i - 1]);
 				submeshes.push_back(submesh);
 			}
@@ -662,7 +662,7 @@ namespace Etoile
 		for(unsigned int i = 0; i < _faces.size(); ++i)
 		{
 			const Face& face = _faces[i];
-			SubMesh* submesh = submeshes[face._materialIndex + 1];
+			RenderSubMesh* submesh = submeshes[face._materialIndex + 1];
 			if(face._vertexCount == 0) continue;
 
 			for(unsigned int j = 0; j < 3; ++j)
@@ -717,7 +717,7 @@ namespace Etoile
 		std::cout<<"submesh data recreated" <<std::endl;
 
 		//MxAssert(ndata.size() == tdata.size() && ndata.size() == vdata.size());
-		_pMesh->cleanEmptySubMesh();
+		_pMesh->cleanEmptyRenderSubMesh();
 		meshToUnitCube();
 		//_pMesh->buildRuntimeData();
 		_pMesh->computeAABB();
@@ -730,10 +730,10 @@ namespace Etoile
 	{
 		Vec3f minPos(1e6, 1e6, 1e6);
 		Vec3f maxPos(-1e6, -1e6, -1e6);
-		std::vector<SubMesh*>& list = _pMesh->getSubMeshList();
-		std::vector<SubMesh*>::iterator itor;
+		std::vector<RenderSubMesh*>& list = _pMesh->getRenderSubMeshList();
+		std::vector<RenderSubMesh*>::iterator itor;
 		for(itor = list.begin(); itor != list.end(); ++itor){
-			SubMesh* submesh = (*itor);
+			RenderSubMesh* submesh = (*itor);
 			for (unsigned int i = 0; i < submesh->getOriginalVertices().size(); ++i)
 			{
 				const Vec3f& p = submesh->getOriginalVertices()[i];
@@ -753,7 +753,7 @@ namespace Etoile
 			(maxPos[2] + minPos[2]) / 2.0f);
 
 		for(itor = list.begin(); itor != list.end(); ++itor){
-			SubMesh* submesh = (*itor);
+			RenderSubMesh* submesh = (*itor);
 			for (unsigned int i = 0; i < submesh->getOriginalVertices().size(); ++i)
 			{
 				Vec3f& p = submesh->getOriginalVertices()[i];

@@ -1,14 +1,14 @@
 /**
 * Copyright(C) 2009-2012                
 * @author Jing HUANG
-* @file MeshRenderer.h
+* @file RenderMeshRenderer.h
 * @brief 
 * @date 1/2/2011
 */
 
 #pragma once
 #include "geometry/ObjectRenderer.h"
-#include "geometry/Mesh.h"
+#include "geometry/RenderMesh.h"
 #include "geometry/ModelTransform.h"
 
 namespace Etoile
@@ -19,13 +19,13 @@ namespace Etoile
 		MeshRenderer(const std::string& name): ObjectRenderer(name), p_mesh(NULL)
 		{
 		}
-		virtual void setMesh(Mesh* mesh, ModelTransform* transform)
+		virtual void setRenderMesh(RenderMesh* mesh, ModelTransform* transform)
 		{
 			p_mesh = mesh;
 			p_transform = transform;
 		}
 
-		virtual void setMesh(Mesh* mesh)
+		virtual void setRenderMesh(RenderMesh* mesh)
 		{
 			p_mesh = mesh;
 		}
@@ -35,17 +35,17 @@ namespace Etoile
 			p_transform = transform;
 		}
 
-		virtual Mesh* getMesh(){return p_mesh;}
+		virtual RenderMesh* getRenderMesh(){return p_mesh;}
 
 		void draw()
 		{
-			drawMesh();
+			drawRenderMesh();
 		}
 
-		virtual void drawMesh() = 0;
+		virtual void drawRenderMesh() = 0;
 		
 	protected:
-		Mesh* p_mesh;
+		RenderMesh* p_mesh;
 		ModelTransform* p_transform;
 	};
 

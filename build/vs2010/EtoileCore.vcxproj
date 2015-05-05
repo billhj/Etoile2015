@@ -24,7 +24,7 @@
     <ClInclude Include="..\..\core\geometry\Light.h" />
     <ClInclude Include="..\..\core\geometry\Manipulator.h" />
     <ClInclude Include="..\..\core\geometry\Material.h" />
-    <ClInclude Include="..\..\core\geometry\Mesh.h" />
+    <ClInclude Include="..\..\core\geometry\RenderMesh.h" />
     <ClInclude Include="..\..\core\geometry\ModelTransform.h" />
     <ClInclude Include="..\..\core\geometry\Octree.h" />
     <ClInclude Include="..\..\core\geometry\Plane.h" />
@@ -35,7 +35,7 @@
     <ClInclude Include="..\..\core\geometry\ObjectRenderer.h" />
     <ClInclude Include="..\..\core\geometry\Scene.h" />
     <ClInclude Include="..\..\core\geometry\SceneManager.h" />
-    <ClInclude Include="..\..\core\geometry\SubMesh.h" />
+    <ClInclude Include="..\..\core\geometry\RenderSubMesh.h" />
     <ClInclude Include="..\..\core\geometry\Texture.h" />
     <ClInclude Include="..\..\core\geometry\VertexBoneAssignment.h" />
     <ClInclude Include="..\..\core\math\ExponentialMap.h" />

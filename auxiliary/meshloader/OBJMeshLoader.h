@@ -16,7 +16,7 @@
 #include <istream>
 #include <deque>
 #include "MeshLoader.h"
-#include "geometry/Mesh.h"
+#include "geometry/RenderMesh.h"
 
 namespace Etoile
 {
@@ -45,7 +45,7 @@ namespace Etoile
 	public:
 		OBJMeshLoader(): MeshLoader(), _smoothThreshold(0.6f){}
 		~OBJMeshLoader(){}
-		virtual bool loadFromFile(const std::string& fileName, Mesh* mesh) override;
+		virtual bool loadFromFile(const std::string& fileName, RenderMesh* mesh) override;
 
 	protected:
 
