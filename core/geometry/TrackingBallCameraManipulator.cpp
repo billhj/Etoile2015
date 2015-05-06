@@ -125,7 +125,7 @@ namespace Etoile
 				break;
 			}
 		}
-		p_camera->getTransform()->translate(p_camera->getTransform()->getOrientation().inverseRotate(trans));
+		p_camera->getTransform()->translate(p_camera->getTransform()->getOrientation().rotate(trans));
 
 	}
 

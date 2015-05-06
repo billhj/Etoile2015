@@ -89,7 +89,7 @@ namespace Etoile
 		int Camera::getWidth() const{return m_screenWidth;}
 		void Camera::setWidth(int screenWidth){m_screenWidth = screenWidth;}
 		int Camera::getHeight() const{return m_screenHeight;}
-		void Camera::setHeight(int m_screenHeight){m_screenHeight = m_screenHeight;}
+		void Camera::setHeight(int screenHeight){m_screenHeight = screenHeight;}
 
 		void Camera::setTarget(const Vec3f& target)
 		{
