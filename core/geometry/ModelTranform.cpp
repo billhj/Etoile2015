@@ -93,9 +93,20 @@ namespace Etoile
 		m_translation = translation;
 	}
 
+	void ModelTransform::translate(const Vec3f& translation)
+	{
+		m_translation += translation;
+	}
+
 	void ModelTransform::setRotation(const Quaternionf& rotation)
 	{
 		m_rotation = rotation;
+		//m_rotation.normalize();
+	}
+
+	void ModelTransform::rotate(const Quaternionf& rotation)
+	{
+		m_rotation *= rotation;
 		m_rotation.normalize();
 	}
 

@@ -38,6 +38,7 @@ namespace Etoile
 	public:
 		VBOMeshRenderer(const std::string& name = "");
 		~VBOMeshRenderer();
+		virtual void drawRenderMesh();
 		virtual void drawRenderSubMesh(RenderSubMesh* submesh, int idx);
 		virtual void setRenderMesh(RenderMesh* mesh) override;
 		//virtual void updateVBO(RenderMesh* mesh);

@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileMeshViewer", "..\..\a
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenMeshCore", "..\..\extern\OpenMesh\Core\OpenMeshCore.vcxproj", "{68E46D49-FF4B-337F-9909-E8CC0C457A5D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileAppTemplate", "..\..\applications\EtoileAppTemplate\EtoileAppTemplate.vcxproj", "{153551F2-D9DB-440C-BE47-550AC6F64205}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileRenderCameraViewer", "..\..\applications\EtoileRenderCameraViewer\EtoileRenderCameraViewer.vcxproj", "{153551F2-D9DB-440C-BE47-550AC6F64205}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

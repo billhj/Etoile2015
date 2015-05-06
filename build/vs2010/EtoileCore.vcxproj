@@ -37,6 +37,7 @@
     <ClInclude Include="..\..\core\geometry\SceneManager.h" />
     <ClInclude Include="..\..\core\geometry\RenderSubMesh.h" />
     <ClInclude Include="..\..\core\geometry\Texture.h" />
+    <ClInclude Include="..\..\core\geometry\TrackingBallCameraManipulator.h" />
     <ClInclude Include="..\..\core\geometry\VertexBoneAssignment.h" />
     <ClInclude Include="..\..\core\math\ExponentialMap.h" />
     <ClInclude Include="..\..\core\math\Function1D.h" />
@@ -73,6 +74,7 @@
     <ClCompile Include="..\..\core\geometry\RenderManager.cpp" />
     <ClCompile Include="..\..\core\geometry\Scene.cpp" />
     <ClCompile Include="..\..\core\geometry\SceneManager.cpp" />
+    <ClCompile Include="..\..\core\geometry\TrackingBallCameraManipulator.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{523007EE-FB65-4458-BCB3-E8270D6281F5}</ProjectGuid>

@@ -134,12 +134,12 @@ namespace Etoile
 
 		Quaternion operator +(const Quaternion &q) const	
 		{ 
-			return Quaternion(this->m_q[0]+m_q[0], this->m_q[1]+ m_q[1], this->m_q[2]+m_q[2],  this->m_q[3]+m_q[3]);
+			return Quaternion(this->m_q[0]+q.m_q[0], this->m_q[1]+ q.m_q[1], this->m_q[2]+q.m_q[2],  this->m_q[3]+q.m_q[3]);
 		}
 
 		Quaternion operator -(const Quaternion &q) const	
 		{ 
-			return Quaternion(this->m_q[0]-m_q[0], this->m_q[1]-m_q[1], this->m_q[2]-m_q[2], this->m_q[3]-m_q[3]); 
+			return Quaternion(this->m_q[0]-q.m_q[0], this->m_q[1]-q.m_q[1], this->m_q[2]-q.m_q[2], this->m_q[3]-q.m_q[3]); 
 		}
 
 		friend Quaternion operator*(const Quaternion& a, const Quaternion& b)

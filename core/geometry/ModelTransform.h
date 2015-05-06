@@ -28,8 +28,10 @@ namespace Etoile
 		Vec3f getScale() const{return m_scale;}
 		void setTranslation(const Vec3f& translation);
 		Vec3f getTranslation() const {return m_translation;}
+		void translate(const Vec3f& translation);
 		void setRotation(const Quaternionf& rotation);
 		Quaternionf getRotation() const {return m_rotation;}
+		void rotate(const Quaternionf& rotation);
 		Matrix4f getModelMatrix();
 		Matrix4f getGLModelMatrix();
 		void setTransform(const Vec3f& scale, const Quaternionf& rotate, const Vec3f& translate)

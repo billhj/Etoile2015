@@ -145,6 +145,9 @@
     <ClInclude Include="..\..\core\geometry\RenderMesh.h">
       <Filter>geometry</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\geometry\TrackingBallCameraManipulator.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -189,6 +192,9 @@
       <Filter>geometry</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\geometry\RenderManager.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\geometry\TrackingBallCameraManipulator.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
   </ItemGroup>

@@ -26,7 +26,23 @@ namespace Etoile
 		_vboUnitIndex.clear();
 	}
 
+	void VBOMeshRenderer::drawRenderMesh()
+	{
+		if(p_mesh == NULL) return;
+		Matrix4f modelM;
+		ModelTransform* t = this->getEntity()->getTransformation();
+		useTransform(t);
+		const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
 
+		for(unsigned int i = 0; i < submeshlist.size(); ++i)
+		{
+			RenderSubMesh* submesh = submeshlist[i];
+			drawRenderSubMesh(submesh, i);
+		}
+			
+		drawAABB();
+		unUseTransform(t);
+	}
 	void VBOMeshRenderer::drawRenderSubMesh(RenderSubMesh* submesh, int idx)
 	{
 		glEnable( GL_TEXTURE_2D );

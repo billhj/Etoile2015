@@ -30,18 +30,19 @@ namespace Etoile
 			reset();
 			p_transform->setPosition(position);
 			p_transform->setOrientation(orientation);
+			m_pivot = getViewDirection() * 2 + p_transform->getPosition();
 		}
 
-		Camera::Camera(const Vec3f& direction, const Vec3f& up, const Vec3f& position): Entity()
+		Camera::Camera(const Vec3f& target, const Vec3f& up, const Vec3f& position): Entity()
 		{
 			reset();
-			p_transform->setPosition(position);
-			this->setupCameraOrientation(direction, up);
+			this->setupCameraOrientation(target, up, position);
 		}
 
 		Camera::Camera(): Entity()
 		{
 			reset();
+			m_pivot = getViewDirection() * 2 + p_transform->getPosition();
 		}
 
 		void Camera::reset()
@@ -92,16 +93,17 @@ namespace Etoile
 
 		void Camera::setTarget(const Vec3f& target)
 		{
-			setupCameraOrientation(target - p_transform->getPosition(), getUpVector());
+			setupCameraOrientation(target - p_transform->getPosition(), getUpVector(), p_transform->getPosition());
 		}
 		void Camera::setUpVector(const Vec3f& up)
 		{
-			setupCameraOrientation(getViewDirection(), up);
+			setupCameraOrientation(getViewDirection(), up, p_transform->getPosition());
 		}
 		Vec3f Camera::getUpVector() const{return p_transform->getOrientation() * Vec3f(0,1,0);}
 		void Camera::setViewDirection(const Vec3f& direction)
 		{
-			setupCameraOrientation(direction, getUpVector());
+			m_pivot = getViewDirection() * 2 + p_transform->getPosition();
+			setupCameraOrientation(m_pivot, getUpVector(), p_transform->getPosition());
 		}
 		Vec3f Camera::getViewDirection() const{return p_transform->getOrientation() * Vec3f(0,0,-1);}
 
@@ -130,8 +132,11 @@ namespace Etoile
 		float* Camera::getGLModelViewMatrix() const{return m_modelviewMatrix.getGLMatrix();}
 		float* Camera::getGLProjectionMatrix() const{return m_projectionMatrix.getGLMatrix();}
 
-		void Camera::setupCameraOrientation(const Vec3f& direction, const Vec3f& upVector)
+		void Camera::setupCameraOrientation(const Vec3f& target, const Vec3f& upVector, const Vec3f& position)
 		{
+			m_pivot = target;
+			p_transform->setPosition(position);
+			Vec3f direction = target - position;
 			if (direction.length() < 1E-10)
 				return;
 

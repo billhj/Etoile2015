@@ -29,9 +29,10 @@ namespace Etoile
 		CameraManipulator* p_manipulator;
 		Frustum* p_frustum;
 		CameraType m_type;
+		Vec3f m_pivot;
 	public:
 		Camera(const Vec3f& position, const Quaternionf& orientation);
-		Camera(const Vec3f& direction, const Vec3f& up, const Vec3f& position);
+		Camera(const Vec3f& target, const Vec3f& up, const Vec3f& position);
 		Camera();
 		void reset();
 		CameraType type();
@@ -50,6 +51,7 @@ namespace Etoile
 		void setHeight(int m_screenHeight);
 
 		void setTarget(const Vec3f& target);
+		Vec3f getTarget(){return m_pivot;}
 		void setUpVector(const Vec3f& up);
 		Vec3f getUpVector() const;
 		void setViewDirection(const Vec3f& direction);
@@ -63,7 +65,7 @@ namespace Etoile
 		float* getGLModelViewMatrix() const;
 		float* getGLProjectionMatrix() const;
 
-		void setupCameraOrientation(const Vec3f& direction, const Vec3f& upVector);
+		void setupCameraOrientation(const Vec3f& target, const Vec3f& upVector, const Vec3f& position);
 		void computeTransformationMatrix();
 		void computeProjectionMatrix();
 		void computeModelViewMatrix();

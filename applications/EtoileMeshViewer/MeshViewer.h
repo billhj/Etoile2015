@@ -115,9 +115,9 @@ public:
 	{
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-		p_camera->computeModelViewMatrix();
+		/*p_camera->computeModelViewMatrix();
 		float* modelv = p_camera->getGLModelViewMatrix();
-		glLoadMatrixf(modelv);
+		glLoadMatrixf(modelv);*/
 		manager->renderOneFrame();
 	}
 
