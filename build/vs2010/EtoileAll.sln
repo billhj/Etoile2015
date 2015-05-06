@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileMeshViewer", "..\..\a
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenMeshCore", "..\..\extern\OpenMesh\Core\OpenMeshCore.vcxproj", "{68E46D49-FF4B-337F-9909-E8CC0C457A5D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileAppTemplate", "..\..\applications\EtoileAppTemplate\EtoileAppTemplate.vcxproj", "{153551F2-D9DB-440C-BE47-550AC6F64205}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,12 +45,16 @@ Global
 		{68E46D49-FF4B-337F-9909-E8CC0C457A5D}.Debug|Win32.Build.0 = Debug|Win32
 		{68E46D49-FF4B-337F-9909-E8CC0C457A5D}.Release|Win32.ActiveCfg = Release|Win32
 		{68E46D49-FF4B-337F-9909-E8CC0C457A5D}.Release|Win32.Build.0 = Release|Win32
+		{153551F2-D9DB-440C-BE47-550AC6F64205}.Debug|Win32.ActiveCfg = Debug|Win32
+		{153551F2-D9DB-440C-BE47-550AC6F64205}.Debug|Win32.Build.0 = Debug|Win32
+		{153551F2-D9DB-440C-BE47-550AC6F64205}.Release|Win32.ActiveCfg = Release|Win32
+		{153551F2-D9DB-440C-BE47-550AC6F64205}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		QtVersion = $(DefaultQtVersion)
 		Qt5Version = 4.8.5
+		QtVersion = $(DefaultQtVersion)
 	EndGlobalSection
 EndGlobal

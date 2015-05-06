@@ -26,6 +26,16 @@ namespace Etoile
 			m_layer = t.m_layer;
 			m_mipmaped = t.m_mipmaped;
 		}
+
+		void setFilePath(const std::string& filepath)
+		{
+			m_filepath = filepath;
+		}
+		const std::string& filepath()
+		{
+			return m_filepath;
+		}
+
 		virtual ~Texture(){}
 		virtual void use() const = 0;
 		virtual void unUse() const = 0;
@@ -57,6 +67,7 @@ namespace Etoile
 		int m_width, m_height, m_layer;
 		bool m_mipmaped;
 		std::string m_name;
+		std::string m_filepath;
 	};
 
 
