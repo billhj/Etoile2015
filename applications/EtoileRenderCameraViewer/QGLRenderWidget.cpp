@@ -322,7 +322,7 @@ namespace Etoile
 	void QGLRenderWidget::mouseDoubleClickEvent(QMouseEvent* const event)
 	{
 		//p_camera->frame()->mouseDoubleClickEvent(event);
-		manipulator->setSpinActive(!manipulator->m_spin_active);
+		//manipulator->setSpinActive(!manipulator->m_spin_active);
 	}
 
 	void QGLRenderWidget::mouseReleaseEvent(QMouseEvent* const event)
@@ -343,6 +343,13 @@ namespace Etoile
 		else if(manipulator->m_rotate)
 		{
 			manipulator->rotateOnScreen(m_prevPos.x(), m_prevPos.y(), currentPos.x(), currentPos.y());
+			if( (currentPos - m_prevPos).manhattanLength() > 5 )
+			{
+				manipulator->setSpinActive(true);
+			}else
+			{
+				manipulator->setSpinActive(false);
+			}
 		}
 		else if(manipulator->m_zoom)
 		{
