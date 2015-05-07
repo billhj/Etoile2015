@@ -96,6 +96,7 @@ namespace Etoile
 		int m_animationTimerId;
 		Camera* p_camera;
 		QPoint m_prevPos, m_pressPos;
+		float m_spinsensibility;
 	};
 }
 #endif // QGLRENDERWIDGET_H

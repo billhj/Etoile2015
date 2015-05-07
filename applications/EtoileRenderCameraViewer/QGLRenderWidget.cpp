@@ -31,7 +31,7 @@ namespace Etoile
 		m_f_p_s = 0.0;
 		m_fpsString = tr("%1Hz", "Frames per seconds, in Hertz").arg("?");
 		m_displayMessage = false;
-
+		m_spinsensibility = 6;
 		m_fullScreen = false;
 		setFullScreen(false);
 
@@ -343,7 +343,7 @@ namespace Etoile
 		else if(manipulator->m_rotate)
 		{
 			manipulator->rotateOnScreen(m_prevPos.x(), m_prevPos.y(), currentPos.x(), currentPos.y());
-			if( (currentPos - m_prevPos).manhattanLength() > 5 )
+			if( (currentPos - m_prevPos).manhattanLength() > m_spinsensibility )
 			{
 				manipulator->setSpinActive(true);
 			}else
