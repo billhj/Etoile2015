@@ -8,6 +8,7 @@
 
 #pragma once
 #include "CameraManipulator.h"
+#include "math/MathHead.h"
 
 namespace Etoile
 {
@@ -18,14 +19,22 @@ namespace Etoile
 		bool m_move;
 		bool m_zoom;
 		bool m_rotate;
+		bool m_spin_active;
+		//bool m_spin_started;
+
+		Quaternionf m_spin;
 
 		TrackingBallCameraManipulator() : CameraManipulator()
 		{
-			m_move = m_zoom = m_rotate = false;
+			m_move = m_zoom = m_rotate = m_spin_active = false;
 		}
 
 		void zoom(float delta);
 		void moveOnScreen(float dx, float dy);
 		void rotateOnScreen(float p_x, float p_y, float c_x, float c_y);
+		void rotateWithOnePoint(Quaternionf rot, Vec3f point);
+		void setSpinActive(bool active);
+		//void startSpin(float p_x, float p_y, float c_x, float c_y);
+		void spinUpdate();
 	};
 }

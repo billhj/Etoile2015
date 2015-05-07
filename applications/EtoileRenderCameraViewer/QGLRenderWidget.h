@@ -30,6 +30,7 @@ namespace Etoile
 
 		void loadProjectionMatrix(bool reset = false);
 		void loadModelViewMatrix(bool reset = false);
+		virtual void animate();
 	protected:
 		void initializeGL();
 		void paintGL();
@@ -48,6 +49,7 @@ namespace Etoile
 		virtual void mouseReleaseEvent(QMouseEvent* const event) override;
 		virtual void mouseMoveEvent(QMouseEvent* const event) override;
 		virtual void wheelEvent(QWheelEvent* const event) override;
+		virtual void timerEvent(QTimerEvent *);
 
 		public Q_SLOTS:
 		/*! Sets the backgroundColor() of the viewer and calls \c qglClearColor(). See also

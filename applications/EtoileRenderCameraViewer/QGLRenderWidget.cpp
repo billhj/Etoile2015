@@ -36,8 +36,8 @@ namespace Etoile
 		setFullScreen(false);
 
 		m_animationTimerId = 0;
-		stopAnimation();
-		setAnimationPeriod(40); // 25Hz
+		//stopAnimation();
+		setAnimationPeriod(5); // 25Hz
 		startAnimation();
 
 		setAttribute(Qt::WA_NoSystemBackground);
@@ -270,6 +270,15 @@ namespace Etoile
 		}*/
 	}
 
+	void QGLRenderWidget::timerEvent(QTimerEvent *)
+	{
+		if (animationIsStarted())
+		{
+			animate();
+			updateGL();
+		}
+	}
+
 	/*! Starts the animation loop. See animationIsStarted(). */
 	void QGLRenderWidget::startAnimation()
 	{
@@ -285,6 +294,10 @@ namespace Etoile
 			killTimer(m_animationTimerId);
 	}
 
+	void QGLRenderWidget::animate()
+	{
+		if(manipulator != NULL) manipulator->spinUpdate();
+	}
 
 	void QGLRenderWidget::mousePressEvent(QMouseEvent* const event)
 	{
@@ -309,6 +322,7 @@ namespace Etoile
 	void QGLRenderWidget::mouseDoubleClickEvent(QMouseEvent* const event)
 	{
 		//p_camera->frame()->mouseDoubleClickEvent(event);
+		manipulator->setSpinActive(!manipulator->m_spin_active);
 	}
 
 	void QGLRenderWidget::mouseReleaseEvent(QMouseEvent* const event)
@@ -337,6 +351,7 @@ namespace Etoile
 			qreal value = fabs(dx) > fabs(dy) ? dx : dy;
 			manipulator->zoom(value);
 		}
+
 		m_prevPos = currentPos;
 		update();
 	}

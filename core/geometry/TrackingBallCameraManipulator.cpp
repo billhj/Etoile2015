@@ -132,20 +132,40 @@ namespace Etoile
 	void TrackingBallCameraManipulator::rotateOnScreen(float p_x, float p_y, float c_x, float c_y)
 	{
 
-		Vec3f cameraPos = p_camera->getTransform()->getPosition();
 		Vec3f pivot = p_camera->getTarget();
-		Quaternionf rot = trackBall(
+		m_spin = trackBall(
 			(p_x - p_camera->getWidth() * 0.5) / p_camera->getWidth(),
 			(p_camera->getHeight() * 0.5 - p_y) / p_camera->getHeight(),
 			(c_x - p_camera->getWidth() * 0.5) / p_camera->getWidth(),
 			(p_camera->getHeight() * 0.5 - c_y) / p_camera->getHeight());
-		p_camera->getTransform()->rotate(rot);
+		
+		rotateWithOnePoint(m_spin, pivot);
+		//std::cout<<p_camera->getTransform()->getOrientation().rotate(Vec3f(0,0,-2)) + p_camera->getTransform()->getPosition()<<std::endl;
+	}
 
+
+	void TrackingBallCameraManipulator::rotateWithOnePoint(Quaternionf rot, Vec3f pivot)
+	{
+		Vec3f cameraPos = p_camera->getTransform()->getPosition();
+		p_camera->getTransform()->rotate(rot);
 		Vec3f invAxis = p_camera->getTransform()->getOrientation().rotate(rot.axis());
 		Quaternionf invRot(invAxis, rot.angle());
 		Vec3f trans = invRot.rotate(cameraPos-pivot);
 		p_camera->getTransform()->setPosition(pivot + trans);
-		
-		//std::cout<<p_camera->getTransform()->getOrientation().rotate(Vec3f(0,0,-2)) + p_camera->getTransform()->getPosition()<<std::endl;
 	}
+
+	void TrackingBallCameraManipulator::setSpinActive(bool active)
+	{
+		m_spin_active = active;
+	}
+
+
+	void TrackingBallCameraManipulator::spinUpdate()
+	{
+		if(!m_spin_active) return;
+		Vec3f pivot = p_camera->getTarget();
+		rotateWithOnePoint(m_spin, pivot);
+	}
+
+
 }
