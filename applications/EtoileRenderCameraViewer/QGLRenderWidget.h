@@ -94,9 +94,7 @@ namespace Etoile
 		bool m_animationStarted; // animation mode started
 		int m_animationPeriod;
 		int m_animationTimerId;
-		Camera* p_camera;
-		QPoint m_prevPos, m_pressPos;
-		float m_spinsensibility;
+		Camera* p_camera;	
 	};
 }
 #endif // QGLRENDERWIDGET_H

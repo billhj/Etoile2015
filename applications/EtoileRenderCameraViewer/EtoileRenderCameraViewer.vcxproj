@@ -32,6 +32,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyMainWindow.cpp" />
     <ClCompile Include="QGLRenderWidget.cpp" />
+    <ClCompile Include="QManipulatorEventManager.cpp" />
+    <ClCompile Include="TrackingBallQEventPerformer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MyMainWindow.h">
@@ -62,6 +64,9 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_MyMainWindow.h" />
     <ClInclude Include="GeneratedFiles\ui_QGLRenderWidget.h" />
+    <ClInclude Include="QManipulatorEventManager.h" />
+    <ClInclude Include="QManipulatorEventPerformer.h" />
+    <ClInclude Include="TrackingBallQEventPerformer.h" />
     <CustomBuild Include="MeshViewer.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing MeshViewer.h...</Message>
@@ -172,7 +177,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties UicDir=".\GeneratedFiles" MocDir=".\GeneratedFiles\$(ConfigurationName)" MocOptions="" RccDir=".\GeneratedFiles" lupdateOnBuild="0" lupdateOptions="" lreleaseOptions="" QtVersion_x0020_Win32="4.8.6" />
+      <UserProperties UicDir=".\GeneratedFiles" MocDir=".\GeneratedFiles\$(ConfigurationName)" MocOptions="" RccDir=".\GeneratedFiles" lupdateOnBuild="0" lupdateOptions="" lreleaseOptions="" QtVersion_x0020_Win32="4.8.5" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

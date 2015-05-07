@@ -20,5 +20,6 @@ namespace Etoile
 		CameraManipulator() : Manipulator()
 		{}
 		void setCamera(Camera* camera){ p_camera = camera; }
+		Camera* getCamera(){return p_camera;}
 	};
 }

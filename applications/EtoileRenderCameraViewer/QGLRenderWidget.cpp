@@ -4,10 +4,11 @@
 #include "geometry/Camera.h"
 #include <iostream>
 #include "geometry/TrackingBallCameraManipulator.h"
+#include "QManipulatorEventManager.h"
+#include "TrackingBallQEventPerformer.h"
 
 namespace Etoile
 {
-	TrackingBallCameraManipulator* manipulator;
 	QGLRenderWidget::QGLRenderWidget(QWidget *parent)
 		: QGLWidget(parent)
 	{
@@ -23,15 +24,17 @@ namespace Etoile
 	void QGLRenderWidget::defaultSetup(){
 		setFocusPolicy(Qt::StrongFocus);
 		p_camera = new Camera(Vec3f(0,0,0), Vec3f(0,1,0), Vec3f(0,0,2));
-		manipulator = new TrackingBallCameraManipulator();
+		TrackingBallCameraManipulator* manipulator = new TrackingBallCameraManipulator();
 		p_camera->setManipulator(manipulator);
+		TrackingBallQEventPerformer* performer = new TrackingBallQEventPerformer();
+		performer->setManipulator(manipulator);
+		performer->setActive(true);
 
 		m_fpsTime.start();
 		m_fpsCounter = 0;
 		m_f_p_s = 0.0;
 		m_fpsString = tr("%1Hz", "Frames per seconds, in Hertz").arg("?");
 		m_displayMessage = false;
-		m_spinsensibility = 6;
 		m_fullScreen = false;
 		setFullScreen(false);
 
@@ -296,78 +299,33 @@ namespace Etoile
 
 	void QGLRenderWidget::animate()
 	{
-		if(manipulator != NULL) manipulator->spinUpdate();
+		QManipulatorEventManager::getInstance()->performAnimate();
 	}
 
 	void QGLRenderWidget::mousePressEvent(QMouseEvent* const event)
 	{
-		if (event->button() == Qt::MouseButton::LeftButton){
-			manipulator->m_move = false;
-			manipulator->m_rotate = true;
-			manipulator->m_zoom = false;
-		}
-		else if (event->button() == Qt::MouseButton::MiddleButton){
-			manipulator->m_move = false;
-			manipulator->m_rotate = false;
-			manipulator->m_zoom = true;
-		}
-		else if (event->button() == Qt::MouseButton::RightButton){
-			manipulator->m_move = true;
-			manipulator->m_rotate = false;
-			manipulator->m_zoom = false;
-		}
-		m_prevPos = m_pressPos = event->pos();
+		QManipulatorEventManager::getInstance()->performMousePressEvent(event);
 	}
 
 	void QGLRenderWidget::mouseDoubleClickEvent(QMouseEvent* const event)
 	{
-		//p_camera->frame()->mouseDoubleClickEvent(event);
-		//manipulator->setSpinActive(!manipulator->m_spin_active);
+		QManipulatorEventManager::getInstance()->performMouseDoubleClickEvent(event);
 	}
 
 	void QGLRenderWidget::mouseReleaseEvent(QMouseEvent* const event)
 	{
-		manipulator->m_move = false;
-		manipulator->m_rotate = false;
-		manipulator->m_zoom = false;
+		QManipulatorEventManager::getInstance()->performMouseReleaseEvent(event);
 	}
 
 	void QGLRenderWidget::mouseMoveEvent(QMouseEvent* const event)
 	{
-		QPoint currentPos = event->pos();
-		if(manipulator->m_move)
-		{
-			QPoint delta = m_prevPos - event->pos();
-			manipulator->moveOnScreen(delta.x(), delta.y());
-		}
-		else if(manipulator->m_rotate)
-		{
-			manipulator->rotateOnScreen(m_prevPos.x(), m_prevPos.y(), currentPos.x(), currentPos.y());
-			if( (currentPos - m_prevPos).manhattanLength() > m_spinsensibility )
-			{
-				manipulator->setSpinActive(true);
-			}else
-			{
-				manipulator->setSpinActive(false);
-			}
-		}
-		else if(manipulator->m_zoom)
-		{
-			qreal dx = qreal(event->x() - m_prevPos.x()) / p_camera->getWidth();
-			qreal dy = qreal(event->y() - m_prevPos.y()) / p_camera->getHeight();
-			qreal value = fabs(dx) > fabs(dy) ? dx : dy;
-			manipulator->zoom(value);
-		}
-
-		m_prevPos = currentPos;
+		QManipulatorEventManager::getInstance()->performMouseMoveEvent(event);
 		update();
 	}
 
 	void QGLRenderWidget::wheelEvent(QWheelEvent* const event)
 	{
-		static const qreal WHEEL_SENSITIVITY_COEF = 8E-4;
-		float value = event->delta() * manipulator->wheelSensitivity() * WHEEL_SENSITIVITY_COEF;
-		manipulator->zoom(value);
+		QManipulatorEventManager::getInstance()->performWheelEvent(event);
 		update();
 	}
 }
