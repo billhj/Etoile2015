@@ -19,11 +19,13 @@
     <ClInclude Include="..\..\core\geometry\Entity.h" />
     <ClInclude Include="..\..\core\geometry\Frustum.h" />
     <ClInclude Include="..\..\core\geometry\GpuProgram.h" />
+    <ClInclude Include="..\..\core\geometry\GpuProgramManager.h" />
     <ClInclude Include="..\..\core\geometry\Intersection.h" />
     <ClInclude Include="..\..\core\geometry\IntersectionTests.h" />
     <ClInclude Include="..\..\core\geometry\Light.h" />
     <ClInclude Include="..\..\core\geometry\Manipulator.h" />
     <ClInclude Include="..\..\core\geometry\Material.h" />
+    <ClInclude Include="..\..\core\geometry\MaterialManager.h" />
     <ClInclude Include="..\..\core\geometry\RenderMesh.h" />
     <ClInclude Include="..\..\core\geometry\ModelTransform.h" />
     <ClInclude Include="..\..\core\geometry\Octree.h" />
@@ -67,8 +69,10 @@
     <ClCompile Include="..\..\core\geometry\Camera.cpp" />
     <ClCompile Include="..\..\core\geometry\Entity.cpp" />
     <ClCompile Include="..\..\core\geometry\Frustum.cpp" />
+    <ClCompile Include="..\..\core\geometry\GpuProgramManager.cpp" />
     <ClCompile Include="..\..\core\geometry\Light.cpp" />
     <ClCompile Include="..\..\core\geometry\Material.cpp" />
+    <ClCompile Include="..\..\core\geometry\MaterialManager.cpp" />
     <ClCompile Include="..\..\core\geometry\ModelTranform.cpp" />
     <ClCompile Include="..\..\core\geometry\Octree.cpp" />
     <ClCompile Include="..\..\core\geometry\Plane.cpp" />

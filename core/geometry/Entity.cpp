@@ -5,7 +5,7 @@
 namespace Etoile
 {
 	static unsigned int ENTITY_ID = 0;
-	Entity::Entity(void)
+	Entity::Entity(const std::string& name) : m_name(name)
 	{
 		m_id = ENTITY_ID++;
 		m_components.resize(MAX_NB_COMPONENTS);

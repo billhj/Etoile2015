@@ -154,6 +154,12 @@
     <ClInclude Include="..\..\core\geometry\ResourceManager.h">
       <Filter>geometry</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\geometry\MaterialManager.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\geometry\GpuProgramManager.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -204,6 +210,12 @@
       <Filter>geometry</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\geometry\TextureManager.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\geometry\MaterialManager.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\geometry\GpuProgramManager.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
   </ItemGroup>

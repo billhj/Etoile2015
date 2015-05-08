@@ -8,7 +8,7 @@
 
 #include "Light.h"
 #include <cmath>
-
+#include "ModelTransform.h"
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
 */
@@ -24,33 +24,23 @@
 namespace Etoile
 {
 
-	Light::Light(const std::string& name, int id) : m_name(name), m_id(id)
+	Light::Light(const std::string& name, int id) : Camera(name), m_id(id)
 	{
 		setDiffuse(0,0,0,0);
 		setSpecular(0,0,0,0);
-		setPosition(0,0,0,0);
+		setPosition(Vec3f(2,2,2));
 		setDiffuseIntensity(1);
 		setSpecularIntensity(1);
-		setLookAt(0,0,0,1);
-		m_cutoff = 60;
 	}
 
-	Light::Light(Light& light)
+	Light::Light(Light& light) : Camera(light.getName())
 	{
-		 m_name = light.m_name;
-		 m_diffuse = light.m_diffuse;
-		 m_specular = light.m_specular;
-		 m_diffuseIntensity = light.m_diffuseIntensity;
-		 m_specularIntensity = light.m_specularIntensity;
-		 m_diffuseFinal = light.m_diffuseFinal;
-		 m_specularFinal = light.m_specularFinal;
-		 m_position = light.m_position;
-		 m_lookAt = light.m_lookAt;
-		 m_direction = light.m_direction;
-		 m_cutoff = light.m_cutoff;
-		m_modelview = light.m_modelview;
-		m_projection = light.m_projection;
-		m_modelviewProjection = light.m_modelviewProjection;
+		m_diffuse = light.m_diffuse;
+		m_specular = light.m_specular;
+		m_diffuseIntensity = light.m_diffuseIntensity;
+		m_specularIntensity = light.m_specularIntensity;
+		m_diffuseFinal = light.m_diffuseFinal;
+		m_specularFinal = light.m_specularFinal;
 		m_id = light.m_id;
 	}
 
@@ -63,34 +53,6 @@ namespace Etoile
 	{
 		return m_id;
 	}
-
-	void Light::setLookAt(float x, float y, float z, float w)
-	{
-		this->m_lookAt[0] = x;
-		this->m_lookAt[1] = y;
-		this->m_lookAt[2] = z;
-		this->m_lookAt[3] = w;
-		calculateDirection();
-	}
-
-	void Light::setCutOffAngle(float angle)
-	{
-		m_cutoff = angle;
-	}
-
-	void Light::calculateDirection()
-	{
-		float length = sqrt( (m_lookAt[0]-m_position[0]) * (m_lookAt[0]-m_position[0])
-			+  (m_lookAt[1]-m_position[1]) * (m_lookAt[1]-m_position[1])
-			+  (m_lookAt[2]-m_position[2]) * (m_lookAt[2]-m_position[2])
-			);
-		m_direction[0] = (m_lookAt[0]-m_position[0]) / length;
-		m_direction[1] = (m_lookAt[1]-m_position[1]) / length;
-		m_direction[2] = (m_lookAt[2]-m_position[2]) / length;
-		m_direction[3] = 0;
-	}
-
-
 
 	void Light::setDiffuse(const Vec4f& diffuse)
 	{
@@ -145,49 +107,12 @@ namespace Etoile
 		m_specularFinal = m_specular * m_specularIntensity;
 	}
 
-
-	void Light::setPosition(const Vec4f& position)
-	{
-		m_position = position;
-		calculateDirection();
-	}
-
-	void Light::setPosition(float x, float y, float z, float w)
-	{
-		this->m_position[0] = x;
-		this->m_position[1] = y;
-		this->m_position[2] = z;
-		this->m_position[3] = w;
-		calculateDirection();
-	}
-
-	Matrix4f& Light::getModelViewMatrix()
-	{
-		return m_modelview;
-	}
-
-	Matrix4f& Light::getProjectionMatrix()
-	{
-		return m_projection;
-	}
-
-	Matrix4f& Light::getModelViewProjectionMatrix()
-	{
-		return m_modelviewProjection;
-	}
-
-	void Light::updateMatrix()
-	{
-		m_modelviewProjection = m_projection * m_modelview;
-
-	}
-
 	void Light::outputValues(std::ofstream* outfile)
 	{
 		(*outfile) << "light: "<< std::endl;
 		(*outfile)<<"diffuse: "<<this->m_diffuse.r()<<" "<<this->m_diffuse.g()<<" "<< this->m_diffuse.b()<<" " <<this->m_diffuse.a()<<std::endl;
 		(*outfile)<<"specular: "<<this->m_specular.r()<<" "<<this->m_specular.g()<<" "<< this->m_specular.b()<<" " <<this->m_specular.a()<<std::endl;
-		(*outfile) << "position; " << this->getPosition().x()<<" " << this->getPosition().y()<<" " << this->getPosition().z()<<" " << this->getPosition().w()<<std::endl;
+		(*outfile) << "position; " << this->getPosition().x()<<" " << this->getPosition().y()<<" " << this->getPosition().z()<<" " <<std::endl;
 
 	}
 

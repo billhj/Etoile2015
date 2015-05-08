@@ -18,7 +18,7 @@ namespace Etoile
 	class Entity
 	{
 	public:
-		Entity(void);
+		Entity(const std::string& name ="");
 		~Entity(void);
 		const std::string getName(){return m_name;}
 		void setName(const std::string& name){ m_name = name;}

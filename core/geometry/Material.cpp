@@ -192,4 +192,6 @@ namespace Etoile
 		(*outfile)<<"shininess: "<<this->m_shininess<<std::endl;
 
 	}
+
+	void Material::setName(const std::string& name){ MaterialManager::getInstance()->renameElement(m_name, name); m_name = name;}
 }

@@ -90,6 +90,7 @@ namespace Etoile
 		const std::vector<DataType*>& getConstDataList() const {return m_datas;}
 		void renameElement(const std::string& oldName, const std::string& newName)
 		{
+			int idx = getIndex(oldName);
 			remove(oldName, false);
 			m_names_idx[newName] = idx;
 		}

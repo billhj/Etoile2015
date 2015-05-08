@@ -31,9 +31,9 @@ namespace Etoile
 		CameraType m_type;
 		Vec3f m_pivot;
 	public:
-		Camera(const Vec3f& position, const Quaternionf& orientation);
-		Camera(const Vec3f& target, const Vec3f& up, const Vec3f& position);
-		Camera();
+		Camera(const Vec3f& position, const Quaternionf& orientation, const std::string& name = "");
+		Camera(const Vec3f& target, const Vec3f& up, const Vec3f& position, const std::string& name = "");
+		Camera(const std::string& name = "");
 		void reset();
 		CameraType type();
 		void setType(CameraType type);
@@ -44,6 +44,11 @@ namespace Etoile
 		float getZFarPlane() const;
 		void setFieldOfView(float fov);
 		float getFieldOfView() const;
+
+		void setPosition(const Vec3f& position);
+		Vec3f getPosition();
+		void setOrientation(const Quaternionf& q);
+		Quaternionf getOrientation();
 
 		int getWidth() const;
 		void setWidth(int screenWidth);

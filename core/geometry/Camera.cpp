@@ -25,7 +25,7 @@
 namespace Etoile
 {
 	
-		Camera::Camera(const Vec3f& position, const Quaternionf& orientation): Entity()
+		Camera::Camera(const Vec3f& position, const Quaternionf& orientation, const std::string& name) : Entity(name)
 		{
 			reset();
 			p_transform->setPosition(position);
@@ -33,13 +33,13 @@ namespace Etoile
 			m_pivot = getViewDirection() * 2 + p_transform->getPosition();
 		}
 
-		Camera::Camera(const Vec3f& target, const Vec3f& up, const Vec3f& position): Entity()
+		Camera::Camera(const Vec3f& target, const Vec3f& up, const Vec3f& position, const std::string& name): Entity(name)
 		{
 			reset();
 			this->setupCameraOrientation(target, up, position);
 		}
 
-		Camera::Camera(): Entity()
+		Camera::Camera(const std::string& name): Entity(name)
 		{
 			reset();
 			m_pivot = getViewDirection() * 2 + p_transform->getPosition();
@@ -91,6 +91,27 @@ namespace Etoile
 		int Camera::getHeight() const{return m_screenHeight;}
 		void Camera::setHeight(int screenHeight){m_screenHeight = screenHeight;}
 
+		void Camera::setPosition(const Vec3f& position)
+		{
+			p_transform->setPosition(position);
+		}
+
+		Vec3f Camera::getPosition()
+		{
+			return p_transform->getPosition();
+		}
+
+
+		void Camera::setOrientation(const Quaternionf& q)
+		{
+			p_transform->setOrientation(q);
+		}
+
+		Quaternionf Camera::getOrientation()
+		{
+			return p_transform->getOrientation();
+		}
+
 		void Camera::setTarget(const Vec3f& target)
 		{
 			setupCameraOrientation(target - p_transform->getPosition(), getUpVector(), p_transform->getPosition());
@@ -102,7 +123,7 @@ namespace Etoile
 		Vec3f Camera::getUpVector() const{return p_transform->getOrientation() * Vec3f(0,1,0);}
 		void Camera::setViewDirection(const Vec3f& direction)
 		{
-			m_pivot = getViewDirection() * 2 + p_transform->getPosition();
+			m_pivot = direction * 2 + p_transform->getPosition();
 			setupCameraOrientation(m_pivot, getUpVector(), p_transform->getPosition());
 		}
 		Vec3f Camera::getViewDirection() const{return p_transform->getOrientation() * Vec3f(0,0,-1);}
