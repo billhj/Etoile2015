@@ -55,6 +55,36 @@ namespace Etoile
 			}
 		}
 
+		Quaternion(const Vec3<T>& from, const Vec3<T>& to)
+		{
+			const double epsilon = 1E-10f;
+
+			const double fromSqNorm = from.length();
+			const double toSqNorm   = to.length();
+			// Identity Quaternion when one vector is null
+			if ((fromSqNorm < epsilon) || (toSqNorm < epsilon))
+			{
+				q[0]=q[1]=q[2]=0.0;
+				q[3]=1.0;
+			}
+			else
+			{
+				Vec3<T> axis = from.cross3(to);
+				const double axisSqNorm = axis.length();
+
+				// Aligned vectors, pick any axis, not aligned with from or to
+				if (axisSqNorm < epsilon)
+					axis = from.orthogonalVec();
+
+				double angle = asin(sqrt(axisSqNorm / (fromSqNorm * toSqNorm)));
+
+				if (from*to < 0.0)
+					angle = M_PI-angle;
+
+				setAxisAngle(axis, angle);
+			}
+		}
+
 		/*! Sets the Quaternion as a rotation of axis \p axis and angle \p angle (in radians).
 		\p axis does not need to be normalized. A null \p axis will result in an identity Quaternion. */
 		void setAxisAngle(const Vec3<T> & axis, T  angle)
@@ -325,8 +355,8 @@ namespace Etoile
 			const T q23 = 2.0l * m_q[2] * m_q[3];
 
 			return Vec3<T>((1.0 - q11 - q22)*v[0] + (      q01 - q23)*v[1] + (      q02 + q13)*v[2],
-				(      q01 + q23)*v[0] + (1.0 - q22 - q00)*v[1] + (      q12 - q03)*v[2],
-				(      q02 - q13)*v[0] + (      q12 + q03)*v[1] + (1.0 - q11 - q00)*v[2] );*/
+			(      q01 + q23)*v[0] + (1.0 - q22 - q00)*v[1] + (      q12 - q03)*v[2],
+			(      q02 - q13)*v[0] + (      q12 + q03)*v[1] + (1.0 - q11 - q00)*v[2] );*/
 			Vec3<T> vn(v);
 			Quaternion vecQuat, resQuat;
 			vecQuat[0] = vn.x();

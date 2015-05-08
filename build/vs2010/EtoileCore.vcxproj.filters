@@ -160,6 +160,9 @@
     <ClInclude Include="..\..\core\geometry\GpuProgramManager.h">
       <Filter>geometry</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLLightRenderer.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">

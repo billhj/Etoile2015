@@ -81,7 +81,7 @@ namespace Etoile
 			return;
 		}
 		printOpenGLError();
-		glLightf(_gl_Light, GL_SPOT_CUTOFF, _pLight->getCutOffAngle());
+		glLightf(_gl_Light, GL_SPOT_CUTOFF, _pLight->getFieldOfView());
 		printOpenGLError();
 	}
 
@@ -93,7 +93,7 @@ namespace Etoile
 			return;
 		}
 		printOpenGLError();
-		glLightfv(_gl_Light, GL_SPOT_DIRECTION, &_pLight->getDirectionVector()[0]);
+		glLightfv(_gl_Light, GL_SPOT_DIRECTION, &_pLight->getViewDirection()[0]);
 		printOpenGLError();
 	}
 
@@ -130,7 +130,7 @@ namespace Etoile
 		glPushMatrix();
 
 		glLoadIdentity();
-		gluLookAt(_pLight->getPosition()[0], _pLight->getPosition()[1], _pLight->getPosition()[2], _pLight->getLookAt()[0], _pLight->getLookAt()[1], _pLight->getLookAt()[2], 0.0, 1.0, 0.0);
+		gluLookAt(_pLight->getPosition()[0], _pLight->getPosition()[1], _pLight->getPosition()[2], _pLight->getTarget()[0], _pLight->getTarget()[1], _pLight->getTarget()[2], 0.0, 1.0, 0.0);
 
 		glGetFloatv(GL_MODELVIEW_MATRIX , &_pLight->getModelViewMatrix()[0][0]);
 
@@ -146,7 +146,7 @@ namespace Etoile
 		glPopMatrix();
 		printOpenGLError();
 
-		_pLight->updateMatrix();
+		//_pLight->updateMatrix();
 	}
 
 

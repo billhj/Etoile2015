@@ -19,20 +19,9 @@ namespace Etoile
 		MeshRenderer(const std::string& name): ObjectRenderer(name), p_mesh(NULL)
 		{
 		}
-		virtual void setRenderMesh(RenderMesh* mesh, ModelTransform* transform)
-		{
-			p_mesh = mesh;
-			p_transform = transform;
-		}
-
 		virtual void setRenderMesh(RenderMesh* mesh)
 		{
 			p_mesh = mesh;
-		}
-
-		virtual void seTransform(ModelTransform* transform)
-		{
-			p_transform = transform;
 		}
 
 		virtual RenderMesh* getRenderMesh(){return p_mesh;}
@@ -46,7 +35,6 @@ namespace Etoile
 		
 	protected:
 		RenderMesh* p_mesh;
-		ModelTransform* p_transform;
 	};
 
 }

@@ -31,6 +31,15 @@ namespace Etoile
 		m_renderObjList.clear();
 	}
 	
+	void RenderManager::preRender()
+	{
+		for(unsigned int i = 0; i < m_preRenderObjList.size(); ++i)
+		{
+			ObjectRenderer* obj = m_preRenderObjList[i];
+			obj->draw();
+		}
+	}
+
 	void RenderManager::renderOneFrame()
 	{
 		for(unsigned int i = 0; i < m_renderObjList.size(); ++i)
@@ -40,9 +49,28 @@ namespace Etoile
 		}
 	}
 
+	void RenderManager::PostRender()
+	{
+		for(unsigned int i = 0; i < m_postRenderObjList.size(); ++i)
+		{
+			ObjectRenderer* obj = m_postRenderObjList[i];
+			obj->draw();
+		}
+	}
+
 	void RenderManager::addObjectRenderer(ObjectRenderer* obj)
 	{
 		m_renderObjList.push_back(obj);
+	}
+
+	void RenderManager::addPrelist(ObjectRenderer* obj)
+	{
+		m_preRenderObjList.push_back(obj);
+	}
+
+	void RenderManager::addPostlist(ObjectRenderer* obj)
+	{
+		m_postRenderObjList.push_back(obj);
 	}
 
 	void RenderManager::updateObjectRendererList(Scene* scene)
@@ -83,5 +111,29 @@ namespace Etoile
 		}
 	}
 
-	
+	void RenderManager::removeFromPreList(ObjectRenderer* cobj)
+	{
+		for(unsigned int i = 0; i < m_preRenderObjList.size(); ++i)
+		{
+			ObjectRenderer* obj = m_preRenderObjList[i];
+			if(cobj == obj)
+			{
+				m_preRenderObjList.erase(m_preRenderObjList.begin()+i);
+				return;
+			}
+		}
+	}
+
+	void RenderManager::removeFromPostList(ObjectRenderer* cobj)
+	{
+		for(unsigned int i = 0; i < m_postRenderObjList.size(); ++i)
+		{
+			ObjectRenderer* obj = m_postRenderObjList[i];
+			if(cobj == obj)
+			{
+				m_postRenderObjList.erase(m_postRenderObjList.begin()+i);
+				return;
+			}
+		}
+	}
 }

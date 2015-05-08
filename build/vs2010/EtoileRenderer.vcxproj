@@ -18,10 +18,12 @@
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\FBOManager.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\FragmentShader.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GeometryShader.h" />
+    <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLCameraRenderer.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\glDrawFunctions.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\glfunctions.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\glhead.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\glInfo.h" />
+    <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLLightRenderer.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLMeshRenderPass.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLMeshRenderer.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLSLGpuProgram.h" />

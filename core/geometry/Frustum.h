@@ -18,7 +18,7 @@ namespace Etoile
 	enum FrustumTest{OUTSIDE, INTERSECT, INSIDE};
 	class Frustum 
 	{
-	protected:
+	public:
 		enum {
 			TOP = 0,
 			BOTTOM,

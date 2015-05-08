@@ -106,7 +106,7 @@ namespace Etoile
 			Vec3f yAxis(0,1,0);
 			Vec3f zAxis(0,0,1);
 			glLineWidth(3);
-	
+
 			glTranslatef(x,y,z);
 			xAxis = q * xAxis;
 			yAxis = q * yAxis;
@@ -132,6 +132,121 @@ namespace Etoile
 			glPopMatrix();
 			//    drawAxis(10);
 			glPopMatrix();
+		}
+
+		static void drawArrow(float length, float radius=-1.0f, int nbSubdivisions=12)
+		{
+			static GLUquadric* quadric = gluNewQuadric();
+
+			if (radius < 0.0)
+				radius = 0.05 * length;
+
+			const float head = 2.5*(radius / length) + 0.1;
+			const float coneRadiusCoef = 4.0 - 5.0 * head;
+
+			gluCylinder(quadric, radius, radius, length * (1.0 - head/coneRadiusCoef), nbSubdivisions, 1);
+			glTranslatef(0.0, 0.0, length * (1.0 - head));
+			gluCylinder(quadric, coneRadiusCoef * radius, 0.0, head * length, nbSubdivisions, 1);
+			glTranslatef(0.0, 0.0, -length * (1.0 - head));
+		}
+
+		static void drawArrow(const Vec3f& from, const Vec3f& to, float radius=-1.0f, int nbSubdivisions=12)
+		{
+			glPushMatrix();
+			glTranslatef(from[0],from[1],from[2]);
+			const Vec3f dir = to-from;
+			Quaternionf r(Vec3f(0,0,1), dir);
+			static Matrix4f m;
+			r.getMatrix(m);
+			glMultMatrixf(m.getGLMatrix());
+			drawArrow(dir.length(), radius, nbSubdivisions);
+			glPopMatrix();
+		}
+
+		static void drawAxis(float length=1.0f)
+		{
+			const float charWidth = length / 40.0;
+			const float charHeight = length / 30.0;
+			const float charShift = 1.04 * length;
+
+			GLboolean lighting, colorMaterial;
+			glGetBooleanv(GL_LIGHTING, &lighting);
+			glGetBooleanv(GL_COLOR_MATERIAL, &colorMaterial);
+
+			glDisable(GL_LIGHTING);
+
+			glBegin(GL_LINES);
+			// The X
+			glVertex3f(charShift,  charWidth, -charHeight);
+			glVertex3f(charShift, -charWidth,  charHeight);
+			glVertex3f(charShift, -charWidth, -charHeight);
+			glVertex3f(charShift,  charWidth,  charHeight);
+			// The Y
+			glVertex3f( charWidth, charShift, charHeight);
+			glVertex3f(0.0,        charShift, 0.0);
+			glVertex3f(-charWidth, charShift, charHeight);
+			glVertex3f(0.0,        charShift, 0.0);
+			glVertex3f(0.0,        charShift, 0.0);
+			glVertex3f(0.0,        charShift, -charHeight);
+			// The Z
+			glVertex3f(-charWidth,  charHeight, charShift);
+			glVertex3f( charWidth,  charHeight, charShift);
+			glVertex3f( charWidth,  charHeight, charShift);
+			glVertex3f(-charWidth, -charHeight, charShift);
+			glVertex3f(-charWidth, -charHeight, charShift);
+			glVertex3f( charWidth, -charHeight, charShift);
+			glEnd();
+
+			glEnable(GL_LIGHTING);
+			glDisable(GL_COLOR_MATERIAL);
+
+			float color[4];
+			color[0] = 0.7f;  color[1] = 0.7f;  color[2] = 1.0f;  color[3] = 1.0f;
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
+			drawArrow(length, 0.01*length);
+
+			color[0] = 1.0f;  color[1] = 0.7f;  color[2] = 0.7f;  color[3] = 1.0f;
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
+			glPushMatrix();
+			glRotatef(90.0, 0.0, 1.0, 0.0);
+			drawArrow(length, 0.01*length);
+			glPopMatrix();
+
+			color[0] = 0.7f;  color[1] = 1.0f;  color[2] = 0.7f;  color[3] = 1.0f;
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
+			glPushMatrix();
+			glRotatef(-90.0, 1.0, 0.0, 0.0);
+			drawArrow(length, 0.01*length);
+			glPopMatrix();
+
+			if (colorMaterial)
+				glEnable(GL_COLOR_MATERIAL);
+			if (!lighting)
+				glDisable(GL_LIGHTING);
+		}
+
+
+		static void drawGrid(float size=1.0f, int nbSubdivisions=10)
+		{
+			GLboolean lighting;
+			glGetBooleanv(GL_LIGHTING, &lighting);
+
+			glDisable(GL_LIGHTING);
+
+			glBegin(GL_LINES);
+			for (int i=0; i<=nbSubdivisions; ++i)
+			{
+				const float pos = size*(2.0*i/nbSubdivisions-1.0);
+				glVertex2f(pos, -size);
+				glVertex2f(pos, +size);
+				glVertex2f(-size, pos);
+				glVertex2f( size, pos);
+			}
+			glEnd();
+
+			if (lighting)
+				glEnable(GL_LIGHTING);
+
 		}
 
 	};

@@ -79,6 +79,7 @@ namespace Etoile
 		CameraManipulator* getManipulator(){return p_manipulator;}
 		void setManipulator(CameraManipulator* manipulator);
 		void setFrustum(Frustum* frustum){p_frustum = frustum;}
+		Frustum* getFrustum(){return p_frustum;}
 		void updateFrustum();
 	};
 
