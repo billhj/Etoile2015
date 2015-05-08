@@ -9,6 +9,7 @@
 #pragma once
 #include <vector>
 #include <map>
+#include "TextureManager.h"
 
 namespace Etoile
 {
@@ -17,6 +18,7 @@ namespace Etoile
 	public:
 		Texture(const std::string& name): m_name(name), m_width(0), m_height(0), m_layer(0)
 		{
+			TextureManager::getInstance()->add(name, this);
 		}
 
 		Texture(Texture& t)
