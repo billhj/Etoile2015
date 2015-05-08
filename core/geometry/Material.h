@@ -116,7 +116,7 @@ namespace Etoile
 
 		void outputValues(std::ofstream* outfile);
 		const std::string getName(){return m_name;}
-		void setName(const std::string& name){ m_name = name;}
+		void setName(const std::string& name){ MaterialManager::getInstance()->renameElement(m_name, name); m_name = name;}
 
 #ifdef USING_BOOST
 		friend class boost::serialization::access;

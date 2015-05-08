@@ -63,7 +63,7 @@ namespace Etoile
 		virtual void write(int x, int y, int width, int height, float* data) = 0;
 		virtual void write(int size, float* data) = 0;
 		const std::string getName(){return m_name;}
-		void setName(const std::string& name){ m_name = name;}
+		void setName(const std::string& name){TextureManager::getInstance()->renameElement(m_name, name); m_name = name;}
 		virtual void draw(int w, int h) = 0;
 		virtual void draw() = 0;
 	protected:

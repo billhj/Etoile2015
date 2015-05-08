@@ -70,8 +70,29 @@ namespace Etoile
 			}
 		}
 
+		void remove(const std::string& name, bool deleteData = true)
+		{
+			std::map<std::string, int>::iterator itor = m_names_idx.find(name);
+			if(itor != m_names_idx.end())
+			{
+				int idx = (*itor).second;
+				DataType* olddata = m_datas[idx];
+				if(deleteData)
+				{
+					delete olddata;
+					m_datas[idx] = NULL;
+				}
+				m_names_idx.erase(itor);
+			}
+		}
+
 		std::vector<DataType*>& getDataList(){return m_datas;}
 		const std::vector<DataType*>& getConstDataList() const {return m_datas;}
+		void renameElement(const std::string& oldName, const std::string& newName)
+		{
+			remove(oldName, false);
+			m_names_idx[newName] = idx;
+		}
 
 	protected:
 		std::vector<DataType*> m_datas;

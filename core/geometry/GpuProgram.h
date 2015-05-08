@@ -9,6 +9,7 @@
 #pragma once
 #include <vector>
 #include <map>
+#include "GpuProgramManager.h"
 
 namespace Etoile
 {
@@ -20,15 +21,17 @@ namespace Etoile
 	public:
 		GpuProgram(const std::string& name): m_name(name)
 		{
+			GpuProgramManager::getInstance()->addGpuProgram(this);
 		}
 
 		GpuProgram(GpuProgram& g)
 		{
-			m_name = g.m_name;
+			m_name = g.m_name+"_copy";
+			GpuProgramManager::getInstance()->addGpuProgram(this);
 		}
 		~GpuProgram(){}
 		const std::string getName(){return m_name;}
-		void setName(const std::string& name){ m_name = name;}
+		void setName(const std::string& name){ GpuProgramManager::getInstance()->renameElement(m_name, name); m_name = name;}
 		virtual void reCompile() = 0;
 		virtual void use() = 0;
 		virtual void unUse() = 0;

@@ -15,10 +15,10 @@ namespace Etoile
 	class Scene
 	{
 	public:
-		Scene(void);
+		Scene(const std::string& name);
 		~Scene(void);
 		const std::string getName(){return m_name;}
-		void setName(const std::string& name){ m_name = name;}
+		void setName(const std::string& name);
 		void addEntity(Entity*);
 		std::vector<Entity*>& getEntities(){return m_entities;}
 		const std::vector<Entity*>& getEntities() const {return m_entities;}

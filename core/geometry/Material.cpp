@@ -26,7 +26,7 @@ namespace Etoile
 
 	Material::Material(const std::string& name): m_name(name), m_ka(1), m_kd(1), m_ks(1), m_shininess(64)
 	{
-		MaterialManager::getInstance()->addMaterial(this);
+		
 		m_ambient = Vec4f(0.2f,0.2f,0.2f,1);
 		m_diffuse = Vec4f(1,1,1,1);
 		m_specular = Vec4f(0.2f,0.2f,0.2f,1);
@@ -43,12 +43,12 @@ namespace Etoile
 		/*setDiffuseTexture("emptyMap");
 		setSpecularTexture("emptyMap");
 		setBumpMap("emptyMap");*/
+		MaterialManager::getInstance()->addMaterial(this);
 		
 	}
 
 	Material::Material(Material& m)
 	{
-		MaterialManager::getInstance()->addMaterial(this);
 		m_name = m.m_name + "_copy";
 		m_ambient = m.m_ambient;
 		m_diffuse = m.m_diffuse;
@@ -66,6 +66,7 @@ namespace Etoile
 		m_shininess = m.m_shininess;
 		m_textures = m.m_textures;
 		p_gpuProgram = m.p_gpuProgram;
+		MaterialManager::getInstance()->addMaterial(this);
 	}
 
 	void Material::setAmbient(const Vec4f& ambient)
