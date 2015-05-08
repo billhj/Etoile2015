@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <vector>
 #include <map>
+#include <string>
 
 namespace Etoile
 {
@@ -21,8 +22,8 @@ namespace Etoile
 	public:
 		DataType* getByIndex(unsigned int idx)
 		{
-			assert(idx < _datas.size());
-			return _datas[idx];
+			assert(idx < m_datas.size());
+			return m_datas[idx];
 		}
 
 
@@ -51,10 +52,13 @@ namespace Etoile
 			std::map<std::string, int>::iterator itor = m_names_idx.find(name);
 			if(itor != m_names_idx.end())
 			{
-				DataType* olddata = m_datas[(*itor).second];
 				int idx = (*itor).second;
-				m_datas[idx] = data;
-				delete olddata;
+				DataType* olddata = m_datas[idx];
+				if(olddata != data)
+				{
+					m_datas[idx] = data;
+					delete olddata;
+				}
 				return idx;
 			}
 			else
@@ -65,6 +69,9 @@ namespace Etoile
 				return idx;
 			}
 		}
+
+		std::vector<DataType*>& getDataList(){return m_datas;}
+		const std::vector<DataType*>& getConstDataList() const {return m_datas;}
 
 	protected:
 		std::vector<DataType*> m_datas;
