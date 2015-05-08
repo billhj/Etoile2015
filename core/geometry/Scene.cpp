@@ -1,11 +1,11 @@
 #include "Scene.h"
+#include "SceneManager.h"
 
 namespace Etoile
 {
-	static unsigned int SCENE_ID = 0;
 	Scene::Scene(void)
 	{
-		m_id = SCENE_ID++;
+		SceneManager::getInstance()->addScene(this);
 	}
 
 

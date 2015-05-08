@@ -24,7 +24,6 @@ namespace Etoile
 		const std::vector<Entity*>& getEntities() const {return m_entities;}
 	private:
 		std::vector<Entity*> m_entities;
-		int m_id;
 		std::string m_name;
 	};
 

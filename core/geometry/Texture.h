@@ -18,7 +18,7 @@ namespace Etoile
 	public:
 		Texture(const std::string& name): m_name(name), m_width(0), m_height(0), m_layer(0)
 		{
-			TextureManager::getInstance()->add(name, this);
+			TextureManager::getInstance()->addTexture(this);
 		}
 
 		Texture(Texture& t)
