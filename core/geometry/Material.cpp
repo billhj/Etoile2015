@@ -8,6 +8,8 @@
 
 #include "Material.h"
 #include <string>
+#include "MaterialManager.h"
+
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
 */
@@ -24,6 +26,7 @@ namespace Etoile
 
 	Material::Material(const std::string& name): m_name(name), m_ka(1), m_kd(1), m_ks(1), m_shininess(64)
 	{
+		MaterialManager::getInstance()->addMaterial(this);
 		m_ambient = Vec4f(0.2f,0.2f,0.2f,1);
 		m_diffuse = Vec4f(1,1,1,1);
 		m_specular = Vec4f(0.2f,0.2f,0.2f,1);
@@ -45,7 +48,8 @@ namespace Etoile
 
 	Material::Material(Material& m)
 	{
-		m_name = m.m_name;
+		MaterialManager::getInstance()->addMaterial(this);
+		m_name = m.m_name + "_copy";
 		m_ambient = m.m_ambient;
 		m_diffuse = m.m_diffuse;
 		m_specular = m.m_diffuse;

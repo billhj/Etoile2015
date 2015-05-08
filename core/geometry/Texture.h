@@ -23,10 +23,11 @@ namespace Etoile
 
 		Texture(Texture& t)
 		{
-			m_name = t.m_name;
+			m_name = t.m_name + "_copy";
 			m_width = t.m_width; m_height = t.m_height;
 			m_layer = t.m_layer;
 			m_mipmaped = t.m_mipmaped;
+			TextureManager::getInstance()->addTexture(this);
 		}
 
 		void setFilePath(const std::string& filepath)
