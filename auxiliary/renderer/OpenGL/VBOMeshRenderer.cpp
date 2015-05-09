@@ -38,6 +38,7 @@ namespace Etoile
 		drawAABB();
 		unUseTransform(t);
 	}
+
 	void VBOMeshRenderer::drawRenderSubMesh(RenderSubMesh* submesh)
 	{
 		VBORenderSubMesh* vbosubmesh = dynamic_cast<VBORenderSubMesh*>(submesh);

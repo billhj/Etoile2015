@@ -20,8 +20,6 @@ namespace Etoile
 		~VBOMeshRenderer();
 		virtual void drawRenderMesh();
 		virtual void drawRenderSubMesh(RenderSubMesh* submesh);
-	protected:
-		int getVBOUnitIndexByName(const std::string& name);
 	};
 
 
