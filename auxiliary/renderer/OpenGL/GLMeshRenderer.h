@@ -65,10 +65,10 @@ namespace Etoile
 
 		virtual void drawRenderSubMesh(RenderSubMesh* submesh)
 		{
-			const std::vector<Vec3f>& vertices = submesh->getOriginalVertices();
-			const std::vector<Vec3f>& normals = submesh->getOriginalNormals();
-			const std::vector<Vec2f>& texs = submesh->getOriginalTextureCoords();
-			const std::vector<int>& faceIndices = submesh->getOriginalVertexIndexForFaces();
+			const std::vector<Vec3f>& vertices = submesh->getVertices();
+			const std::vector<Vec3f>& normals = submesh->getNormals();
+			const std::vector<Vec2f>& texs = submesh->getTextureCoords();
+			const std::vector<int>& faceIndices = submesh->getVertexIndexForFaces();
 
 			Material* material = submesh->getMaterial();
 			if(material != NULL)

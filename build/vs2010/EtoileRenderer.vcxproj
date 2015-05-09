@@ -42,6 +42,7 @@
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\UniformBufferObject.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\VBO.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\VBOMeshRenderer.h" />
+    <ClInclude Include="..\..\auxiliary\renderer\OpenGL\VBORenderSubMesh.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\VertexShader.h" />
     <ClInclude Include="..\..\auxiliary\renderer\RenderTarget.h" />
   </ItemGroup>
@@ -69,6 +70,7 @@
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\UniformBufferObject.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\VBO.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\VBOMeshRenderer.cpp" />
+    <ClCompile Include="..\..\auxiliary\renderer\OpenGL\VBORenderSubMesh.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\VertexShader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

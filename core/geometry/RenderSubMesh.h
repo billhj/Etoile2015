@@ -80,12 +80,12 @@ namespace Etoile
 			m_texcoord_index_face.push_back(texcoord_index);
 		}
 
-		std::vector<int>& getOriginalVertexIndexForFaces(){return m_vertices_index_face;}
-		std::vector<int>& getOriginalNormalIndexForFaces(){return m_normal_index_face;}
-		std::vector<int>&  getOriginalTextureIndexForFaces(){return m_texcoord_index_face;}
-		std::vector<Vec3f>&  getOriginalVertices(){return m_vdata;} 
-		std::vector<Vec3f>&  getOriginalNormals(){return m_ndata;}
-		std::vector<Vec2f>& getOriginalTextureCoords(){return m_tdata;}
+		std::vector<int>& getVertexIndexForFaces(){return m_vertices_index_face;}
+		std::vector<int>& getNormalIndexForFaces(){return m_normal_index_face;}
+		std::vector<int>&  getTextureIndexForFaces(){return m_texcoord_index_face;}
+		std::vector<Vec3f>&  getVertices(){return m_vdata;} 
+		std::vector<Vec3f>&  getNormals(){return m_ndata;}
+		std::vector<Vec2f>& getTextureCoords(){return m_tdata;}
 	
 		void computeAABB()
 		{
@@ -110,12 +110,10 @@ namespace Etoile
 			ar & m_vertices_index_face;
 		}
 #endif
-	private:
-		Material* p_material;
+
 	public:
 		int m_nbVerticesPerFace;
 		int m_numberOfFaces;
-	private:
 		std::vector<int> m_vertices_index_face;
 		std::vector<int> m_normal_index_face;
 		std::vector<int> m_texcoord_index_face;
@@ -123,5 +121,6 @@ namespace Etoile
 		std::vector<Vec2f> m_tdata;
 		std::string m_name;
 		AxisAlignedBoundingBoxf m_aabb;
+		Material* p_material;
 	};
 }

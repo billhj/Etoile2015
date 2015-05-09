@@ -69,7 +69,7 @@ namespace Etoile
 			for(itor = newlist.begin(); itor != newlist.end(); ++itor)
 			{
 				RenderSubMesh* submesh = (*itor);
-				if(submesh->getOriginalVertexIndexForFaces().empty())
+				if(submesh->getVertexIndexForFaces().empty())
 				{
 					delete submesh;
 				}else

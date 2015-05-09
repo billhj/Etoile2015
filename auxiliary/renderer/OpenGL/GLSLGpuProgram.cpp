@@ -465,7 +465,7 @@ namespace Etoile
 	}
 
 
-	void GLSLGpuProgram::drawIndexVBO(GLenum primitive, VBOUnit& pos, VBOUnit& normal, VBOUnit& texCoord, IndexVBO* index)
+	void GLSLGpuProgram::drawIndexVBO(GLenum primitive, VBO* pos, VBO* normal, VBO* texCoord, IndexVBO* index)
 	{
 		printOpenGLError ();
 		if(_pShader != 0)
@@ -475,33 +475,33 @@ namespace Etoile
 			size_t nComponentPerVertex = 3;
 			size_t nTextureCoordComponentPerVertex = 2;
 
-			GLint locationTex = getAttributLocation(texCoord._attributeName);
+			GLint locationTex = getAttributLocation("In_TextureCoord");
 			if(locationTex != -1)
 			{
-				texCoord._pVBO->use();
-				glVertexAttribPointer( locationTex, texCoord._numberComponents, GL_FLOAT, GL_FALSE, 0, 0);
+				texCoord->use();
+				glVertexAttribPointer( locationTex, 2, GL_FLOAT, GL_FALSE, 0, 0);
 				printOpenGLError();
 				glEnableVertexAttribArray(locationTex);
 			}
 
 			printOpenGLError();
 
-			GLint locationNormal = getAttributLocation(normal._attributeName);
+			GLint locationNormal = getAttributLocation("In_Normal");
 			if(locationNormal != -1)
 			{
-				normal._pVBO->use();
-				glVertexAttribPointer(locationNormal, normal._numberComponents, GL_FLOAT, GL_FALSE, 0, 0);
+				normal->use();
+				glVertexAttribPointer(locationNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
 				printOpenGLError();
 				glEnableVertexAttribArray(locationNormal);
 			}
 
 			printOpenGLError();
 
-			GLint locationVertex = getAttributLocation(pos._attributeName);
+			GLint locationVertex = getAttributLocation("In_Vertex");
 			if(locationVertex != -1)
 			{
-				pos._pVBO->use();
-				glVertexAttribPointer(locationVertex, pos._numberComponents, GL_FLOAT, GL_FALSE, 0, 0);
+				pos->use();
+				glVertexAttribPointer(locationVertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
 				printOpenGLError();
 				glEnableVertexAttribArray(locationVertex);
 			}
@@ -531,21 +531,21 @@ namespace Etoile
 			{
 				glDisableVertexAttribArray(locationTex);
 				printOpenGLError();
-				texCoord._pVBO->unUse();
+				texCoord->unUse();
 				printOpenGLError();
 			}
 			if(locationNormal != -1)
 			{
 				glDisableVertexAttribArray(locationNormal);
 				printOpenGLError();
-				normal._pVBO->unUse();
+				normal->unUse();
 				printOpenGLError();
 			}
 			if(locationVertex != -1)
 			{
 				glDisableVertexAttribArray(locationVertex);
 				printOpenGLError();
-				pos._pVBO->unUse();
+				pos->unUse();
 				printOpenGLError();
 			}
 			_pShader->unbind();

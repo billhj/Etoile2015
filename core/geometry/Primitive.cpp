@@ -30,35 +30,35 @@ namespace Etoile
 		submesh->getMaterial()->setDiffuse(Vec4f(0,0,1,1));
 		this->addRenderSubMesh(submesh);
 		
-		submesh->getOriginalVertices().push_back(Vec3f(  1.0, -1.0, -1));
-		submesh->getOriginalVertices().push_back(Vec3f( -1.0, -1.0, -1));
-		submesh->getOriginalVertices().push_back(Vec3f(  1.0,  1.0, -1));
+		submesh->getVertices().push_back(Vec3f(  1.0, -1.0, -1));
+		submesh->getVertices().push_back(Vec3f( -1.0, -1.0, -1));
+		submesh->getVertices().push_back(Vec3f(  1.0,  1.0, -1));
 
-		submesh->getOriginalVertices().push_back(Vec3f( -1.0,  1.0, -1));
-		submesh->getOriginalVertices().push_back(Vec3f(  1.0,  1.0, -1));
-		submesh->getOriginalVertices().push_back(Vec3f( -1.0, -1.0, -1));
+		submesh->getVertices().push_back(Vec3f( -1.0,  1.0, -1));
+		submesh->getVertices().push_back(Vec3f(  1.0,  1.0, -1));
+		submesh->getVertices().push_back(Vec3f( -1.0, -1.0, -1));
 
-		submesh->getOriginalTextureCoords().push_back(Vec2f(1.0, 0.0));
-		submesh->getOriginalTextureCoords().push_back(Vec2f(0.0, 0.0));
-		submesh->getOriginalTextureCoords().push_back(Vec2f(1.0, 1.0));
+		submesh->getTextureCoords().push_back(Vec2f(1.0, 0.0));
+		submesh->getTextureCoords().push_back(Vec2f(0.0, 0.0));
+		submesh->getTextureCoords().push_back(Vec2f(1.0, 1.0));
 
-		submesh->getOriginalTextureCoords().push_back(Vec2f(0.0, 1.0));
-		submesh->getOriginalTextureCoords().push_back(Vec2f(1.0, 1.0));
-		submesh->getOriginalTextureCoords().push_back(Vec2f(0.0, 0.0));
+		submesh->getTextureCoords().push_back(Vec2f(0.0, 1.0));
+		submesh->getTextureCoords().push_back(Vec2f(1.0, 1.0));
+		submesh->getTextureCoords().push_back(Vec2f(0.0, 0.0));
 
-		submesh->getOriginalNormals().push_back(Vec3f( 0.0, 0, 1.0));
-		submesh->getOriginalNormals().push_back(Vec3f( 0.0, 0, 1.0));
-		submesh->getOriginalNormals().push_back(Vec3f( 0.0, 0, 1.0));
-		submesh->getOriginalNormals().push_back(Vec3f( 0.0, 0, 1.0));
-		submesh->getOriginalNormals().push_back(Vec3f( 0.0, 0, 1.0));
-		submesh->getOriginalNormals().push_back(Vec3f( 0.0, 0, 1.0));
+		submesh->getNormals().push_back(Vec3f( 0.0, 0, 1.0));
+		submesh->getNormals().push_back(Vec3f( 0.0, 0, 1.0));
+		submesh->getNormals().push_back(Vec3f( 0.0, 0, 1.0));
+		submesh->getNormals().push_back(Vec3f( 0.0, 0, 1.0));
+		submesh->getNormals().push_back(Vec3f( 0.0, 0, 1.0));
+		submesh->getNormals().push_back(Vec3f( 0.0, 0, 1.0));
 
-		submesh->getOriginalVertexIndexForFaces().push_back(0);
-		submesh->getOriginalVertexIndexForFaces().push_back(1);
-		submesh->getOriginalVertexIndexForFaces().push_back(2);
-		submesh->getOriginalVertexIndexForFaces().push_back(3);
-		submesh->getOriginalVertexIndexForFaces().push_back(4);
-		submesh->getOriginalVertexIndexForFaces().push_back(5);
+		submesh->getVertexIndexForFaces().push_back(0);
+		submesh->getVertexIndexForFaces().push_back(1);
+		submesh->getVertexIndexForFaces().push_back(2);
+		submesh->getVertexIndexForFaces().push_back(3);
+		submesh->getVertexIndexForFaces().push_back(4);
+		submesh->getVertexIndexForFaces().push_back(5);
 	}
 
 
@@ -71,21 +71,21 @@ namespace Etoile
 		submesh->getMaterial()->setDiffuse(Vec4f(0,0,1,1));
 		this->addRenderSubMesh(submesh);
 		
-		submesh->getOriginalVertices().push_back(Vec3f(-1.0, -1.0, 0.0));
-		submesh->getOriginalVertices().push_back(Vec3f( 1.0, -1.0, 0.0));
-		submesh->getOriginalVertices().push_back(Vec3f( 0.0f,  1.0, 0.0));
+		submesh->getVertices().push_back(Vec3f(-1.0, -1.0, 0.0));
+		submesh->getVertices().push_back(Vec3f( 1.0, -1.0, 0.0));
+		submesh->getVertices().push_back(Vec3f( 0.0f,  1.0, 0.0));
 
-		submesh->getOriginalTextureCoords().push_back(Vec2f(1.0f, 0.0f));
-		submesh->getOriginalTextureCoords().push_back(Vec2f(0.0f, 0.0f));
-		submesh->getOriginalTextureCoords().push_back(Vec2f(1.0f, 1.0f));
+		submesh->getTextureCoords().push_back(Vec2f(1.0f, 0.0f));
+		submesh->getTextureCoords().push_back(Vec2f(0.0f, 0.0f));
+		submesh->getTextureCoords().push_back(Vec2f(1.0f, 1.0f));
 
-		submesh->getOriginalNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
-		submesh->getOriginalNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
-		submesh->getOriginalNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
+		submesh->getNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
+		submesh->getNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
+		submesh->getNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
 
-		submesh->getOriginalVertexIndexForFaces().push_back(0);
-		submesh->getOriginalVertexIndexForFaces().push_back(1);
-		submesh->getOriginalVertexIndexForFaces().push_back(2);
+		submesh->getVertexIndexForFaces().push_back(0);
+		submesh->getVertexIndexForFaces().push_back(1);
+		submesh->getVertexIndexForFaces().push_back(2);
 	}
 
 	void Plane::init()
@@ -99,48 +99,48 @@ namespace Etoile
 		{
 			for(int j = -m_line; j < m_line; ++j)
 			{
-				submesh->getOriginalVertices().push_back(Vec3f(  1.0 + i, 0, j - 1.0));
-				submesh->getOriginalVertices().push_back(Vec3f( -1.0 + i, 0, j - 1.0));
-				submesh->getOriginalVertices().push_back(Vec3f(  1.0 + i, 0, j + 1.0));
+				submesh->getVertices().push_back(Vec3f(  1.0 + i, 0, j - 1.0));
+				submesh->getVertices().push_back(Vec3f( -1.0 + i, 0, j - 1.0));
+				submesh->getVertices().push_back(Vec3f(  1.0 + i, 0, j + 1.0));
 
-				submesh->getOriginalVertices().push_back(Vec3f( -1.0 + i, 0, j + 1.0));
-				submesh->getOriginalVertices().push_back(Vec3f(  1.0 + i, 0, j + 1.0));
-				submesh->getOriginalVertices().push_back(Vec3f( -1.0 + i, 0, j - 1.0));
+				submesh->getVertices().push_back(Vec3f( -1.0 + i, 0, j + 1.0));
+				submesh->getVertices().push_back(Vec3f(  1.0 + i, 0, j + 1.0));
+				submesh->getVertices().push_back(Vec3f( -1.0 + i, 0, j - 1.0));
 
 				float x0 = (i + m_line) / (2.0 * m_line);
 				float x1 = (i + m_line + 1.0) / (2.0 * m_line);
 				float z0 = (j + m_line) / (2.0 * m_line);
 				float z1 = (j + m_line + 1.0) / (2.0 * m_line);
 
-				submesh->getOriginalTextureCoords().push_back(Vec2f(1, 0));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(0, 0));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(1, 1));
+				submesh->getTextureCoords().push_back(Vec2f(1, 0));
+				submesh->getTextureCoords().push_back(Vec2f(0, 0));
+				submesh->getTextureCoords().push_back(Vec2f(1, 1));
 
-				submesh->getOriginalTextureCoords().push_back(Vec2f(0, 1));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(1, 1));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(0, 0));
+				submesh->getTextureCoords().push_back(Vec2f(0, 1));
+				submesh->getTextureCoords().push_back(Vec2f(1, 1));
+				submesh->getTextureCoords().push_back(Vec2f(0, 0));
 
-				/*submesh->getOriginalTextureCoords().push_back(Vec2f(x1, z0));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x0, z0));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x1, z1));
+				/*submesh->getTextureCoords().push_back(Vec2f(x1, z0));
+				submesh->getTextureCoords().push_back(Vec2f(x0, z0));
+				submesh->getTextureCoords().push_back(Vec2f(x1, z1));
 
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x0, z1));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x1, z1));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x0, z0));*/
+				submesh->getTextureCoords().push_back(Vec2f(x0, z1));
+				submesh->getTextureCoords().push_back(Vec2f(x1, z1));
+				submesh->getTextureCoords().push_back(Vec2f(x0, z0));*/
 
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
 
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
 			}
 		}
 		this->computeAABB();
@@ -149,56 +149,56 @@ namespace Etoile
 	void Plane::reinit()
 	{
 		RenderSubMesh* submesh = this->getRenderSubMesh(0);
-		submesh->getOriginalTextureCoords().clear();
-		submesh->getOriginalNormals().clear();
-		submesh->getOriginalVertexIndexForFaces().clear();
+		submesh->getTextureCoords().clear();
+		submesh->getNormals().clear();
+		submesh->getVertexIndexForFaces().clear();
 		int index = 0;
 		for(int i = -m_line; i < m_line; ++i)
 		{
 			for(int j = -m_line; j < m_line; ++j)
 			{
-				submesh->getOriginalVertices().push_back(Vec3f(  1.0 + i, 0, j - 1.0));
-				submesh->getOriginalVertices().push_back(Vec3f( -1.0 + i, 0, j - 1.0));
-				submesh->getOriginalVertices().push_back(Vec3f(  1.0 + i, 0, j + 1.0));
+				submesh->getVertices().push_back(Vec3f(  1.0 + i, 0, j - 1.0));
+				submesh->getVertices().push_back(Vec3f( -1.0 + i, 0, j - 1.0));
+				submesh->getVertices().push_back(Vec3f(  1.0 + i, 0, j + 1.0));
 
-				submesh->getOriginalVertices().push_back(Vec3f( -1.0 + i, 0, j + 1.0));
-				submesh->getOriginalVertices().push_back(Vec3f(  1.0 + i, 0, j + 1.0));
-				submesh->getOriginalVertices().push_back(Vec3f( -1.0 + i, 0, j - 1.0));
+				submesh->getVertices().push_back(Vec3f( -1.0 + i, 0, j + 1.0));
+				submesh->getVertices().push_back(Vec3f(  1.0 + i, 0, j + 1.0));
+				submesh->getVertices().push_back(Vec3f( -1.0 + i, 0, j - 1.0));
 
 				float x0 = (i + m_line) / (2.0 * m_line);
 				float x1 = (i + m_line + 1.0) / (2.0 * m_line);
 				float z0 = (j + m_line) / (2.0 * m_line);
 				float z1 = (j + m_line + 1.0) / (2.0 * m_line);
 
-				submesh->getOriginalTextureCoords().push_back(Vec2f(1, 0));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(0, 0));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(1, 1));
+				submesh->getTextureCoords().push_back(Vec2f(1, 0));
+				submesh->getTextureCoords().push_back(Vec2f(0, 0));
+				submesh->getTextureCoords().push_back(Vec2f(1, 1));
 
-				submesh->getOriginalTextureCoords().push_back(Vec2f(0, 1));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(1, 1));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(0, 0));
+				submesh->getTextureCoords().push_back(Vec2f(0, 1));
+				submesh->getTextureCoords().push_back(Vec2f(1, 1));
+				submesh->getTextureCoords().push_back(Vec2f(0, 0));
 
-				/*submesh->getOriginalTextureCoords().push_back(Vec2f(x1, z0));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x0, z0));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x1, z1));
+				/*submesh->getTextureCoords().push_back(Vec2f(x1, z0));
+				submesh->getTextureCoords().push_back(Vec2f(x0, z0));
+				submesh->getTextureCoords().push_back(Vec2f(x1, z1));
 
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x0, z1));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x1, z1));
-				submesh->getOriginalTextureCoords().push_back(Vec2f(x0, z0));*/
+				submesh->getTextureCoords().push_back(Vec2f(x0, z1));
+				submesh->getTextureCoords().push_back(Vec2f(x1, z1));
+				submesh->getTextureCoords().push_back(Vec2f(x0, z0));*/
 
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
-				submesh->getOriginalNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
+				submesh->getNormals().push_back(Vec3f( 0.0, 1.0, 0));
 
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
-				submesh->getOriginalVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
+				submesh->getVertexIndexForFaces().push_back(index++);
 			}
 		}
 		this->computeAABB();

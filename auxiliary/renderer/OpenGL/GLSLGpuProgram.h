@@ -60,7 +60,7 @@ namespace Etoile
 		virtual void bindTexture(std::string const, Texture*);
 		virtual void unBindBindingTextures();
 
-		void drawIndexVBO(GLenum primitive, VBOUnit& pos, VBOUnit& normal,  VBOUnit& texCoord, IndexVBO* index);
+		void drawIndexVBO(GLenum primitive, VBO* pos, VBO* normal,  VBO* texCoord, IndexVBO* index);
 		void drawVBO( VBO*, GLenum primitive = GL_TRIANGLES, int numberComponents = 4);
 		void drawVBO( VBOUnit&);
 		void drawComputerShader();

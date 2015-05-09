@@ -8,6 +8,7 @@
 
 #include "VBOMeshRenderer.h"
 #include "GLSLGpuProgram.h"
+#include "VBORenderSubMesh.h"
 
 namespace Etoile
 {
@@ -18,12 +19,6 @@ namespace Etoile
 	VBOMeshRenderer::~VBOMeshRenderer()
 	{
 
-		for(unsigned int i = 0; i < _vboUnitList.size(); ++i)
-		{
-			delete _vboUnitList[i];
-		}
-		_vboUnitList.clear();
-		_vboUnitIndex.clear();
 	}
 
 	void VBOMeshRenderer::drawRenderMesh()
@@ -37,17 +32,19 @@ namespace Etoile
 		for(unsigned int i = 0; i < submeshlist.size(); ++i)
 		{
 			RenderSubMesh* submesh = submeshlist[i];
-			drawRenderSubMesh(submesh, i);
+			drawRenderSubMesh(submesh);
 		}
 			
 		drawAABB();
 		unUseTransform(t);
 	}
-	void VBOMeshRenderer::drawRenderSubMesh(RenderSubMesh* submesh, int idx)
+	void VBOMeshRenderer::drawRenderSubMesh(RenderSubMesh* submesh)
 	{
-		glEnable( GL_TEXTURE_2D );
+		VBORenderSubMesh* vbosubmesh = dynamic_cast<VBORenderSubMesh*>(submesh);
+		if(NULL == vbosubmesh) return;
 
-		Material* material = submesh->getMaterial();
+		glEnable( GL_TEXTURE_2D );
+		Material* material = vbosubmesh->getMaterial();
 		if(material != NULL){
 			applyMaterial(material);
 
@@ -61,14 +58,12 @@ namespace Etoile
 				t->use();
 			}
 
-			RenderSubMeshVBOUnit* info = _vboUnitList[idx];
-
-			info->m_texCoordVBO._pVBO->use();
-			glTexCoordPointer(info->m_texCoordVBO._numberComponents, GL_FLOAT, 0, 0);
-			info->m_normalVBO._pVBO->use();
+			vbosubmesh->p_texcoordVBO->use();
+			glTexCoordPointer(2, GL_FLOAT, 0, 0);
+			vbosubmesh->p_normalVBO->use();
 			glNormalPointer(GL_FLOAT, 0, 0);
-			info->m_vertexVBO._pVBO->use();
-			glVertexPointer(info->m_vertexVBO._numberComponents, GL_FLOAT, 0, 0);
+			vbosubmesh->p_vertexVBO->use();
+			glVertexPointer(3, GL_FLOAT, 0, 0);
 
 			printOpenGLError();
 
@@ -78,9 +73,9 @@ namespace Etoile
 
 			printOpenGLError();
 
-			info->p_indexVBO->use();
-			glDrawElements( GL_TRIANGLES, info->p_indexVBO->getSize(), GL_UNSIGNED_INT, 0 );
-			info->p_indexVBO->unUse();
+			vbosubmesh->p_indexVBO->use();
+			glDrawElements( GL_TRIANGLES, vbosubmesh->p_indexVBO->getSize(), GL_UNSIGNED_INT, 0 );
+			vbosubmesh->p_indexVBO->unUse();
 
 			printOpenGLError();
 
@@ -89,9 +84,9 @@ namespace Etoile
 			glDisableClientState(GL_VERTEX_ARRAY);
 
 
-			info->m_texCoordVBO._pVBO->unUse();
-			info->m_normalVBO._pVBO->unUse();
-			info->m_vertexVBO._pVBO->unUse();
+			vbosubmesh->p_texcoordVBO->unUse();
+			vbosubmesh->p_normalVBO->unUse();
+			vbosubmesh->p_vertexVBO->unUse();
 
 			printOpenGLError();
 
@@ -108,17 +103,7 @@ namespace Etoile
 
 	}
 
-
-	void VBOMeshRenderer::setRenderMesh(RenderMesh* mesh)
-	{
-		_vboUnitList.clear();
-		p_mesh = mesh;
-		if(p_mesh != NULL)
-			createVBO(p_mesh);
-
-	}
-
-	void VBOMeshRenderer::createVBO(RenderMesh* mesh, GLenum usage)
+	/*void VBOMeshRenderer::createVBO(RenderMesh* mesh, GLenum usage)
 	{
 		const std::vector<RenderSubMesh*>& submeshlist = mesh->getRenderSubMeshList();
 
@@ -127,74 +112,44 @@ namespace Etoile
 			RenderSubMesh* submesh = submeshlist[i];
 
 			RenderSubMeshVBOUnit* info = new RenderSubMeshVBOUnit();
-			size_t sizeComponent = submesh->getOriginalVertices().size();
-			size_t sizeTextureCord = submesh->getOriginalTextureCoords().size();
+			size_t sizeComponent = submesh->getVertices().size();
+			size_t sizeTextureCord = submesh->getTextureCoords().size();
 	
-			VBO* normalVBO = new VBO(sizeComponent * 3, &(submesh->getOriginalNormals()[0][0]), usage);
+			VBO* normalVBO = new VBO(sizeComponent * 3, &(submesh->getNormals()[0][0]), usage);
 			info->m_normalVBO._pVBO = normalVBO;
 			info->m_normalVBO._attributeName = "In_Normal";
 			info->m_normalVBO._numberComponents = 3;
 			info->m_normalVBO._primitive = GL_TRIANGLES;
 
-			VBO* texCoordVBO = new VBO(sizeTextureCord * 2, &(submesh->getOriginalTextureCoords()[0][0]), usage);
+			VBO* texCoordVBO = new VBO(sizeTextureCord * 2, &(submesh->getTextureCoords()[0][0]), usage);
 			info->m_texCoordVBO._pVBO = texCoordVBO;
 			info->m_texCoordVBO._attributeName = "In_TextureCoord";
 			info->m_texCoordVBO._numberComponents = 2;
 			info->m_texCoordVBO._primitive = GL_TRIANGLES;
 
-			VBO* vertexVBO = new VBO(sizeComponent * 3, &(submesh->getOriginalVertices()[0][0]), usage);
+			VBO* vertexVBO = new VBO(sizeComponent * 3, &(submesh->getVertices()[0][0]), usage);
 			info->m_vertexVBO._pVBO = vertexVBO;
 			info->m_vertexVBO._attributeName = "In_Vertex";
 			info->m_vertexVBO._numberComponents = 3;
 			info->m_vertexVBO._primitive = GL_TRIANGLES;
 
 
-			IndexVBO* p_indexVBO = new IndexVBO(submesh->getOriginalVertexIndexForFaces().size(), &(submesh->getOriginalVertexIndexForFaces()[0]), usage);
+			IndexVBO* p_indexVBO = new IndexVBO(submesh->getVertexIndexForFaces().size(), &(submesh->getVertexIndexForFaces()[0]), usage);
 			info->p_indexVBO = p_indexVBO;
 			_vboUnitList.push_back(info);
 
 		}
-	}
-
-	/*void VBOMeshRenderer::updateVBO(RenderMesh* mesh)
-	{
-		const std::vector<RenderSubMesh*>& submeshlist = mesh->getRenderSubMeshList();
-
-		for(unsigned int i = 0; i < submeshlist.size(); ++i)
-		{
-			RenderSubMesh* submesh = submeshlist[i];
-			updateVBO(submesh, i);
-		}
-	}
-
-	void VBOMeshRenderer::updateVBO(RenderSubMesh* submesh, int i)
-	{
-		if(submesh->getSkin()._updated)
-		{
-			RenderSubMeshVBOUnit* info = _vboUnitList[i];
-			int size = submesh->getSkin()._vdata.size() * 3;
-			info->m_vertexVBO._pVBO->write(0, size, &submesh->getSkin()._vdata[0][0]);
-			info->m_normalVBO._pVBO->write(0, size, &submesh->getSkin()._ndata[0][0]);
-			submesh->getSkin()._updated = false;
-		}
 	}*/
 
-	int VBOMeshRenderer::getVBOUnitIndexByName(const std::string& name)
-	{
-		std::map<std::string, int>::iterator itor = _vboUnitIndex.find(name);
-		if(itor != _vboUnitIndex.end())
-		{
-			return itor->second;
-		}
-		return -1;
-	}
 
 	GPUBasedVBOMeshRenderer::GPUBasedVBOMeshRenderer(const std::string& name) : VBOMeshRenderer(name)
 	{}
 
 
-	void GPUBasedVBOMeshRenderer::drawRenderSubMesh(RenderSubMesh* submesh, int idx)
+	void GPUBasedVBOMeshRenderer::drawRenderSubMesh(RenderSubMesh* submesh)
 	{
+		VBORenderSubMesh* vbosubmesh = dynamic_cast<VBORenderSubMesh*>(submesh);
+		if(NULL == vbosubmesh) return;
 
 		glEnable( GL_TEXTURE_2D );
 
@@ -222,8 +177,7 @@ namespace Etoile
 					Texture* t = itor->second;
 					gpuprogram->bindTexture(bName, t);
 				}
-				RenderSubMeshVBOUnit* info = _vboUnitList[idx];
-				gpuprogram->drawIndexVBO(GL_TRIANGLES, info->m_vertexVBO, info->m_normalVBO, info->m_texCoordVBO, info->p_indexVBO);
+				gpuprogram->drawIndexVBO(GL_TRIANGLES, vbosubmesh->p_vertexVBO, vbosubmesh->p_normalVBO, vbosubmesh->p_texcoordVBO, vbosubmesh->p_indexVBO);
 				gpuprogram->unBindBindingTextures();
 			}
 			else
@@ -235,14 +189,13 @@ namespace Etoile
 				{
 					t->use();
 				}
-				RenderSubMeshVBOUnit* info = _vboUnitList[idx];
 
-				info->m_texCoordVBO._pVBO->use();
-				glTexCoordPointer(info->m_texCoordVBO._numberComponents, GL_FLOAT, 0, 0);
-				info->m_normalVBO._pVBO->use();
+				vbosubmesh->p_texcoordVBO->use();
+				glTexCoordPointer(2, GL_FLOAT, 0, 0);
+				vbosubmesh->p_normalVBO->use();
 				glNormalPointer(GL_FLOAT, 0, 0);
-				info->m_vertexVBO._pVBO->use();
-				glVertexPointer(info->m_vertexVBO._numberComponents, GL_FLOAT, 0, 0);
+				vbosubmesh->p_vertexVBO->use();
+				glVertexPointer(3, GL_FLOAT, 0, 0);
 
 				printOpenGLError();
 
@@ -252,9 +205,9 @@ namespace Etoile
 
 				printOpenGLError();
 
-				info->p_indexVBO->use();
-				glDrawElements( GL_TRIANGLES, info->p_indexVBO->getSize(), GL_UNSIGNED_INT, 0 );
-				info->p_indexVBO->unUse();
+				vbosubmesh->p_indexVBO->use();
+				glDrawElements( GL_TRIANGLES, vbosubmesh->p_indexVBO->getSize(), GL_UNSIGNED_INT, 0 );
+				vbosubmesh->p_indexVBO->unUse();
 
 				printOpenGLError();
 
@@ -262,9 +215,9 @@ namespace Etoile
 				glDisableClientState(GL_NORMAL_ARRAY);
 				glDisableClientState(GL_VERTEX_ARRAY);
 
-				info->m_texCoordVBO._pVBO->unUse();
-				info->m_normalVBO._pVBO->unUse();
-				info->m_vertexVBO._pVBO->unUse();
+				vbosubmesh->p_texcoordVBO->unUse();
+				vbosubmesh->p_normalVBO->unUse();
+				vbosubmesh->p_vertexVBO->unUse();
 
 				printOpenGLError();
 				if(t != NULL)
@@ -287,8 +240,10 @@ namespace Etoile
 	{}
 
 
-	void AvancedGPUBasedVBOMeshRenderer::drawRenderSubMesh(RenderSubMesh* submesh, int idx)
+	void AvancedGPUBasedVBOMeshRenderer::drawRenderSubMesh(RenderSubMesh* submesh)
 	{
+		VBORenderSubMesh* vbosubmesh = dynamic_cast<VBORenderSubMesh*>(submesh);
+		if(NULL == vbosubmesh) return;
 		glEnable( GL_TEXTURE_2D );
 
 		Material* material = submesh->getMaterial();
@@ -310,8 +265,7 @@ namespace Etoile
 					gpuprogram->bindTexture(bName, t);
 				}
 
-				RenderSubMeshVBOUnit* info = _vboUnitList[idx];
-				gpuprogram->drawIndexVBO(GL_TRIANGLES, info->m_vertexVBO, info->m_normalVBO, info->m_texCoordVBO, info->p_indexVBO);
+				gpuprogram->drawIndexVBO(GL_TRIANGLES, vbosubmesh->p_vertexVBO, vbosubmesh->p_normalVBO, vbosubmesh->p_texcoordVBO, vbosubmesh->p_indexVBO);
 				printOpenGLError();
 				gpuprogram->unBindBindingTextures();
 			}else
