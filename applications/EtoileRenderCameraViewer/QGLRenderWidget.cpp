@@ -11,8 +11,7 @@
 
 namespace Etoile
 {
-	QGLRenderWidget::QGLRenderWidget(QWidget *parent)
-		: QGLWidget(parent)
+	QGLRenderWidget::QGLRenderWidget(QWidget *parent) : QGLWidget(parent)
 	{
 		ui.setupUi(this);
 		defaultSetup();
@@ -23,7 +22,12 @@ namespace Etoile
 
 	}
 
-	void QGLRenderWidget::defaultSetup(){
+	void QGLRenderWidget::defaultSetup()
+	{
+		//QGLWidget::setFormat(QGLFormat(QGL::SampleBuffers));
+		glEnable(GL_MULTISAMPLE);
+		glEnable(GL_POLYGON_SMOOTH);
+
 		setFocusPolicy(Qt::StrongFocus);
 		p_camera = new Camera(Vec3f(0,0,0), Vec3f(0,1,0), Vec3f(0,0,2));
 		TrackingBallCameraManipulator* manipulator = new TrackingBallCameraManipulator();
@@ -324,5 +328,16 @@ namespace Etoile
 	{
 		QManipulatorEventManager::getInstance()->performWheelEvent(event);
 		update();
+	}
+
+	void QGLRenderWidget::keyPressEvent(QKeyEvent *e)
+	{
+	
+	}
+
+
+	void QGLRenderWidget::closeEvent(QCloseEvent *e)
+	{
+		QGLWidget::closeEvent(e);
 	}
 }

@@ -226,7 +226,7 @@ namespace Etoile
 		}
 
 
-		static void drawGrid(float size=1.0f, int nbSubdivisions=10)
+		static void drawGrid(float size=1.0f, int nbSubdivisions=20)
 		{
 			GLboolean lighting;
 			glGetBooleanv(GL_LIGHTING, &lighting);

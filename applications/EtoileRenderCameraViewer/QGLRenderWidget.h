@@ -52,6 +52,8 @@ namespace Etoile
 		virtual void mouseMoveEvent(QMouseEvent* const event) override;
 		virtual void wheelEvent(QWheelEvent* const event) override;
 		virtual void timerEvent(QTimerEvent *);
+		virtual void keyPressEvent(QKeyEvent *);
+		virtual void closeEvent(QCloseEvent *);
 
 		public Q_SLOTS:
 		/*! Sets the backgroundColor() of the viewer and calls \c qglClearColor(). See also
