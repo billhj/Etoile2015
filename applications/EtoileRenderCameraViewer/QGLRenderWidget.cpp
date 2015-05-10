@@ -66,7 +66,7 @@ namespace Etoile
 
 		// Default colors
 		setForegroundColor(QColor(180, 180, 180));
-		setBackgroundColor(QColor(51, 51, 51));
+		setBackgroundColor(QColor(100, 100, 100));
 
 		// Clear the buffer where we're going to draw
 		if (format().stereo())
@@ -242,7 +242,13 @@ namespace Etoile
 
 	void QGLRenderWidget::displayFPS()
 	{
-		drawText(10, int(1.5*((QApplication::font().pixelSize() > 0) ? QApplication::font().pixelSize() : QApplication::font().pointSize())), m_fpsString);
+		 QFont font( "Times" );
+		font.setPointSize( 12 );
+
+		font.setWeight( QFont::Bold );
+		font.setKerning(true);
+		//font.setUnderline( TRUE );
+		drawText(10, int(2*((QApplication::font().pixelSize() > 0) ? QApplication::font().pixelSize() : QApplication::font().pointSize())), m_fpsString, font);
 		//drawText(50, int(1.5*((QApplication::font().pixelSize() > 0) ? QApplication::font().pixelSize() : QApplication::font().pointSize())), QString().setNum(camera()->getZFarPlane()));
 	}
 
