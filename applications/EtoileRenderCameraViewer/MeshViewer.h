@@ -13,7 +13,7 @@
 #include "geometry/RenderMesh.h"
 #include "geometry/RenderManager.h"
 #include "renderer/OpenGL/GLTexture2D.h"
-#include "renderer/OpenGL/VBOMeshRenderer.h"
+#include "renderer/OpenGL/ImmediateMeshRenderer.h"
 #include "renderer/OpenGL/LightController.h"
 #include "math/Vectors.h"
 #include "meshloader/OBJMeshLoader.h"
@@ -64,7 +64,7 @@ public:
 		glEnable(GL_MULTISAMPLE);
 		
 		Triangle* triangle = new Triangle("triangle");
-		VBOMeshRenderer* renderer = new VBOMeshRenderer("triangle");
+		ImmediateMeshRenderer* renderer = new ImmediateMeshRenderer("triangle");
 		Entity* entity = new Entity();
 		entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
 		renderer->setRenderMesh(triangle);

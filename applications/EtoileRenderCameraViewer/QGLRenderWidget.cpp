@@ -1,3 +1,4 @@
+#include "renderer/OpenGL/glDrawFunctions.h"
 #include "QGLRenderWidget.h"
 #include <QTimer>
 #include <QMouseEvent>
@@ -6,6 +7,7 @@
 #include "geometry/TrackingBallCameraManipulator.h"
 #include "QManipulatorEventManager.h"
 #include "TrackingBallQEventPerformer.h"
+
 
 namespace Etoile
 {
@@ -38,9 +40,12 @@ namespace Etoile
 		m_fullScreen = false;
 		setFullScreen(false);
 
+		m_drawAxis = true;
+		m_drawGrid = true;
+
 		m_animationTimerId = 0;
 		//stopAnimation();
-		setAnimationPeriod(5); // 25Hz
+		setAnimationPeriod(5); // >60Hz
 		startAnimation();
 
 		setAttribute(Qt::WA_NoSystemBackground);
@@ -80,26 +85,42 @@ namespace Etoile
 
 	void QGLRenderWidget::paintGL()
 	{
-		//if (displaysInStereo())
-		//{
-		//	for (int view = 1; view >= 0; --view)
-		//	{
-		//		// Clears screen, set model view matrix with shifted matrix for ith buffer
-		//		//preDrawStereo(view);
-		//		
-		//		draw();
-		//		postDraw();
-		//	}
-		//}
-		//else
-		//{
-			// Clears screen, set model view matrix...
-			preDraw();
-			draw();
-			// Add visual hints: axis, camera, grid...
-			postDraw();
-		//}
+
+		// Clears screen, set model view matrix...
+		preDraw();
+		draw();
+		// Add visual hints: axis, camera, grid...
+		postDraw();
+
 		Q_EMIT drawFinished(true);
+	}
+
+
+	
+
+	void QGLRenderWidget::loadProjectionMatrix(bool reset)
+	{
+
+		glMatrixMode(GL_PROJECTION);
+		p_camera->computeProjectionMatrix();
+		float* projectM = p_camera->getGLProjectionMatrix();
+		if (reset)
+		{
+			glLoadIdentity();
+		}
+		glMultMatrixf(projectM);
+	}
+
+	void QGLRenderWidget::loadModelViewMatrix(bool reset)
+	{
+		glMatrixMode(GL_MODELVIEW);
+		p_camera->computeModelViewMatrix();
+		float* modelVM = p_camera->getGLModelViewMatrix();
+		if (reset)
+		{
+			glLoadIdentity();
+		}
+		glMultMatrixf(modelVM);
 	}
 
 
@@ -125,32 +146,6 @@ namespace Etoile
 
 		Q_EMIT drawNeeded();
 	}
-
-	void QGLRenderWidget::loadProjectionMatrix(bool reset)
-	{
-		
-		glMatrixMode(GL_PROJECTION);
-		p_camera->computeProjectionMatrix();
-		float* projectM = p_camera->getGLProjectionMatrix();
-		if (reset)
-		{
-			glLoadIdentity();
-		}
-		glMultMatrixf(projectM);
-	}
-
-	void QGLRenderWidget::loadModelViewMatrix(bool reset)
-	{
-		glMatrixMode(GL_MODELVIEW);
-		p_camera->computeModelViewMatrix();
-		float* modelVM = p_camera->getGLModelViewMatrix();
-		if (reset)
-		{
-			glLoadIdentity();
-		}
-		glMultMatrixf(modelVM);
-	}
-
 
 	/*! Called after draw() to draw viewer visual hints.
 
@@ -187,6 +182,9 @@ namespace Etoile
 		glDisable(GL_COLOR_MATERIAL);
 		qglColor(foregroundColor());
 
+
+		if (m_drawGrid) { glLineWidth(1.0); glDrawFunctions::drawGrid(p_camera->sceneRadius()); }
+	    if (m_drawAxis) { glLineWidth(2.0); glDrawFunctions::drawAxis(p_camera->sceneRadius()); }
 
 		// FPS computation
 		const unsigned int maxCounter = 20;
@@ -241,7 +239,6 @@ namespace Etoile
 	void QGLRenderWidget::displayFPS()
 	{
 		drawText(10, int(1.5*((QApplication::font().pixelSize() > 0) ? QApplication::font().pixelSize() : QApplication::font().pointSize())), m_fpsString);
-
 		//drawText(50, int(1.5*((QApplication::font().pixelSize() > 0) ? QApplication::font().pixelSize() : QApplication::font().pointSize())), QString().setNum(camera()->getZFarPlane()));
 	}
 
@@ -262,7 +259,7 @@ namespace Etoile
 
 		/*if (isFullScreen())
 		{
-		prevPos_ = topLevelWidget()->pos();
+		m_prevPos = topLevelWidget()->pos();
 		tlw->showFullScreen();
 		tlw->move(0, 0);
 		}

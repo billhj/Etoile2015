@@ -398,6 +398,18 @@ namespace Etoile
 		}
 
 
+		Vec3 orthogonalVec() const
+		{
+		  // Find smallest component. Keep equal case for null values.
+		  if ((fabs(m_data[1]) >= 0.9*fabs(m_data[0])) && (fabs(m_data[2]) >= 0.9*fabs(m_data[0])))
+			return Vec3(0.0, -m_data[2], m_data[1]);
+		  else
+			if ((fabs(m_data[0]) >= 0.9*fabs(m_data[1])) && (fabs(m_data[2]) >= 0.9*fabs(m_data[1])))
+			  return Vec3(-m_data[2], 0.0, m_data[0]);
+			else
+			  return Vec3(-m_data[1], m_data[0], 0.0);
+		}
+
 		friend ostream& operator<<(ostream& o, const Vec3& v)
 		{
 			return o << v[0] << '\t' << v[1] << '\t'<< v[2] << '\t';

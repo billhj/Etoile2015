@@ -201,18 +201,18 @@ namespace Etoile
 			glDisable(GL_COLOR_MATERIAL);
 
 			float color[4];
-			color[0] = 0.7f;  color[1] = 0.7f;  color[2] = 1.0f;  color[3] = 1.0f;
+			color[0] = 0.1f;  color[1] = 0.1f;  color[2] = 1.0f;  color[3] = 1.0f;
 			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 			drawArrow(length, 0.01*length);
 
-			color[0] = 1.0f;  color[1] = 0.7f;  color[2] = 0.7f;  color[3] = 1.0f;
+			color[0] = 1.0f;  color[1] = 0.1f;  color[2] = 0.1f;  color[3] = 1.0f;
 			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 			glPushMatrix();
 			glRotatef(90.0, 0.0, 1.0, 0.0);
 			drawArrow(length, 0.01*length);
 			glPopMatrix();
 
-			color[0] = 0.7f;  color[1] = 1.0f;  color[2] = 0.7f;  color[3] = 1.0f;
+			color[0] = 0.1f;  color[1] = 1.0f;  color[2] = 0.1f;  color[3] = 1.0f;
 			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 			glPushMatrix();
 			glRotatef(-90.0, 1.0, 0.0, 0.0);
@@ -232,15 +232,17 @@ namespace Etoile
 			glGetBooleanv(GL_LIGHTING, &lighting);
 
 			glDisable(GL_LIGHTING);
-
+			float color[4];
+			color[0] = 0.3f;  color[1] = 0.3f;  color[2] = 0.3f;  color[3] = 1.0f;
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 			glBegin(GL_LINES);
 			for (int i=0; i<=nbSubdivisions; ++i)
 			{
 				const float pos = size*(2.0*i/nbSubdivisions-1.0);
-				glVertex2f(pos, -size);
-				glVertex2f(pos, +size);
-				glVertex2f(-size, pos);
-				glVertex2f( size, pos);
+				glVertex3f(pos, 0, -size);
+				glVertex3f(pos, 0, +size);
+				glVertex3f(-size, 0, pos);
+				glVertex3f( size, 0, pos);
 			}
 			glEnd();
 

@@ -64,8 +64,8 @@ namespace Etoile
 			// Identity Quaternion when one vector is null
 			if ((fromSqNorm < epsilon) || (toSqNorm < epsilon))
 			{
-				q[0]=q[1]=q[2]=0.0;
-				q[3]=1.0;
+				m_q[0]=m_q[1]=m_q[2]=0.0;
+				m_q[3]=1.0;
 			}
 			else
 			{
@@ -78,7 +78,7 @@ namespace Etoile
 
 				double angle = asin(sqrt(axisSqNorm / (fromSqNorm * toSqNorm)));
 
-				if (from*to < 0.0)
+				if (from.dot3(to) < 0.0)
 					angle = M_PI-angle;
 
 				setAxisAngle(axis, angle);

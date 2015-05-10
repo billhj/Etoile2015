@@ -81,6 +81,8 @@ namespace Etoile
 		void setFrustum(Frustum* frustum){p_frustum = frustum;}
 		Frustum* getFrustum(){return p_frustum;}
 		void updateFrustum();
+
+		float sceneRadius();
 	};
 
 

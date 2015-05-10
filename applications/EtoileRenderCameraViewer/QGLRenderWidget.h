@@ -27,6 +27,8 @@ namespace Etoile
 		int animationPeriod() const { return m_animationPeriod; }
 		Camera* camera(){ return p_camera; }
 
+		void setDrawAxis(bool draw){m_drawAxis = draw;}
+		void setDrawGrid(bool draw){m_drawGrid = draw;}
 
 		void loadProjectionMatrix(bool reset = false);
 		void loadModelViewMatrix(bool reset = false);
@@ -90,6 +92,9 @@ namespace Etoile
 
 		QString m_message;
 		bool m_displayMessage;
+
+		bool m_drawGrid;
+		bool m_drawAxis;
 
 		bool m_animationStarted; // animation mode started
 		int m_animationPeriod;

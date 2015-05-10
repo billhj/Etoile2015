@@ -174,6 +174,11 @@ namespace Etoile
 			p_transform->setOrientation(q);
 		}
 
+		float Camera::sceneRadius()
+		{
+			return 2;
+		}
+
 		void Camera::computeTransformationMatrix()
 		{
 			computeProjectionMatrix();
