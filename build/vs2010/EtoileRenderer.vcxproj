@@ -34,7 +34,7 @@
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\ImmediateMeshRenderer.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\IndexVBO.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\LightController.h" />
-    <ClInclude Include="..\..\auxiliary\renderer\OpenGL\PickingRenderer.h" />
+    <ClInclude Include="..\..\auxiliary\renderer\OpenGL\Picker.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\ShaderObject.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\ShaderProgram.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\TessCtrlShader.h" />
@@ -63,7 +63,7 @@
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\ImmediateMeshRenderer.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\IndexVBO.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\LightController.cpp" />
-    <ClCompile Include="..\..\auxiliary\renderer\OpenGL\PickingRenderer.cpp" />
+    <ClCompile Include="..\..\auxiliary\renderer\OpenGL\Picker.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\ShaderObject.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\ShaderProgram.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\TessCtrlShader.cpp" />

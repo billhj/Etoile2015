@@ -51,6 +51,13 @@ namespace Etoile
 		p_texcoordVBO = new VBO(sizeTextureCord * 2, &(m_tdata[0][0]), m_usage);
 		p_vertexVBO = new VBO(sizeComponent * 3, &(m_vdata[0][0]), m_usage);
 	    p_indexVBO = new IndexVBO(m_vertices_index_face.size(), &(m_vertices_index_face[0]), m_usage);
+
+		for(unsigned int i = 0; i < m_tdata.size(); ++i)
+		{
+			m_tcdata.push_back(Vec3f(m_tdata[i].x(), m_tdata[i].y(), 0));
+		}
+		p_texcoordColorVBO = new VBO(sizeTextureCord * 3, &(m_tcdata[0][0]), m_usage);
+
 	}
 
 }

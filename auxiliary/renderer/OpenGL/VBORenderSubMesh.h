@@ -26,6 +26,10 @@ namespace Etoile
 		VBO* p_texcoordVBO;
 		IndexVBO* p_indexVBO;
 		GLenum m_usage;
+
+
+		VBO* p_texcoordColorVBO;
+		std::vector<Vec3f> m_tcdata;
 	};
 
 }

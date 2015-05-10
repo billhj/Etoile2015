@@ -20,6 +20,9 @@ namespace Etoile
 		~VBOMeshRenderer();
 		virtual void drawRenderMesh();
 		virtual void drawRenderSubMesh(RenderSubMesh* submesh);
+
+		virtual void drawTextureCoord();
+		virtual void drawTextureCoordRenderSubMesh(RenderSubMesh* submesh);
 	};
 
 

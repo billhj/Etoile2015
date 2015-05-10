@@ -34,7 +34,7 @@ namespace Etoile
 			RenderSubMesh* submesh = submeshlist[i];
 			drawRenderSubMesh(submesh);
 		}
-			
+
 		drawAABB();
 		unUseTransform(t);
 	}
@@ -104,42 +104,92 @@ namespace Etoile
 
 	}
 
-	/*void VBOMeshRenderer::createVBO(RenderMesh* mesh, GLenum usage)
+	void VBOMeshRenderer::drawTextureCoord()
 	{
-		const std::vector<RenderSubMesh*>& submeshlist = mesh->getRenderSubMeshList();
+		if(p_mesh == NULL) return;
+		Matrix4f modelM;
+		ModelTransform* t = this->getEntity()->getTransformation();
+		useTransform(t);
+		const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
 
 		for(unsigned int i = 0; i < submeshlist.size(); ++i)
 		{
 			RenderSubMesh* submesh = submeshlist[i];
-
-			RenderSubMeshVBOUnit* info = new RenderSubMeshVBOUnit();
-			size_t sizeComponent = submesh->getVertices().size();
-			size_t sizeTextureCord = submesh->getTextureCoords().size();
-	
-			VBO* normalVBO = new VBO(sizeComponent * 3, &(submesh->getNormals()[0][0]), usage);
-			info->m_normalVBO._pVBO = normalVBO;
-			info->m_normalVBO._attributeName = "In_Normal";
-			info->m_normalVBO._numberComponents = 3;
-			info->m_normalVBO._primitive = GL_TRIANGLES;
-
-			VBO* texCoordVBO = new VBO(sizeTextureCord * 2, &(submesh->getTextureCoords()[0][0]), usage);
-			info->m_texCoordVBO._pVBO = texCoordVBO;
-			info->m_texCoordVBO._attributeName = "In_TextureCoord";
-			info->m_texCoordVBO._numberComponents = 2;
-			info->m_texCoordVBO._primitive = GL_TRIANGLES;
-
-			VBO* vertexVBO = new VBO(sizeComponent * 3, &(submesh->getVertices()[0][0]), usage);
-			info->m_vertexVBO._pVBO = vertexVBO;
-			info->m_vertexVBO._attributeName = "In_Vertex";
-			info->m_vertexVBO._numberComponents = 3;
-			info->m_vertexVBO._primitive = GL_TRIANGLES;
-
-
-			IndexVBO* p_indexVBO = new IndexVBO(submesh->getVertexIndexForFaces().size(), &(submesh->getVertexIndexForFaces()[0]), usage);
-			info->p_indexVBO = p_indexVBO;
-			_vboUnitList.push_back(info);
-
+			drawTextureCoordRenderSubMesh(submesh);
 		}
+
+		drawAABB();
+		unUseTransform(t);
+	}
+
+	void VBOMeshRenderer::drawTextureCoordRenderSubMesh(RenderSubMesh* submesh)
+	{
+		VBORenderSubMesh* vbosubmesh = dynamic_cast<VBORenderSubMesh*>(submesh);
+		if(NULL == vbosubmesh) return;
+		vbosubmesh->p_texcoordColorVBO->use();
+		glColorPointer(3, GL_FLOAT, 0, 0);
+		vbosubmesh->p_vertexVBO->use();
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+
+		printOpenGLError();
+
+		glEnableClientState(GL_COLOR_ARRAY);
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		printOpenGLError();
+
+		vbosubmesh->p_indexVBO->use();
+		glDrawElements(GL_TRIANGLES, vbosubmesh->p_indexVBO->getSize(), GL_UNSIGNED_INT, 0 );
+		vbosubmesh->p_indexVBO->unUse();
+
+		printOpenGLError();
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+
+		vbosubmesh->p_texcoordColorVBO->unUse();
+		vbosubmesh->p_vertexVBO->unUse();
+
+		printOpenGLError();
+
+	}
+
+	/*void VBOMeshRenderer::createVBO(RenderMesh* mesh, GLenum usage)
+	{
+	const std::vector<RenderSubMesh*>& submeshlist = mesh->getRenderSubMeshList();
+
+	for(unsigned int i = 0; i < submeshlist.size(); ++i)
+	{
+	RenderSubMesh* submesh = submeshlist[i];
+
+	RenderSubMeshVBOUnit* info = new RenderSubMeshVBOUnit();
+	size_t sizeComponent = submesh->getVertices().size();
+	size_t sizeTextureCord = submesh->getTextureCoords().size();
+
+	VBO* normalVBO = new VBO(sizeComponent * 3, &(submesh->getNormals()[0][0]), usage);
+	info->m_normalVBO._pVBO = normalVBO;
+	info->m_normalVBO._attributeName = "In_Normal";
+	info->m_normalVBO._numberComponents = 3;
+	info->m_normalVBO._primitive = GL_TRIANGLES;
+
+	VBO* texCoordVBO = new VBO(sizeTextureCord * 2, &(submesh->getTextureCoords()[0][0]), usage);
+	info->m_texCoordVBO._pVBO = texCoordVBO;
+	info->m_texCoordVBO._attributeName = "In_TextureCoord";
+	info->m_texCoordVBO._numberComponents = 2;
+	info->m_texCoordVBO._primitive = GL_TRIANGLES;
+
+	VBO* vertexVBO = new VBO(sizeComponent * 3, &(submesh->getVertices()[0][0]), usage);
+	info->m_vertexVBO._pVBO = vertexVBO;
+	info->m_vertexVBO._attributeName = "In_Vertex";
+	info->m_vertexVBO._numberComponents = 3;
+	info->m_vertexVBO._primitive = GL_TRIANGLES;
+
+
+	IndexVBO* p_indexVBO = new IndexVBO(submesh->getVertexIndexForFaces().size(), &(submesh->getVertexIndexForFaces()[0]), usage);
+	info->p_indexVBO = p_indexVBO;
+	_vboUnitList.push_back(info);
+
+	}
 	}*/
 
 
