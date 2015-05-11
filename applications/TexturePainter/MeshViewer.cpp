@@ -66,10 +66,11 @@ void MeshViewer::init()
 void MeshViewer::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	//RenderManager::getInstance()->renderOneFrame();
-	RenderManager::getInstance()->renderTexcoordPicking();
-	if(m_picked)
+	RenderManager::getInstance()->renderOneFrame();
+	
+	if(m_picked && m_mode == PAINT_TEXTURE_MODE)
 	{
+		RenderManager::getInstance()->renderTexcoordPicking();
 		GLfloat pixel[3];
 		Picker::processPickFloat(m_x, m_y, pixel);
 		std::cout<<pixel[0]<<"  "<<pixel[1]<<"  "<<pixel[3]<<std::endl;

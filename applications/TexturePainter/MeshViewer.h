@@ -11,9 +11,13 @@
 #include "QGLRenderer/QGLRenderWidget.h"
 
 using namespace Etoile;
+
 class MeshViewer : public QGLRenderWidget
 {
 	Q_OBJECT
+
+public:
+	enum Mode{VIEW_MODE, PAINT_TEXTURE_MODE, GEOMETRY_MODE};
 public:
 	MeshViewer(QWidget *parent = 0);
 	~MeshViewer();
@@ -24,4 +28,5 @@ protected:
 private:
 	int m_x, m_y;
 	bool m_picked;
+	int m_mode;
 };
