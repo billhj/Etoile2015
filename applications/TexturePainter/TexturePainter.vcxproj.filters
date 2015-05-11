@@ -56,6 +56,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_MeshViewer.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="MeshViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="TexturePainter.h">

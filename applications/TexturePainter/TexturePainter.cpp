@@ -1,5 +1,5 @@
 #include "TexturePainter.h"
-
+#include "MeshViewer.h"
 TexturePainter::TexturePainter(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {

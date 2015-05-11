@@ -3,7 +3,8 @@
 
 #include <QtGui/QMainWindow>
 #include "ui_TexturePainter.h"
-#include "MeshViewer.h"
+
+class MeshViewer;
 class TexturePainter : public QMainWindow
 {
 	Q_OBJECT

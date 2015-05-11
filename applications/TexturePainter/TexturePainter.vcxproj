@@ -91,6 +91,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MeshViewer.cpp" />
     <ClCompile Include="TexturePainter.cpp" />
   </ItemGroup>
   <ItemGroup>
