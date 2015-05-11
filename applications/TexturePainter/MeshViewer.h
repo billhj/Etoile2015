@@ -24,7 +24,13 @@ public:
 	void init();
 	void draw();
 protected:
-	void mouseDoubleClickEvent(QMouseEvent* const event);
+	virtual void mouseDoubleClickEvent(QMouseEvent* const event) override;
+	virtual void mousePressEvent(QMouseEvent* const event) override;
+	virtual void mouseReleaseEvent(QMouseEvent* const event) override;
+	virtual void mouseMoveEvent(QMouseEvent* const event) override;
+	virtual void wheelEvent(QWheelEvent* const event) override;
+	virtual void keyPressEvent(QKeyEvent* const event) override;
+
 private:
 	int m_x, m_y;
 	bool m_picked;

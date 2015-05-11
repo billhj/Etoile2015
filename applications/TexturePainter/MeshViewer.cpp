@@ -65,17 +65,25 @@ void MeshViewer::init()
 
 void MeshViewer::draw()
 {
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	RenderManager::getInstance()->renderOneFrame();
 	
+	
+
 	if(m_picked && m_mode == PAINT_TEXTURE_MODE)
 	{
+		glDisable(GL_BLEND);
+        glDisable(GL_LIGHTING);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		RenderManager::getInstance()->renderTexcoordPicking();
 		GLfloat pixel[3];
 		Picker::processPickFloat(m_x, m_y, pixel);
 		std::cout<<pixel[0]<<"  "<<pixel[1]<<"  "<<pixel[3]<<std::endl;
 		m_picked = false;
+		glEnable(GL_BLEND);
+        glEnable(GL_LIGHTING);
 	}
+		
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	RenderManager::getInstance()->renderOneFrame();
 	//Vec3f cameraPos = p_camera->getTransform()->getPosition();
 	//std::cout<<cameraPos<<std::endl;
 }
@@ -87,4 +95,38 @@ void MeshViewer::mouseDoubleClickEvent(QMouseEvent* const event)
 	m_y = event->y();
 	m_picked = true;
 	QGLRenderWidget::mouseDoubleClickEvent(event);
+}
+
+
+void MeshViewer::mousePressEvent(QMouseEvent* const event)
+{
+	QGLRenderWidget::mousePressEvent(event);
+}
+
+void MeshViewer::mouseReleaseEvent(QMouseEvent* const event)
+{
+	QGLRenderWidget::mouseReleaseEvent(event);
+}
+
+void MeshViewer::mouseMoveEvent(QMouseEvent* const event)
+{
+	if(event->buttons() & Qt::MouseButton::LeftButton  && event->modifiers() == Qt::CTRL)
+	{
+		std::cout<<"draw"<<std::endl;
+		m_mode = PAINT_TEXTURE_MODE;
+	}
+	else
+	{	//m_mode == 0;
+		QGLRenderWidget::mouseMoveEvent(event);
+	}
+}
+
+void MeshViewer::wheelEvent(QWheelEvent* const event)
+{
+	QGLRenderWidget::wheelEvent(event);
+}
+
+void MeshViewer::keyPressEvent(QKeyEvent * const event)
+{
+	QGLRenderWidget::keyPressEvent(event);
 }
