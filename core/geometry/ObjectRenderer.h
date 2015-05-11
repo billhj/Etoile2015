@@ -21,6 +21,7 @@ namespace Etoile
 		{
 		}
 		virtual void draw() = 0;
+		virtual void drawTexcoordPicking() = 0;
 		
 	};
 }

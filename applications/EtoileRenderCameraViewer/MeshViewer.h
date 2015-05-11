@@ -24,8 +24,6 @@ using namespace Etoile;
 class MeshViewer : public QGLRenderWidget
 {
 	Q_OBJECT
-
-	RenderManager* manager;
 public:
 	MeshViewer()
 	{
@@ -64,23 +62,22 @@ public:
 		glEnable(GL_MULTISAMPLE);
 		
 		Triangle* triangle = new Triangle("triangle");
-		ImmediateMeshRenderer* renderer = new ImmediateMeshRenderer("triangle");
+		renderer = new ImmediateMeshRenderer("triangle");
 		Entity* entity = new Entity();
 		entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
 		renderer->setRenderMesh(triangle);
-		manager = new RenderManager("render");
-		manager->addIntoObjectRendererList(renderer);
+		RenderManager::getInstance()->addIntoObjectRendererList(renderer);
 		//p_camera->getTransform()->setPosition(Vec3f(0,0,2));
 		
 	}
-
+	ImmediateMeshRenderer* renderer;
 	
 
 	void draw()
 	{
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-		manager->renderOneFrame();
-		Vec3f cameraPos = p_camera->getTransform()->getPosition();
+		RenderManager::getInstance()->renderOneFrame();
+		//Vec3f cameraPos = p_camera->getTransform()->getPosition();
 		//std::cout<<cameraPos<<std::endl;
 	}
 

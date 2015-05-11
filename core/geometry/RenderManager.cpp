@@ -12,7 +12,7 @@
 
 namespace Etoile
 {
-	RenderManager::RenderManager(const std::string& name): m_name(name)
+	RenderManager::RenderManager()
 	{
 	}
 
@@ -55,6 +55,15 @@ namespace Etoile
 		{
 			ObjectRenderer* obj = m_postRenderObjList[i];
 			obj->draw();
+		}
+	}
+
+	void RenderManager::renderTexcoordPicking()
+	{
+		for(unsigned int i = 0; i < m_renderObjList.size(); ++i)
+		{
+			ObjectRenderer* obj = m_renderObjList[i];
+			obj->drawTexcoordPicking();
 		}
 	}
 

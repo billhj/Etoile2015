@@ -19,12 +19,13 @@ namespace Etoile
 		MeshRenderer(const std::string& name): ObjectRenderer(name), p_mesh(NULL)
 		{
 		}
-		virtual void setRenderMesh(RenderMesh* mesh)
+
+		void setRenderMesh(RenderMesh* mesh)
 		{
 			p_mesh = mesh;
 		}
 
-		virtual RenderMesh* getRenderMesh(){return p_mesh;}
+		RenderMesh* getRenderMesh(){return p_mesh;}
 
 		void draw()
 		{

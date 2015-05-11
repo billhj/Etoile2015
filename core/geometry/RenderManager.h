@@ -16,15 +16,22 @@ namespace Etoile
 	class Scene;
 	class RenderManager
 	{
-	
+		RenderManager();
 	public:
-		RenderManager(const std::string& name);
+		static RenderManager* getInstance()
+		{
+			static RenderManager manager;
+			return &manager;
+		}
+		
 		virtual ~RenderManager();
 		virtual void clear();
 	
 		virtual void preRender();
 		virtual void renderOneFrame();
 		virtual void PostRender();
+
+		virtual void renderTexcoordPicking();
 
 		
 		void updateObjectRendererList(Scene* scene);
