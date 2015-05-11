@@ -19,6 +19,8 @@
 #include "meshloader/OBJMeshLoader.h"
 #include "geometry/Primitive.h"
 #include "geometry/Camera.h"
+#include "renderer/OpenGL/Picker.h"
+#include <QMouseEvent>
 
 using namespace Etoile;
 class MeshViewer : public QGLRenderWidget
@@ -78,10 +80,27 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		//RenderManager::getInstance()->renderOneFrame();
 		RenderManager::getInstance()->renderTexcoordPicking();
+		if(m_picked)
+		{
+			GLfloat pixel[3];
+			Picker::processPickFloat(m_x, m_y, pixel);
+			std::cout<<pixel[0]<<"  "<<pixel[1]<<"  "<<pixel[3]<<std::endl;
+			m_picked = false;
+		}
 		//Vec3f cameraPos = p_camera->getTransform()->getPosition();
 		//std::cout<<cameraPos<<std::endl;
 	}
 
-	
 
+	void mouseDoubleClickEvent(QMouseEvent* const event)
+	{
+		m_x = event->x();
+		m_y = event->y();
+		m_picked = true;
+		QGLRenderWidget::mouseDoubleClickEvent(event);
+	}
+	
+private:
+	int m_x, m_y;
+	bool m_picked;
 };
