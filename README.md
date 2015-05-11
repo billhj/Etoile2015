@@ -20,4 +20,6 @@ lib: compiled libs
 
 bin: executable
 
+USING_GLEW macro is added in visual studio when developping using glew
+
 
