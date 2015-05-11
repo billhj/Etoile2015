@@ -25,8 +25,8 @@ namespace Etoile
 	void QGLRenderWidget::defaultSetup()
 	{
 		//QGLWidget::setFormat(QGLFormat(QGL::SampleBuffers));
-		glEnable(GL_MULTISAMPLE);
-		glEnable(GL_POLYGON_SMOOTH);
+		//glEnable(GL_MULTISAMPLE);
+		//glEnable(GL_POLYGON_SMOOTH);
 
 		setFocusPolicy(Qt::StrongFocus);
 		p_camera = new Camera(Vec3f(0,0,0), Vec3f(0,1,0), Vec3f(0,0,2));

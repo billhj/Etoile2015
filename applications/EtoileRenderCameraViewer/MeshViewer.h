@@ -8,7 +8,7 @@
 
 #include "renderer/OpenGL/glhead.h"
 #include "renderer/OpenGL/glInfo.h"
-#include "QGLRenderWidget.h"
+#include "QGLRenderer/QGLRenderWidget.h"
 
 #include "geometry/RenderMesh.h"
 #include "geometry/RenderManager.h"

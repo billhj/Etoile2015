@@ -18,7 +18,7 @@
 #include "geometry/RenderMesh.h"
 #include "geometry/RenderManager.h"
 #include "renderer/OpenGL/GLTexture2D.h"
-#include "renderer/OpenGL/VBOMeshRenderer.h"
+#include "renderer/OpenGL/ImmediateMeshRenderer.h"
 #include "renderer/OpenGL/LightController.h"
 #include "math/Vectors.h"
 #include "meshloader/OBJMeshLoader.h"
@@ -73,12 +73,11 @@ public:
 		QString str = QDir::currentPath();
 		
 		Triangle* triangle = new Triangle("triangle");
-		VBOMeshRenderer* renderer = new VBOMeshRenderer("triangle");
+		ImmediateMeshRenderer* renderer = new ImmediateMeshRenderer("triangle");
 		Entity* entity = new Entity();
 		entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
 		renderer->setRenderMesh(triangle);
-		manager = new RenderManager("render");
-		manager->addIntoObjectRendererList(renderer);
+		RenderManager::getInstance()->addIntoObjectRendererList(renderer);
 		p_camera = new Camera(Vec3f(0,0,-1), Vec3f(0,1,0), Vec3f(0,0,2));
 		//p_camera->getTransform()->setPosition(Vec3f(0,0,2));
 		
@@ -118,7 +117,7 @@ public:
 		/*p_camera->computeModelViewMatrix();
 		float* modelv = p_camera->getGLModelViewMatrix();
 		glLoadMatrixf(modelv);*/
-		manager->renderOneFrame();
+		RenderManager::getInstance()->renderOneFrame();
 	}
 
 	//void loadTextures(std::map<std::string, std::string>& txtPath)
