@@ -46,6 +46,14 @@ namespace Etoile
 		submesh->getTextureCoords().push_back(Vec2f(1.0, 1.0));
 		submesh->getTextureCoords().push_back(Vec2f(0.0, 0.0));
 
+		submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 0.0f, 0));
+		submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 0.0f, 0));
+		submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 1.0f, 0));
+
+		submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 1.0f, 0));
+		submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 1.0f, 0));
+		submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 0.0f, 0));
+
 		submesh->getNormals().push_back(Vec3f( 0.0, 0, 1.0));
 		submesh->getNormals().push_back(Vec3f( 0.0, 0, 1.0));
 		submesh->getNormals().push_back(Vec3f( 0.0, 0, 1.0));
@@ -78,6 +86,10 @@ namespace Etoile
 		submesh->getTextureCoords().push_back(Vec2f(1.0f, 0.0f));
 		submesh->getTextureCoords().push_back(Vec2f(0.0f, 0.0f));
 		submesh->getTextureCoords().push_back(Vec2f(1.0f, 1.0f));
+
+		submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 0.0f, 0));
+		submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 0.0f, 0));
+		submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 1.0f, 0));
 
 		submesh->getNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
 		submesh->getNormals().push_back(Vec3f( 0.0f, 1.0f, 0));
@@ -119,6 +131,14 @@ namespace Etoile
 				submesh->getTextureCoords().push_back(Vec2f(0, 1));
 				submesh->getTextureCoords().push_back(Vec2f(1, 1));
 				submesh->getTextureCoords().push_back(Vec2f(0, 0));
+
+				submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 0.0f, 0));
+				submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 0.0f, 0));
+				submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 1.0f, 0));
+
+				submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 1.0f, 0));
+				submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 1.0f, 0));
+				submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 0.0f, 0));
 
 				/*submesh->getTextureCoords().push_back(Vec2f(x1, z0));
 				submesh->getTextureCoords().push_back(Vec2f(x0, z0));
@@ -177,6 +197,15 @@ namespace Etoile
 				submesh->getTextureCoords().push_back(Vec2f(0, 1));
 				submesh->getTextureCoords().push_back(Vec2f(1, 1));
 				submesh->getTextureCoords().push_back(Vec2f(0, 0));
+
+
+				submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 0.0f, 0));
+				submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 0.0f, 0));
+				submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 1.0f, 0));
+
+				submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 1.0f, 0));
+				submesh->getTextureCoordsColor().push_back(Vec3f(1.0f, 1.0f, 0));
+				submesh->getTextureCoordsColor().push_back(Vec3f(0.0f, 0.0f, 0));
 
 				/*submesh->getTextureCoords().push_back(Vec2f(x1, z0));
 				submesh->getTextureCoords().push_back(Vec2f(x0, z0));

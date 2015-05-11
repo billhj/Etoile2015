@@ -76,7 +76,8 @@ public:
 	void draw()
 	{
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-		RenderManager::getInstance()->renderOneFrame();
+		//RenderManager::getInstance()->renderOneFrame();
+		RenderManager::getInstance()->renderTexcoordPicking();
 		//Vec3f cameraPos = p_camera->getTransform()->getPosition();
 		//std::cout<<cameraPos<<std::endl;
 	}

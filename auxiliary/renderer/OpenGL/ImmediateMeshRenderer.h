@@ -17,7 +17,9 @@ namespace Etoile
 	public:
 		ImmediateMeshRenderer(const std::string& name = "");
 		virtual void draw() override;
-		virtual void drawTexcoordPicking() override{}
+		virtual void drawTexcoordPicking() override;
+		virtual void drawTexcoordPickingMesh();
+		virtual void drawTexcoordPickingSubMesh(RenderSubMesh* submesh);
 	};
 
 

@@ -86,7 +86,8 @@ namespace Etoile
 		std::vector<Vec3f>&  getVertices(){return m_vdata;} 
 		std::vector<Vec3f>&  getNormals(){return m_ndata;}
 		std::vector<Vec2f>& getTextureCoords(){return m_tdata;}
-	
+		std::vector<Vec3f>& getTextureCoordsColor(){return m_tcdata;}
+		
 		void computeAABB()
 		{
 			m_aabb.build(m_vdata);
@@ -119,6 +120,7 @@ namespace Etoile
 		std::vector<int> m_texcoord_index_face;
 		std::vector<Vec3f> m_vdata, m_ndata;
 		std::vector<Vec2f> m_tdata;
+		std::vector<Vec3f> m_tcdata;
 		std::string m_name;
 		AxisAlignedBoundingBoxf m_aabb;
 		Material* p_material;
