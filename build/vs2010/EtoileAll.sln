@@ -67,6 +67,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		QtVersion = $(DefaultQtVersion)
-		Qt5Version = 4.8.5
 	EndGlobalSection
 EndGlobal
