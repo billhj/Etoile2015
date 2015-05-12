@@ -4,7 +4,6 @@
 #include <QtGui/QMainWindow>
 #include "ui_TexturePainter.h"
 
-class MeshViewer;
 class TexturePainter : public QMainWindow
 {
 	Q_OBJECT
@@ -15,7 +14,6 @@ public:
 
 private:
 	Ui::TexturePainterClass ui;
-	MeshViewer* _pWidget;
 };
 
 #endif // TEXTUREPAINTER_H

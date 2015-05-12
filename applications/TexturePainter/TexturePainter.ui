@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>TexturePainter</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="MeshViewer" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -27,6 +27,7 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="actionNew"/>
     <addaction name="action_Open"/>
     <addaction name="action_Close"/>
     <addaction name="separator"/>
@@ -37,8 +38,9 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="actionCut"/>
     <addaction name="actionCopy"/>
-    <addaction name="actionPast"/>
+    <addaction name="actionPaste"/>
     <addaction name="actionClear"/>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
@@ -107,14 +109,42 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="action_Open"/>
+   <addaction name="action_Close"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="ParametersDockWidget">
+   <property name="windowTitle">
+    <string>Parameters</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3"/>
+  </widget>
+  <widget class="QDockWidget" name="ToolsDockWidget">
+   <property name="windowTitle">
+    <string>Tools</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4"/>
+  </widget>
   <action name="action_Open">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../bin/ico/png/open127.png</normaloff>../../bin/ico/png/open127.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Open</string>
    </property>
   </action>
   <action name="action_Close">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../bin/ico/png/door13.png</normaloff>../../bin/ico/png/door13.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Close</string>
    </property>
@@ -130,11 +160,19 @@
    </property>
   </action>
   <action name="actionCopy">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../bin/ico/png/copy12.png</normaloff>../../bin/ico/png/copy12.png</iconset>
+   </property>
    <property name="text">
     <string>Copy</string>
    </property>
   </action>
-  <action name="actionPast">
+  <action name="actionPaste">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../bin/ico/png/clipboard46.png</normaloff>../../bin/ico/png/clipboard46.png</iconset>
+   </property>
    <property name="text">
     <string>Paste</string>
    </property>
@@ -154,10 +192,53 @@
     <string>Redo</string>
    </property>
   </action>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../bin/ico/png/open130.png</normaloff>../../bin/ico/png/open130.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../bin/ico/png/cut20.png</normaloff>../../bin/ico/png/cut20.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cut</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MeshViewer</class>
+   <extends>QWidget</extends>
+   <header>meshviewer.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="TexturePainter.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>action_Close</sender>
+   <signal>triggered()</signal>
+   <receiver>TexturePainterClass</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
