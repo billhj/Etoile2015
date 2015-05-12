@@ -23,6 +23,7 @@ public:
 	~MeshViewer();
 	void init();
 	void draw();
+	void drawTexturePicking();
 protected:
 	virtual void mouseDoubleClickEvent(QMouseEvent* const event) override;
 	virtual void mousePressEvent(QMouseEvent* const event) override;
