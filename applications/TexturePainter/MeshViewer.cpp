@@ -110,6 +110,14 @@ void MeshViewer::drawTexturePicking()
 		glEnable(GL_LIGHTING);
 }
 
+void MeshViewer::colorPicking()
+{
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	RenderManager::getInstance()->renderOneFrame();
+	GLfloat pixel[3];
+	Picker::processPickFloat(m_x, m_y, pixel);
+}
+
 void MeshViewer::mouseDoubleClickEvent(QMouseEvent* const event)
 {
 	m_x = event->x();
@@ -150,4 +158,9 @@ void MeshViewer::wheelEvent(QWheelEvent* const event)
 void MeshViewer::keyPressEvent(QKeyEvent * const event)
 {
 	QGLRenderWidget::keyPressEvent(event);
+}
+
+void MeshViewer::usePipette()
+{
+
 }

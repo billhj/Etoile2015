@@ -24,6 +24,9 @@ public:
 	void init();
 	void draw();
 	void drawTexturePicking();
+	void colorPicking();
+	public slots:
+		void usePipette();
 protected:
 	virtual void mouseDoubleClickEvent(QMouseEvent* const event) override;
 	virtual void mousePressEvent(QMouseEvent* const event) override;
