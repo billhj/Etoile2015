@@ -16,7 +16,7 @@
 #include "renderer/OpenGL/ImmediateMeshRenderer.h"
 #include "renderer/OpenGL/LightController.h"
 #include "math/Vectors.h"
-#include "meshloader/OBJMeshLoader.h"
+#include "meshIO/OBJMeshLoader.h"
 #include "geometry/Primitive.h"
 #include "geometry/Camera.h"
 

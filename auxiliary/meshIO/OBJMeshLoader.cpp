@@ -625,13 +625,14 @@ namespace Etoile
 			"Normal count : " <<_normals.size()<<" "<<
 			"Face count : " <<_faces.size()<<std::endl;
 
-		std::vector<Etoile::RenderSubMesh*> submeshes;
+		std::vector<Etoile::VBORenderSubMesh*> submeshes;
 
 		for( unsigned int i = 0; i < _materials.size() + 1; ++i)
 		{
 			if(i==0)
 			{
-				RenderSubMesh* submesh = _pMesh->creatNewRenderSubMesh("empty");
+				VBORenderSubMesh* submesh = new VBORenderSubMesh("empty");
+				_pMesh->addRenderSubMesh(submesh);
 				submeshes.push_back(submesh);
 				Material* mat = new Material("empty");
 				mat->setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
@@ -640,7 +641,8 @@ namespace Etoile
 			}
 			else
 			{
-				RenderSubMesh* submesh =  _pMesh->creatNewRenderSubMesh(_materials[i - 1]->getName());
+				VBORenderSubMesh* submesh = new VBORenderSubMesh(_materials[i - 1]->getName());
+				_pMesh->addRenderSubMesh(submesh);
 				submesh->setMaterial(_materials[i - 1]);
 				submeshes.push_back(submesh);
 			}
@@ -662,7 +664,7 @@ namespace Etoile
 		for(unsigned int i = 0; i < _faces.size(); ++i)
 		{
 			const Face& face = _faces[i];
-			RenderSubMesh* submesh = submeshes[face._materialIndex + 1];
+			VBORenderSubMesh* submesh = submeshes[face._materialIndex + 1];
 			if(face._vertexCount == 0) continue;
 
 			for(unsigned int j = 0; j < 3; ++j)

@@ -9,8 +9,8 @@
 #pragma once
 #include <string>
 #include "tinyxml/tinyxml.h"
-#include "../Mesh.h"
-
+#include "geometry/RenderMesh.h"
+#include "renderer/OpenGL/VBORenderSubMesh.h"
 #include "MeshLoader.h"
 namespace Etoile
 {
@@ -19,16 +19,16 @@ namespace Etoile
 	public:
 		XMLMeshLoader();
 		~XMLMeshLoader();
-		virtual bool loadFromFile(const std::string& fileName, Mesh* mesh) override;
+		virtual bool loadFromFile(const std::string& fileName,RenderMesh* mesh) override;
 	private:
 		bool loadMeshes();
 		bool loadPoses();
-		void meshToUnitCube(SubMesh* submesh);
+		void meshToUnitCube(VBORenderSubMesh* submesh);
 		void checkSpecifiedPose(const std::string& nameOfPose);
-		void readSubMesh(TiXmlElement *elemSubMesh);
-		void readFaces(TiXmlElement *elemFaces, SubMesh* submesh);
-		void readGeometry(TiXmlElement *elemGeometry, SubMesh* submesh);
-		void readBoneAssignment(TiXmlElement *elemBoneAssignment, SubMesh* submesh);
+		void readVBORenderSubMesh(TiXmlElement *elemVBORenderSubMesh);
+		void readFaces(TiXmlElement *elemFaces, VBORenderSubMesh* submesh);
+		void readGeometry(TiXmlElement *elemGeometry, VBORenderSubMesh* submesh);
+		void readBoneAssignment(TiXmlElement *elemBoneAssignment, VBORenderSubMesh* submesh);
 		void readPoses(TiXmlElement *elemPoses);
 		void readAnimations(TiXmlElement *elemAnimations);
 		void readTracks(TiXmlElement *elemTracks);

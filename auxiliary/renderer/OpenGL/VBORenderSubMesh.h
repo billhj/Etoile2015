@@ -7,19 +7,20 @@
 */
 
 #pragma once
+#include "glhead.h"
 #include "geometry/RenderSubMesh.h"
-#include "VBO.h"
-#include "IndexVBO.h"
+
 
 namespace Etoile
 {
-
+	class VBO;
+	class IndexVBO;
 	class VBORenderSubMesh : public RenderSubMesh
 	{
 	public:
-		VBORenderSubMesh(GLenum usage = GL_STATIC_DRAW_ARB, const std::string& name = "");
+		VBORenderSubMesh(const std::string& name = "");
 		~VBORenderSubMesh();
-		void buildVBO();
+		void buildVBO(GLenum usage/* = GL_STATIC_DRAW_ARB*/);
 	
 		VBO* p_vertexVBO;
 		VBO* p_normalVBO;

@@ -8,10 +8,12 @@
 
 #include "VBORenderSubMesh.h"
 #include "GLSLGpuProgram.h"
+#include "VBO.h"
+#include "IndexVBO.h"
 
 namespace Etoile
 {
-	VBORenderSubMesh::VBORenderSubMesh(GLenum usage, const std::string& name) : m_usage(usage), RenderSubMesh(name)
+	VBORenderSubMesh::VBORenderSubMesh(const std::string& name) :  RenderSubMesh(name)
 	{
 		p_vertexVBO = NULL;
 		p_normalVBO = NULL;
@@ -43,8 +45,9 @@ namespace Etoile
 	}
 
 	
-	void VBORenderSubMesh::buildVBO()
+	void VBORenderSubMesh::buildVBO(GLenum usage)
 	{
+		m_usage = usage;
 		size_t sizeComponent = m_vdata.size();
 		size_t sizeTextureCord = m_tdata.size();
 		p_normalVBO = new VBO(sizeComponent * 3, &(m_ndata[0][0]), m_usage);

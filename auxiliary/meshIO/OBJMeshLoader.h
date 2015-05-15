@@ -17,6 +17,7 @@
 #include <deque>
 #include "MeshLoader.h"
 #include "geometry/RenderMesh.h"
+#include "renderer/OpenGL/VBORenderSubMesh.h"
 
 namespace Etoile
 {

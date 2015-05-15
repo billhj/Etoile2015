@@ -9,7 +9,7 @@
 #pragma once
 
 #include <string>
-#include "../Mesh.h"
+#include "geometry/RenderMesh.h"
 #include "MeshLoader.h"
 namespace Etoile
 {
@@ -18,7 +18,7 @@ namespace Etoile
 	public:
 		BinaryMeshLoader(){}
 		~BinaryMeshLoader(){}
-		virtual bool loadFromFile(const std::string& fileName, Mesh* mesh) override
+		virtual bool loadFromFile(const std::string& fileName,RenderMesh* mesh) override
 		{
 			_pMesh = mesh;
 			std::ifstream in_file(fileName.c_str(), std::ios_base::binary);

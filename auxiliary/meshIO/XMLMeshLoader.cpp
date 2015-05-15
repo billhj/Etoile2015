@@ -31,7 +31,7 @@ namespace Etoile{
 	}
 
 
-	bool XMLMeshLoader::loadFromFile(const std::string& fileName, Mesh* mesh)
+	bool XMLMeshLoader::loadFromFile(const std::string& fileName,RenderMesh* mesh)
 	{
 		_fileName = fileName;
 		_pMesh = mesh;
@@ -48,26 +48,26 @@ namespace Etoile{
 		//_pMesh->createVBO(usage, eInternalType);
 		//meshToUnitCube();
 		//creatGpuData();
-		_pMesh->initSkin();
 		_pMesh->computeAABB();
 		return b;
 	}
 
-	void XMLMeshLoader::readSubMesh(TiXmlElement *elemSubMesh)
+	void XMLMeshLoader::readVBORenderSubMesh(TiXmlElement *elemVBORenderSubMesh)
 	{
 
-		std::string material = elemSubMesh->Attribute("material");
-		//std::string usesharedvertices = elemSubMesh->Attribute("usesharedvertices");
-		//std::string use32bitindexes = elemSubMesh->Attribute("use32bitindexes");
-		//std::string operationtype = elemSubMesh->Attribute("operationtype");
+		std::string material = elemVBORenderSubMesh->Attribute("material");
+		//std::string usesharedvertices = elemVBORenderSubMesh->Attribute("usesharedvertices");
+		//std::string use32bitindexes = elemVBORenderSubMesh->Attribute("use32bitindexes");
+		//std::string operationtype = elemVBORenderSubMesh->Attribute("operationtype");
 		//Material* m = new Material(material);
-		SubMesh* submesh = _pMesh->creatNewSubMesh(material);
+		VBORenderSubMesh* submesh = new VBORenderSubMesh(material);
+		_pMesh->addRenderSubMesh(submesh);
 		//_pMesh->_materialGroup.push_back(m);
 #if defined(_DEBUG) || defined(DEBUG)
 		std::cout<<"read faces start"<<std::endl;
 #endif
 
-		TiXmlElement *elemFaces = elemSubMesh->FirstChildElement("faces");
+		TiXmlElement *elemFaces = elemVBORenderSubMesh->FirstChildElement("faces");
 		while (elemFaces)
 		{			
 			readFaces(elemFaces, submesh);
@@ -77,7 +77,7 @@ namespace Etoile{
 		std::cout<<"read faces end"<<std::endl;
 #endif
 
-		TiXmlElement *elemGeometry = elemSubMesh->FirstChildElement("geometry");
+		TiXmlElement *elemGeometry = elemVBORenderSubMesh->FirstChildElement("geometry");
 		while (elemGeometry)
 		{			
 			readGeometry(elemGeometry, submesh);
@@ -87,7 +87,7 @@ namespace Etoile{
 		std::cout<<"read Geometry end"<<std::endl;
 #endif
 
-		TiXmlElement *elemBoneAssignment = elemSubMesh->FirstChildElement("boneassignments");
+		TiXmlElement *elemBoneAssignment = elemVBORenderSubMesh->FirstChildElement("boneassignments");
 		while (elemBoneAssignment)
 		{			
 			readBoneAssignment(elemBoneAssignment, submesh);
@@ -98,15 +98,15 @@ namespace Etoile{
 
 	}
 
-	void XMLMeshLoader::readFaces(TiXmlElement *elemFaces, SubMesh* submesh)
+	void XMLMeshLoader::readFaces(TiXmlElement *elemFaces, VBORenderSubMesh* submesh)
 	{
 		int count = 0;
 		int returnvalue = elemFaces->QueryIntAttribute("count", &count);
 		if( !returnvalue == TIXML_SUCCESS)
 			return;
-		submesh->_numberOfFaces = count;
+		submesh->m_numberOfFaces = count;
 		int size = count * 3;
-		submesh->getOriginalVertexIndexForFaces().resize(size);
+		submesh->getVertexIndexForFaces().resize(size);
 
 		TiXmlElement *elemFace = elemFaces->FirstChildElement("face");
 		int n = 0;
@@ -116,9 +116,9 @@ namespace Etoile{
 			elemFace->QueryIntAttribute("v1", &v1);
 			elemFace->QueryIntAttribute("v2", &v2);
 			elemFace->QueryIntAttribute("v3", &v3);
-			submesh->getOriginalVertexIndexForFaces()[n * 3] = v1;
-			submesh->getOriginalVertexIndexForFaces()[n * 3 + 1] = v2;
-			submesh->getOriginalVertexIndexForFaces()[n * 3 + 2] = v3;
+			submesh->getVertexIndexForFaces()[n * 3] = v1;
+			submesh->getVertexIndexForFaces()[n * 3 + 1] = v2;
+			submesh->getVertexIndexForFaces()[n * 3 + 2] = v3;
 			n++;
 			elemFace = elemFace->NextSiblingElement("face"); // iteration
 		}
@@ -126,16 +126,16 @@ namespace Etoile{
 	}
 
 
-	void XMLMeshLoader::readGeometry(TiXmlElement *elemGeometry, SubMesh* submesh)
+	void XMLMeshLoader::readGeometry(TiXmlElement *elemGeometry, VBORenderSubMesh* submesh)
 	{
 
 		int vertexcount = 0;
 		int returnvalue = elemGeometry->QueryIntAttribute("vertexcount", &vertexcount);
 		if(returnvalue != TIXML_SUCCESS)
 			return;
-		submesh->getOriginalVertices().resize(vertexcount); 
-		submesh->getOriginalNormals().resize(vertexcount);
-		submesh->getOriginalTextureCoords().resize(vertexcount); 
+		submesh->getVertices().resize(vertexcount); 
+		submesh->getNormals().resize(vertexcount);
+		submesh->getTextureCoords().resize(vertexcount); 
 		TiXmlElement *elemvertexbuffer = elemGeometry->FirstChildElement("vertexbuffer");
 		while (elemvertexbuffer)
 		{
@@ -172,7 +172,7 @@ namespace Etoile{
 						elemposition->QueryDoubleAttribute("z", &z);
 
 						Vec3f xyz(x*_scale.x(),y*_scale.y(),z*_scale.z());
-						submesh->getOriginalVertices()[n] = _rotate * xyz + _translate;
+						submesh->getVertices()[n] = _rotate * xyz + _translate;
 						n++;
 						elemposition = elemposition->NextSiblingElement("position"); // iteration
 					}
@@ -208,7 +208,7 @@ namespace Etoile{
 						elemnormal->QueryDoubleAttribute("y", &y);
 						elemnormal->QueryDoubleAttribute("z", &z);
 						Vec3f xyz(x,y,z);
-						submesh->getOriginalNormals()[n] = xyz;
+						submesh->getNormals()[n] = xyz;
 						n++;
 						elemnormal = elemnormal->NextSiblingElement("normal"); // iteration
 					}
@@ -243,7 +243,7 @@ namespace Etoile{
 						elemtexcoord->QueryDoubleAttribute("u", &u);
 						elemtexcoord->QueryDoubleAttribute("v", &v);
 						Vec2f uv(u,v);
-						submesh->getOriginalTextureCoords()[n] = uv;
+						submesh->getTextureCoords()[n] = uv;
 						n++;
 
 						elemtexcoord = elemtexcoord->NextSiblingElement("texcoord"); // iteration
@@ -266,30 +266,30 @@ namespace Etoile{
 	}
 
 
-	void XMLMeshLoader::readBoneAssignment(TiXmlElement *elemBoneAssignment, SubMesh* submesh)
+	void XMLMeshLoader::readBoneAssignment(TiXmlElement *elemBoneAssignment, VBORenderSubMesh* submesh)
 	{
 
-		TiXmlElement *vertexboneassignment = elemBoneAssignment->FirstChildElement("vertexboneassignment");
+		//TiXmlElement *vertexboneassignment = elemBoneAssignment->FirstChildElement("vertexboneassignment");
 
-		if(vertexboneassignment)
-			submesh->getSkin()._vertexBoneAssignmentData.resize(submesh->getOriginalVertices().size());
+		//if(vertexboneassignment)
+		//	submesh->getSkin()._vertexBoneAssignmentData.resize(submesh->getVertices().size());
 
-		while (vertexboneassignment)
-		{			
-			int vertexIndex = -1;
-			vertexboneassignment->QueryIntAttribute("vertexindex", &vertexIndex);
-			int boneIndex = -1;
-			vertexboneassignment->QueryIntAttribute("boneindex", &boneIndex);
-			double weight = 0;
-			vertexboneassignment->QueryDoubleAttribute("weight", &weight);
+		//while (vertexboneassignment)
+		//{			
+		//	int vertexIndex = -1;
+		//	vertexboneassignment->QueryIntAttribute("vertexindex", &vertexIndex);
+		//	int boneIndex = -1;
+		//	vertexboneassignment->QueryIntAttribute("boneindex", &boneIndex);
+		//	double weight = 0;
+		//	vertexboneassignment->QueryDoubleAttribute("weight", &weight);
 
-			if(vertexIndex < 0) continue;
-			submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].setIdx(vertexIndex);
-			submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].addBoneWeight(boneIndex, weight);
-			submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].setPosition(submesh->getOriginalVertices()[vertexIndex]);
+		//	if(vertexIndex < 0) continue;
+		//	submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].setIdx(vertexIndex);
+		//	submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].addBoneWeight(boneIndex, weight);
+		//	submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].setPosition(submesh->getVertices()[vertexIndex]);
 
-			vertexboneassignment = vertexboneassignment->NextSiblingElement("vertexboneassignment"); // iteration
-		}
+		//	vertexboneassignment = vertexboneassignment->NextSiblingElement("vertexboneassignment"); // iteration
+		//}
 	}
 
 
@@ -364,32 +364,32 @@ namespace Etoile{
 	}
 
 
-	void XMLMeshLoader::meshToUnitCube(SubMesh* submesh)
+	void XMLMeshLoader::meshToUnitCube(VBORenderSubMesh* submesh)
 	{
-		Vec3f min(1e6, 1e6, 1e6);
-		Vec3f max(-1e6, -1e6, -1e6);
+		Vec3f minP(1e6, 1e6, 1e6);
+		Vec3f maxP(-1e6, -1e6, -1e6);
 
-		for (unsigned int j = 0; j < submesh->getOriginalVertices().size(); j++)
+		for (unsigned int j = 0; j < submesh->getVertices().size(); j++)
 		{
-			Vec3f p = submesh->getOriginalVertices()[j];
+			Vec3f p = submesh->getVertices()[j];
 			for (int i = 0; i < 3; ++i)
 			{
-				if (p[i] > max[i]) max[i] = p[i];
-				if (p[i] < min[i]) min[i] = p[i];
+				if (p[i] > maxP[i]) maxP[i] = p[i];
+				if (p[i] < minP[i]) minP[i] = p[i];
 			}
 		}
 
 		// find the longest edge and scale it to 1
-		double scale = 1.0f / std::max(std::max(max[0] - min[0], max[1] - min[1]), max[2] - min[2]);
+		double scale = 1.0f / max(max(maxP[0] - minP[0], maxP[1] - minP[1]), maxP[2] - minP[2]);
 
-		Vec3f center((max[0] + min[0]) / 2.0f,
-			(max[1] + min[1]) / 2.0f,
-			(max[2] + min[2]) / 2.0f);
+		Vec3f center((maxP[0] + minP[0]) / 2.0f,
+			(maxP[1] + minP[1]) / 2.0f,
+			(maxP[2] + minP[2]) / 2.0f);
 
-		for (unsigned int j = 0; j < submesh->getOriginalVertices().size(); j++)
+		for (unsigned int j = 0; j < submesh->getVertices().size(); j++)
 		{
-			submesh->getOriginalVertices()[j] -= center;
-			submesh->getOriginalVertices()[j] *= scale;
+			submesh->getVertices()[j] -= center;
+			submesh->getVertices()[j] *= scale;
 		}
 	}
 
@@ -405,11 +405,11 @@ namespace Etoile{
 			TiXmlElement *elemSubmeshes = elemRoot->FirstChildElement("submeshes");
 			while (elemSubmeshes)
 			{
-				TiXmlElement *elemSubMesh = elemSubmeshes->FirstChildElement("submesh");
+				TiXmlElement *elemVBORenderSubMesh = elemSubmeshes->FirstChildElement("submesh");
 
-				while(elemSubMesh){
-					readSubMesh(elemSubMesh);
-					elemSubMesh = elemSubMesh->NextSiblingElement("submesh");
+				while(elemVBORenderSubMesh){
+					readVBORenderSubMesh(elemVBORenderSubMesh);
+					elemVBORenderSubMesh = elemVBORenderSubMesh->NextSiblingElement("submesh");
 				}
 
 				elemSubmeshes = elemSubmeshes->NextSiblingElement("submeshes"); // iteration

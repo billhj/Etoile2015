@@ -38,7 +38,7 @@ namespace Etoile
 	}
 
 
-	bool OpenMeshLoader::loadFromFile(const std::string& fileName, Mesh* mesh)
+	bool OpenMeshLoader::loadFromFile(const std::string& fileName,RenderMesh* mesh)
 	{
 		// request vertex normals, so the mesh reader can use normal information
 		// if available
@@ -101,9 +101,8 @@ namespace Etoile
 		this->loadTextures(fileName);
 		meshToUnitCube(*_omesh);
 		createData();
-		_pMesh->cleanEmptySubMesh();
+		_pMesh->cleanEmptyRenderSubMesh();
 		//_pMesh->buildRuntimeData();
-		_pMesh->initSkin();
 		_pMesh->computeAABB();
 		return true;
 	}
@@ -113,17 +112,19 @@ namespace Etoile
 	// create Vertex buffer object(vertices, normal, color, texCord)
 	void OpenMeshLoader::createData()
 	{
-		std::vector<SubMesh*> submeshes;
+		std::vector<VBORenderSubMesh*> submeshes;
 
 		for( unsigned int i = 0; i < _materials.size() + 1; ++i){
 			if(i==0)
 			{
-				SubMesh* submesh = _pMesh->creatNewSubMesh("empty");
+				VBORenderSubMesh* submesh = new VBORenderSubMesh("empty");
+				_pMesh->addRenderSubMesh(submesh);
 				submeshes.push_back(submesh);
 			}
 			else
 			{
-				SubMesh* submesh =  _pMesh->creatNewSubMesh(_materials[i - 1]->getName());
+				VBORenderSubMesh* submesh = new VBORenderSubMesh(_materials[i - 1]->getName());
+				_pMesh->addRenderSubMesh(submesh);
 				submesh->setMaterial(_materials[i - 1]);
 				submeshes.push_back(submesh);
 			}
@@ -139,7 +140,7 @@ namespace Etoile
 		{
 			OMesh::FaceHandle hFace = f.handle();
 			int iTexIndex = _omesh->texture_index( hFace );
-			SubMesh* submesh = submeshes[iTexIndex];
+			VBORenderSubMesh* submesh = submeshes[iTexIndex];
 
 			for( OMesh::FaceVertexIter fv_it=_omesh->fv_iter(f.handle()); fv_it; ++fv_it)
 			{
@@ -162,13 +163,13 @@ namespace Etoile
 				const OMesh::Normal & nn = smoothNormal/smoothNormal.norm();
 				const OMesh::TexCoord2D & tt = _omesh->texcoord2D(vh);
 
-				submesh->getOriginalNormals().push_back(Vec3f(nn.data()[0], nn.data()[1], nn.data()[2]));
+				submesh->getNormals().push_back(Vec3f(nn.data()[0], nn.data()[1], nn.data()[2]));
 
-				submesh->getOriginalTextureCoords().push_back(Vec2f(tt.data()[0], tt.data()[1]));
+				submesh->getTextureCoords().push_back(Vec2f(tt.data()[0], tt.data()[1]));
 
-				submesh->getOriginalVertices().push_back(Vec3f(pp.data()[0], pp.data()[1], pp.data()[2]));
+				submesh->getVertices().push_back(Vec3f(pp.data()[0], pp.data()[1], pp.data()[2]));
 
-				submesh->getOriginalVertexIndexForFaces().push_back(submesh->getOriginalVertices().size() - 1);
+				submesh->getVertexIndexForFaces().push_back(submesh->getVertices().size() - 1);
 
 			}
 
@@ -179,25 +180,25 @@ namespace Etoile
 
 	void OpenMeshLoader::meshToUnitCube(OMesh& mesh)
 	{
-		OMesh::Point min(1e6, 1e6, 1e6);
-		OMesh::Point max(-1e6, -1e6, -1e6);
+		OMesh::Point minP(1e6, 1e6, 1e6);
+		OMesh::Point maxP(-1e6, -1e6, -1e6);
 
 		for (OMesh::ConstVertexIter v_it = mesh.vertices_begin(); v_it != mesh.vertices_end(); ++v_it)
 		{
 			OMesh::Point p = mesh.point(v_it.handle());
 			for (int i = 0; i < 3; ++i)
 			{
-				if (p[i] > max[i]) max[i] = p[i];
-				if (p[i] < min[i]) min[i] = p[i];
+				if (p[i] > maxP[i]) maxP[i] = p[i];
+				if (p[i] < minP[i]) minP[i] = p[i];
 			}
 		}
 
 		// find the longest edge and scale it to 1
-		double scale = 1.0f / std::max(std::max(max[0] - min[0], max[1] - min[1]), max[2] - min[2]);
+		double scale = 1.0f / max(max(maxP[0] - minP[0], maxP[1] - minP[1]), maxP[2] - minP[2]);
 
-		OMesh::Point center((max[0] + min[0]) / 2.0f,
-			(max[1] + min[1]) / 2.0f,
-			(max[2] + min[2]) / 2.0f);
+		OMesh::Point center((maxP[0] + minP[0]) / 2.0f,
+			(maxP[1] + minP[1]) / 2.0f,
+			(maxP[2] + minP[2]) / 2.0f);
 
 		for (OMesh::VertexIter v_it = mesh.vertices_begin(); v_it != mesh.vertices_end(); ++v_it)
 		{

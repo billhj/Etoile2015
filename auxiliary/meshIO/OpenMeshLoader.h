@@ -10,8 +10,9 @@
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
 #include <OpenMesh/Core/Mesh/PolyMesh_ArrayKernelT.hh>
-#include "../Mesh.h"
+#include "geometry/RenderMesh.h"
 #include "MeshLoader.h"
+#include "renderer/OpenGL/VBORenderSubMesh.h"
 
 struct MyTraits : public OpenMesh::DefaultTraits
 {
@@ -31,7 +32,7 @@ namespace Etoile
 	public:
 		OpenMeshLoader();
 		~OpenMeshLoader();
-		virtual bool loadFromFile(const std::string& fileName, Mesh* mesh) override;
+		virtual bool loadFromFile(const std::string& fileName,RenderMesh* mesh) override;
 	private:
 		void createData();
 		void meshToUnitCube(OMesh& mesh);
