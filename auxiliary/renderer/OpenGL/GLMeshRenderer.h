@@ -71,17 +71,16 @@ namespace Etoile
 			const std::vector<int>& faceIndices = submesh->getVertexIndexForFaces();
 
 			Material* material = submesh->getMaterial();
+			Texture* t = NULL;
 			if(material != NULL)
 			{
 				applyMaterial(material);
-				/*Matrix4f modelM = submesh->getGLModelMatrix() * p_mesh->getGLModelMatrix();
-				glPushMatrix();
-				glLoadMatrixf(&modelM[0][0]);*/
-				Texture* t = material->getDiffuseTexture();
+				t = material->getDiffuseTexture();
 				if(t != NULL)
 				{
 					t->use();
 				}
+			}
 
 				glBegin(GL_TRIANGLES);
 				for(unsigned int i = 0; i < faceIndices.size(); ++i)
@@ -92,16 +91,11 @@ namespace Etoile
 				}
 				glEnd();
 
-				if(t != NULL)
-				{
-					t->unUse();
-				}
-				
-			}
-			else
+			if(t != NULL)
 			{
-				assert(0 && "GLRenderMeshRenderer: no material");
+					t->unUse();
 			}
+			
 		}
 
 		

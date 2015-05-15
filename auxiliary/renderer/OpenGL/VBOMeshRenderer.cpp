@@ -104,7 +104,7 @@ namespace Etoile
 
 	}
 
-	void VBOMeshRenderer::drawTextureCoord()
+	void VBOMeshRenderer::drawMeshTexcoord()
 	{
 		if(p_mesh == NULL) return;
 		Matrix4f modelM;
@@ -115,16 +115,19 @@ namespace Etoile
 		for(unsigned int i = 0; i < submeshlist.size(); ++i)
 		{
 			RenderSubMesh* submesh = submeshlist[i];
-			drawTextureCoordRenderSubMesh(submesh);
+			drawSubMeshTexcoord(submesh);
 		}
 
 		drawAABB();
 		unUseTransform(t);
 	}
 
-	void VBOMeshRenderer::drawTextureCoordRenderSubMesh(RenderSubMesh* submesh)
+	void VBOMeshRenderer::drawSubMeshTexcoord(RenderSubMesh* submesh)
 	{
 		VBORenderSubMesh* vbosubmesh = dynamic_cast<VBORenderSubMesh*>(submesh);
+
+		if(submesh->getTextureCoordsColor().size() < 1 || submesh->getVertices().size() < 1) return;
+
 		if(NULL == vbosubmesh) return;
 		vbosubmesh->p_texcoordColorVBO->use();
 		glColorPointer(3, GL_FLOAT, 0, 0);

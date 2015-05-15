@@ -91,6 +91,35 @@ namespace Etoile
 		m_vertices_index_face.push_back(2);
 	}
 
+	void Box::init()
+	{
+
+		m_vdata.push_back(Vec3f(-1.0, -1.0, -1.0));
+		m_vdata.push_back(Vec3f(-1.0, -1.0, 1.0));
+		m_vdata.push_back(Vec3f(-1.0f, 1.0, -1.0));
+		m_vdata.push_back(Vec3f(-1.0, 1.0, 1.0));
+		m_vdata.push_back(Vec3f(1.0, -1.0, -1.0));
+		m_vdata.push_back(Vec3f(1.0f, -1.0, 1.0));
+		m_vdata.push_back(Vec3f(1.0, 1.0, -1.0));
+		m_vdata.push_back(Vec3f(1.0, 1.0, 1.0));
+
+		m_tdata.push_back(Vec2f(1.0f, 0.0f));
+		m_tdata.push_back(Vec2f(0.0f, 0.0f));
+		m_tdata.push_back(Vec2f(1.0f, 1.0f));
+
+		m_tcdata.push_back(Vec3f(1.0f, 0.0f, 0));
+		m_tcdata.push_back(Vec3f(0.0f, 0.0f, 0));
+		m_tcdata.push_back(Vec3f(1.0f, 1.0f, 0));
+
+		m_ndata.push_back(Vec3f( 0.0f, 1.0f, 0));
+		m_ndata.push_back(Vec3f( 0.0f, 1.0f, 0));
+		m_ndata.push_back(Vec3f( 0.0f, 1.0f, 0));
+
+		m_vertices_index_face.push_back(0);
+		m_vertices_index_face.push_back(1);
+		m_vertices_index_face.push_back(2);
+	}
+
 	void Plane::init()
 	{
 		int index = 0;

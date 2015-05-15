@@ -63,7 +63,7 @@ namespace Etoile
 		for(unsigned int i = 0; i < m_renderObjList.size(); ++i)
 		{
 			ObjectRenderer* obj = m_renderObjList[i];
-			obj->drawTexcoordPicking();
+			obj->drawTexcoord();
 		}
 	}
 

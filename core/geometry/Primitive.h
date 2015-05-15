@@ -50,5 +50,14 @@ namespace Etoile
 	protected:
 		int m_line;
 	};
+
+
+	class Box : public Primitive
+	{
+	public:
+		Box() {}
+		virtual void init();
+	protected:
+	};
 }
 

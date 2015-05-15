@@ -20,13 +20,13 @@ namespace Etoile
 		drawRenderMesh();
 	}
 
-	void ImmediateMeshRenderer::drawTexcoordPicking()
+	void ImmediateMeshRenderer::drawTexcoord()
 	{
-		drawTexcoordPickingMesh();
+		drawMeshTexcoord();
 	}
 
 
-	void ImmediateMeshRenderer::drawTexcoordPickingMesh()
+	void ImmediateMeshRenderer::drawMeshTexcoord()
 	{
 		if(p_mesh == NULL) return;
 		Matrix4f modelM;
@@ -37,16 +37,19 @@ namespace Etoile
 		for(unsigned int i = 0; i < submeshlist.size(); ++i)
 		{
 			RenderSubMesh* submesh = submeshlist[i];
-			drawTexcoordPickingSubMesh(submesh);
+			drawSubMeshTexcoord(submesh);
 		}
 		drawAABB();
 		unUseTransform(t);
 	}
 
-	void ImmediateMeshRenderer::drawTexcoordPickingSubMesh(RenderSubMesh* submesh)
+	void ImmediateMeshRenderer::drawSubMeshTexcoord(RenderSubMesh* submesh)
 	{
 		const std::vector<Vec3f>& vertices = submesh->getVertices();
 		const std::vector<Vec3f>& texs = submesh->getTextureCoordsColor();
+
+		if(texs.size() < 1 || vertices.size() < 1) return;
+
 		const std::vector<int>& faceIndices = submesh->getVertexIndexForFaces();
 
 		glBegin(GL_TRIANGLES);

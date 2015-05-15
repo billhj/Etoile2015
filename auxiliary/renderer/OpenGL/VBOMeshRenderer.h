@@ -21,8 +21,8 @@ namespace Etoile
 		virtual void drawRenderMesh();
 		virtual void drawRenderSubMesh(RenderSubMesh* submesh);
 
-		virtual void drawTextureCoord();
-		virtual void drawTextureCoordRenderSubMesh(RenderSubMesh* submesh);
+		virtual void drawMeshTexcoord();
+		virtual void drawSubMeshTexcoord(RenderSubMesh* submesh);
 	};
 
 
