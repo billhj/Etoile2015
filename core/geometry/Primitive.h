@@ -12,19 +12,20 @@
 
 namespace Etoile
 {
-	class Primitive : public RenderMesh
+	class Primitive
 	{
 	public:
-		Primitive(const std::string& name) : RenderMesh(name){}
-		Material* getMaterial(){return getRenderSubMesh(0)->getMaterial();}
-		void setMaterial(Material* material){getRenderSubMesh(0)->setMaterial(material);}
+		std::vector<Vec3f> m_vdata, m_ndata;
+		std::vector<Vec2f> m_tdata;
+		std::vector<Vec3f> m_tcdata;
+		std::vector<int> m_vertices_index_face;
 	};
 
 
 	class Quad : public Primitive
 	{
 	public:
-		Quad(const std::string& name): Primitive(name) { init();}
+		Quad(){}
 		virtual void init();
 	protected:
 
@@ -33,7 +34,7 @@ namespace Etoile
 	class Triangle : public Primitive
 	{
 	public:
-		Triangle(const std::string& name): Primitive(name) { init();}
+		Triangle() {}
 		virtual void init();
 	protected:
 	};
@@ -42,7 +43,7 @@ namespace Etoile
 	class Plane :  public Primitive
 	{
 	public:
-		Plane(const std::string& name): Primitive(name), m_line(4){init();}
+		Plane(): m_line(4){}
 		void setLine(int line){m_line = line;}
 		virtual void init();
 		void reinit();

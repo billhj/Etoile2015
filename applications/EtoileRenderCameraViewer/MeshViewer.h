@@ -61,11 +61,21 @@ public:
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_MULTISAMPLE);
 		
-		Triangle* triangle = new Triangle("triangle");
+		Triangle* triangle = new Triangle();
+		triangle->init();
+		RenderMesh* mesh = new RenderMesh("triangle");
+		RenderSubMesh* submesh = new RenderSubMesh("triangle");
+		mesh->addRenderSubMesh(submesh);
+		submesh->m_vdata = triangle->m_vdata;
+		submesh->m_tdata = triangle->m_tdata;
+		submesh->m_ndata = triangle->m_ndata;
+		submesh->m_tcdata = triangle->m_tcdata;
+		submesh->m_vertices_index_face = triangle->m_vertices_index_face;
+
 		renderer = new ImmediateMeshRenderer("triangle");
 		Entity* entity = new Entity();
 		entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
-		renderer->setRenderMesh(triangle);
+		renderer->setRenderMesh(mesh);
 		RenderManager::getInstance()->addIntoObjectRendererList(renderer);
 		//p_camera->getTransform()->setPosition(Vec3f(0,0,2));
 		
