@@ -16,18 +16,24 @@ namespace Etoile
 	class Texture
 	{
 	public:
-		Texture(const std::string& name): m_name(name), m_width(0), m_height(0), m_layer(0)
+		Texture(): m_width(0), m_height(0), m_layer(0)
 		{
-			TextureManager::getInstance()->addTexture(this);
+			m_index = TextureManager::getInstance()->addTexture(this);
 		}
 
 		Texture(Texture& t)
 		{
-			m_name = t.m_name + "_copy";
-			m_width = t.m_width; m_height = t.m_height;
+			set(t);
+			m_index = TextureManager::getInstance()->addTexture(this);
+		}
+
+		void set(Texture& t)
+		{
+			m_width = t.m_width; 
+			m_height = t.m_height;
 			m_layer = t.m_layer;
 			m_mipmaped = t.m_mipmaped;
-			TextureManager::getInstance()->addTexture(this);
+			m_filepath = t.m_filepath;
 		}
 
 		void setFilePath(const std::string& filepath)
@@ -62,14 +68,13 @@ namespace Etoile
 		virtual void read(float* data) = 0;
 		virtual void write(int x, int y, int width, int height, float* data) = 0;
 		virtual void write(int size, float* data) = 0;
-		const std::string getName(){return m_name;}
-		void setName(const std::string& name){TextureManager::getInstance()->renameElement(m_name, name); m_name = name;}
+		int getTexturePoolIndex(){return m_index;}
 		virtual void draw(int w, int h) = 0;
 		virtual void draw() = 0;
 	protected:
 		int m_width, m_height, m_layer;
 		bool m_mipmaped;
-		std::string m_name;
+		int m_index;
 		std::string m_filepath;
 	};
 

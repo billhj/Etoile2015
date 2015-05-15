@@ -34,7 +34,7 @@ namespace Etoile
 		~OpenMeshLoader();
 		virtual bool loadFromFile(const std::string& fileName,RenderMesh* mesh) override;
 	private:
-		void createData();
+		void createData(OMesh* omesh);
 		void meshToUnitCube(OMesh& mesh);
 
 		void loadTextures(const std::string& directory);

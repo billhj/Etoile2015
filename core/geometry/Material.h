@@ -27,9 +27,10 @@ namespace Etoile
 	class Material
 	{
 	public:
-		Material(const std::string& name);
+		Material();
 		Material(Material&);
 
+		void set(Material&);
 		void setAmbient(const Vec4f& ambient);
 		void setDiffuse(const Vec4f& diffuse);
 		void setSpecular(const Vec4f& specular);
@@ -115,8 +116,6 @@ namespace Etoile
 		}
 
 		void outputValues(std::ofstream* outfile);
-		const std::string getName(){return m_name;}
-		void setName(const std::string& name);
 
 #ifdef USING_BOOST
 		friend class boost::serialization::access;
@@ -163,7 +162,7 @@ namespace Etoile
 		int m_shininess;
 		std::map<std::string, Texture*> m_textures;
 		GpuProgram* p_gpuProgram;
-		std::string m_name;
+		int m_index;
 	};
 
 	//typedef std::map<std::string, Material*> MaterialList;

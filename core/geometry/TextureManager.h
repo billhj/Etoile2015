@@ -12,9 +12,13 @@
 namespace Etoile
 {
 	class Texture;
-	class TextureManager : public ResourceManager<Texture>
+	class TextureManager
 	{
+	private:
 		TextureManager();
+	protected:
+		std::vector<Texture*> m_datas;
+		
 	public:
 		static TextureManager* getInstance()
 		{
@@ -23,7 +27,6 @@ namespace Etoile
 		}
 
 		unsigned int addTexture(Texture* t);
-		Texture* getTextureByName(const std::string& name);
 		Texture* getTextureByIndex(unsigned int idx);
 		void addTextures(std::vector<Texture*> resources);
 	};

@@ -7,7 +7,7 @@
 */
 #include "OpenMeshLoader.h"
 #include "util/File.h"
-
+#include "renderer/OpenGL/GLTexture2D.h"
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
 */
@@ -99,19 +99,19 @@ namespace Etoile
 		//mesh.request_face_texture_index ();
 
 		this->loadTextures(fileName);
-		meshToUnitCube(*_omesh);
-		createData();
-		_pMesh->cleanEmptyRenderSubMesh();
-		//_pMesh->buildRuntimeData();
-		_pMesh->computeAABB();
+		createData(_omesh);
+		
 		return true;
 	}
 
 
 
 	// create Vertex buffer object(vertices, normal, color, texCord)
-	void OpenMeshLoader::createData()
+	void OpenMeshLoader::createData(OMesh* omesh)
 	{
+		
+		meshToUnitCube(*omesh);
+
 		std::vector<VBORenderSubMesh*> submeshes;
 
 		for( unsigned int i = 0; i < _materials.size() + 1; ++i){
@@ -123,7 +123,7 @@ namespace Etoile
 			}
 			else
 			{
-				VBORenderSubMesh* submesh = new VBORenderSubMesh(_materials[i - 1]->getName());
+				VBORenderSubMesh* submesh = new VBORenderSubMesh();
 				_pMesh->addRenderSubMesh(submesh);
 				submesh->setMaterial(_materials[i - 1]);
 				submeshes.push_back(submesh);
@@ -133,13 +133,13 @@ namespace Etoile
 
 
 
-		size_t sNumFaces = _omesh->n_faces();
+		size_t sNumFaces = omesh->n_faces();
 
-		OMesh::FaceIter f = _omesh->faces_begin() , f_end = _omesh->faces_end();
+		OMesh::FaceIter f = omesh->faces_begin() , f_end = omesh->faces_end();
 		for ( ; f != f_end; ++f )
 		{
 			OMesh::FaceHandle hFace = f.handle();
-			int iTexIndex = _omesh->texture_index( hFace );
+			int iTexIndex = omesh->texture_index( hFace );
 			VBORenderSubMesh* submesh = submeshes[iTexIndex];
 
 			for( OMesh::FaceVertexIter fv_it=_omesh->fv_iter(f.handle()); fv_it; ++fv_it)
@@ -148,20 +148,20 @@ namespace Etoile
 				OMesh::VertexHandle vh = fv_it.handle() ;
 
 				OMesh::Normal smoothNormal(0,0,0);// _omesh->normal(f.handle());
-				const OMesh::Normal faceNormal = _omesh->normal(f.handle());
+				const OMesh::Normal faceNormal = omesh->normal(f.handle());
 
-				for(OMesh::VertexFaceIter vf_it = _omesh->vf_iter(vh); vf_it; ++vf_it)
+				for(OMesh::VertexFaceIter vf_it = omesh->vf_iter(vh); vf_it; ++vf_it)
 				{
-					const OMesh::Normal &nn = _omesh->normal(vf_it.handle());
+					const OMesh::Normal &nn = omesh->normal(vf_it.handle());
 					if( OpenMesh::dot(faceNormal,nn)  > _smoothThreshold)
 					{
 						smoothNormal += nn;
 					}
 				}
 
-				const OMesh::Point & pp = _omesh->point(vh);
+				const OMesh::Point & pp = omesh->point(vh);
 				const OMesh::Normal & nn = smoothNormal/smoothNormal.norm();
-				const OMesh::TexCoord2D & tt = _omesh->texcoord2D(vh);
+				const OMesh::TexCoord2D & tt = omesh->texcoord2D(vh);
 
 				submesh->getNormals().push_back(Vec3f(nn.data()[0], nn.data()[1], nn.data()[2]));
 
@@ -176,6 +176,10 @@ namespace Etoile
 		}
 
 		std::cout<<"debug:"<<"nb faces:"<<sNumFaces<<std::endl;
+
+		_pMesh->cleanEmptyRenderSubMesh();
+		//_pMesh->buildRuntimeData();
+		_pMesh->computeAABB();
 	}
 
 	void OpenMeshLoader::meshToUnitCube(OMesh& mesh)
@@ -230,25 +234,23 @@ namespace Etoile
 				std::cout<<directory+strTexMapFilename<<std::endl;
 #endif
 
-				std::stringstream index_texture_ss;
-				index_texture_ss << index_texture;
+				/*std::stringstream index_texture_ss;
+				index_texture_ss << index_texture;*/
 
 				std::string path = (directory+strTexMapFilename);
 
 				std::string currentMat = strTexMapFilename;
-				_texturePathMap[currentMat] = path;
-				_materials.push_back(new Material(currentMat));
-				Material* mat = _materials.back();
-				_materialNameMap[currentMat] = _materials.size() - 1;
-				mat->setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
-				mat->setSpecularTexture( _pTextureLoader->loadFromFile("emptyMap"));
-
-				mat->setDiffuseTexture(_pTextureLoader->loadFromFile(path));
+				_materials.push_back(Material());
+				Material& mat = _materials.back();
+				//_materialNameMap[currentMat] = _materials.size() - 1;
+				GLTexture2D* t = new GLTexture2D();
+				t->setFilePath(path);
+				mat.setDiffuseTexture(t);
 				index_texture++;
 			}
 
 		}
-		_texturePathMap["emptyMap"] = "emptyMap";
+		//_texturePathMap["emptyMap"] = "emptyMap";
 
 	}
 

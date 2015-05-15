@@ -102,19 +102,19 @@ public:
 
 		RenderMesh* _pMesh = new RenderMesh("mesh");
 		objloader.loadFromFile(name.toStdString(), _pMesh);
-		std::map<std::string, std::string> txtPath = objloader.getTexturePathMap();
-		std::vector<Material*>& mats = objloader.getMaterials();
-		for(unsigned int i = 0; i < mats.size(); ++i){
-			//_pRenderman->getMaterialManager()->addMaterial(new Material(mats[i]));
-		}
-		//loadTextures(txtPath);
-		std::cout<<"loading time: "<<qtime.elapsed()<<" msc"<<std::endl;
+		//std::map<std::string, std::string> txtPath = objloader.getTexturePathMap();
+		//std::vector<Material>& mats = objloader.getMaterials();
+		//for(unsigned int i = 0; i < mats.size(); ++i){
+		//	//_pRenderman->getMaterialManager()->addMaterial(new Material(mats[i]));
+		//}
+		////loadTextures(txtPath);
+		//std::cout<<"loading time: "<<qtime.elapsed()<<" msc"<<std::endl;
 
-		std::vector<RenderSubMesh*> submeshes = _pMesh->getRenderSubMeshList();
-		for(unsigned int i = 0; i < submeshes.size(); ++i)
-		{
-			RenderSubMesh* sub = submeshes[i];
-		}
+		//std::vector<RenderSubMesh*> submeshes = _pMesh->getRenderSubMeshList();
+		//for(unsigned int i = 0; i < submeshes.size(); ++i)
+		//{
+		//	RenderSubMesh* sub = submeshes[i];
+		//}
 
 		//setGPUProgramRenderer();
 	}

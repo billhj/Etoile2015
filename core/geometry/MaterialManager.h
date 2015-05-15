@@ -12,9 +12,12 @@
 namespace Etoile
 {
 	class Material;
-	class MaterialManager : public ResourceManager<Material>
+	class MaterialManager
 	{
+	private:
 		MaterialManager();
+	protected:
+		std::vector<Material*> m_datas;
 	public:
 		static MaterialManager* getInstance()
 		{
@@ -23,7 +26,6 @@ namespace Etoile
 		}
 
 		unsigned int addMaterial(Material* t);
-		Material* getMaterialByName(const std::string& name);
 		Material* getMaterialByIndex(unsigned int idx);
 		void addMaterials(std::vector<Material*> resources);
 	};

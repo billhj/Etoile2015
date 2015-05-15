@@ -16,14 +16,21 @@ namespace Etoile
 	class GLTexture : public Texture
 	{
 	public:
-		GLTexture(const std::string& name);
-		GLTexture(const std::string& name, GLuint id);
+		GLTexture();
+		GLTexture(GLuint id);
 		GLTexture(GLTexture& t): Texture(t)
 		{
 			m_id = t.m_id;
 			m_internalFormat = t.m_internalFormat;
-			m_selfGenerated = t.m_selfGenerated;
 		}
+
+		void set(GLTexture& t)
+		{
+			Texture::set(t);
+			m_id = t.m_id;
+			m_internalFormat = t.m_internalFormat;
+		}
+
 		virtual ~GLTexture() ;
 		virtual void release() override;
 		void setId(GLuint id)
@@ -50,7 +57,6 @@ namespace Etoile
 		virtual void setGLTextureParameter(GLenum target, GLenum pname, GLfloat param);
 		GLuint m_id;
 		GLenum m_internalFormat;
-		bool m_selfGenerated;
 	};
 
 

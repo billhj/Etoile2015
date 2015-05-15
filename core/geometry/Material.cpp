@@ -24,7 +24,7 @@
 namespace Etoile
 {
 
-	Material::Material(const std::string& name): m_name(name), m_ka(1), m_kd(1), m_ks(1), m_shininess(64)
+	Material::Material(): m_ka(1), m_kd(1), m_ks(1), m_shininess(64)
 	{
 		
 		m_ambient = Vec4f(0.2f,0.2f,0.2f,1);
@@ -43,13 +43,18 @@ namespace Etoile
 		/*setDiffuseTexture("emptyMap");
 		setSpecularTexture("emptyMap");
 		setBumpMap("emptyMap");*/
-		MaterialManager::getInstance()->addMaterial(this);
+		m_index = MaterialManager::getInstance()->addMaterial(this);
 		
 	}
 
 	Material::Material(Material& m)
 	{
-		m_name = m.m_name + "_copy";
+		set(m);
+		m_index = MaterialManager::getInstance()->addMaterial(this);
+	}
+
+	void Material::set(Material& m)
+	{
 		m_ambient = m.m_ambient;
 		m_diffuse = m.m_diffuse;
 		m_specular = m.m_diffuse;
@@ -66,7 +71,6 @@ namespace Etoile
 		m_shininess = m.m_shininess;
 		m_textures = m.m_textures;
 		p_gpuProgram = m.p_gpuProgram;
-		MaterialManager::getInstance()->addMaterial(this);
 	}
 
 	void Material::setAmbient(const Vec4f& ambient)
@@ -185,13 +189,11 @@ namespace Etoile
 
 	void Material::outputValues(std::ofstream* outfile)
 	{
-		(*outfile) << "Material: "<<this->m_name << std::endl;
+		(*outfile) << "Material: "<<this->m_index << std::endl;
 		(*outfile) << "ambient; " << this->m_ambient[0]<<" " << this->m_ambient[1]<<" " << this->m_ambient[2]<<" " << this->m_ambient[3]<<std::endl;
 		(*outfile)<<"diffuse: "<<this->m_diffuse[0]<<" "<<this->m_diffuse[1]<<" "<< this->m_diffuse[2]<<" " <<this->m_diffuse[3]<<std::endl;
 		(*outfile)<<"specular: "<<this->m_specular[0]<<" "<<this->m_specular[1]<<" "<< this->m_specular[2]<<" " <<this->m_specular[3]<<std::endl;
 		(*outfile)<<"shininess: "<<this->m_shininess<<std::endl;
 
 	}
-
-	void Material::setName(const std::string& name){ MaterialManager::getInstance()->renameElement(m_name, name); m_name = name;}
 }

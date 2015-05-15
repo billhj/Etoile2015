@@ -45,62 +45,58 @@ namespace Etoile
 		if(NULL == vbosubmesh) return;
 
 		glEnable( GL_TEXTURE_2D );
-		Material* material = vbosubmesh->getMaterial();
-		if(material != NULL){
-			applyMaterial(material);
+		Material& material = vbosubmesh->getMaterial();
 
-			/*Matrix4f modelM = submesh->getGLModelMatrix() * p_mesh->getGLModelMatrix();
-			glPushMatrix();
-			glLoadMatrixf(&modelM[0][0]);*/
+		applyMaterial(&material);
 
-			Texture* t = material->getDiffuseTexture();
-			if(t != NULL)
-			{
-				t->use();
-			}
+		/*Matrix4f modelM = submesh->getGLModelMatrix() * p_mesh->getGLModelMatrix();
+		glPushMatrix();
+		glLoadMatrixf(&modelM[0][0]);*/
 
-			vbosubmesh->p_texcoordVBO->use();
-			glTexCoordPointer(2, GL_FLOAT, 0, 0);
-			vbosubmesh->p_normalVBO->use();
-			glNormalPointer(GL_FLOAT, 0, 0);
-			vbosubmesh->p_vertexVBO->use();
-			glVertexPointer(3, GL_FLOAT, 0, 0);
-
-			printOpenGLError();
-
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glEnableClientState(GL_NORMAL_ARRAY);
-			glEnableClientState(GL_VERTEX_ARRAY);
-
-			printOpenGLError();
-
-			vbosubmesh->p_indexVBO->use();
-			glDrawElements( GL_TRIANGLES, vbosubmesh->p_indexVBO->getSize(), GL_UNSIGNED_INT, 0 );
-			vbosubmesh->p_indexVBO->unUse();
-
-			printOpenGLError();
-
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			glDisableClientState(GL_NORMAL_ARRAY);
-			glDisableClientState(GL_VERTEX_ARRAY);
-
-
-			vbosubmesh->p_texcoordVBO->unUse();
-			vbosubmesh->p_normalVBO->unUse();
-			vbosubmesh->p_vertexVBO->unUse();
-
-			printOpenGLError();
-
-			if(t != NULL)
-			{
-				t->unUse();
-			}
-			//glPopMatrix();
-		}
-		else
+		Texture* t = material.getDiffuseTexture();
+		if(t != NULL)
 		{
-			assert(0 && "VBOMeshRenderer: no material");
+			t->use();
 		}
+
+		vbosubmesh->p_texcoordVBO->use();
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		vbosubmesh->p_normalVBO->use();
+		glNormalPointer(GL_FLOAT, 0, 0);
+		vbosubmesh->p_vertexVBO->use();
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+
+		printOpenGLError();
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		printOpenGLError();
+
+		vbosubmesh->p_indexVBO->use();
+		glDrawElements( GL_TRIANGLES, vbosubmesh->p_indexVBO->getSize(), GL_UNSIGNED_INT, 0 );
+		vbosubmesh->p_indexVBO->unUse();
+
+		printOpenGLError();
+
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+
+		vbosubmesh->p_texcoordVBO->unUse();
+		vbosubmesh->p_normalVBO->unUse();
+		vbosubmesh->p_vertexVBO->unUse();
+
+		printOpenGLError();
+
+		if(t != NULL)
+		{
+			t->unUse();
+		}
+		//glPopMatrix();
+
 
 	}
 
@@ -207,85 +203,81 @@ namespace Etoile
 
 		glEnable( GL_TEXTURE_2D );
 
-		Material* material = submesh->getMaterial();
-		if(material != NULL)
+		Material& material = submesh->getMaterial();
+
+		applyMaterial(&material);
+		GLSLGpuProgram* gpuprogram = (GLSLGpuProgram*)material.getGpuProgram();
+
+		Matrix4f modelM;
+		ModelTransform* t = this->getEntity()->getTransformation();
+		if(t)
 		{
-			applyMaterial(material);
-			GLSLGpuProgram* gpuprogram = (GLSLGpuProgram*)material->getGpuProgram();
+			modelM = t->getGLModelMatrix();
+		}
+		if(gpuprogram != NULL)
+		{
+			gpuprogram->setUniformVariable("In_WorldMatrix",  modelM);
+			std::map<std::string, Texture*>& idxs = material.getTextures();
+			std::map<std::string, Texture*>::iterator itor;
 
-			Matrix4f modelM;
-			ModelTransform* t = this->getEntity()->getTransformation();
-			if(t)
+			for(itor = idxs.begin(); itor != idxs.end(); ++itor)
 			{
-				modelM = t->getGLModelMatrix();
+				std::string bName = itor->first;
+				Texture* t = itor->second;
+				gpuprogram->bindTexture(bName, t);
 			}
-			if(gpuprogram != NULL)
-			{
-				gpuprogram->setUniformVariable("In_WorldMatrix",  modelM);
-				std::map<std::string, Texture*>& idxs = material->getTextures();
-				std::map<std::string, Texture*>::iterator itor;
-
-				for(itor = idxs.begin(); itor != idxs.end(); ++itor)
-				{
-					std::string bName = itor->first;
-					Texture* t = itor->second;
-					gpuprogram->bindTexture(bName, t);
-				}
-				gpuprogram->drawIndexVBO(GL_TRIANGLES, vbosubmesh->p_vertexVBO, vbosubmesh->p_normalVBO, vbosubmesh->p_texcoordVBO, vbosubmesh->p_indexVBO);
-				gpuprogram->unBindBindingTextures();
-			}
-			else
-			{
-				glPushMatrix();
-				glLoadMatrixf(&modelM[0][0]);
-				Texture* t = material->getDiffuseTexture();
-				if(t != NULL)
-				{
-					t->use();
-				}
-
-				vbosubmesh->p_texcoordVBO->use();
-				glTexCoordPointer(2, GL_FLOAT, 0, 0);
-				vbosubmesh->p_normalVBO->use();
-				glNormalPointer(GL_FLOAT, 0, 0);
-				vbosubmesh->p_vertexVBO->use();
-				glVertexPointer(3, GL_FLOAT, 0, 0);
-
-				printOpenGLError();
-
-				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				glEnableClientState(GL_NORMAL_ARRAY);
-				glEnableClientState(GL_VERTEX_ARRAY);
-
-				printOpenGLError();
-
-				vbosubmesh->p_indexVBO->use();
-				glDrawElements( GL_TRIANGLES, vbosubmesh->p_indexVBO->getSize(), GL_UNSIGNED_INT, 0 );
-				vbosubmesh->p_indexVBO->unUse();
-
-				printOpenGLError();
-
-				glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-				glDisableClientState(GL_NORMAL_ARRAY);
-				glDisableClientState(GL_VERTEX_ARRAY);
-
-				vbosubmesh->p_texcoordVBO->unUse();
-				vbosubmesh->p_normalVBO->unUse();
-				vbosubmesh->p_vertexVBO->unUse();
-
-				printOpenGLError();
-				if(t != NULL)
-				{
-					t->unUse();
-				}
-				glPushMatrix();
-			}
-
+			gpuprogram->drawIndexVBO(GL_TRIANGLES, vbosubmesh->p_vertexVBO, vbosubmesh->p_normalVBO, vbosubmesh->p_texcoordVBO, vbosubmesh->p_indexVBO);
+			gpuprogram->unBindBindingTextures();
 		}
 		else
 		{
-			assert(0 && "GPUBasedVBOMeshRenderer: no material");
+			glPushMatrix();
+			glLoadMatrixf(&modelM[0][0]);
+			Texture* t = material.getDiffuseTexture();
+			if(t != NULL)
+			{
+				t->use();
+			}
+
+			vbosubmesh->p_texcoordVBO->use();
+			glTexCoordPointer(2, GL_FLOAT, 0, 0);
+			vbosubmesh->p_normalVBO->use();
+			glNormalPointer(GL_FLOAT, 0, 0);
+			vbosubmesh->p_vertexVBO->use();
+			glVertexPointer(3, GL_FLOAT, 0, 0);
+
+			printOpenGLError();
+
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glEnableClientState(GL_NORMAL_ARRAY);
+			glEnableClientState(GL_VERTEX_ARRAY);
+
+			printOpenGLError();
+
+			vbosubmesh->p_indexVBO->use();
+			glDrawElements( GL_TRIANGLES, vbosubmesh->p_indexVBO->getSize(), GL_UNSIGNED_INT, 0 );
+			vbosubmesh->p_indexVBO->unUse();
+
+			printOpenGLError();
+
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			glDisableClientState(GL_NORMAL_ARRAY);
+			glDisableClientState(GL_VERTEX_ARRAY);
+
+			vbosubmesh->p_texcoordVBO->unUse();
+			vbosubmesh->p_normalVBO->unUse();
+			vbosubmesh->p_vertexVBO->unUse();
+
+			printOpenGLError();
+			if(t != NULL)
+			{
+				t->unUse();
+			}
+			glPushMatrix();
 		}
+
+
+
 
 	}
 
@@ -300,37 +292,31 @@ namespace Etoile
 		if(NULL == vbosubmesh) return;
 		glEnable( GL_TEXTURE_2D );
 
-		Material* material = submesh->getMaterial();
-		if(material != NULL)
+		Material& material = submesh->getMaterial();
+		applyMaterial(&material);
+		GLSLGpuProgram* gpuprogram = (GLSLGpuProgram*)material.getGpuProgram();
+
+		if(gpuprogram != NULL)
 		{
-			applyMaterial(material);
-			GLSLGpuProgram* gpuprogram = (GLSLGpuProgram*)material->getGpuProgram();
+			gpuprogram->setUniformVariable("In_WorldMatrix",  this->getEntity()->getTransformation()->getGLModelMatrix());
+			std::map<std::string, Texture*>& idxs = material.getTextures();
+			std::map<std::string, Texture*>::iterator itor;
 
-			if(gpuprogram != NULL)
+			for(itor = idxs.begin(); itor != idxs.end(); ++itor)
 			{
-				gpuprogram->setUniformVariable("In_WorldMatrix",  this->getEntity()->getTransformation()->getGLModelMatrix());
-				std::map<std::string, Texture*>& idxs = material->getTextures();
-				std::map<std::string, Texture*>::iterator itor;
-
-				for(itor = idxs.begin(); itor != idxs.end(); ++itor)
-				{
-					std::string bName = itor->first;
-					Texture* t = itor->second;
-					gpuprogram->bindTexture(bName, t);
-				}
-
-				gpuprogram->drawIndexVBO(GL_TRIANGLES, vbosubmesh->p_vertexVBO, vbosubmesh->p_normalVBO, vbosubmesh->p_texcoordVBO, vbosubmesh->p_indexVBO);
-				printOpenGLError();
-				gpuprogram->unBindBindingTextures();
-			}else
-			{
-				std::cout<< "AvancedVBOMeshRenderer gpuprogram is not available : "<< gpuprogram->getName()<<std::endl;
+				std::string bName = itor->first;
+				Texture* t = itor->second;
+				gpuprogram->bindTexture(bName, t);
 			}
-		}
-		else
+
+			gpuprogram->drawIndexVBO(GL_TRIANGLES, vbosubmesh->p_vertexVBO, vbosubmesh->p_normalVBO, vbosubmesh->p_texcoordVBO, vbosubmesh->p_indexVBO);
+			printOpenGLError();
+			gpuprogram->unBindBindingTextures();
+		}else
 		{
-			assert(0 && "AvancedVBOMeshRenderer: no material");
+			std::cout<< "AvancedVBOMeshRenderer gpuprogram is not available : "<< gpuprogram->getName()<<std::endl;
 		}
+
 
 	}
 

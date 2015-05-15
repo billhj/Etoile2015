@@ -23,17 +23,15 @@
 
 namespace Etoile
 {
-	GLTexture::GLTexture(const std::string& name) : Texture(name)
+	GLTexture::GLTexture() : Texture()
 	{
 		printOpenGLError();
 		glGenTextures(1, &m_id);
 		printOpenGLError();
-		m_selfGenerated = true;
 	}
 
-	GLTexture::GLTexture(const std::string& name, GLuint id) : Texture(name), m_id(id)
+	GLTexture::GLTexture(GLuint id) : Texture(), m_id(id)
 	{
-		m_selfGenerated = false;
 	}
 
 	GLTexture::~GLTexture()
@@ -102,7 +100,7 @@ namespace Etoile
 	void GLTexture::release()
 	{
 		printOpenGLError();
-		if(m_selfGenerated)
+		if(m_id > 0)
 			glDeleteTextures(1, &m_id );
 		printOpenGLError();
 	}

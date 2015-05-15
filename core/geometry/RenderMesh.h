@@ -85,12 +85,12 @@ namespace Etoile
 			m_subRenderMeshList.push_back(sub);
 			return m_subRenderMeshList.size() - 1;
 		}
-		RenderSubMesh* creatNewRenderSubMesh(const std::string& name = "")
+		/*RenderSubMesh* creatNewRenderSubMesh(const std::string& name = "")
 		{
 			RenderSubMesh* submesh = new RenderSubMesh(name);
 			m_subRenderMeshList.push_back(submesh);
 			return submesh;
-		}
+		}*/
 
 		RenderSubMesh* getRenderSubMesh(int idx)
 		{

@@ -21,12 +21,12 @@
 
 namespace Etoile
 {
-	GLTextureArray::GLTextureArray(const std::string& name): GLTexture(name)
+	GLTextureArray::GLTextureArray(): GLTexture()
 	{
 		printOpenGLError();
 	}
 
-	GLTextureArray::GLTextureArray(const std::string& name, GLuint id): GLTexture(name, id)
+	GLTextureArray::GLTextureArray(GLuint id): GLTexture(id)
 	{
 	}
 

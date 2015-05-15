@@ -21,12 +21,12 @@
 
 namespace Etoile
 {
-	GLTexture2D::GLTexture2D(const std::string& name) : GLTexture(name)
+	GLTexture2D::GLTexture2D() : GLTexture()
 	{
 
 	}
 
-	GLTexture2D::GLTexture2D(const std::string& name, GLuint id) : GLTexture(name, id)
+	GLTexture2D::GLTexture2D(GLuint id) : GLTexture(id)
 	{
 
 	}

@@ -14,8 +14,8 @@ namespace Etoile
 	class GLTextureCube : public GLTexture
 	{
 	public:
-		GLTextureCube(const std::string& name);
-		GLTextureCube(const std::string& name, GLuint id);
+		GLTextureCube();
+		GLTextureCube(GLuint id);
 
 		virtual bool create(int iWidth, int iHeight,int _iLayer, GLenum internalFormat = GL_RGBA16F_ARB, GLenum pixeldataformat = GL_RGBA, GLenum type = GL_FLOAT, float* data = 0, bool bCreateMipMap = false) override;
 		virtual void setGLTextureParameter(GLenum pname, GLfloat param) override;

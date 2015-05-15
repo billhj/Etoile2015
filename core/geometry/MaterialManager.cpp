@@ -24,23 +24,22 @@
 namespace Etoile
 {
 
-	MaterialManager::MaterialManager() : ResourceManager<Material>()
+	MaterialManager::MaterialManager()
 	{
 	}
 
 	unsigned int MaterialManager::addMaterial(Material* t)
 	{
-		return add(t->getName(), t);
-	}
-
-	Material* MaterialManager::getMaterialByName(const std::string& name)
-	{
-		return (Material*)getByName(name);
+		int size = m_datas.size();
+		m_datas.push_back(t);
+		return size;
 	}
 
 	Material* MaterialManager::getMaterialByIndex(unsigned int idx)
 	{
-		return (Material*)getByIndex(idx);
+		if(idx < m_datas.size())
+			return m_datas[idx];
+		return NULL;
 	}
 
 	void MaterialManager::addMaterials(std::vector<Material*> resources)

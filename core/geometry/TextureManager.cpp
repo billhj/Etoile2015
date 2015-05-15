@@ -24,23 +24,23 @@
 namespace Etoile
 {
 
-	TextureManager::TextureManager() : ResourceManager<Texture>()
+	TextureManager::TextureManager()
 	{
 	}
 
 	unsigned int TextureManager::addTexture(Texture* t)
 	{
-		return add(t->getName(), t);
+		int size = m_datas.size();
+		m_datas.push_back(t);
+		return size;
 	}
 
-	Texture* TextureManager::getTextureByName(const std::string& name)
-	{
-		return (Texture*)getByName(name);
-	}
-
+	
 	Texture* TextureManager::getTextureByIndex(unsigned int idx)
 	{
-		return (Texture*)getByIndex(idx);
+		if(idx < m_datas.size())
+			return m_datas[idx];
+		return NULL;
 	}
 
 	void TextureManager::addTextures(std::vector<Texture*> resources)

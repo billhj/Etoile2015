@@ -7,6 +7,7 @@
 */
 
 #include "OBJMeshLoader.h"
+#include "renderer/OpenGL/GLTexture2D.h"
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
 */
@@ -224,48 +225,45 @@ namespace Etoile
 			{
 				stream >> key;
 				currentMat = key;
-				_materials.push_back(new Material(currentMat));
-				Material* mat = _materials.back();
+				_materials.push_back(Material());
+				Material& mat = _materials.back();
 				_materialNameMap[currentMat] = _materials.size() - 1;
-				mat->setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
-				mat->setSpecularTexture( _pTextureLoader->loadFromFile("emptyMap"));
-
 				nb_material++;
 			}
 
 			else if (keyWrd == "Kd") // diffuse color
 			{
-				Material* mat = _materials.back();
+				Material& mat = _materials.back();
 				stream >> f1; stream >> f2; stream >> f3;
 
 				if( !stream.fail() )
 				{
-					mat->setDiffuse(f1,f2,f3,1);
-					mat->setDiffuseConstant(1);
+					mat.setDiffuse(f1,f2,f3,1);
+					mat.setDiffuseConstant(1);
 				}
 			}
 
 			else if (keyWrd == "Ka") // ambient color
 			{
-				Material* mat = _materials.back();
+				Material& mat = _materials.back();
 				stream >> f1; stream >> f2; stream >> f3;
 
 				if( !stream.fail() )
 				{
-					mat->setAmbient(f1,f2,f3,1);
-					mat->setAmbientConstant(1);
+					mat.setAmbient(f1,f2,f3,1);
+					mat.setAmbientConstant(1);
 				}
 			}
 
 			else if (keyWrd == "Ks") // specular color
 			{
-				Material* mat = _materials.back();
+				Material& mat = _materials.back();
 				stream >> f1; stream >> f2; stream >> f3;
 
 				if( !stream.fail() )
 				{
-					mat->setSpecular(f1,f2,f3,1);
-					mat->setSpecularConstant(1);
+					mat.setSpecular(f1,f2,f3,1);
+					mat.setSpecularConstant(1);
 				}
 			}
 
@@ -296,7 +294,7 @@ namespace Etoile
 			else if (keyWrd == "map_Kd" ) {
 				// Get the rest of the line, removing leading or trailing spaces
 				// This will define the filename of the texture
-				Material* mat = _materials.back();
+				Material& mat = _materials.back();
 				std::string textureName;
 				std::getline(stream,textureName);
 				trimString(textureName);
@@ -310,33 +308,36 @@ namespace Etoile
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					mat->setDiffuseTexture(_pTextureLoader->loadFromFile(s));
-					_texturePathMap[textureName] = s;
+					GLTexture2D* t = new GLTexture2D();
+					t->setFilePath(s);
+					mat.setDiffuseTexture(t);
 				}else
 				{
-					mat->setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
+					//mat.setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
 				}
 			}
 			else if (keyWrd == "map_Ks") // map images
 			{
-				Material* mat = _materials.back();
+				Material& mat = _materials.back();
 				std::string textureName;
 				std::getline(stream,textureName);
 				trimString(textureName);
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					mat->setSpecularTexture(_pTextureLoader->loadFromFile(s));
-					_texturePathMap[textureName] = s;
+					GLTexture2D* t = new GLTexture2D();
+					t->setFilePath(s);
+					mat.setSpecularTexture(t);
+					//_texturePathMap[textureName] = s;
 
 				}else
 				{
-					mat->setSpecularTexture(_pTextureLoader->loadFromFile("emptyMap"));
+					//mat.setSpecularTexture(_pTextureLoader->loadFromFile("emptyMap"));
 				}
 			}
 			else if (keyWrd == "map_bump") // map images
 			{
-				Material* mat = _materials.back();
+				Material& mat = _materials.back();
 				std::string textureName;
 				//std::getline(stream,textureName);
 				//trimString(textureName);
@@ -346,31 +347,33 @@ namespace Etoile
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					mat->setBumpMap(_pTextureLoader->loadFromFile(s));
-					_texturePathMap[textureName] = s;
+					GLTexture2D* t = new GLTexture2D();
+					t->setFilePath(s);
+					mat.setBumpMap(t);
+					//_texturePathMap[textureName] = s;
 
 				}else
 				{
-					mat->setBumpMap( _pTextureLoader->loadFromFile("emptyMap"));
+					//mat.setBumpMap( _pTextureLoader->loadFromFile("emptyMap"));
 				}
 			}
 			else if (keyWrd == "Tr") // transparency value
 			{
-				Material* mat = _materials.back();
+				Material& mat = _materials.back();
 				stream >> f1;
 				if( !stream.fail() )
 				{
-					mat->setTransparency(f1);
+					mat.setTransparency(f1);
 				}
 			}
 			else if (keyWrd == "d") // transparency value
 			{
-				Material* mat = _materials.back();
+				Material& mat = _materials.back();
 				stream >> f1;
 				if( !stream.fail() )
 				{
 
-					mat->setDissolvedOpacity(f1);
+					mat.setDissolvedOpacity(f1);
 				}
 			}
 
@@ -381,7 +384,7 @@ namespace Etoile
 			//}
 
 		}
-		_texturePathMap["emptyMap"] = "emptyMap";
+		//_texturePathMap["emptyMap"] = "emptyMap";
 		return nb_material;
 	}
 
@@ -634,14 +637,13 @@ namespace Etoile
 				VBORenderSubMesh* submesh = new VBORenderSubMesh("empty");
 				_pMesh->addRenderSubMesh(submesh);
 				submeshes.push_back(submesh);
-				Material* mat = new Material("empty");
-				mat->setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
-				mat->setSpecularTexture( _pTextureLoader->loadFromFile("emptyMap"));
-				submesh->setMaterial(mat);
+				/*Material& mat = submesh->getMaterial();
+				mat.setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
+				mat.setSpecularTexture( _pTextureLoader->loadFromFile("emptyMap"));*/
 			}
 			else
 			{
-				VBORenderSubMesh* submesh = new VBORenderSubMesh(_materials[i - 1]->getName());
+				VBORenderSubMesh* submesh = new VBORenderSubMesh();
 				_pMesh->addRenderSubMesh(submesh);
 				submesh->setMaterial(_materials[i - 1]);
 				submeshes.push_back(submesh);

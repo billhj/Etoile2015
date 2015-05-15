@@ -25,13 +25,12 @@ namespace Etoile
 	public:
 		RenderSubMesh(const std::string& name = ""): m_name(name), m_nbVerticesPerFace(3)
 		{
-			p_material = NULL;
 		}
 
 		RenderSubMesh(RenderSubMesh& sub): m_nbVerticesPerFace(3)
 		{
 			m_name = sub.m_name;
-			p_material = sub.p_material;
+			m_material = sub.m_material;
 			m_nbVerticesPerFace = sub.m_nbVerticesPerFace;
 			m_numberOfFaces = sub.m_numberOfFaces;
 			m_vertices_index_face = sub.m_vertices_index_face;
@@ -55,14 +54,14 @@ namespace Etoile
 		const std::string getName(){return m_name;}
 		void setName(const std::string& name){ m_name = name;}
 
-		void setMaterial(Material* material)
+		void setMaterial(Material& m)
 		{
-			p_material = material;
+			m_material.set(m);
 		}
 
-		Material* getMaterial()
+		Material& getMaterial()
 		{
-			return p_material;
+			return m_material;
 		}
 
 		void addVertexIndex(int vertices_index)
@@ -123,6 +122,6 @@ namespace Etoile
 		std::vector<Vec3f> m_tcdata;
 		std::string m_name;
 		AxisAlignedBoundingBoxf m_aabb;
-		Material* p_material;
+		Material m_material;
 	};
 }

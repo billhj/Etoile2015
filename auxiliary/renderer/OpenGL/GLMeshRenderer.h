@@ -40,7 +40,7 @@ namespace Etoile
 				RenderSubMesh* submesh = submeshlist[i];
 				drawRenderSubMesh(submesh);
 			}
-			
+
 			drawAABB();
 			unUseTransform(t);
 		}
@@ -70,35 +70,33 @@ namespace Etoile
 			const std::vector<Vec2f>& texs = submesh->getTextureCoords();
 			const std::vector<int>& faceIndices = submesh->getVertexIndexForFaces();
 
-			Material* material = submesh->getMaterial();
+			Material& material = submesh->getMaterial();
 			Texture* t = NULL;
-			if(material != NULL)
+			applyMaterial(&material);
+			t = material.getDiffuseTexture();
+			if(t != NULL)
 			{
-				applyMaterial(material);
-				t = material->getDiffuseTexture();
-				if(t != NULL)
-				{
-					t->use();
-				}
+				t->use();
 			}
 
-				glBegin(GL_TRIANGLES);
-				for(unsigned int i = 0; i < faceIndices.size(); ++i)
-				{
-					glTexCoord2fv( &texs[faceIndices[i]][0] );
-					glNormal3fv( &normals[faceIndices[i]][0] );
-					glVertex3fv( &vertices[faceIndices[i]][0] );
-				}
-				glEnd();
+
+			glBegin(GL_TRIANGLES);
+			for(unsigned int i = 0; i < faceIndices.size(); ++i)
+			{
+				glTexCoord2fv( &texs[faceIndices[i]][0] );
+				glNormal3fv( &normals[faceIndices[i]][0] );
+				glVertex3fv( &vertices[faceIndices[i]][0] );
+			}
+			glEnd();
 
 			if(t != NULL)
 			{
-					t->unUse();
+				t->unUse();
 			}
-			
+
 		}
 
-		
+
 
 		void drawAABB(AxisAlignedBoundingBoxf* aabb)
 		{

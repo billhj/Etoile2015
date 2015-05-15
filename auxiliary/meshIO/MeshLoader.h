@@ -20,22 +20,22 @@ namespace Etoile
 		~MeshLoader(){}
 		virtual bool loadFromFile(const std::string& fileName, RenderMesh* mesh) = 0;
 		RenderMesh* getMesh(){return _pMesh;};
-		void setTextureLoader(TextureLoader  * loader){_pTextureLoader = loader;}
+		/*void setTextureLoader(TextureLoader  * loader){_pTextureLoader = loader;}
 		TextureLoader * getTextureLoader(){return _pTextureLoader;}
-		std::vector<Material*>& getMaterials(){return _materials;}
+		std::vector<Material>& getMaterials(){return _materials;}
 		std::map<std::string, int> getMaterialNameIdMap(){return _materialNameMap;}
-		const std::map<std::string, std::string>& getTexturePathMap() const {return _texturePathMap;}
+		const std::map<std::string, std::string>& getTexturePathMap() const {return _texturePathMap;}*/
 
 	protected:
 		std::string _fileName;
-		std::map<std::string, std::string> _texturePathMap;
+		//std::map<std::string, std::string> _texturePathMap;
 		std::map<std::string, int> _materialNameMap;
-		std::vector<Material*> _materials;
+		std::vector<Material> _materials;
 		Vec3f _scale;
 		Vec3f _translate;
 		Quaternionf _rotate;
 		RenderMesh* _pMesh;
-		TextureLoader * _pTextureLoader;
+		//TextureLoader * _pTextureLoader;
 	};
 
 }

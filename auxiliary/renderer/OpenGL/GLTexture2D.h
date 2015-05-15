@@ -14,8 +14,8 @@ namespace Etoile
 	class GLTexture2D : public GLTexture
 	{
 	public:
-		GLTexture2D(const std::string& name);
-		GLTexture2D(const std::string& name, GLuint id);
+		GLTexture2D();
+		GLTexture2D(GLuint id);
 
 		virtual bool create( int iWidth, int iHeight,int _iLayer, GLenum internalFormat = GL_RGBA16F_ARB, GLenum pixeldataformat = GL_RGBA, GLenum type = GL_FLOAT, float* data = 0, bool bCreateMipMap = false) override;
 		virtual void setGLTextureParameter(GLenum pname, GLfloat param) override;
