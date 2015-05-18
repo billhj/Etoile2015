@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>424</height>
+    <width>1043</width>
+    <height>649</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>1043</width>
      <height>21</height>
     </rect>
    </property>
@@ -784,7 +784,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>190</y>
+       <y>250</y>
        <width>151</width>
        <height>101</height>
       </rect>
@@ -799,6 +799,31 @@
        <string>Tab 2</string>
       </attribute>
      </widget>
+    </widget>
+    <widget class="QPushButton" name="colorButton">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>190</y>
+       <width>91</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(0, 0, 255);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
     </widget>
    </widget>
   </widget>
@@ -979,6 +1004,7 @@
    <header>meshviewer.h</header>
    <container>1</container>
    <slots>
+    <signal>colorPicked()</signal>
     <slot>showGrid()</slot>
     <slot>showAxis()</slot>
     <slot>setViewerMode(QString)</slot>
@@ -1070,7 +1096,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>colorButton</sender>
+   <signal>clicked()</signal>
+   <receiver>TexturePainterClass</receiver>
+   <slot>selectColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>287</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>521</x>
+     <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>centralWidget</sender>
+   <signal>colorPicked()</signal>
+   <receiver>TexturePainterClass</receiver>
+   <slot>pipetteColorPicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>521</x>
+     <y>266</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>521</x>
+     <y>324</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>selectColor()</slot>
+  <slot>pipetteColorPicked()</slot>
+ </slots>
  <buttongroups>
   <buttongroup name="buttonGroup"/>
  </buttongroups>

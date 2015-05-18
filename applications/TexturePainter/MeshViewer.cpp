@@ -20,14 +20,14 @@
 #include <QMouseEvent>
 
 using namespace Etoile;
-static GLfloat pixel[3];
 MeshViewer::MeshViewer(QWidget *parent) : QGLRenderWidget(parent), m_pickOn(false)
 {
-
+	m_pixel = new GLfloat[3];
 }
 
 MeshViewer::~MeshViewer()
 {
+	delete m_pixel;
 }
 
 void MeshViewer::init()
@@ -78,8 +78,8 @@ void MeshViewer::drawOnTexture()
 	{
 		texCoordPicking();
 		m_x, m_y;
-		pixel;
-		std::cout<<"drawOnTexture: screen "<<m_x <<" "<<m_y<<" texCoord: "<< pixel[0]<<"  "<<pixel[1]<<std::endl;
+		m_pixel;
+		std::cout<<"drawOnTexture: screen "<<m_x <<" "<<m_y<<" texCoord: "<< m_pixel[0]<<"  "<<m_pixel[1]<<std::endl;
 		m_pickOn = false;
 		//TODO drawOnTexture
 	}
@@ -116,7 +116,7 @@ void MeshViewer::texCoordPicking()
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	RenderManager::getInstance()->renderTexcoordPicking();
 	//GLfloat pixel[3];
-	Picker::processPickFloat(m_x, m_y, pixel);
+	Picker::processPickFloat(m_x, m_y, m_pixel);
 	//std::cout<<pixel[0]<<"  "<<pixel[1]<<"  "<<pixel[3]<<std::endl;
 	if (colorMaterial)
 		glEnable(GL_COLOR_MATERIAL);
@@ -128,9 +128,10 @@ void MeshViewer::colorPicking()
 {
 	if(m_tool == PIPETTE && m_pickOn == true)
 	{
-		Picker::processPickFloat(m_x, m_y, pixel);
+		Picker::processPickFloat(m_x, m_y, m_pixel);
 		m_pickOn = false;
-		std::cout<<"colorPicking: "<<m_x <<" "<<m_y<<" color: "<< pixel[0]<<"  "<<pixel[1]<<"  "<<pixel[2]<<std::endl;
+		std::cout<<"colorPicking: "<<m_x <<" "<<m_y<<" color: "<< m_pixel[0]<<"  "<<m_pixel[1]<<"  "<<m_pixel[2]<<std::endl;
+		emit colorPicked();
 		//TODO Show on colorpanel
 	}
 }

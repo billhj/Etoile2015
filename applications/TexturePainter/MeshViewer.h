@@ -34,6 +34,9 @@ public:
 		void usePipette();
 		void setViewerMode(QString mode);
 		void setTool(QAbstractButton* button);
+
+signals:
+		void colorPicked();
 protected:
 	virtual void mouseDoubleClickEvent(QMouseEvent* const event) override;
 	virtual void mousePressEvent(QMouseEvent* const event) override;
@@ -49,4 +52,5 @@ private:
 	VIEWER_MODE m_mode;
 	TOOLS m_tool;
 	bool m_pickOn;
+	GLfloat* m_pixel;
 };

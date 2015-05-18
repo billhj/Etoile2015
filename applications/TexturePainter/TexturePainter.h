@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include "ui_TexturePainter.h"
+#include <QColorDialog>
 
 class TexturePainter : public QMainWindow
 {
@@ -11,8 +12,12 @@ class TexturePainter : public QMainWindow
 public:
 	TexturePainter(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~TexturePainter();
+	public slots:
+		void selectColor();
+		void pipetteColorPicked();
 private:
 	Ui::TexturePainterClass ui;
+	QColorDialog * p_colordlg;
 };
 
 #endif // TEXTUREPAINTER_H
