@@ -9,25 +9,31 @@
 #include "renderer/OpenGL/glhead.h"
 #include "renderer/OpenGL/glInfo.h"
 #include "QGLRenderer/QGLRenderWidget.h"
+#include <QPushButton>
 
 using namespace Etoile;
 
 class MeshViewer : public QGLRenderWidget
 {
 	Q_OBJECT
-
+	friend class TexturePainter;
 public:
-	enum Mode{VIEW_MODE, PAINT_TEXTURE_MODE, GEOMETRY_MODE};
-	enum PICK_MODE{NO_MODE, TEXCOORD, COLORCOORD};
+	enum VIEWER_MODE{VIEW_MODE, TEXTURE_MODE, GEOMETRY_MODE};
+	//enum PICK_MODE{NO_MODE, TEXCOORD, COLORCOORD};
+	enum TOOLS{NOTOOL, PENCIL, MOVE, PIPETTE};
 public:
 	MeshViewer(QWidget *parent = 0);
 	~MeshViewer();
 	void init();
 	void draw();
-	void drawTexCoordPicking();
+	void texCoordPicking();
 	void colorPicking();
+
+	void drawOnTexture();
 	public slots:
 		void usePipette();
+		void setViewerMode(QString mode);
+		void setTool(QAbstractButton* button);
 protected:
 	virtual void mouseDoubleClickEvent(QMouseEvent* const event) override;
 	virtual void mousePressEvent(QMouseEvent* const event) override;
@@ -38,6 +44,9 @@ protected:
 
 private:
 	int m_x, m_y;
-	PICK_MODE m_picked;
-	int m_mode;
+	//GLfloat pixel[3];
+	//PICK_MODE m_picked;
+	VIEWER_MODE m_mode;
+	TOOLS m_tool;
+	bool m_pickOn;
 };

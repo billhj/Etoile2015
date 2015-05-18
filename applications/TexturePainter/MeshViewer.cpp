@@ -20,8 +20,8 @@
 #include <QMouseEvent>
 
 using namespace Etoile;
-
-MeshViewer::MeshViewer(QWidget *parent) : QGLRenderWidget(parent), m_picked(NO_MODE)
+static GLfloat pixel[3];
+MeshViewer::MeshViewer(QWidget *parent) : QGLRenderWidget(parent), m_pickOn(false)
 {
 
 }
@@ -72,38 +72,40 @@ void MeshViewer::init()
 
 }
 
+void MeshViewer::drawOnTexture()
+{
+	if(m_tool == PENCIL && m_mode == TEXTURE_MODE && m_pickOn == true)
+	{
+		texCoordPicking();
+		m_x, m_y;
+		pixel;
+		std::cout<<"drawOnTexture: screen "<<m_x <<" "<<m_y<<" texCoord: "<< pixel[0]<<"  "<<pixel[1]<<std::endl;
+		m_pickOn = false;
+		//TODO drawOnTexture
+	}
+}
 
 
 void MeshViewer::draw()
 {
 
 
-
-	if(m_picked == TEXCOORD)
-	{
-		drawTexCoordPicking();
-	}
-
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+	drawOnTexture();
 
 	/*this is use for no lighting gl_color ()
 	glDisable(GL_LIGHTING);
 	glEnable(GL_COLOR_MATERIAL);
 	glColor4f(0,0,1,1);*/
 	RenderManager::getInstance()->renderOneFrame();
-	if(m_picked == COLORCOORD)
-	{
-		colorPicking();
-	}
-
-
-	//Vec3f cameraPos = p_camera->getTransform()->getPosition();
-	//std::cout<<cameraPos<<std::endl;
+	
+	colorPicking();
+	
 }
 
 
-void MeshViewer::drawTexCoordPicking()
+void MeshViewer::texCoordPicking()
 {
 	GLboolean lighting, colorMaterial;
 	glGetBooleanv(GL_LIGHTING, &lighting);
@@ -113,7 +115,7 @@ void MeshViewer::drawTexCoordPicking()
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	RenderManager::getInstance()->renderTexcoordPicking();
-	GLfloat pixel[3];
+	//GLfloat pixel[3];
 	Picker::processPickFloat(m_x, m_y, pixel);
 	//std::cout<<pixel[0]<<"  "<<pixel[1]<<"  "<<pixel[3]<<std::endl;
 	if (colorMaterial)
@@ -124,15 +126,20 @@ void MeshViewer::drawTexCoordPicking()
 
 void MeshViewer::colorPicking()
 {
-	GLfloat pixel[3];
-	Picker::processPickFloat(m_x, m_y, pixel);
+	if(m_tool == PIPETTE && m_pickOn == true)
+	{
+		Picker::processPickFloat(m_x, m_y, pixel);
+		m_pickOn = false;
+		std::cout<<"colorPicking: "<<m_x <<" "<<m_y<<" color: "<< pixel[0]<<"  "<<pixel[1]<<"  "<<pixel[2]<<std::endl;
+		//TODO Show on colorpanel
+	}
 }
 
 void MeshViewer::mouseDoubleClickEvent(QMouseEvent* const event)
 {
 	m_x = event->x();
 	m_y = event->y();
-	//m_picked = true;
+	m_pickOn = true;
 	QGLRenderWidget::mouseDoubleClickEvent(event);
 }
 
@@ -152,10 +159,9 @@ void MeshViewer::mouseMoveEvent(QMouseEvent* const event)
 	if(event->buttons() & Qt::MouseButton::LeftButton  && event->modifiers() == Qt::CTRL)
 	{
 		std::cout<<"draw"<<std::endl;
-		m_mode = PAINT_TEXTURE_MODE;
 	}
 	else
-	{	//m_mode == 0;
+	{	
 		QGLRenderWidget::mouseMoveEvent(event);
 	}
 }
@@ -173,4 +179,36 @@ void MeshViewer::keyPressEvent(QKeyEvent * const event)
 void MeshViewer::usePipette()
 {
 
+}
+
+void MeshViewer::setViewerMode(QString mode)
+{
+	if(mode.compare("VIEW") == 0)
+	{
+		m_mode = VIEW_MODE;
+	}
+	else if(mode.compare("TEXTURE") == 0)
+	{
+		m_mode = TEXTURE_MODE;
+	}
+	else if(mode.compare("GEOMETRY") == 0)
+	{
+		m_mode = GEOMETRY_MODE;
+	}
+}
+
+void MeshViewer::setTool(QAbstractButton* button)
+{
+	if(button->objectName().compare("PENCIL", Qt::CaseInsensitive) == 0)
+	{
+		m_tool = PENCIL;
+	}
+	else if(button->objectName().compare("MOVE", Qt::CaseInsensitive) == 0)
+	{
+		m_tool = MOVE;
+	}
+	else if(button->objectName().compare("PIPETTE", Qt::CaseInsensitive) == 0)
+	{
+		m_tool = PIPETTE;
+	}
 }
