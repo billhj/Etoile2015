@@ -11,7 +11,6 @@ class TexturePainter : public QMainWindow
 public:
 	TexturePainter(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~TexturePainter();
-
 private:
 	Ui::TexturePainterClass ui;
 };

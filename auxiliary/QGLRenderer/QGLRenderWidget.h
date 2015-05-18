@@ -27,8 +27,6 @@ namespace Etoile
 		int animationPeriod() const { return m_animationPeriod; }
 		Camera* camera(){ return p_camera; }
 
-		void setDrawAxis(bool draw){m_drawAxis = draw;}
-		void setDrawGrid(bool draw){m_drawGrid = draw;}
 
 		void loadProjectionMatrix(bool reset = false);
 		void loadModelViewMatrix(bool reset = false);
@@ -67,6 +65,10 @@ namespace Etoile
 		void setAnimationPeriod(int period) { m_animationPeriod = period; }
 		virtual void startAnimation();
 		virtual void stopAnimation();
+		void setDrawAxis(bool draw){m_drawAxis = draw;}
+		void setDrawGrid(bool draw){m_drawGrid = draw;}
+		void showAxis(){m_drawAxis = !m_drawAxis;}
+		void showGrid(){m_drawGrid = !m_drawGrid;}
 	public:
 	Q_SIGNALS :
 		/*! Signal emitted by the default init() method.

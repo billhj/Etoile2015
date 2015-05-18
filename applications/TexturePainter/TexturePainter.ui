@@ -54,6 +54,8 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <addaction name="actionShowAxis"/>
+    <addaction name="actionShowGrid"/>
    </widget>
    <widget class="QMenu" name="menuImage">
     <property name="title">
@@ -238,7 +240,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../bin/ico/magicselection.png</normaloff>../../bin/ico/magicselection.png</iconset>
+            <normaloff>../../bin/img/ico/magicselection.png</normaloff>../../bin/img/ico/magicselection.png</iconset>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -273,7 +275,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../bin/ico/pencil.png</normaloff>../../bin/ico/pencil.png</iconset>
+            <normaloff>../../bin/img/ico/pencil.png</normaloff>../../bin/img/ico/pencil.png</iconset>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -308,7 +310,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../bin/ico/brush.png</normaloff>../../bin/ico/brush.png</iconset>
+            <normaloff>../../bin/img/ico/brush.png</normaloff>../../bin/img/ico/brush.png</iconset>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -362,7 +364,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../bin/ico/brush2.png</normaloff>../../bin/ico/brush2.png</iconset>
+            <normaloff>../../bin/img/ico/brush2.png</normaloff>../../bin/img/ico/brush2.png</iconset>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -691,7 +693,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>../../bin/ico/pipette2.png</normaloff>../../bin/ico/pipette2.png</iconset>
+            <normaloff>../../bin/img/ico/pipette2.png</normaloff>../../bin/img/ico/pipette2.png</iconset>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -730,7 +732,7 @@
   <action name="action_Open">
    <property name="icon">
     <iconset>
-     <normaloff>../../bin/ico/png/open127.png</normaloff>../../bin/ico/png/open127.png</iconset>
+     <normaloff>../../bin/img/ico/open127.png</normaloff>../../bin/img/ico/open127.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open</string>
@@ -739,7 +741,7 @@
   <action name="action_Close">
    <property name="icon">
     <iconset>
-     <normaloff>../../bin/ico/png/door13.png</normaloff>../../bin/ico/png/door13.png</iconset>
+     <normaloff>../../bin/img/ico/door13.png</normaloff>../../bin/img/ico/door13.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Close</string>
@@ -758,7 +760,7 @@
   <action name="actionCopy">
    <property name="icon">
     <iconset>
-     <normaloff>../../bin/ico/png/copy12.png</normaloff>../../bin/ico/png/copy12.png</iconset>
+     <normaloff>../../bin/img/ico/copy12.png</normaloff>../../bin/img/ico/copy12.png</iconset>
    </property>
    <property name="text">
     <string>Copy</string>
@@ -767,7 +769,7 @@
   <action name="actionPaste">
    <property name="icon">
     <iconset>
-     <normaloff>../../bin/ico/png/clipboard46.png</normaloff>../../bin/ico/png/clipboard46.png</iconset>
+     <normaloff>../../bin/img/ico/clipboard46.png</normaloff>../../bin/img/ico/clipboard46.png</iconset>
    </property>
    <property name="text">
     <string>Paste</string>
@@ -791,7 +793,7 @@
   <action name="actionNew">
    <property name="icon">
     <iconset>
-     <normaloff>../../bin/ico/png/open130.png</normaloff>../../bin/ico/png/open130.png</iconset>
+     <normaloff>../../bin/img/ico/document79.png</normaloff>../../bin/img/ico/document79.png</iconset>
    </property>
    <property name="text">
     <string>&amp;New</string>
@@ -800,10 +802,28 @@
   <action name="actionCut">
    <property name="icon">
     <iconset>
-     <normaloff>../../bin/ico/png/cut20.png</normaloff>../../bin/ico/png/cut20.png</iconset>
+     <normaloff>../../bin/img/ico/cut.png</normaloff>../../bin/img/ico/cut.png</iconset>
    </property>
    <property name="text">
     <string>Cut</string>
+   </property>
+  </action>
+  <action name="actionShowAxis">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../bin/img/ico/axis.png</normaloff>../../bin/img/ico/axis.png</iconset>
+   </property>
+   <property name="text">
+    <string>showAxis</string>
+   </property>
+  </action>
+  <action name="actionShowGrid">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../bin/img/ico/grid.png</normaloff>../../bin/img/ico/grid.png</iconset>
+   </property>
+   <property name="text">
+    <string>showGrid</string>
    </property>
   </action>
  </widget>
@@ -814,6 +834,10 @@
    <extends>QWidget</extends>
    <header>meshviewer.h</header>
    <container>1</container>
+   <slots>
+    <slot>showGrid()</slot>
+    <slot>showAxis()</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources>
@@ -833,6 +857,38 @@
     <hint type="destinationlabel">
      <x>299</x>
      <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShowAxis</sender>
+   <signal>triggered()</signal>
+   <receiver>centralWidget</receiver>
+   <slot>showAxis()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>217</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShowGrid</sender>
+   <signal>triggered()</signal>
+   <receiver>centralWidget</receiver>
+   <slot>showGrid()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>217</y>
     </hint>
    </hints>
   </connection>
