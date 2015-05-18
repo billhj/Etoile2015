@@ -18,12 +18,13 @@ class MeshViewer : public QGLRenderWidget
 
 public:
 	enum Mode{VIEW_MODE, PAINT_TEXTURE_MODE, GEOMETRY_MODE};
+	enum PICK_MODE{NO_MODE, TEXCOORD, COLORCOORD};
 public:
 	MeshViewer(QWidget *parent = 0);
 	~MeshViewer();
 	void init();
 	void draw();
-	void drawTexturePicking();
+	void drawTexCoordPicking();
 	void colorPicking();
 	public slots:
 		void usePipette();
@@ -37,6 +38,6 @@ protected:
 
 private:
 	int m_x, m_y;
-	bool m_picked;
+	PICK_MODE m_picked;
 	int m_mode;
 };

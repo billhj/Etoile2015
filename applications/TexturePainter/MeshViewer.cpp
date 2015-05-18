@@ -21,7 +21,7 @@
 
 using namespace Etoile;
 
-MeshViewer::MeshViewer(QWidget *parent) : QGLRenderWidget(parent), m_picked(false)
+MeshViewer::MeshViewer(QWidget *parent) : QGLRenderWidget(parent), m_picked(NO_MODE)
 {
 
 }
@@ -79,9 +79,9 @@ void MeshViewer::draw()
 
 
 
-	if(m_picked)
+	if(m_picked == TEXCOORD)
 	{
-		drawTexturePicking();
+		drawTexCoordPicking();
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -92,6 +92,10 @@ void MeshViewer::draw()
 	glEnable(GL_COLOR_MATERIAL);
 	glColor4f(0,0,1,1);*/
 	RenderManager::getInstance()->renderOneFrame();
+	if(m_picked == COLORCOORD)
+	{
+		colorPicking();
+	}
 
 
 	//Vec3f cameraPos = p_camera->getTransform()->getPosition();
@@ -99,7 +103,7 @@ void MeshViewer::draw()
 }
 
 
-void MeshViewer::drawTexturePicking()
+void MeshViewer::drawTexCoordPicking()
 {
 	GLboolean lighting, colorMaterial;
 	glGetBooleanv(GL_LIGHTING, &lighting);
@@ -112,7 +116,6 @@ void MeshViewer::drawTexturePicking()
 	GLfloat pixel[3];
 	Picker::processPickFloat(m_x, m_y, pixel);
 	//std::cout<<pixel[0]<<"  "<<pixel[1]<<"  "<<pixel[3]<<std::endl;
-	m_picked = false;
 	if (colorMaterial)
 		glEnable(GL_COLOR_MATERIAL);
 	if (lighting)
@@ -121,8 +124,6 @@ void MeshViewer::drawTexturePicking()
 
 void MeshViewer::colorPicking()
 {
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	RenderManager::getInstance()->renderOneFrame();
 	GLfloat pixel[3];
 	Picker::processPickFloat(m_x, m_y, pixel);
 }
@@ -131,7 +132,7 @@ void MeshViewer::mouseDoubleClickEvent(QMouseEvent* const event)
 {
 	m_x = event->x();
 	m_y = event->y();
-	m_picked = true;
+	//m_picked = true;
 	QGLRenderWidget::mouseDoubleClickEvent(event);
 }
 
