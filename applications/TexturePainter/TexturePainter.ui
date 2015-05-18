@@ -127,8 +127,8 @@
   <widget class="QDockWidget" name="ParametersDockWidget">
    <property name="minimumSize">
     <size>
-     <width>147</width>
-     <height>200</height>
+     <width>228</width>
+     <height>209</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -153,9 +153,27 @@
           <attribute name="title">
            <string>layers</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout_2"/>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QListView" name="listView"/>
+           </item>
+          </layout>
          </widget>
          <widget class="QWidget" name="tab_4">
+          <attribute name="title">
+           <string>Tab 2</string>
+          </attribute>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTabWidget" name="tabWidget_3">
+         <widget class="QWidget" name="tab_3">
+          <attribute name="title">
+           <string>Tab 1</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tab_5">
           <attribute name="title">
            <string>Tab 2</string>
           </attribute>
@@ -170,7 +188,7 @@
   <widget class="QDockWidget" name="ToolsDockWidget">
    <property name="minimumSize">
     <size>
-     <width>100</width>
+     <width>152</width>
      <height>309</height>
     </size>
    </property>
@@ -193,7 +211,7 @@
        <property name="rightMargin">
         <number>1</number>
        </property>
-       <item>
+       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
         <widget class="QWidget" name="widget" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
@@ -875,7 +893,7 @@
    <property name="minimumSize">
     <size>
      <width>200</width>
-     <height>150</height>
+     <height>100</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -910,6 +928,48 @@
       </property>
      </item>
     </widget>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="Output">
+   <property name="minimumSize">
+    <size>
+     <width>89</width>
+     <height>100</height>
+    </size>
+   </property>
+   <property name="windowTitle">
+    <string>Output</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QPlainTextEdit" name="cmd"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="windowTitle">
+    <string>Files</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5">
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <widget class="QTreeWidget" name="treeWidget">
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <action name="action_Open">
