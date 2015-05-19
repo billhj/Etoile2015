@@ -28,7 +28,7 @@ void TexturePainter::selectColor()
 	QColor input = pal.color(QPalette::Button);
 	p_colordlg->setCurrentColor(input);
 	int resultCode = p_colordlg->exec();
-	QColor result;
+	QColor result = input;
 	if (resultCode == QDialog::Accepted)
 		result = p_colordlg->currentColor();
 	QString styleSheet = QString("background-color: rgb(%1, %2, %3);").arg(result.red()).arg(result.green()).arg(result.blue());
