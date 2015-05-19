@@ -33,7 +33,7 @@ namespace Etoile
 		}
 
 		virtual void drawRenderMesh() = 0;
-		
+		virtual void drawTexcoord() = 0;
 	protected:
 		RenderMesh* p_mesh;
 	};

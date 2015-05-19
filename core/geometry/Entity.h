@@ -26,9 +26,12 @@ namespace Etoile
 		Component* getComponent(ComponentType type){return m_components[type];}
 		ObjectRenderer* getObjectRenderer();
 		ModelTransform* getTransformation();
+		void setVisible(bool visible);
+		bool isVisible(){return m_visible;}
 	private:
 		std::vector<Component*> m_components;
 		int m_id;
 		std::string m_name;
+		bool m_visible;
 	};
 }

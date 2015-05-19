@@ -21,6 +21,18 @@ namespace Etoile
 
 	}
 
+	void VBOMeshRenderer::setRenderMesh(RenderMesh* mesh)
+	{
+		p_mesh = mesh;
+		const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
+
+		for(unsigned int i = 0; i < submeshlist.size(); ++i)
+		{
+			RenderSubMesh* submesh = submeshlist[i];
+			((VBORenderSubMesh*)submesh)->buildVBO(GL_STATIC_DRAW_ARB);
+		}
+	}
+
 	void VBOMeshRenderer::drawRenderMesh()
 	{
 		if(p_mesh == NULL) return;

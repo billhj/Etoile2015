@@ -1,4 +1,23 @@
 <RCC>
-    <qresource prefix="TexturePainter">
+    <qresource prefix="/">
+        <file>Resources/img/ico/axis.png</file>
+        <file>Resources/img/ico/brush.png</file>
+        <file>Resources/img/ico/brush2.png</file>
+        <file>Resources/img/ico/clipboard46.png</file>
+        <file>Resources/img/ico/copy12.png</file>
+        <file>Resources/img/ico/cut.png</file>
+        <file>Resources/img/ico/document79.png</file>
+        <file>Resources/img/ico/door13.png</file>
+        <file>Resources/img/ico/floppy13.png</file>
+        <file>Resources/img/ico/floppy15.png</file>
+        <file>Resources/img/ico/garbage4.png</file>
+        <file>Resources/img/ico/grid.png</file>
+        <file>Resources/img/ico/magicselection.png</file>
+        <file>Resources/img/ico/move.png</file>
+        <file>Resources/img/ico/open127.png</file>
+        <file>Resources/img/ico/pencil.png</file>
+        <file>Resources/img/ico/pipette2.png</file>
+        <file>Resources/img/ico/redo.png</file>
+        <file>Resources/img/ico/undo.png</file>
     </qresource>
 </RCC>

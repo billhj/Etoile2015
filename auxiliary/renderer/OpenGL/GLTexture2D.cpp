@@ -72,6 +72,8 @@ namespace Etoile
 		unUse();
 		glDisable( GL_TEXTURE_2D );
 		printOpenGLError();
+
+		m_isCreated = true;
 		return true;
 	}
 

@@ -15,6 +15,9 @@ public:
 	public slots:
 		void selectColor();
 		void pipetteColorPicked();
+		void addMesh();
+		void updateOutputError();
+		void updateOutputText();
 private:
 	Ui::TexturePainterClass ui;
 	QColorDialog * p_colordlg;

@@ -18,11 +18,11 @@ namespace Etoile
 	protected:
 		bool m_drawAABBs;
 	public:
-		GLMeshRenderer(const std::string& name) : MeshRenderer(name), m_drawAABBs(true)
+		GLMeshRenderer(const std::string& name = "") : MeshRenderer(name), m_drawAABBs(true)
 		{
 		}
 
-		void setAABBenable(bool b)
+		void setAABBVisible(bool b)
 		{
 			m_drawAABBs = b;
 		}
@@ -96,6 +96,47 @@ namespace Etoile
 
 		}
 
+
+		void drawTexcoord()
+		{
+			drawMeshTexcoord();
+		}
+
+
+		void drawMeshTexcoord()
+		{
+			if(p_mesh == NULL) return;
+			Matrix4f modelM;
+			ModelTransform* t = this->getEntity()->getTransformation();
+			useTransform(t);
+			const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
+
+			for(unsigned int i = 0; i < submeshlist.size(); ++i)
+			{
+				RenderSubMesh* submesh = submeshlist[i];
+				drawSubMeshTexcoord(submesh);
+			}
+			drawAABB();
+			unUseTransform(t);
+		}
+
+		void drawSubMeshTexcoord(RenderSubMesh* submesh)
+		{
+			const std::vector<Vec3f>& vertices = submesh->getVertices();
+			const std::vector<Vec3f>& texs = submesh->getTextureCoordsColor();
+
+			if(texs.size() < 1 || vertices.size() < 1) return;
+
+			const std::vector<int>& faceIndices = submesh->getVertexIndexForFaces();
+
+			glBegin(GL_TRIANGLES);
+			for(unsigned int i = 0; i < faceIndices.size(); ++i)
+			{
+				glColor3fv( &texs[faceIndices[i]][0] );
+				glVertex3fv( &vertices[faceIndices[i]][0] );
+			}
+			glEnd();
+		}
 
 
 		void drawAABB(AxisAlignedBoundingBoxf* aabb)

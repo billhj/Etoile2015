@@ -16,7 +16,7 @@ namespace Etoile
 	class Texture
 	{
 	public:
-		Texture(): m_width(0), m_height(0), m_layer(0)
+		Texture(): m_width(0), m_height(0), m_layer(0), m_isCreated(false)
 		{
 			m_index = TextureManager::getInstance()->addTexture(this);
 		}
@@ -34,6 +34,7 @@ namespace Etoile
 			m_layer = t.m_layer;
 			m_mipmaped = t.m_mipmaped;
 			m_filepath = t.m_filepath;
+			m_isCreated = t.m_isCreated;
 		}
 
 		void setFilePath(const std::string& filepath)
@@ -71,11 +72,13 @@ namespace Etoile
 		int getTexturePoolIndex(){return m_index;}
 		virtual void draw(int w, int h) = 0;
 		virtual void draw() = 0;
+		bool isCreated(){return m_isCreated;}
 	protected:
 		int m_width, m_height, m_layer;
 		bool m_mipmaped;
 		int m_index;
 		std::string m_filepath;
+		bool m_isCreated;
 	};
 
 

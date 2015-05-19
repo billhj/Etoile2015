@@ -18,6 +18,18 @@ namespace Etoile
 		m_entities.push_back(entity);
 	}
 
+	void Scene::removeEntity(Entity* entity)
+	{
+		for(unsigned int i = 0; i < m_entities.size(); ++i)
+		{
+			if(m_entities[i] == entity)
+			{
+				m_entities.erase(m_entities.begin() + i);
+				return;
+			}
+		}
+	}
+
 	void Scene::setName(const std::string& name)
 	{
 		SceneManager::getInstance()->renameElement(m_name, name);

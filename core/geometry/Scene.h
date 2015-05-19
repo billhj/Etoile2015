@@ -20,6 +20,7 @@ namespace Etoile
 		const std::string getName(){return m_name;}
 		void setName(const std::string& name);
 		void addEntity(Entity*);
+		void removeEntity(Entity*);
 		std::vector<Entity*>& getEntities(){return m_entities;}
 		const std::vector<Entity*>& getEntities() const {return m_entities;}
 	private:

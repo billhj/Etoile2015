@@ -52,8 +52,9 @@ void MeshViewer::init()
 	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_MULTISAMPLE);
+	glDisable(GL_COLOR_MATERIAL);
 
-	Triangle* triangle = new Triangle();
+	/*Triangle* triangle = new Triangle();
 		triangle->init();
 		RenderMesh* mesh = new RenderMesh("triangle");
 		RenderSubMesh* submesh = new RenderSubMesh("triangle");
@@ -68,8 +69,7 @@ void MeshViewer::init()
 	entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
 	renderer->setRenderMesh(mesh);
 	RenderManager::getInstance()->addIntoObjectRendererList(renderer);
-	//p_camera->getTransform()->setPosition(Vec3f(0,0,2));
-	//this->setFullScreen();
+*/
 	
 }
 

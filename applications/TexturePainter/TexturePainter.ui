@@ -105,6 +105,15 @@
     <property name="title">
      <string>Scene</string>
     </property>
+    <widget class="QMenu" name="menuAddPrimitive">
+     <property name="title">
+      <string>addPrimitive</string>
+     </property>
+     <addaction name="actionTriangle"/>
+     <addaction name="actionPlane"/>
+    </widget>
+    <addaction name="menuAddPrimitive"/>
+    <addaction name="actionAddMesh"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -418,8 +427,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
-                <normaloff>../../bin/img/ico/pipette2.png</normaloff>../../bin/img/ico/pipette2.png</iconset>
+               <iconset resource="TexturePainter.qrc">
+                <normaloff>:/Resources/img/ico/pipette2.png</normaloff>:/Resources/img/ico/pipette2.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -465,8 +474,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
-                <normaloff>../../bin/img/ico/magicselection.png</normaloff>../../bin/img/ico/magicselection.png</iconset>
+               <iconset resource="TexturePainter.qrc">
+                <normaloff>:/Resources/img/ico/magicselection.png</normaloff>:/Resources/img/ico/magicselection.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -503,8 +512,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
-                <normaloff>../../bin/img/ico/brush.png</normaloff>../../bin/img/ico/brush.png</iconset>
+               <iconset resource="TexturePainter.qrc">
+                <normaloff>:/Resources/img/ico/brush.png</normaloff>:/Resources/img/ico/brush.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -541,8 +550,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
-                <normaloff>../../bin/img/ico/pencil.png</normaloff>../../bin/img/ico/pencil.png</iconset>
+               <iconset resource="TexturePainter.qrc">
+                <normaloff>:/Resources/img/ico/pencil.png</normaloff>:/Resources/img/ico/pencil.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -573,8 +582,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
-                <normaloff>../../bin/img/ico/brush2.png</normaloff>../../bin/img/ico/brush2.png</iconset>
+               <iconset resource="TexturePainter.qrc">
+                <normaloff>:/Resources/img/ico/brush2.png</normaloff>:/Resources/img/ico/brush2.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -661,8 +670,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
-                <normaloff>../../bin/img/ico/move.png</normaloff>../../bin/img/ico/move.png</iconset>
+               <iconset resource="TexturePainter.qrc">
+                <normaloff>:/Resources/img/ico/move.png</normaloff>:/Resources/img/ico/move.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -959,19 +968,10 @@
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
-      <widget class="QPlainTextEdit" name="cmd">
+      <widget class="QPlainTextEdit" name="cmdField">
        <property name="palette">
         <palette>
          <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>235</red>
-             <green>235</green>
-             <blue>235</blue>
-            </color>
-           </brush>
-          </colorrole>
           <colorrole role="Button">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
@@ -984,9 +984,9 @@
           <colorrole role="Text">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
-             <red>248</red>
-             <green>248</green>
-             <blue>248</blue>
+             <red>238</red>
+             <green>238</green>
+             <blue>238</blue>
             </color>
            </brush>
           </colorrole>
@@ -1019,15 +1019,6 @@
           </colorrole>
          </active>
          <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>235</red>
-             <green>235</green>
-             <blue>235</blue>
-            </color>
-           </brush>
-          </colorrole>
           <colorrole role="Button">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
@@ -1040,9 +1031,9 @@
           <colorrole role="Text">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
-             <red>248</red>
-             <green>248</green>
-             <blue>248</blue>
+             <red>238</red>
+             <green>238</green>
+             <blue>238</blue>
             </color>
            </brush>
           </colorrole>
@@ -1075,15 +1066,6 @@
           </colorrole>
          </inactive>
          <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>120</red>
-             <green>120</green>
-             <blue>120</blue>
-            </color>
-           </brush>
-          </colorrole>
           <colorrole role="Button">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
@@ -1195,8 +1177,8 @@ selection-color: rgb(255, 83, 15);
   </widget>
   <action name="action_Open">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/open127.png</normaloff>../../bin/img/ico/open127.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/open127.png</normaloff>:/Resources/img/ico/open127.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open</string>
@@ -1204,8 +1186,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="action_Close">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/door13.png</normaloff>../../bin/img/ico/door13.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/door13.png</normaloff>:/Resources/img/ico/door13.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Close</string>
@@ -1223,8 +1205,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="actionCopy">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/copy12.png</normaloff>../../bin/img/ico/copy12.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/copy12.png</normaloff>:/Resources/img/ico/copy12.png</iconset>
    </property>
    <property name="text">
     <string>Copy</string>
@@ -1232,8 +1214,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="actionPaste">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/clipboard46.png</normaloff>../../bin/img/ico/clipboard46.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/clipboard46.png</normaloff>:/Resources/img/ico/clipboard46.png</iconset>
    </property>
    <property name="text">
     <string>Paste</string>
@@ -1241,8 +1223,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="actionDelete">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/garbage4.png</normaloff>../../bin/img/ico/garbage4.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/garbage4.png</normaloff>:/Resources/img/ico/garbage4.png</iconset>
    </property>
    <property name="text">
     <string>Delete</string>
@@ -1250,8 +1232,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="actionUndo">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/undo.png</normaloff>../../bin/img/ico/undo.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/undo.png</normaloff>:/Resources/img/ico/undo.png</iconset>
    </property>
    <property name="text">
     <string>Undo</string>
@@ -1259,8 +1241,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="actionRedo">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/redo.png</normaloff>../../bin/img/ico/redo.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/redo.png</normaloff>:/Resources/img/ico/redo.png</iconset>
    </property>
    <property name="text">
     <string>Redo</string>
@@ -1268,8 +1250,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/document79.png</normaloff>../../bin/img/ico/document79.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/document79.png</normaloff>:/Resources/img/ico/document79.png</iconset>
    </property>
    <property name="text">
     <string>&amp;New</string>
@@ -1277,8 +1259,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="actionCut">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/cut.png</normaloff>../../bin/img/ico/cut.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/cut.png</normaloff>:/Resources/img/ico/cut.png</iconset>
    </property>
    <property name="text">
     <string>Cut</string>
@@ -1292,8 +1274,8 @@ selection-color: rgb(255, 83, 15);
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/axis.png</normaloff>../../bin/img/ico/axis.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/axis.png</normaloff>:/Resources/img/ico/axis.png</iconset>
    </property>
    <property name="text">
     <string>showAxis</string>
@@ -1307,8 +1289,8 @@ selection-color: rgb(255, 83, 15);
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/grid.png</normaloff>../../bin/img/ico/grid.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/grid.png</normaloff>:/Resources/img/ico/grid.png</iconset>
    </property>
    <property name="text">
     <string>showGrid</string>
@@ -1316,8 +1298,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/floppy13.png</normaloff>../../bin/img/ico/floppy13.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/floppy13.png</normaloff>:/Resources/img/ico/floppy13.png</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -1325,8 +1307,8 @@ selection-color: rgb(255, 83, 15);
   </action>
   <action name="actionSave_as_Copy">
    <property name="icon">
-    <iconset>
-     <normaloff>../../bin/img/ico/floppy15.png</normaloff>../../bin/img/ico/floppy15.png</iconset>
+    <iconset resource="TexturePainter.qrc">
+     <normaloff>:/Resources/img/ico/floppy15.png</normaloff>:/Resources/img/ico/floppy15.png</iconset>
    </property>
    <property name="text">
     <string>Save as Copy</string>
@@ -1407,6 +1389,21 @@ selection-color: rgb(255, 83, 15);
    </property>
    <property name="text">
     <string>Nodes</string>
+   </property>
+  </action>
+  <action name="actionAddMesh">
+   <property name="text">
+    <string>addMesh</string>
+   </property>
+  </action>
+  <action name="actionTriangle">
+   <property name="text">
+    <string>Triangle</string>
+   </property>
+  </action>
+  <action name="actionPlane">
+   <property name="text">
+    <string>Plane</string>
    </property>
   </action>
  </widget>
@@ -1654,10 +1651,27 @@ selection-color: rgb(255, 83, 15);
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionAddMesh</sender>
+   <signal>triggered()</signal>
+   <receiver>TexturePainterClass</receiver>
+   <slot>addMesh()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>521</x>
+     <y>324</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>selectColor()</slot>
   <slot>pipetteColorPicked()</slot>
+  <slot>addMesh()</slot>
  </slots>
  <buttongroups>
   <buttongroup name="buttonGroup"/>
