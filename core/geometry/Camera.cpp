@@ -114,11 +114,11 @@ namespace Etoile
 
 		void Camera::setTarget(const Vec3f& target)
 		{
-			setupCameraOrientation(target - p_transform->getPosition(), getUpVector(), p_transform->getPosition());
+			setupCameraOrientation(target, getUpVector(), p_transform->getPosition());
 		}
 		void Camera::setUpVector(const Vec3f& up)
 		{
-			setupCameraOrientation(getViewDirection(), up, p_transform->getPosition());
+			setupCameraOrientation(m_pivot, up, p_transform->getPosition());
 		}
 		Vec3f Camera::getUpVector() const{return p_transform->getOrientation() * Vec3f(0,1,0);}
 		void Camera::setViewDirection(const Vec3f& direction)

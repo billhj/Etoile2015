@@ -54,6 +54,9 @@ void MeshViewer::init()
 	glEnable(GL_MULTISAMPLE);
 	glDisable(GL_COLOR_MATERIAL);
 
+	this->camera()->setPosition(Vec3f(1,3,4));
+	this->camera()->setTarget(Vec3f(0,0,0));
+
 	/*Triangle* triangle = new Triangle();
 		triangle->init();
 		RenderMesh* mesh = new RenderMesh("triangle");
