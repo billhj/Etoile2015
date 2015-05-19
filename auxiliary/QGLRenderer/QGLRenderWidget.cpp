@@ -40,7 +40,9 @@ namespace Etoile
 		m_fpsCounter = 0;
 		m_f_p_s = 0.0;
 		m_fpsString = tr("%1Hz", "Frames per seconds, in Hertz").arg("?");
-		m_displayMessage = false;
+		m_displayMessage = true;
+		m_textIsEnabled = true;
+		m_FPSIsDisplayed = true;
 		m_fullScreen = false;
 		setFullScreen(false);
 
@@ -49,7 +51,7 @@ namespace Etoile
 
 		m_animationTimerId = 0;
 		//stopAnimation();
-		setAnimationPeriod(5); // >60Hz
+		setAnimationPeriod(15); // >60Hz
 		startAnimation();
 
 		setAttribute(Qt::WA_NoSystemBackground);
@@ -208,7 +210,6 @@ namespace Etoile
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 		glDisable(GL_LIGHTING);
 		glDisable(GL_DEPTH_TEST);
-
 		if (FPSIsDisplayed()) displayFPS();
 		if (m_displayMessage) drawText(10, height() - 10, m_message);
 
@@ -242,7 +243,7 @@ namespace Etoile
 
 	void QGLRenderWidget::displayFPS()
 	{
-		 QFont font( "Times" );
+		QFont font( "Times" );
 		font.setPointSize( 12 );
 
 		font.setWeight( QFont::Bold );
