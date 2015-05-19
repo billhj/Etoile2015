@@ -1445,6 +1445,10 @@ selection-color: rgb(255, 83, 15);
     <slot>showAxis()</slot>
     <slot>setViewerMode(QString)</slot>
     <slot>setTool(QAbstractButton*)</slot>
+    <slot>setTopView()</slot>
+    <slot>setFrontView()</slot>
+    <slot>setLeftView()</slot>
+    <slot>setRightView()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1689,6 +1693,70 @@ selection-color: rgb(255, 83, 15);
     <hint type="destinationlabel">
      <x>521</x>
      <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTop</sender>
+   <signal>triggered()</signal>
+   <receiver>centralWidget</receiver>
+   <slot>setTopView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>508</x>
+     <y>265</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionFront</sender>
+   <signal>triggered()</signal>
+   <receiver>centralWidget</receiver>
+   <slot>setFrontView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>508</x>
+     <y>265</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLeft</sender>
+   <signal>triggered()</signal>
+   <receiver>centralWidget</receiver>
+   <slot>setLeftView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>508</x>
+     <y>265</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRight</sender>
+   <signal>triggered()</signal>
+   <receiver>centralWidget</receiver>
+   <slot>setRightView()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>508</x>
+     <y>265</y>
     </hint>
    </hints>
   </connection>

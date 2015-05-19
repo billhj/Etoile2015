@@ -217,3 +217,24 @@ void MeshViewer::setTool(QAbstractButton* button)
 		m_tool = PIPETTE;
 	}
 }
+
+
+void MeshViewer::setTopView()
+{
+	this->camera()->setTopView(4);
+}
+
+void MeshViewer::setFrontView()
+{
+	this->camera()->setFrontView(4);
+}
+
+void MeshViewer::setLeftView()
+{
+	this->camera()->setLeftView(4);
+}
+
+void MeshViewer::setRightView()
+{
+	this->camera()->setRightView(4);
+}

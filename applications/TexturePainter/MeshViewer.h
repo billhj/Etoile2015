@@ -35,6 +35,11 @@ public:
 		void setViewerMode(QString mode);
 		void setTool(QAbstractButton* button);
 
+		void setTopView();
+		void setFrontView();
+		void setLeftView();
+		void setRightView();
+
 signals:
 		void colorPicked();
 protected:

@@ -228,17 +228,38 @@ namespace Etoile
 			m_modelviewMatrix[3][3] = 1.0;
 		}
 
-		FrontViewCamera::FrontViewCamera(const Vec3f& position): Camera(Vec3f(0,0,-1),Vec3f(0,1,0),position)
+		void Camera::setTopView(float distance)
+		{
+			this->setupCameraOrientation(Vec3f(0,0,0),Vec3f(0,0,-1), Vec3f(0,distance,0));
+		}
+
+		void Camera::setRightView(float distance)
+		{
+			this->setupCameraOrientation(Vec3f(0,0,0),Vec3f(0,1,0), Vec3f(distance,0,0));
+		}
+
+		void Camera::setLeftView(float distance)
+		{
+			this->setupCameraOrientation(Vec3f(0,0,0),Vec3f(0,1,0), Vec3f(-distance,0,0));
+		}
+
+		void Camera::setFrontView(float distance)
+		{
+			this->setupCameraOrientation(Vec3f(0,0,0),Vec3f(0,1,0), Vec3f(0,0,distance));
+		}
+
+
+		FrontViewCamera::FrontViewCamera(const Vec3f& position): Camera(Vec3f(0,0,0),Vec3f(0,1,0),position)
 		{
 		
 		}
 
-		LeftViewCamera::LeftViewCamera(const Vec3f& position): Camera(Vec3f(1,0,0),Vec3f(0,1,0),position)
+		LeftViewCamera::LeftViewCamera(const Vec3f& position): Camera(Vec3f(0,0,0),Vec3f(0,1,0),position)
 		{
 		
 		}
 
-		TopViewCamera::TopViewCamera(const Vec3f& position): Camera(Vec3f(0,-1,0),Vec3f(0,0,-1),position)
+		TopViewCamera::TopViewCamera(const Vec3f& position): Camera(Vec3f(0,0,0),Vec3f(0,0,-1),position)
 		{
 		
 		}
