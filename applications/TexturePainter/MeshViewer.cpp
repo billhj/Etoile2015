@@ -69,7 +69,8 @@ void MeshViewer::init()
 	renderer->setRenderMesh(mesh);
 	RenderManager::getInstance()->addIntoObjectRendererList(renderer);
 	//p_camera->getTransform()->setPosition(Vec3f(0,0,2));
-
+	//this->setFullScreen();
+	
 }
 
 void MeshViewer::drawOnTexture()
