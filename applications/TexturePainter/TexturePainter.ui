@@ -433,7 +433,7 @@
               </property>
               <property name="icon">
                <iconset resource="TexturePainter.qrc">
-                <normaloff>:/Resources/img/ico/pipette2.png</normaloff>:/Resources/img/ico/pipette2.png</iconset>
+                <normaloff>:/Resources/pipette2.png</normaloff>:/Resources/pipette2.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -480,7 +480,7 @@
               </property>
               <property name="icon">
                <iconset resource="TexturePainter.qrc">
-                <normaloff>:/Resources/img/ico/magicselection.png</normaloff>:/Resources/img/ico/magicselection.png</iconset>
+                <normaloff>:/Resources/magicselection.png</normaloff>:/Resources/magicselection.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -518,7 +518,7 @@
               </property>
               <property name="icon">
                <iconset resource="TexturePainter.qrc">
-                <normaloff>:/Resources/img/ico/brush.png</normaloff>:/Resources/img/ico/brush.png</iconset>
+                <normaloff>:/Resources/brush.png</normaloff>:/Resources/brush.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -556,7 +556,7 @@
               </property>
               <property name="icon">
                <iconset resource="TexturePainter.qrc">
-                <normaloff>:/Resources/img/ico/pencil.png</normaloff>:/Resources/img/ico/pencil.png</iconset>
+                <normaloff>:/Resources/pencil.png</normaloff>:/Resources/pencil.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -588,7 +588,7 @@
               </property>
               <property name="icon">
                <iconset resource="TexturePainter.qrc">
-                <normaloff>:/Resources/img/ico/brush2.png</normaloff>:/Resources/img/ico/brush2.png</iconset>
+                <normaloff>:/Resources/brush2.png</normaloff>:/Resources/brush2.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -676,7 +676,7 @@
               </property>
               <property name="icon">
                <iconset resource="TexturePainter.qrc">
-                <normaloff>:/Resources/img/ico/move.png</normaloff>:/Resources/img/ico/move.png</iconset>
+                <normaloff>:/Resources/move.png</normaloff>:/Resources/move.png</iconset>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -1183,7 +1183,7 @@ selection-color: rgb(255, 83, 15);
   <action name="action_Open">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/open127.png</normaloff>:/Resources/img/ico/open127.png</iconset>
+     <normaloff>:/Resources/open127.png</normaloff>:/Resources/open127.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open</string>
@@ -1192,7 +1192,7 @@ selection-color: rgb(255, 83, 15);
   <action name="action_Close">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/door13.png</normaloff>:/Resources/img/ico/door13.png</iconset>
+     <normaloff>:/Resources/door13.png</normaloff>:/Resources/door13.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Close</string>
@@ -1211,7 +1211,7 @@ selection-color: rgb(255, 83, 15);
   <action name="actionCopy">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/copy12.png</normaloff>:/Resources/img/ico/copy12.png</iconset>
+     <normaloff>:/Resources/copy12.png</normaloff>:/Resources/copy12.png</iconset>
    </property>
    <property name="text">
     <string>Copy</string>
@@ -1220,7 +1220,7 @@ selection-color: rgb(255, 83, 15);
   <action name="actionPaste">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/clipboard46.png</normaloff>:/Resources/img/ico/clipboard46.png</iconset>
+     <normaloff>:/Resources/clipboard46.png</normaloff>:/Resources/clipboard46.png</iconset>
    </property>
    <property name="text">
     <string>Paste</string>
@@ -1229,7 +1229,7 @@ selection-color: rgb(255, 83, 15);
   <action name="actionDelete">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/garbage4.png</normaloff>:/Resources/img/ico/garbage4.png</iconset>
+     <normaloff>:/Resources/garbage4.png</normaloff>:/Resources/garbage4.png</iconset>
    </property>
    <property name="text">
     <string>Delete</string>
@@ -1238,7 +1238,7 @@ selection-color: rgb(255, 83, 15);
   <action name="actionUndo">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/undo.png</normaloff>:/Resources/img/ico/undo.png</iconset>
+     <normaloff>:/Resources/undo.png</normaloff>:/Resources/undo.png</iconset>
    </property>
    <property name="text">
     <string>Undo</string>
@@ -1247,7 +1247,7 @@ selection-color: rgb(255, 83, 15);
   <action name="actionRedo">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/redo.png</normaloff>:/Resources/img/ico/redo.png</iconset>
+     <normaloff>:/Resources/redo.png</normaloff>:/Resources/redo.png</iconset>
    </property>
    <property name="text">
     <string>Redo</string>
@@ -1256,7 +1256,7 @@ selection-color: rgb(255, 83, 15);
   <action name="actionNew">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/document79.png</normaloff>:/Resources/img/ico/document79.png</iconset>
+     <normaloff>:/Resources/document79.png</normaloff>:/Resources/document79.png</iconset>
    </property>
    <property name="text">
     <string>&amp;New</string>
@@ -1265,7 +1265,7 @@ selection-color: rgb(255, 83, 15);
   <action name="actionCut">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/cut.png</normaloff>:/Resources/img/ico/cut.png</iconset>
+     <normaloff>:/Resources/cut.png</normaloff>:/Resources/cut.png</iconset>
    </property>
    <property name="text">
     <string>Cut</string>
@@ -1280,7 +1280,7 @@ selection-color: rgb(255, 83, 15);
    </property>
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/axis.png</normaloff>:/Resources/img/ico/axis.png</iconset>
+     <normaloff>:/Resources/axis.png</normaloff>:/Resources/axis.png</iconset>
    </property>
    <property name="text">
     <string>showAxis</string>
@@ -1295,7 +1295,7 @@ selection-color: rgb(255, 83, 15);
    </property>
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/grid.png</normaloff>:/Resources/img/ico/grid.png</iconset>
+     <normaloff>:/Resources/grid.png</normaloff>:/Resources/grid.png</iconset>
    </property>
    <property name="text">
     <string>showGrid</string>
@@ -1304,7 +1304,7 @@ selection-color: rgb(255, 83, 15);
   <action name="actionSave">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/floppy13.png</normaloff>:/Resources/img/ico/floppy13.png</iconset>
+     <normaloff>:/Resources/floppy13.png</normaloff>:/Resources/floppy13.png</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -1313,7 +1313,7 @@ selection-color: rgb(255, 83, 15);
   <action name="actionSave_as_Copy">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
-     <normaloff>:/Resources/img/ico/floppy15.png</normaloff>:/Resources/img/ico/floppy15.png</iconset>
+     <normaloff>:/Resources/floppy15.png</normaloff>:/Resources/floppy15.png</iconset>
    </property>
    <property name="text">
     <string>Save as Copy</string>
