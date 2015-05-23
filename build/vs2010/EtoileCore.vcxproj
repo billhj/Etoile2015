@@ -44,6 +44,10 @@
     <ClInclude Include="..\..\core\geometry\TextureManager.h" />
     <ClInclude Include="..\..\core\geometry\TrackingBallCameraManipulator.h" />
     <ClInclude Include="..\..\core\geometry\VertexBoneAssignment.h" />
+    <ClInclude Include="..\..\core\Image\Image.h" />
+    <ClInclude Include="..\..\core\Image\ImageLoader.h" />
+    <ClInclude Include="..\..\core\Image\PFMImageLoader.h" />
+    <ClInclude Include="..\..\core\Image\TGAImageLoader.h" />
     <ClInclude Include="..\..\core\math\ExponentialMap.h" />
     <ClInclude Include="..\..\core\math\Function1D.h" />
     <ClInclude Include="..\..\core\math\Gaussian.h" />
@@ -65,6 +69,17 @@
     <ClInclude Include="..\..\core\math\Vec4.h" />
     <ClInclude Include="..\..\core\math\VecN.h" />
     <ClInclude Include="..\..\core\math\Vectors.h" />
+    <ClInclude Include="..\..\core\util\Assert.h" />
+    <ClInclude Include="..\..\core\util\Dir.h" />
+    <ClInclude Include="..\..\core\util\Dirent.h" />
+    <ClInclude Include="..\..\core\util\File.h" />
+    <ClInclude Include="..\..\core\util\FileSearch.h" />
+    <ClInclude Include="..\..\core\util\HelpFunctions.h" />
+    <ClInclude Include="..\..\core\util\Log.h" />
+    <ClInclude Include="..\..\core\util\Macros.h" />
+    <ClInclude Include="..\..\core\util\SamplesGenerator.h" />
+    <ClInclude Include="..\..\core\util\Thread.h" />
+    <ClInclude Include="..\..\core\util\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\core\geometry\Camera.cpp" />
@@ -83,6 +98,14 @@
     <ClCompile Include="..\..\core\geometry\SceneManager.cpp" />
     <ClCompile Include="..\..\core\geometry\TextureManager.cpp" />
     <ClCompile Include="..\..\core\geometry\TrackingBallCameraManipulator.cpp" />
+    <ClCompile Include="..\..\core\Image\PFMImageLoader.cpp" />
+    <ClCompile Include="..\..\core\Image\tga.c" />
+    <ClCompile Include="..\..\core\Image\TGAImageLoader.cpp" />
+    <ClCompile Include="..\..\core\util\File.cpp" />
+    <ClCompile Include="..\..\core\util\Log.cpp" />
+    <ClCompile Include="..\..\core\util\SamplesGenerator.cpp" />
+    <ClCompile Include="..\..\core\util\Thread.cpp" />
+    <ClCompile Include="..\..\core\util\Timer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{523007EE-FB65-4458-BCB3-E8270D6281F5}</ProjectGuid>

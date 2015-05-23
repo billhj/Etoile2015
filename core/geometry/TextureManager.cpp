@@ -50,4 +50,9 @@ namespace Etoile
 			addTexture(resources[i]);
 		}
 	}
+
+	const std::vector<Texture*>& TextureManager::getTextures()
+	{
+		return m_datas;
+	}
 }

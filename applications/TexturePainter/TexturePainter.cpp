@@ -59,11 +59,15 @@ void TexturePainter::updateOutputText()
 #include "renderer/OpenGL/ImmediateMeshRenderer.h"
 #include "renderer/OpenGL/VBOMeshRenderer.h"
 #include "geometry/RenderManager.h"
+#include "QGLRenderer/QTTextureLoader.h"
+
 
 void TexturePainter::addMesh()
 {
 	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("Mesh (*.obj)"));
 	OBJMeshLoader loader;
+	QTTextureLoader qtextureLoader;
+	loader.setTextureLoader(&qtextureLoader);
 
 	RenderMesh* mesh = new RenderMesh(name.toStdString());
 	loader.loadFromFile(name.toStdString(), mesh);

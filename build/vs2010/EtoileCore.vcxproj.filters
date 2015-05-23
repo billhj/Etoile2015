@@ -163,6 +163,51 @@
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLLightRenderer.h">
       <Filter>geometry</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\util\Assert.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\Dir.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\Dirent.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\File.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\FileSearch.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\HelpFunctions.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\Log.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\Macros.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\SamplesGenerator.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\Thread.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\util\Timer.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\Image\Image.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\Image\ImageLoader.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\Image\PFMImageLoader.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\Image\TGAImageLoader.h">
+      <Filter>image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -170,6 +215,12 @@
     </Filter>
     <Filter Include="geometry">
       <UniqueIdentifier>{ccc37a3f-32ab-4eba-b35c-9e87abb9135c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{d5b13565-bb63-4a0e-82cd-d3565dd5c0ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="image">
+      <UniqueIdentifier>{4c2508c9-faa2-4405-8eea-784e22473dc6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +271,30 @@
     </ClCompile>
     <ClCompile Include="..\..\core\geometry\GpuProgramManager.cpp">
       <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\util\File.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\util\Log.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\util\SamplesGenerator.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\util\Thread.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\util\Timer.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Image\PFMImageLoader.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Image\tga.c">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\Image\TGAImageLoader.cpp">
+      <Filter>image</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

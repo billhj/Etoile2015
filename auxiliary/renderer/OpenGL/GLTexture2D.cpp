@@ -77,6 +77,21 @@ namespace Etoile
 		return true;
 	}
 
+	void GLTexture2D::createWhiteTexture()
+	{
+		float emptyMap[16] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};	
+		create(2, 2, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &emptyMap[0], false);
+	}
+
+	void GLTexture2D::createCheckBoardTexture()
+	{
+		float checkboard[64] = {0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
+			1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0,  
+			0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
+			1,1,1,1,0,0,0,0, 1,1,1,1,0,0,0,0};
+		create(4, 4, 1 , GL_RGBA32F_ARB, GL_RGBA, GL_FLOAT , &checkboard[0], false);
+	}
+
 	void GLTexture2D::setGLTextureParameter(GLenum pname, GLfloat param)
 	{
 		GLTexture::setGLTextureParameter(GL_TEXTURE_2D, pname, param);

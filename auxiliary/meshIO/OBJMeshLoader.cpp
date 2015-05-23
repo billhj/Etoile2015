@@ -7,7 +7,7 @@
 */
 
 #include "OBJMeshLoader.h"
-#include "renderer/OpenGL/GLTexture2D.h"
+//#include "renderer/OpenGL/GLTexture2D.h"
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
 */
@@ -308,9 +308,9 @@ namespace Etoile
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					GLTexture2D* t = new GLTexture2D();
-					t->setFilePath(s);
-					mat.setDiffuseTexture(t);
+					/*GLTexture2D* t = new GLTexture2D();
+					t->setFilePath(s);*/
+					mat.setDiffuseTexture(_pTextureLoader->loadFromFile(s));
 				}else
 				{
 					//mat.setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
@@ -325,9 +325,9 @@ namespace Etoile
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					GLTexture2D* t = new GLTexture2D();
-					t->setFilePath(s);
-					mat.setSpecularTexture(t);
+					/*GLTexture2D* t = new GLTexture2D();
+					t->setFilePath(s);*/
+					mat.setSpecularTexture(_pTextureLoader->loadFromFile(s));
 					//_texturePathMap[textureName] = s;
 
 				}else
@@ -347,9 +347,9 @@ namespace Etoile
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					GLTexture2D* t = new GLTexture2D();
-					t->setFilePath(s);
-					mat.setBumpMap(t);
+					/*GLTexture2D* t = new GLTexture2D();
+					t->setFilePath(s);*/
+					mat.setBumpMap(_pTextureLoader->loadFromFile(s));
 					//_texturePathMap[textureName] = s;
 
 				}else

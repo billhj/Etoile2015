@@ -7,7 +7,7 @@
 */
 #include "OpenMeshLoader.h"
 #include "util/File.h"
-#include "renderer/OpenGL/GLTexture2D.h"
+//#include "renderer/OpenGL/GLTexture2D.h"
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
 */
@@ -243,9 +243,9 @@ namespace Etoile
 				_materials.push_back(Material());
 				Material& mat = _materials.back();
 				//_materialNameMap[currentMat] = _materials.size() - 1;
-				GLTexture2D* t = new GLTexture2D();
-				t->setFilePath(path);
-				mat.setDiffuseTexture(t);
+				/*GLTexture2D* t = new GLTexture2D();
+				t->setFilePath(path);*/
+				mat.setDiffuseTexture(_pTextureLoader->loadFromFile(path));
 				index_texture++;
 			}
 

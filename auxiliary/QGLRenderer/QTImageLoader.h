@@ -8,7 +8,7 @@
 
 #pragma once
 #include <string>
-#include "ImageLoader.h"
+#include "Image/ImageLoader.h"
 #include <QImage>
 
 namespace Etoile

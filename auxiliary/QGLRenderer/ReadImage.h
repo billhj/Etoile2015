@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "Image.h"
+#include "Image/Image.h"
 
 namespace Etoile
 {

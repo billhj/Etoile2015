@@ -29,6 +29,7 @@ namespace Etoile
 		unsigned int addTexture(Texture* t);
 		Texture* getTextureByIndex(unsigned int idx);
 		void addTextures(std::vector<Texture*> resources);
+		const std::vector<Texture*>& getTextures();
 	};
 
 }

@@ -7,7 +7,7 @@
 */
 
 #include "PFMImageLoader.h"
-#include "../File.h"
+#include "util/File.h"
 #include <iostream>
 #include <cassert>
 #include <cstring>

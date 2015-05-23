@@ -16,8 +16,7 @@ namespace Etoile
 	public:
 		TextureLoader(){}
 		~TextureLoader(){}
-		virtual Texture* loadFromFile(const std::string& fileName) = 0;
-	
+		virtual Texture* loadFromFile(const std::string& path) = 0;
 	};
 
 }

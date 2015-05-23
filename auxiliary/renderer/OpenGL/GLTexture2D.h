@@ -18,6 +18,8 @@ namespace Etoile
 		GLTexture2D(GLuint id);
 
 		virtual bool create( int iWidth, int iHeight,int _iLayer, GLenum internalFormat = GL_RGBA16F_ARB, GLenum pixeldataformat = GL_RGBA, GLenum type = GL_FLOAT, float* data = 0, bool bCreateMipMap = false) override;
+		void createWhiteTexture();
+		void createCheckBoardTexture();
 		virtual void setGLTextureParameter(GLenum pname, GLfloat param) override;
 		virtual void use() const override;
 		virtual void unUse() const override;

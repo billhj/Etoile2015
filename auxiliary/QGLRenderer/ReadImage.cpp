@@ -7,10 +7,10 @@
 */
 
 #include "ReadImage.h"
-#include "PFMImageLoader.h"
+#include "Image/PFMImageLoader.h"
 #include "QTImageLoader.h"
-#include "TGAImageLoader.h"
-#include "../File.h"
+#include "Image/TGAImageLoader.h"
+#include "util/File.h"
 
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
