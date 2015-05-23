@@ -30,7 +30,7 @@ namespace Etoile
 		virtual void drawRenderMesh()
 		{
 			if(p_mesh == NULL) return;
-			Matrix4f modelM;
+			//Matrix4f modelM;
 			ModelTransform* t = this->getEntity()->getTransformation();
 			useTransform(t);
 			const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
@@ -41,7 +41,7 @@ namespace Etoile
 				drawRenderSubMesh(submesh);
 			}
 
-			drawAABB();
+			//drawAABB();
 			unUseTransform(t);
 		}
 
@@ -182,11 +182,14 @@ namespace Etoile
 			const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
 			if(m_drawAABBs)
 			{
+				ModelTransform* t = this->getEntity()->getTransformation();
+				useTransform(t);
 				for(unsigned int i = 0; i < submeshlist.size(); ++i)
 				{
 					RenderSubMesh* submesh = submeshlist[i];
 					drawAABB(submesh->getAABB());
 				}
+				unUseTransform(t);
 			}
 		}
 

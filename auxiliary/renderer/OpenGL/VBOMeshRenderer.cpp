@@ -36,7 +36,7 @@ namespace Etoile
 	void VBOMeshRenderer::drawRenderMesh()
 	{
 		if(p_mesh == NULL) return;
-		Matrix4f modelM;
+		//Matrix4f modelM;
 		ModelTransform* t = this->getEntity()->getTransformation();
 		useTransform(t);
 		const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
@@ -47,7 +47,7 @@ namespace Etoile
 			drawRenderSubMesh(submesh);
 		}
 
-		drawAABB();
+		//drawAABB();
 		unUseTransform(t);
 	}
 
@@ -115,7 +115,6 @@ namespace Etoile
 	void VBOMeshRenderer::drawMeshTexcoord()
 	{
 		if(p_mesh == NULL) return;
-		Matrix4f modelM;
 		ModelTransform* t = this->getEntity()->getTransformation();
 		useTransform(t);
 		const std::vector<RenderSubMesh*>& submeshlist = p_mesh->getRenderSubMeshList();
@@ -125,8 +124,6 @@ namespace Etoile
 			RenderSubMesh* submesh = submeshlist[i];
 			drawSubMeshTexcoord(submesh);
 		}
-
-		drawAABB();
 		unUseTransform(t);
 	}
 
@@ -219,16 +216,10 @@ namespace Etoile
 
 		applyMaterial(&material);
 		GLSLGpuProgram* gpuprogram = (GLSLGpuProgram*)material.getGpuProgram();
-
-		Matrix4f modelM;
-		ModelTransform* t = this->getEntity()->getTransformation();
-		if(t)
-		{
-			modelM = t->getGLModelMatrix();
-		}
+		
 		if(gpuprogram != NULL)
 		{
-			gpuprogram->setUniformVariable("In_WorldMatrix",  modelM);
+			gpuprogram->setUniformVariable("In_WorldMatrix",  this->getEntity()->getTransformation()->getGLModelMatrix());
 			std::map<std::string, Texture*>& idxs = material.getTextures();
 			std::map<std::string, Texture*>::iterator itor;
 
@@ -244,7 +235,7 @@ namespace Etoile
 		else
 		{
 			glPushMatrix();
-			glLoadMatrixf(&modelM[0][0]);
+			glLoadMatrixf(&this->getEntity()->getTransformation()->getGLModelMatrix()[0][0]);
 			Texture* t = material.getDiffuseTexture();
 			if(t != NULL)
 			{

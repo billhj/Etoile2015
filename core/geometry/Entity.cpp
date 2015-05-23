@@ -9,6 +9,7 @@ namespace Etoile
 	{
 		m_id = ENTITY_ID++;
 		m_components.resize(MAX_NB_COMPONENTS);
+		setComponent(ComponentType::TRANSFORM_COMPONENT, new ModelTransform());
 	}
 
 
