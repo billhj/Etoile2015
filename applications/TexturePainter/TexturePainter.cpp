@@ -29,6 +29,8 @@ void TexturePainter::load()
 	m_fileDir = QDir::currentPath();
 	QSettings settings("TexturePainter.ini", QSettings::IniFormat);
 	m_fileDir = settings.value("filepath").toString();	
+	restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
 
 	QList<QAction*> windowactions = ui.menuWindows->actions();
 	foreach(QAction* action , windowactions)
@@ -47,7 +49,12 @@ void TexturePainter::save()
 	{
 		settings.setValue(action->objectName(), action->isChecked());
 	}
+	settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
 	settings.sync();
+
+	
+  
 }
 
 void TexturePainter::selectColor()
@@ -112,4 +119,5 @@ void TexturePainter::addMesh()
 void TexturePainter::closeEvent(QCloseEvent *event)
 {
 	save();
+	QMainWindow::closeEvent(event);
 }
