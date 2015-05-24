@@ -24,12 +24,18 @@
 
 namespace Etoile
 {
-	class RenderMesh
+	struct RenderMesh
 	{
 	public:
 		RenderMesh(const std::string& name = ""): m_name(name), m_numberOfFaces(0)
 		{
 		}
+
+		~RenderMesh()
+		{
+			release();
+		}
+
 		void setDeviceID(long id)
 		{
 			m_deviceID = id;
@@ -42,11 +48,10 @@ namespace Etoile
 			m_name = m.m_name;
 			m_subRenderMeshList = m.m_subRenderMeshList;
 			m_numberOfFaces = m.m_numberOfFaces;
+			m_aabb = m.m_aabb;
 
 		}
 		//virtual ~RenderMesh(){}
-		const std::string getName(){return m_name;}
-		void setName(const std::string& name){ m_name = name;}
 
 		virtual void release()
 		{
@@ -69,7 +74,7 @@ namespace Etoile
 			for(itor = newlist.begin(); itor != newlist.end(); ++itor)
 			{
 				RenderSubMesh* submesh = (*itor);
-				if(submesh->getVertexIndexForFaces().empty())
+				if(submesh->m_vertices_index_face.empty())
 				{
 					delete submesh;
 				}else

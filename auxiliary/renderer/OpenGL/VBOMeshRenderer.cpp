@@ -131,7 +131,7 @@ namespace Etoile
 	{
 		VBORenderSubMesh* vbosubmesh = dynamic_cast<VBORenderSubMesh*>(submesh);
 
-		if(submesh->getTextureCoordsColor().size() < 1 || submesh->getVertices().size() < 1) return;
+		if(submesh->m_tcdata.size() < 1 || submesh->m_vdata.size() < 1) return;
 
 		if(NULL == vbosubmesh) return;
 		vbosubmesh->p_texcoordColorVBO->use();

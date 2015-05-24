@@ -673,12 +673,12 @@ namespace Etoile
 			{
 
 				int indexV = face._indexVertices[j];
-				submesh->getVertices().push_back(_vertices[indexV]);
-				submesh->addVertexIndex(submesh->getVertices().size() - 1);
+				submesh->m_vdata.push_back(_vertices[indexV]);
+				submesh->addVertexIndex(submesh->m_vdata.size() - 1);
 
 				if(face._hasNormalIndex)
 				{
-					submesh->getNormals().push_back(_normals[face._indexNormals[j]]);
+					submesh->m_ndata.push_back(_normals[face._indexNormals[j]]);
 				}
 				else
 				{
@@ -699,21 +699,21 @@ namespace Etoile
 						}
 					}
 					currentVertexNormal.normalize();
-					submesh->getNormals().push_back(currentVertexNormal);
+					submesh->m_ndata.push_back(currentVertexNormal);
 				}
 
-				submesh->addNormalIndex(submesh->getNormals().size() - 1);
+				submesh->addNormalIndex(submesh->m_ndata.size() - 1);
 
 
 				if(face._hasTextureCoordIndex)
 				{
-					submesh->getTextureCoords().push_back(_texcoords[face._indexTextureCoordinates[j]]);
+					submesh->m_tdata.push_back(_texcoords[face._indexTextureCoordinates[j]]);
 				}
 				else
 				{
-					submesh->getTextureCoords().push_back(Vec2f());
+					submesh->m_tdata.push_back(Vec2f());
 				}
-				submesh->addTextureCoordinateIndex(submesh->getTextureCoords().size() - 1);
+				submesh->addTextureCoordinateIndex(submesh->m_tdata.size() - 1);
 			}
 
 		}
@@ -738,9 +738,9 @@ namespace Etoile
 		std::vector<RenderSubMesh*>::iterator itor;
 		for(itor = list.begin(); itor != list.end(); ++itor){
 			RenderSubMesh* submesh = (*itor);
-			for (unsigned int i = 0; i < submesh->getVertices().size(); ++i)
+			for (unsigned int i = 0; i < submesh->m_vdata.size(); ++i)
 			{
-				const Vec3f& p = submesh->getVertices()[i];
+				const Vec3f& p = submesh->m_vdata[i];
 				for (int i = 0; i < 3; ++i)
 				{
 					if (p[i] > maxPos[i]) maxPos[i] = p[i];
@@ -758,9 +758,9 @@ namespace Etoile
 
 		for(itor = list.begin(); itor != list.end(); ++itor){
 			RenderSubMesh* submesh = (*itor);
-			for (unsigned int i = 0; i < submesh->getVertices().size(); ++i)
+			for (unsigned int i = 0; i < submesh->m_vdata.size(); ++i)
 			{
-				Vec3f& p = submesh->getVertices()[i];
+				Vec3f& p = submesh->m_vdata[i];
 				p -= center;
 				p *= scale;
 			}

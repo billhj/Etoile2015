@@ -65,10 +65,10 @@ namespace Etoile
 
 		virtual void drawRenderSubMesh(RenderSubMesh* submesh)
 		{
-			const std::vector<Vec3f>& vertices = submesh->getVertices();
-			const std::vector<Vec3f>& normals = submesh->getNormals();
-			const std::vector<Vec2f>& texs = submesh->getTextureCoords();
-			const std::vector<int>& faceIndices = submesh->getVertexIndexForFaces();
+			const std::vector<Vec3f>& vertices = submesh->m_vdata;
+			const std::vector<Vec3f>& normals = submesh->m_ndata;
+			const std::vector<Vec2f>& texs = submesh->m_tdata;
+			const std::vector<int>& faceIndices = submesh->m_vertices_index_face;
 
 			Material& material = submesh->getMaterial();
 			Texture* t = NULL;
@@ -122,12 +122,12 @@ namespace Etoile
 
 		void drawSubMeshTexcoord(RenderSubMesh* submesh)
 		{
-			const std::vector<Vec3f>& vertices = submesh->getVertices();
-			const std::vector<Vec3f>& texs = submesh->getTextureCoordsColor();
+			const std::vector<Vec3f>& vertices = submesh->m_vdata;
+			const std::vector<Vec3f>& texs = submesh->m_tcdata;
 
 			if(texs.size() < 1 || vertices.size() < 1) return;
 
-			const std::vector<int>& faceIndices = submesh->getVertexIndexForFaces();
+			const std::vector<int>& faceIndices = submesh->m_vertices_index_face;
 
 			glBegin(GL_TRIANGLES);
 			for(unsigned int i = 0; i < faceIndices.size(); ++i)

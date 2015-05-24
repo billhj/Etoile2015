@@ -106,7 +106,7 @@ namespace Etoile{
 			return;
 		submesh->m_numberOfFaces = count;
 		int size = count * 3;
-		submesh->getVertexIndexForFaces().resize(size);
+		submesh->m_vertices_index_face.resize(size);
 
 		TiXmlElement *elemFace = elemFaces->FirstChildElement("face");
 		int n = 0;
@@ -116,9 +116,9 @@ namespace Etoile{
 			elemFace->QueryIntAttribute("v1", &v1);
 			elemFace->QueryIntAttribute("v2", &v2);
 			elemFace->QueryIntAttribute("v3", &v3);
-			submesh->getVertexIndexForFaces()[n * 3] = v1;
-			submesh->getVertexIndexForFaces()[n * 3 + 1] = v2;
-			submesh->getVertexIndexForFaces()[n * 3 + 2] = v3;
+			submesh->m_vertices_index_face[n * 3] = v1;
+			submesh->m_vertices_index_face[n * 3 + 1] = v2;
+			submesh->m_vertices_index_face[n * 3 + 2] = v3;
 			n++;
 			elemFace = elemFace->NextSiblingElement("face"); // iteration
 		}
@@ -133,9 +133,9 @@ namespace Etoile{
 		int returnvalue = elemGeometry->QueryIntAttribute("vertexcount", &vertexcount);
 		if(returnvalue != TIXML_SUCCESS)
 			return;
-		submesh->getVertices().resize(vertexcount); 
-		submesh->getNormals().resize(vertexcount);
-		submesh->getTextureCoords().resize(vertexcount); 
+		submesh->m_vdata.resize(vertexcount); 
+		submesh->m_ndata.resize(vertexcount);
+		submesh->m_tdata.resize(vertexcount); 
 		TiXmlElement *elemvertexbuffer = elemGeometry->FirstChildElement("vertexbuffer");
 		while (elemvertexbuffer)
 		{
@@ -172,7 +172,7 @@ namespace Etoile{
 						elemposition->QueryDoubleAttribute("z", &z);
 
 						Vec3f xyz(x*_scale.x(),y*_scale.y(),z*_scale.z());
-						submesh->getVertices()[n] = _rotate * xyz + _translate;
+						submesh->m_vdata[n] = _rotate * xyz + _translate;
 						n++;
 						elemposition = elemposition->NextSiblingElement("position"); // iteration
 					}
@@ -208,7 +208,7 @@ namespace Etoile{
 						elemnormal->QueryDoubleAttribute("y", &y);
 						elemnormal->QueryDoubleAttribute("z", &z);
 						Vec3f xyz(x,y,z);
-						submesh->getNormals()[n] = xyz;
+						submesh->m_ndata[n] = xyz;
 						n++;
 						elemnormal = elemnormal->NextSiblingElement("normal"); // iteration
 					}
@@ -243,7 +243,7 @@ namespace Etoile{
 						elemtexcoord->QueryDoubleAttribute("u", &u);
 						elemtexcoord->QueryDoubleAttribute("v", &v);
 						Vec2f uv(u,v);
-						submesh->getTextureCoords()[n] = uv;
+						submesh->m_tdata[n] = uv;
 						n++;
 
 						elemtexcoord = elemtexcoord->NextSiblingElement("texcoord"); // iteration
@@ -272,7 +272,7 @@ namespace Etoile{
 		//TiXmlElement *vertexboneassignment = elemBoneAssignment->FirstChildElement("vertexboneassignment");
 
 		//if(vertexboneassignment)
-		//	submesh->getSkin()._vertexBoneAssignmentData.resize(submesh->getVertices().size());
+		//	submesh->getSkin()._vertexBoneAssignmentData.resize(submesh->m_vdata.size());
 
 		//while (vertexboneassignment)
 		//{			
@@ -286,7 +286,7 @@ namespace Etoile{
 		//	if(vertexIndex < 0) continue;
 		//	submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].setIdx(vertexIndex);
 		//	submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].addBoneWeight(boneIndex, weight);
-		//	submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].setPosition(submesh->getVertices()[vertexIndex]);
+		//	submesh->getSkin()._vertexBoneAssignmentData[vertexIndex].setPosition(submesh->m_vdata[vertexIndex]);
 
 		//	vertexboneassignment = vertexboneassignment->NextSiblingElement("vertexboneassignment"); // iteration
 		//}
@@ -369,9 +369,9 @@ namespace Etoile{
 		Vec3f minP(1e6, 1e6, 1e6);
 		Vec3f maxP(-1e6, -1e6, -1e6);
 
-		for (unsigned int j = 0; j < submesh->getVertices().size(); j++)
+		for (unsigned int j = 0; j < submesh->m_vdata.size(); j++)
 		{
-			Vec3f p = submesh->getVertices()[j];
+			Vec3f p = submesh->m_vdata[j];
 			for (int i = 0; i < 3; ++i)
 			{
 				if (p[i] > maxP[i]) maxP[i] = p[i];
@@ -386,10 +386,10 @@ namespace Etoile{
 			(maxP[1] + minP[1]) / 2.0f,
 			(maxP[2] + minP[2]) / 2.0f);
 
-		for (unsigned int j = 0; j < submesh->getVertices().size(); j++)
+		for (unsigned int j = 0; j < submesh->m_vdata.size(); j++)
 		{
-			submesh->getVertices()[j] -= center;
-			submesh->getVertices()[j] *= scale;
+			submesh->m_vdata[j] -= center;
+			submesh->m_vdata[j] *= scale;
 		}
 	}
 

@@ -20,7 +20,7 @@
 namespace Etoile
 {
 
-	class RenderSubMesh
+	struct RenderSubMesh
 	{
 	public:
 		RenderSubMesh(const std::string& name = ""): m_name(name), m_nbVerticesPerFace(3)
@@ -39,6 +39,7 @@ namespace Etoile
 			m_vdata = sub.m_vdata;
 			m_ndata = sub.m_ndata;
 			m_tdata = sub.m_tdata;
+			m_tcdata = sub.m_tcdata;
 		}
 
 		virtual void release()
@@ -49,10 +50,8 @@ namespace Etoile
 			m_vdata.clear();
 			m_ndata.clear();
 			m_tdata.clear();
+			m_tcdata.clear();
 		}
-
-		const std::string getName(){return m_name;}
-		void setName(const std::string& name){ m_name = name;}
 
 		void setMaterial(Material& m)
 		{
@@ -79,13 +78,13 @@ namespace Etoile
 			m_texcoord_index_face.push_back(texcoord_index);
 		}
 
-		std::vector<int>& getVertexIndexForFaces(){return m_vertices_index_face;}
+	/*	std::vector<int>& getVertexIndexForFaces(){return m_vertices_index_face;}
 		std::vector<int>& getNormalIndexForFaces(){return m_normal_index_face;}
 		std::vector<int>&  getTextureIndexForFaces(){return m_texcoord_index_face;}
 		std::vector<Vec3f>&  getVertices(){return m_vdata;} 
 		std::vector<Vec3f>&  getNormals(){return m_ndata;}
 		std::vector<Vec2f>& getTextureCoords(){return m_tdata;}
-		std::vector<Vec3f>& getTextureCoordsColor(){return m_tcdata;}
+		std::vector<Vec3f>& getTextureCoordsColor(){return m_tcdata;}*/
 		
 		void computeAABB()
 		{
