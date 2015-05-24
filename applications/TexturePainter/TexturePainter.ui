@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1043</width>
-    <height>649</height>
+    <height>689</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -151,67 +151,6 @@
    <addaction name="actionShowGrid"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="parametersDockWidget">
-   <property name="minimumSize">
-    <size>
-     <width>228</width>
-     <height>209</height>
-    </size>
-   </property>
-   <property name="windowTitle">
-    <string>Parameters</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_3">
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QTabWidget" name="tabWidget_2">
-         <property name="accessibleName">
-          <string/>
-         </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="layers">
-          <attribute name="title">
-           <string>layers</string>
-          </attribute>
-          <layout class="QHBoxLayout" name="horizontalLayout_6">
-           <item>
-            <widget class="QListView" name="listView"/>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab_4">
-          <attribute name="title">
-           <string>Tab 2</string>
-          </attribute>
-         </widget>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTabWidget" name="tabWidget_3">
-         <widget class="QWidget" name="tab_3">
-          <attribute name="title">
-           <string>Tab 1</string>
-          </attribute>
-         </widget>
-         <widget class="QWidget" name="tab_5">
-          <attribute name="title">
-           <string>Tab 2</string>
-          </attribute>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="toolsDockWidget">
    <property name="minimumSize">
     <size>
@@ -978,20 +917,17 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="fileSystemWidget">
-   <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
-   </property>
+  <widget class="QDockWidget" name="nodeWidget">
    <property name="windowTitle">
-    <string>Files</string>
+    <string>Nodes</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>2</number>
+    <number>8</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_5">
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <widget class="QTFileWidget" name="fileView" native="true"/>
+   <widget class="QWidget" name="dockWidgetContents_7">
+    <layout class="QGridLayout" name="gridLayout_4">
+     <item row="0" column="0">
+      <widget class="QGraphicsView" name="graphicsView"/>
      </item>
     </layout>
    </widget>
@@ -1004,24 +940,88 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_6">
-    <layout class="QHBoxLayout" name="horizontalLayout_7">
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
       <widget class="QTSceneTreeWidget" name="sceneTreeView" native="true"/>
      </item>
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="nodeWidget">
+  <widget class="QDockWidget" name="fileSystemWidget">
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
    <property name="windowTitle">
-    <string>Nodes</string>
+    <string>Files</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_7">
-    <layout class="QVBoxLayout" name="verticalLayout">
+   <widget class="QWidget" name="dockWidgetContents_5">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="QTFileWidget" name="fileView" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="parametersDockWidget">
+   <property name="minimumSize">
+    <size>
+     <width>147</width>
+     <height>209</height>
+    </size>
+   </property>
+   <property name="windowTitle">
+    <string>Parameters</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
-      <widget class="QGraphicsView" name="graphicsView"/>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QTabWidget" name="tabWidget_2">
+         <property name="accessibleName">
+          <string/>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="layers">
+          <attribute name="title">
+           <string>layers</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QListView" name="listView"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_4">
+          <attribute name="title">
+           <string>Tab 2</string>
+          </attribute>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTabWidget" name="tabWidget_3">
+         <widget class="QWidget" name="tab_3">
+          <attribute name="title">
+           <string>Tab 1</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tab_5">
+          <attribute name="title">
+           <string>Tab 2</string>
+          </attribute>
+         </widget>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -1277,6 +1277,8 @@
     <string>Right</string>
    </property>
   </action>
+  <zorder>parametersDockWidget</zorder>
+  <zorder>sceneTreeWidget</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -1369,22 +1371,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>comboBox</sender>
-   <signal>currentIndexChanged(QString)</signal>
-   <receiver>centralWidget</receiver>
-   <slot>setViewerMode(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>60</x>
-     <y>271</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>142</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>buttonGroup</sender>
    <signal>buttonClicked(QAbstractButton*)</signal>
    <receiver>centralWidget</receiver>
@@ -1401,22 +1387,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>colorButton</sender>
-   <signal>clicked()</signal>
-   <receiver>TexturePainterClass</receiver>
-   <slot>selectColor()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>85</x>
-     <y>287</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>521</x>
-     <y>324</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>centralWidget</sender>
    <signal>colorPicked()</signal>
    <receiver>TexturePainterClass</receiver>
@@ -1429,118 +1399,6 @@
     <hint type="destinationlabel">
      <x>521</x>
      <y>324</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionIOs</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>ioWidget</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>746</x>
-     <y>573</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionParameters</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>parametersDockWidget</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>928</x>
-     <y>285</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionFiles</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>fileSystemWidget</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>75</x>
-     <y>451</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionTools</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>toolsDockWidget</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>75</x>
-     <y>220</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionStates</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>stateWidget</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>224</x>
-     <y>573</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSceneTree</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>sceneTreeWidget</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>928</x>
-     <y>421</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionNodes</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>nodeWidget</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>900</x>
-     <y>573</y>
     </hint>
    </hints>
   </connection>
@@ -1621,6 +1479,150 @@
     <hint type="destinationlabel">
      <x>508</x>
      <y>265</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>colorButton</sender>
+   <signal>clicked()</signal>
+   <receiver>TexturePainterClass</receiver>
+   <slot>selectColor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>287</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>521</x>
+     <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTools</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>toolsDockWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>75</x>
+     <y>220</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>comboBox</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>centralWidget</receiver>
+   <slot>setViewerMode(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>60</x>
+     <y>271</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>142</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStates</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>stateWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>224</x>
+     <y>573</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionIOs</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>ioWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>746</x>
+     <y>573</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionNodes</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>nodeWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>900</x>
+     <y>573</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSceneTree</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>sceneTreeWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>928</x>
+     <y>421</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionFiles</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>fileSystemWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>75</x>
+     <y>451</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionParameters</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>parametersDockWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>928</x>
+     <y>285</y>
     </hint>
    </hints>
   </connection>
