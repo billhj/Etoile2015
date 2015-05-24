@@ -60,7 +60,7 @@ namespace Etoile
 		  typename Tr::int_type overflow( typename Tr::int_type v )
 		  {
 			  Elem ch = Tr::to_char_type( v );
-			  //m_pCbFunc( &ch, 1, m_pUserData );
+			  m_pCbFunc( &ch, 1, m_pUserData );
 			  return Tr::not_eof( v );
 		  }
 

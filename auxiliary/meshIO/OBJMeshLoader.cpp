@@ -623,9 +623,9 @@ namespace Etoile
 		}
 		std::cout << std::endl<<
 			"finish reading : "<<
-			"Vertex count : " <<_vertices.size()<<" "<<
-			"Tex count : " <<_texcoords.size()<<" "<<
-			"Normal count : " <<_normals.size()<<" "<<
+			"Vertex count : " << _vertices.size()<<" "<<
+			"Tex count : " << _texcoords.size()<<" "<<
+			"Normal count : " << _normals.size()<<" "<<
 			"Face count : " <<_faces.size()<<std::endl;
 
 		std::vector<Etoile::VBORenderSubMesh*> submeshes;
