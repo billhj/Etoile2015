@@ -1,6 +1,7 @@
 #include "QTSceneTreeWidget.h"
 #include <QFileInfo>
 #include <QStringList>
+#include <QVariant>
 namespace Etoile
 {
 QList<QStandardItem *> prepareRow(const QString &first, const QString &second, const QString &third)
@@ -18,9 +19,7 @@ QTSceneTreeWidget::QTSceneTreeWidget(QWidget *parent)
 	ui.setupUi(this);
 	p_standardModel = new QStandardItemModel;
 	QStringList list;
-	list.append("name");
-	list.append("file");
-	list.append("id");
+	list.append("Scene");
 	p_standardModel->setHorizontalHeaderLabels(list);
 	updateModel();
     //QList<QStandardItem *> preparedRow =prepareRow("first", "second", "third");
@@ -48,14 +47,15 @@ void QTSceneTreeWidget::updateModel()
 	if(p_scene == NULL) return;
 	p_standardModel->clear();
 	QStandardItem *item = p_standardModel->invisibleRootItem();
-	QList<QStandardItem *> sceneRow = prepareRow("Scene", QString().fromStdString(p_scene->getName()), "");
+	QStandardItem * sceneRow = new QStandardItem(QString().fromStdString(p_scene->getName()));
 	item->appendRow(sceneRow);
 	for(unsigned int i = 0 ; i < p_scene->getEntities().size(); ++i)
 	{
 		Entity* entity = p_scene->getEntities()[i];
 		QFileInfo file(QString().fromStdString(entity->getName()));
-		QList<QStandardItem *> secondRow = prepareRow(file.fileName(), QString().fromStdString(entity->getName()), QString::number(entity->getIndex()));
-		sceneRow.first()->appendRow(secondRow);
+		QStandardItem * row = new QStandardItem(file.fileName());
+		row->setData(QVariant(entity->getIndex()));
+		sceneRow->appendRow(row);
 	}
 }
 
