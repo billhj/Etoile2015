@@ -5,7 +5,7 @@ QTFileWidget::QTFileWidget(QWidget *parent)
 {
 	ui.setupUi(this);
 	QString path = QDir::currentPath();
-	
+
 	p_dirmodel = new QFileSystemModel(this);
 	p_dirmodel->setRootPath(path);
 	p_dirmodel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
@@ -25,6 +25,31 @@ QTFileWidget::~QTFileWidget()
 
 void QTFileWidget::treeview_onclick(QModelIndex qindex)
 {
+	m_dirIndex = qindex;
 	QString path = p_dirmodel->fileInfo(qindex).absoluteFilePath();
 	ui.listView->setRootIndex(p_filemodel->setRootPath(path));
+}
+
+void QTFileWidget::listview_onclick(QModelIndex qindex)
+{
+	m_fileIndex = qindex;
+}
+
+#include <QDebug>
+void QTFileWidget::openFile()
+{
+	QString filepath = p_filemodel->filePath(m_fileIndex);
+	qDebug()<<filepath;
+}
+
+void QTFileWidget::newFile()
+{
+	QDir filedir = p_dirmodel->fileInfo(m_dirIndex).absoluteFilePath();
+	qDebug()<<filedir;
+}
+
+void QTFileWidget::removeFile()
+{
+	QString filepath = p_filemodel->filePath(m_fileIndex);
+	qDebug()<<filepath;
 }

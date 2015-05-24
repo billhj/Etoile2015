@@ -51,7 +51,7 @@ namespace Etoile
 
 		m_animationTimerId = 0;
 		//stopAnimation();
-		setAnimationPeriod(50); // >60Hz
+		setAnimationPeriod(20); // >60Hz
 		startAnimation();
 
 		setAttribute(Qt::WA_NoSystemBackground);

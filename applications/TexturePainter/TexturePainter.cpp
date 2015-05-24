@@ -30,12 +30,12 @@ void TexturePainter::load()
 	QSettings settings("TexturePainter.ini", QSettings::IniFormat);
 	m_fileDir = settings.value("filepath").toString();	
 
-	QList<QAction*> windowactions = ui.menuWindows->actions();
+	/*QList<QAction*> windowactions = ui.menuWindows->actions();
 	foreach(QAction* action , windowactions)
 	{
 		action->setChecked(!settings.value(action->objectName()).toBool());
 		action->trigger();
-	}
+	}*/
 }
 
 void TexturePainter::save()
