@@ -78,6 +78,7 @@
     <ClInclude Include="..\..\core\util\Log.h" />
     <ClInclude Include="..\..\core\util\Macros.h" />
     <ClInclude Include="..\..\core\util\SamplesGenerator.h" />
+    <ClInclude Include="..\..\core\util\StdRedirector.h" />
     <ClInclude Include="..\..\core\util\Thread.h" />
     <ClInclude Include="..\..\core\util\Timer.h" />
   </ItemGroup>

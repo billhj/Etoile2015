@@ -208,6 +208,9 @@
     <ClInclude Include="..\..\core\Image\TGAImageLoader.h">
       <Filter>image</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\util\StdRedirector.h">
+      <Filter>util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">

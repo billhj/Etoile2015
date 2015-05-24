@@ -15,7 +15,7 @@ TexturePainter::TexturePainter(QWidget *parent, Qt::WFlags flags)
 	QString styleSheet = QString("background-color: rgb(0, 0, 0);");
 	ui.colorButton->setStyleSheet(styleSheet);
 
-	ui.cmdField->appendPlainText(QString("start"));
+	//ui.cmdField->appendPlainText(QString("start"));
 }
 
 TexturePainter::~TexturePainter()
@@ -30,12 +30,12 @@ void TexturePainter::load()
 	QSettings settings("TexturePainter.ini", QSettings::IniFormat);
 	m_fileDir = settings.value("filepath").toString();	
 
-	/*QList<QAction*> windowactions = ui.menuWindows->actions();
+	QList<QAction*> windowactions = ui.menuWindows->actions();
 	foreach(QAction* action , windowactions)
 	{
 		action->setChecked(!settings.value(action->objectName()).toBool());
 		action->trigger();
-	}*/
+	}
 }
 
 void TexturePainter::save()
@@ -74,13 +74,13 @@ void TexturePainter::pipetteColorPicked()
 void TexturePainter::updateOutputError()
 {
 	QByteArray data;
-	ui.cmdField->appendPlainText(QString(data));
+	//ui.cmdField->appendPlainText(QString(data));
 }
 
 void TexturePainter::updateOutputText()
 {
 	QByteArray data;
-	ui.cmdField->appendPlainText(QString(data));
+	//ui.cmdField->appendPlainText(QString(data));
 }
 
 #include "meshIO/OBJMeshLoader.h"
