@@ -51,7 +51,7 @@ namespace Etoile
 
 		m_animationTimerId = 0;
 		//stopAnimation();
-		setAnimationPeriod(15); // >60Hz
+		setAnimationPeriod(50); // >60Hz
 		startAnimation();
 
 		setAttribute(Qt::WA_NoSystemBackground);
@@ -145,12 +145,14 @@ namespace Etoile
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		//QTime time = QTime::currentTime();
 		// GL_PROJECTION matrix
 		loadProjectionMatrix(true);
 		// GL_MODELVIEW matrix
 		loadModelViewMatrix(true);
 
 		Q_EMIT drawNeeded();
+		//std::cout<<time.elapsed()<<std::endl;
 	}
 
 	/*! Called after draw() to draw viewer visual hints.
@@ -165,6 +167,7 @@ namespace Etoile
 	different attributes) if you overload this method. */
 	void QGLRenderWidget::postDraw()
 	{
+		//QTime time = QTime::currentTime();
 		// Reset model view matrix to world coordinates origin
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
@@ -216,6 +219,7 @@ namespace Etoile
 		// Restore GL state
 		glPopAttrib();
 		glPopMatrix();
+		//std::cout<<time.elapsed()<<std::endl;
 	}
 
 
@@ -231,13 +235,16 @@ namespace Etoile
 		draw();
 	}
 
-
+//#include <QTime>
 	void QGLRenderWidget::resizeGL(int width, int height)
 	{
+		//QTime time = QTime::currentTime();
 		QGLWidget::resizeGL(width, height);
 		glViewport(0, 0, GLint(width), GLint(height));
 		camera()->setWidth(width);
 		camera()->setHeight(height);
+		
+		//std::cout<<time.elapsed()<<std::endl;
 	}
 
 
