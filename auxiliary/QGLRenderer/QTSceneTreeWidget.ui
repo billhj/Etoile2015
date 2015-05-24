@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SceneTreeWidget</class>
- <widget class="QTreeView" name="SceneTreeWidget">
+ <class>QTSceneTreeWidget</class>
+ <widget class="QWidget" name="QTSceneTreeWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,8 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>SceneTreeWidget</string>
+   <string>QTSceneTreeWidget</string>
   </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTreeView" name="treeView"/>
+   </item>
+  </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

@@ -973,7 +973,7 @@
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
-      <widget class="QTIOWidget" name="widget_2" native="true"/>
+      <widget class="QTIOWidget" name="ioview" native="true"/>
      </item>
     </layout>
    </widget>
@@ -1006,7 +1006,7 @@
    <widget class="QWidget" name="dockWidgetContents_6">
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
-      <widget class="QTreeView" name="treeView"/>
+      <widget class="QTSceneTreeWidget" name="sceneTreeView" native="true"/>
      </item>
     </layout>
    </widget>
@@ -1307,6 +1307,12 @@
    <class>QTIOWidget</class>
    <extends>QWidget</extends>
    <header>QGLRenderer/QTIOWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QTSceneTreeWidget</class>
+   <extends>QWidget</extends>
+   <header>QGLRenderer/QTSceneTreeWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
