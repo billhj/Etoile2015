@@ -1,7 +1,6 @@
 #include "TexturePainter.h"
 #include <qlabel.h>
 #include <QFileDialog>
-#include <QFileSystemModel>
 #include <QSettings>
 
 TexturePainter::TexturePainter(QWidget *parent, Qt::WFlags flags)
@@ -16,9 +15,6 @@ TexturePainter::TexturePainter(QWidget *parent, Qt::WFlags flags)
 	QString styleSheet = QString("background-color: rgb(0, 0, 0);");
 	ui.colorButton->setStyleSheet(styleSheet);
 
-	QFileSystemModel *model = new QFileSystemModel;
-    model->setRootPath(m_fileDir);
-	ui.fileView->setModel(model);
 	ui.cmdField->appendPlainText(QString("start"));
 }
 
@@ -33,7 +29,6 @@ void TexturePainter::load()
 	m_fileDir = QDir::currentPath();
 	QSettings settings("TexturePainter.ini", QSettings::IniFormat);
 	m_fileDir = settings.value("filepath").toString();	
-
 
 	QList<QAction*> windowactions = ui.menuWindows->actions();
 	foreach(QAction* action , windowactions)

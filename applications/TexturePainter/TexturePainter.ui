@@ -1139,7 +1139,7 @@ selection-color: rgb(255, 83, 15);
    <widget class="QWidget" name="dockWidgetContents_5">
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
-      <widget class="QTreeView" name="fileView"/>
+      <widget class="QTFileWidget" name="fileView" native="true"/>
      </item>
     </layout>
    </widget>
@@ -1444,6 +1444,12 @@ selection-color: rgb(255, 83, 15);
     <slot>setLeftView()</slot>
     <slot>setRightView()</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>QTFileWidget</class>
+   <extends>QWidget</extends>
+   <header>QGLRenderer/QTFileWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
