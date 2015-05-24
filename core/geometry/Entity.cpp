@@ -1,13 +1,16 @@
 #include "Entity.h"
 #include "ObjectRenderer.h"
 #include "ModelTransform.h"
+#include "Scene.h"
 
 namespace Etoile
 {
-	static unsigned int ENTITY_ID = 0;
-	Entity::Entity(const std::string& name) : m_name(name), m_visible(true)
+	Entity::Entity(const std::string& name, Scene* owner) : m_name(name), m_visible(true), p_owner(owner)
 	{
-		m_id = ENTITY_ID++;
+		if(NULL != owner)
+		{
+			m_id = owner->addEntity(this);
+		}
 		m_components.resize(MAX_NB_COMPONENTS);
 		setComponent(ComponentType::TRANSFORM_COMPONENT, new ModelTransform());
 	}

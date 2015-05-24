@@ -1,11 +1,14 @@
 #include "TexturePainter.h"
 #include <qlabel.h>
 #include <QFileDialog>
+#include <QFileSystemModel>
+#include <QSettings>
+
 TexturePainter::TexturePainter(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {
-
 	ui.setupUi(this);
+	load();
 	this->showMaximized();
 	p_colordlg = new QColorDialog(this);
 	p_colordlg->setWindowTitle(QColorDialog::tr("Select color"));
@@ -13,6 +16,9 @@ TexturePainter::TexturePainter(QWidget *parent, Qt::WFlags flags)
 	QString styleSheet = QString("background-color: rgb(0, 0, 0);");
 	ui.colorButton->setStyleSheet(styleSheet);
 
+	QFileSystemModel *model = new QFileSystemModel;
+    model->setRootPath(m_fileDir);
+	ui.fileView->setModel(model);
 	ui.cmdField->appendPlainText(QString("start"));
 }
 
@@ -21,6 +27,33 @@ TexturePainter::~TexturePainter()
 
 }
 
+
+void TexturePainter::load()
+{
+	m_fileDir = QDir::currentPath();
+	QSettings settings("TexturePainter.ini", QSettings::IniFormat);
+	m_fileDir = settings.value("filepath").toString();	
+
+
+	QList<QAction*> windowactions = ui.menuWindows->actions();
+	foreach(QAction* action , windowactions)
+	{
+		action->setChecked(!settings.value(action->objectName()).toBool());
+		action->trigger();
+	}
+}
+
+void TexturePainter::save()
+{
+	QSettings settings("TexturePainter.ini", QSettings::IniFormat);
+    settings.setValue("filepath", m_fileDir);
+	QList<QAction*> windowactions = ui.menuWindows->actions();
+	foreach(QAction* action , windowactions)
+	{
+		settings.setValue(action->objectName(), action->isChecked());
+	}
+	settings.sync();
+}
 
 void TexturePainter::selectColor()
 {
@@ -79,4 +112,9 @@ void TexturePainter::addMesh()
 	entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
 	RenderManager::getInstance()->addIntoObjectRendererList(renderer);
 
+}
+
+void TexturePainter::closeEvent(QCloseEvent *event)
+{
+	save();
 }

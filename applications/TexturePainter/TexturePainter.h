@@ -12,15 +12,21 @@ class TexturePainter : public QMainWindow
 public:
 	TexturePainter(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~TexturePainter();
+	void load();
+	void save();
+protected:
+    void closeEvent(QCloseEvent *event);
 	public slots:
 		void selectColor();
 		void pipetteColorPicked();
 		void addMesh();
 		void updateOutputError();
 		void updateOutputText();
+
 private:
 	Ui::TexturePainterClass ui;
 	QColorDialog * p_colordlg;
+	QString m_fileDir;
 };
 
 #endif // TEXTUREPAINTER_H

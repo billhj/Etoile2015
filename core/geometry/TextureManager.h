@@ -18,7 +18,6 @@ namespace Etoile
 		TextureManager();
 	protected:
 		std::vector<Texture*> m_datas;
-		
 	public:
 		static TextureManager* getInstance()
 		{

@@ -927,7 +927,7 @@
     <string>States</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>8</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
     <widget class="QComboBox" name="comboBox">
@@ -1134,18 +1134,12 @@ selection-color: rgb(255, 83, 15);
     <string>Files</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_5">
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
-      <widget class="QTreeWidget" name="treeWidget">
-       <column>
-        <property name="text">
-         <string notr="true">1</string>
-        </property>
-       </column>
-      </widget>
+      <widget class="QTreeView" name="fileView"/>
      </item>
     </layout>
    </widget>

@@ -13,9 +13,19 @@ namespace Etoile
 	{
 	}
 
-	void Scene::addEntity(Entity* entity)
+	int Scene::addEntity(Entity* entity)
 	{
+		for(unsigned int i = 0; i < m_entities.size(); ++i)
+		{
+			if(m_entities[i] == entity)
+			{
+				m_entities.erase(m_entities.begin() + i);
+				return i;
+			}
+		}
+		int size = m_entities.size();
 		m_entities.push_back(entity);
+		return size;
 	}
 
 	void Scene::removeEntity(Entity* entity)

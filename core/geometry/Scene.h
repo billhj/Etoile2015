@@ -19,7 +19,7 @@ namespace Etoile
 		~Scene(void);
 		const std::string getName(){return m_name;}
 		void setName(const std::string& name);
-		void addEntity(Entity*);
+		int addEntity(Entity*);
 		void removeEntity(Entity*);
 		std::vector<Entity*>& getEntities(){return m_entities;}
 		const std::vector<Entity*>& getEntities() const {return m_entities;}

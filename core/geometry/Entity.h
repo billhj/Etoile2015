@@ -13,12 +13,13 @@
 
 namespace Etoile
 {
+	class Scene;
 	class ObjectRenderer;
 	class ModelTransform;
 	class Entity
 	{
 	public:
-		Entity(const std::string& name ="");
+		Entity(const std::string& name ="", Scene* owner= NULL);
 		~Entity(void);
 		const std::string getName(){return m_name;}
 		void setName(const std::string& name){ m_name = name;}
@@ -28,10 +29,13 @@ namespace Etoile
 		ModelTransform* getTransformation();
 		void setVisible(bool visible);
 		bool isVisible(){return m_visible;}
+		Scene* getScene(){return p_owner;}
+		int getIndex(){return m_id;}
 	private:
 		std::vector<Component*> m_components;
 		int m_id;
 		std::string m_name;
 		bool m_visible;
+		Scene* p_owner;
 	};
 }
