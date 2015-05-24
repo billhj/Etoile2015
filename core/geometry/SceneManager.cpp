@@ -4,6 +4,7 @@ namespace Etoile
 {
 	SceneManager::SceneManager(void) : ResourceManager<Scene>()
 	{
+		p_current = new Scene("defaut");
 	}
 
 

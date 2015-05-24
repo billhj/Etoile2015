@@ -94,12 +94,15 @@ void TexturePainter::updateOutputText()
 #include "renderer/OpenGL/ImmediateMeshRenderer.h"
 #include "renderer/OpenGL/VBOMeshRenderer.h"
 #include "geometry/RenderManager.h"
+#include "geometry/SceneManager.h"
 #include "QGLRenderer/QTTextureLoader.h"
 
 
 void TexturePainter::addMesh()
 {
 	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("Mesh (*.obj)"));
+	//QFile file(name);
+	if(name.isEmpty()) return;
 	OBJMeshLoader loader;
 	QTTextureLoader qtextureLoader;
 	loader.setTextureLoader(&qtextureLoader);
@@ -109,11 +112,11 @@ void TexturePainter::addMesh()
 
 	VBOMeshRenderer* renderer = new VBOMeshRenderer();
 	renderer->setRenderMesh(mesh);
-
-	Entity* entity = new Entity(name.toStdString());
+	Scene* scene = SceneManager::getInstance()->getCurrentScene();
+	Entity* entity = new Entity(name.toStdString(), scene);
 	entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
 	RenderManager::getInstance()->addIntoObjectRendererList(renderer);
-
+	ui.sceneTreeView->setScene(scene);ui.sceneTreeView->updateModel();
 }
 
 void TexturePainter::closeEvent(QCloseEvent *event)

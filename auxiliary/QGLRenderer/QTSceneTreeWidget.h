@@ -3,6 +3,7 @@
 
 #include "ui_QTSceneTreeWidget.h"
 #include "geometry/Scene.h"
+#include <QStandardItemModel>
 
 namespace Etoile
 {
@@ -17,6 +18,7 @@ public:
 	void updateModel();
 private:
 	Ui::QTSceneTreeWidget ui;
+	QStandardItemModel* p_standardModel;
 	Scene* p_scene;
 };
 }
