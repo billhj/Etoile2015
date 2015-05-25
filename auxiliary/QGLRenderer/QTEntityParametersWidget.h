@@ -17,7 +17,16 @@ namespace Etoile
 		void setEntity(Entity*);
 		public slots:
 			void setEntity(int idx);
-			void updateTransform();
+			/**
+			* use current Entity to update widget spinboxes
+			*/
+			void updateTransformView();
+			/**
+			*  spinbox to transform value in Entity
+			*/
+			void scaleSpinBoxModified(double);
+			void translationSpinBoxModified(double);
+			void quaternionSpinBoxModified(double);
 	private:
 		Ui::QTEntityParametersWidget ui;
 		Entity* p_entity;

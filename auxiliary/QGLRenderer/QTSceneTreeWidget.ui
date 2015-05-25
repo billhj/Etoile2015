@@ -41,5 +41,6 @@
  </connections>
  <slots>
   <slot>treeview_onclick(QModelIndex)</slot>
+  <slot>updateModel()</slot>
  </slots>
 </ui>

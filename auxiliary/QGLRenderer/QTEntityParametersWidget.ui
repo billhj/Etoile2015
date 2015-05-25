@@ -6,16 +6,22 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>291</height>
+    <width>267</width>
+    <height>279</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>QTEntityParametersWidget</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <item>
+   <item alignment="Qt::AlignLeft|Qt::AlignTop">
     <widget class="QTabWidget" name="parametersview">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -23,64 +29,86 @@
       <attribute name="title">
        <string>transform</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
         <layout class="QGridLayout" name="gridLayout">
          <property name="verticalSpacing">
           <number>6</number>
          </property>
-         <item row="3" column="1">
-          <widget class="QDoubleSpinBox" name="qx">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QDoubleSpinBox" name="s0">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="4">
-          <widget class="QDoubleSpinBox" name="m10">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
-          <widget class="QDoubleSpinBox" name="s1">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Scale:</string>
+         <item row="6" column="5">
+          <widget class="QDoubleSpinBox" name="m7">
+           <property name="enabled">
+            <bool>false</bool>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Translation:</string>
+         <item row="6" column="4">
+          <widget class="QDoubleSpinBox" name="m6">
+           <property name="enabled">
+            <bool>false</bool>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Quaternion:</string>
+         <item row="6" column="3">
+          <widget class="QDoubleSpinBox" name="m5">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QDoubleSpinBox" name="m4">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="5">
+          <widget class="QDoubleSpinBox" name="m3">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="4">
+          <widget class="QDoubleSpinBox" name="m2">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="3">
+          <widget class="QDoubleSpinBox" name="m1">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QDoubleSpinBox" name="m0">
+           <property name="enabled">
+            <bool>false</bool>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -97,22 +125,8 @@
            </property>
           </widget>
          </item>
-         <item row="7" column="5">
-          <widget class="QDoubleSpinBox" name="m11">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="3">
-          <widget class="QDoubleSpinBox" name="m9">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QDoubleSpinBox" name="qy">
+         <item row="3" column="5">
+          <widget class="QDoubleSpinBox" name="qw">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
@@ -125,22 +139,25 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="5">
-          <widget class="QDoubleSpinBox" name="s2">
+         <item row="3" column="3">
+          <widget class="QDoubleSpinBox" name="qy">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="5" column="3">
-          <widget class="QDoubleSpinBox" name="m1">
+         <item row="3" column="1">
+          <widget class="QDoubleSpinBox" name="qx">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
-          <widget class="QDoubleSpinBox" name="t0">
+         <item row="2" column="1">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Quaternion:</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
@@ -153,57 +170,86 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="5">
-          <widget class="QDoubleSpinBox" name="qw">
+         <item row="1" column="4">
+          <widget class="QDoubleSpinBox" name="t1">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
-          <widget class="QDoubleSpinBox" name="m0">
+         <item row="1" column="3">
+          <widget class="QDoubleSpinBox" name="t0">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="5" column="4">
-          <widget class="QDoubleSpinBox" name="m2">
+         <item row="1" column="1">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Translation:</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="5" column="5">
-          <widget class="QDoubleSpinBox" name="m3">
+         <item row="0" column="5">
+          <widget class="QDoubleSpinBox" name="s2">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="6" column="3">
-          <widget class="QDoubleSpinBox" name="m5">
+         <item row="0" column="4">
+          <widget class="QDoubleSpinBox" name="s1">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="6" column="5">
-          <widget class="QDoubleSpinBox" name="m7">
+         <item row="0" column="3">
+          <widget class="QDoubleSpinBox" name="s0">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="6" column="4">
-          <widget class="QDoubleSpinBox" name="m6">
+         <item row="0" column="1">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Scale:</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
-          <widget class="QDoubleSpinBox" name="m4">
+         <item row="7" column="4">
+          <widget class="QDoubleSpinBox" name="m10">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="5">
+          <widget class="QDoubleSpinBox" name="m11">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="3">
+          <widget class="QDoubleSpinBox" name="m9">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
@@ -211,27 +257,9 @@
          </item>
          <item row="7" column="1">
           <widget class="QDoubleSpinBox" name="m8">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
+           <property name="enabled">
+            <bool>false</bool>
            </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QDoubleSpinBox" name="m12">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="3">
-          <widget class="QDoubleSpinBox" name="m13">
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="4">
-          <widget class="QDoubleSpinBox" name="m14">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
@@ -239,13 +267,39 @@
          </item>
          <item row="8" column="5">
           <widget class="QDoubleSpinBox" name="m15">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="1" column="4">
-          <widget class="QDoubleSpinBox" name="t1">
+         <item row="8" column="3">
+          <widget class="QDoubleSpinBox" name="m13">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="4">
+          <widget class="QDoubleSpinBox" name="m14">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QDoubleSpinBox" name="m12">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
@@ -271,5 +325,171 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>s0</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>scaleSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>153</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>s1</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>scaleSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>244</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>s2</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>scaleSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>334</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>t0</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>translationSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>153</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>t1</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>translationSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>244</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>t2</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>translationSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>334</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qw</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>quaternionSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>334</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qx</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>quaternionSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qy</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>quaternionSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>153</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qz</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>QTEntityParametersWidget</receiver>
+   <slot>quaternionSpinBoxModified(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>244</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>scaleSpinBoxModified(double)</slot>
+  <slot>translationSpinBoxModified(double)</slot>
+  <slot>quaternionSpinBoxModified(double)</slot>
+ </slots>
 </ui>

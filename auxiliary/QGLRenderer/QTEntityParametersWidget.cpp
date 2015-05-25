@@ -24,10 +24,10 @@ namespace Etoile
 	{
 		Entity* entity = SceneManager::getInstance()->getCurrentScene()->getEntity(idx);
 		setEntity(entity);
-		updateTransform();
+		updateTransformView();
 	}
 
-	void QTEntityParametersWidget::updateTransform()
+	void QTEntityParametersWidget::updateTransformView()
 	{
 		if(NULL == p_entity) return;
 		ModelTransform* transform = p_entity->getTransformation();
@@ -35,6 +35,17 @@ namespace Etoile
 		Vec3f trans = transform->getTranslation();
 		Quaternionf q = transform->getRotation();
 		Matrix4f mat = transform->getModelMatrix();
+
+		ui.s0->blockSignals(true);
+		ui.s1->blockSignals(true);
+		ui.s2->blockSignals(true);
+		ui.t0->blockSignals(true);
+		ui.t1->blockSignals(true);
+		ui.t2->blockSignals(true);
+		ui.qx->blockSignals(true);
+		ui.qy->blockSignals(true);
+		ui.qz->blockSignals(true);
+		ui.qw->blockSignals(true);
 
 		ui.s0->setValue(scale.x());
 		ui.s1->setValue(scale.y());
@@ -69,5 +80,40 @@ namespace Etoile
 		ui.m14->setValue(mat[3][2]);
 		ui.m15->setValue(mat[3][3]);
 
+		ui.s0->blockSignals(false);
+		ui.s1->blockSignals(false);
+		ui.s2->blockSignals(false);
+		ui.t0->blockSignals(false);
+		ui.t1->blockSignals(false);
+		ui.t2->blockSignals(false);
+		ui.qx->blockSignals(false);
+		ui.qy->blockSignals(false);
+		ui.qz->blockSignals(false);
+		ui.qw->blockSignals(false);
+
+	}
+
+	void QTEntityParametersWidget::scaleSpinBoxModified(double)
+	{
+		if(NULL == p_entity) return;
+		ModelTransform* transform = p_entity->getTransformation();
+		transform->setScale(Vec3f(ui.s0->value(), ui.s1->value(), ui.s2->value()));
+		transform->updateTransform();
+	}
+
+	void QTEntityParametersWidget::translationSpinBoxModified(double)
+	{
+		if(NULL == p_entity) return;
+		ModelTransform* transform = p_entity->getTransformation();
+		transform->setTranslation(Vec3f(ui.t0->value(), ui.t1->value(), ui.t2->value()));
+		transform->updateTransform();
+	}
+
+	void QTEntityParametersWidget::quaternionSpinBoxModified(double)
+	{
+		if(NULL == p_entity) return;
+		ModelTransform* transform = p_entity->getTransformation();
+		transform->setRotation(Quaternionf(ui.qx->value(), ui.qy->value(), ui.qz->value(), ui.qw->value()));
+		transform->updateTransform();
 	}
 }

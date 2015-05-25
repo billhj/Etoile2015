@@ -15,8 +15,8 @@ namespace Etoile
 		QTSceneTreeWidget(QWidget *parent = 0);
 		~QTSceneTreeWidget();
 		void setScene(Scene* scene);
-		void updateModel();
 		public slots:
+			void updateModel();
 			void treeview_onclick(QModelIndex);
 signals:
 			void entitySelected(int idx);

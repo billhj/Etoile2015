@@ -46,6 +46,11 @@ namespace Etoile
 			setTransform(m_scale, m_rotation, m_translation);
 		}
 
+		void updateTransform()
+		{
+			m_modelTransform = Matrix4f().makeTranslation(m_translation) * Matrix4f().makeAxisRotation(m_rotation.axis(), m_rotation.angle()) * Matrix4f().makeScale(m_scale);
+		}
+
 		Quaternionf getOrientation();
 		Vec3f getPosition();
 
