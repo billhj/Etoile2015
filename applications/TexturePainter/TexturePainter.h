@@ -17,9 +17,6 @@ protected:
 	public slots:
 		void pipetteColorPicked();
 		void addMesh();
-		void updateOutputError();
-		void updateOutputText();
-
 private:
 	Ui::TexturePainterClass ui;
 	QString m_fileDir;

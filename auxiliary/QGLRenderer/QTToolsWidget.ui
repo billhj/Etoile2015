@@ -706,7 +706,44 @@
  <resources>
   <include location="../../applications/TexturePainter/TexturePainter.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonGroup</sender>
+   <signal>buttonClicked(QAbstractButton*)</signal>
+   <receiver>QTToolsWidget</receiver>
+   <slot>toolsButton_onclick(QAbstractButton*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>75</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>colorButton</sender>
+   <signal>clicked()</signal>
+   <receiver>QTToolsWidget</receiver>
+   <slot>colorButton_onclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>75</x>
+     <y>201</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>75</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>toolsButton_onclick(QAbstractButton*)</slot>
+  <slot>colorButton_onclick()</slot>
+ </slots>
  <buttongroups>
   <buttongroup name="buttonGroup"/>
  </buttongroups>

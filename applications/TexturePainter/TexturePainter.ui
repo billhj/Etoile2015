@@ -639,6 +639,9 @@
    <extends>QWidget</extends>
    <header>QGLRenderer/QTToolsWidget.h</header>
    <container>1</container>
+   <slots>
+    <signal>toolsButtonClicked(QAbstractButton*)</signal>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources>
@@ -914,6 +917,22 @@
     <hint type="destinationlabel">
      <x>928</x>
      <y>285</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolsWidget</sender>
+   <signal>toolsButtonClicked(QAbstractButton*)</signal>
+   <receiver>centralWidget</receiver>
+   <slot>setTool(QAbstractButton*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>167</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>282</y>
     </hint>
    </hints>
   </connection>

@@ -18,8 +18,18 @@ namespace Etoile
 
 	}
 
+	QColor QTToolsWidget::getColorButtonCurrentColor()
+	{
+		QPalette pal = ui.colorButton->palette();
+		return pal.color(QPalette::Button);
+	}
 
-	void QTToolsWidget::selectColor()
+	QAbstractButton* QTToolsWidget::getCurrentToolsButton()
+	{
+		return ui.buttonGroup->checkedButton();
+	}
+
+	void QTToolsWidget::colorButton_onclick()
 	{
 		QPalette pal = ui.colorButton->palette();
 		QColor input = pal.color(QPalette::Button);
@@ -35,5 +45,10 @@ namespace Etoile
 	void QTToolsWidget::setColorButtonStyleSheet(QString styleSheet)
 	{
 		ui.colorButton->setStyleSheet(styleSheet);
+	}
+
+	void QTToolsWidget::toolsButton_onclick(QAbstractButton* button)
+	{
+		emit toolsButtonClicked(button);
 	}
 }

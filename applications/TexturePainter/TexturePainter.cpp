@@ -58,18 +58,6 @@ void TexturePainter::pipetteColorPicked()
 	ui.toolsWidget->setColorButtonStyleSheet(styleSheet);
 }
 
-void TexturePainter::updateOutputError()
-{
-	QByteArray data;
-	//ui.cmdField->appendPlainText(QString(data));
-}
-
-void TexturePainter::updateOutputText()
-{
-	QByteArray data;
-	//ui.cmdField->appendPlainText(QString(data));
-}
-
 #include "meshIO/OBJMeshLoader.h"
 #include "renderer/OpenGL/ImmediateMeshRenderer.h"
 #include "renderer/OpenGL/VBOMeshRenderer.h"

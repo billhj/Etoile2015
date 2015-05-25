@@ -14,9 +14,14 @@ namespace Etoile
 	public:
 		QTToolsWidget(QWidget *parent = 0);
 		~QTToolsWidget();
+		QColor getColorButtonCurrentColor();
+		QAbstractButton* getCurrentToolsButton();
 	public slots:
-		void selectColor();
+		void colorButton_onclick();
 		void setColorButtonStyleSheet(QString styleSheet);
+		void toolsButton_onclick(QAbstractButton* button);
+signals:
+		void toolsButtonClicked(QAbstractButton* button);
 	private:
 		Ui::QTToolsWidget ui;
 		QColorDialog * p_colordlg;
