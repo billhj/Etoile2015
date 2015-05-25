@@ -7,20 +7,24 @@
 
 namespace Etoile
 {
-class QTSceneTreeWidget : public QWidget
-{
-	Q_OBJECT
+	class QTSceneTreeWidget : public QWidget
+	{
+		Q_OBJECT
 
-public:
-	QTSceneTreeWidget(QWidget *parent = 0);
-	~QTSceneTreeWidget();
-	void setScene(Scene* scene);
-	void updateModel();
-private:
-	Ui::QTSceneTreeWidget ui;
-	QStandardItemModel* p_standardModel;
-	Scene* p_scene;
-};
+	public:
+		QTSceneTreeWidget(QWidget *parent = 0);
+		~QTSceneTreeWidget();
+		void setScene(Scene* scene);
+		void updateModel();
+		public slots:
+			void treeview_onclick(QModelIndex);
+signals:
+			void entitySelected(int idx);
+	private:
+		Ui::QTSceneTreeWidget ui;
+		QStandardItemModel* p_standardModel;
+		Scene* p_scene;
+	};
 }
 
 #endif // SCENETREEWIDGET_H

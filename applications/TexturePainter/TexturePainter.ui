@@ -154,8 +154,8 @@
   <widget class="QDockWidget" name="toolsDockWidget">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>80</width>
+     <height>40</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -298,47 +298,7 @@
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QTabWidget" name="tabWidget_2">
-         <property name="accessibleName">
-          <string/>
-         </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="layers">
-          <attribute name="title">
-           <string>layers</string>
-          </attribute>
-          <layout class="QHBoxLayout" name="horizontalLayout_6">
-           <item>
-            <widget class="QListView" name="listView"/>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tab_4">
-          <attribute name="title">
-           <string>Tab 2</string>
-          </attribute>
-         </widget>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTabWidget" name="tabWidget_3">
-         <widget class="QWidget" name="tab_3">
-          <attribute name="title">
-           <string>Tab 1</string>
-          </attribute>
-         </widget>
-         <widget class="QWidget" name="tab_5">
-          <attribute name="title">
-           <string>Tab 2</string>
-          </attribute>
-         </widget>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QTEntityParametersWidget" name="widget" native="true"/>
      </item>
     </layout>
    </widget>
@@ -642,6 +602,12 @@
    <slots>
     <signal>toolsButtonClicked(QAbstractButton*)</signal>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>QTEntityParametersWidget</class>
+   <extends>QWidget</extends>
+   <header>QGLRenderer/QTEntityParametersWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
