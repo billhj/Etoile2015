@@ -45,4 +45,9 @@ namespace Etoile
 		SceneManager::getInstance()->renameElement(m_name, name);
 		m_name = name;
 	}
+
+	Entity* Scene::getEntity(int idx)
+	{
+		return m_entities[idx];
+	}
 }

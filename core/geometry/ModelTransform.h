@@ -16,9 +16,9 @@ namespace Etoile
 	class ModelTransform : public Component
 	{
 	public:
-		ModelTransform();
+		//ModelTransform();
 		ModelTransform(const ModelTransform& obj);
-		ModelTransform(const Vec3f& translate, const Quaternionf& rotation, const Vec3f& scale = Vec3f(1,1,1), ModelTransform* ref = NULL);
+		ModelTransform(const Vec3f& translate = Vec3f(), const Quaternionf& rotation = Quaternionf(), const Vec3f& scale = Vec3f(1,1,1), ModelTransform* ref = NULL);
 		void set(const Vec3f& translate, const Quaternionf& rotation, const Vec3f& scale = Vec3f(1,1,1), ModelTransform* ref = NULL);
 		ModelTransform& operator=(const ModelTransform& obj);
 		void setReferenceObject(ModelTransform* obj);

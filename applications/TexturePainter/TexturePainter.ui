@@ -172,7 +172,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="stateWidget">
+  <widget class="QDockWidget" name="stateDockWidget">
    <property name="minimumSize">
     <size>
      <width>200</width>
@@ -213,7 +213,7 @@
     </widget>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="ioWidget">
+  <widget class="QDockWidget" name="ioDockWidget">
    <property name="minimumSize">
     <size>
      <width>89</width>
@@ -234,7 +234,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="nodeWidget">
+  <widget class="QDockWidget" name="nodesDockWidget">
    <property name="windowTitle">
     <string>Nodes</string>
    </property>
@@ -249,7 +249,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="sceneTreeWidget">
+  <widget class="QDockWidget" name="sceneTreeDockWidget">
    <property name="windowTitle">
     <string>SceneTree</string>
    </property>
@@ -264,7 +264,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="fileSystemWidget">
+  <widget class="QDockWidget" name="fileSystemDockWidget">
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
@@ -298,7 +298,7 @@
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
-      <widget class="QTEntityParametersWidget" name="widget" native="true"/>
+      <widget class="QTEntityParametersWidget" name="parametersView" native="true"/>
      </item>
     </layout>
    </widget>
@@ -555,7 +555,7 @@
    </property>
   </action>
   <zorder>parametersDockWidget</zorder>
-  <zorder>sceneTreeWidget</zorder>
+  <zorder>sceneTreeDockWidget</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -593,6 +593,9 @@
    <extends>QWidget</extends>
    <header>QGLRenderer/QTSceneTreeWidget.h</header>
    <container>1</container>
+   <slots>
+    <signal>entitySelected(int)</signal>
+   </slots>
   </customwidget>
   <customwidget>
    <class>QTToolsWidget</class>
@@ -608,6 +611,9 @@
    <extends>QWidget</extends>
    <header>QGLRenderer/QTEntityParametersWidget.h</header>
    <container>1</container>
+   <slots>
+    <slot>setEntity(int)</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources>
@@ -793,7 +799,7 @@
   <connection>
    <sender>actionStates</sender>
    <signal>triggered(bool)</signal>
-   <receiver>stateWidget</receiver>
+   <receiver>stateDockWidget</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -809,7 +815,7 @@
   <connection>
    <sender>actionIOs</sender>
    <signal>triggered(bool)</signal>
-   <receiver>ioWidget</receiver>
+   <receiver>ioDockWidget</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -825,7 +831,7 @@
   <connection>
    <sender>actionNodes</sender>
    <signal>triggered(bool)</signal>
-   <receiver>nodeWidget</receiver>
+   <receiver>nodesDockWidget</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -841,7 +847,7 @@
   <connection>
    <sender>actionSceneTree</sender>
    <signal>triggered(bool)</signal>
-   <receiver>sceneTreeWidget</receiver>
+   <receiver>sceneTreeDockWidget</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -857,7 +863,7 @@
   <connection>
    <sender>actionFiles</sender>
    <signal>triggered(bool)</signal>
-   <receiver>fileSystemWidget</receiver>
+   <receiver>fileSystemDockWidget</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -899,6 +905,22 @@
     <hint type="destinationlabel">
      <x>300</x>
      <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sceneTreeView</sender>
+   <signal>entitySelected(int)</signal>
+   <receiver>parametersView</receiver>
+   <slot>setEntity(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>628</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>628</x>
+     <y>331</y>
     </hint>
    </hints>
   </connection>

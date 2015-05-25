@@ -21,13 +21,13 @@
 
 namespace Etoile
 {
-	ModelTransform::ModelTransform(): p_ref(NULL), Component(TRANSFORM_COMPONENT)
+	/*ModelTransform::ModelTransform(): p_ref(NULL), Component(TRANSFORM_COMPONENT)
 	{
 		setScale(Vec3f(1,1,1));
 		setTranslation(Vec3f());
 		setRotation(Quaternionf());
 		setTransform();
-	}
+	}*/
 
 	ModelTransform::ModelTransform(const ModelTransform& obj): Component(TRANSFORM_COMPONENT)
 	{
@@ -37,18 +37,11 @@ namespace Etoile
 
 	ModelTransform::ModelTransform(const Vec3f& translate, const Quaternionf& rotation, const Vec3f& scale, ModelTransform* ref):  p_ref(ref), Component(TRANSFORM_COMPONENT)
 	{
-		if(p_ref == NULL)
-		{
-			setScale(scale);
-			setTranslation(translate);
-			setRotation(rotation);
-		}
-		else
-		{
-			setScale(scale);
-			setTranslation(translate);
-			setRotation(rotation);
-		}
+	
+		setScale(scale);
+		setTranslation(translate);
+		setRotation(rotation);
+		setTransform();
 	}
 
 	void ModelTransform::set(const Vec3f& translate, const Quaternionf& rotation, const Vec3f& scale, ModelTransform* ref)

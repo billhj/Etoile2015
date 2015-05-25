@@ -51,7 +51,7 @@ namespace Etoile
 			{
 				Matrix4f modelM = t->getGLModelMatrix();
 				glPushMatrix();
-				glLoadMatrixf(&modelM[0][0]);
+				glMultMatrixf(&modelM[0][0]);
 			}
 		}
 

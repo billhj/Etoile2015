@@ -23,7 +23,7 @@ namespace Etoile
 
 	void Entity::setComponent(ComponentType type, Component* c)
 	{
-		m_components.insert(m_components.begin() + type, c);
+		m_components[type] = c;
 		c->setEntity(this);
 	}
 

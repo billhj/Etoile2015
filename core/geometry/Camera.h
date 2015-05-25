@@ -31,9 +31,9 @@ namespace Etoile
 		CameraType m_type;
 		Vec3f m_pivot;
 	public:
-		Camera(const Vec3f& position, const Quaternionf& orientation, const std::string& name = "");
-		Camera(const Vec3f& target, const Vec3f& up, const Vec3f& position, const std::string& name = "");
-		Camera(const std::string& name = "");
+		Camera(const Vec3f& position, const Quaternionf& orientation, const std::string& name = "camera");
+		Camera(const Vec3f& target, const Vec3f& up, const Vec3f& position, const std::string& name = "camera");
+		Camera(const std::string& name = "camera");
 		void reset();
 		CameraType type();
 		void setType(CameraType type);
