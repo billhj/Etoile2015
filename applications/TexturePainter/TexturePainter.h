@@ -3,8 +3,6 @@
 
 #include <QtGui/QMainWindow>
 #include "ui_TexturePainter.h"
-#include <QColorDialog>
-
 class TexturePainter : public QMainWindow
 {
 	Q_OBJECT
@@ -17,7 +15,6 @@ public:
 protected:
     void closeEvent(QCloseEvent *event);
 	public slots:
-		void selectColor();
 		void pipetteColorPicked();
 		void addMesh();
 		void updateOutputError();
@@ -25,7 +22,6 @@ protected:
 
 private:
 	Ui::TexturePainterClass ui;
-	QColorDialog * p_colordlg;
 	QString m_fileDir;
 };
 
