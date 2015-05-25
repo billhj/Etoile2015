@@ -99,6 +99,7 @@ namespace Etoile
 		ModelTransform* transform = p_entity->getTransformation();
 		transform->setScale(Vec3f(ui.s0->value(), ui.s1->value(), ui.s2->value()));
 		transform->updateTransform();
+		updateTransformView();
 	}
 
 	void QTEntityParametersWidget::translationSpinBoxModified(double)
@@ -107,6 +108,7 @@ namespace Etoile
 		ModelTransform* transform = p_entity->getTransformation();
 		transform->setTranslation(Vec3f(ui.t0->value(), ui.t1->value(), ui.t2->value()));
 		transform->updateTransform();
+		updateTransformView();
 	}
 
 	void QTEntityParametersWidget::quaternionSpinBoxModified(double)
@@ -115,5 +117,6 @@ namespace Etoile
 		ModelTransform* transform = p_entity->getTransformation();
 		transform->setRotation(Quaternionf(ui.qx->value(), ui.qy->value(), ui.qz->value(), ui.qw->value()));
 		transform->updateTransform();
+		updateTransformView();
 	}
 }

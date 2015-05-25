@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>267</width>
+    <width>279</width>
     <height>279</height>
    </rect>
   </property>
@@ -43,6 +43,9 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="6" column="4">
@@ -52,6 +55,9 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -63,6 +69,9 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="6" column="1">
@@ -72,6 +81,9 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -83,6 +95,9 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="5" column="4">
@@ -92,6 +107,9 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -103,6 +121,9 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="5" column="1">
@@ -112,6 +133,9 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -293,6 +317,9 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="7" column="5">
@@ -302,6 +329,9 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -313,6 +343,9 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="7" column="1">
@@ -322,6 +355,9 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -333,6 +369,9 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="8" column="3">
@@ -342,6 +381,9 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -353,6 +395,9 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="8" column="1">
@@ -362,6 +407,9 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

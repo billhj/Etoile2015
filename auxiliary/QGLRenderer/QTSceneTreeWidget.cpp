@@ -2,6 +2,8 @@
 #include <QFileInfo>
 #include <QStringList>
 #include <QVariant>
+#include "geometry/SceneManager.h"
+
 namespace Etoile
 {
 	QList<QStandardItem *> prepareRow(const QString &first, const QString &second, const QString &third)
@@ -33,6 +35,9 @@ namespace Etoile
 
 		ui.treeView->setModel(p_standardModel);
 		ui.treeView->expandAll();
+
+		setScene(SceneManager::getInstance()->getCurrentScene());
+		updateModel();
 	}
 
 
