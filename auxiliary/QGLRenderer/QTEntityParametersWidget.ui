@@ -130,12 +130,24 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
           </widget>
          </item>
          <item row="3" column="4">
           <widget class="QDoubleSpinBox" name="qz">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
            </property>
           </widget>
          </item>
@@ -144,12 +156,24 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
           </widget>
          </item>
          <item row="3" column="1">
           <widget class="QDoubleSpinBox" name="qx">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
            </property>
           </widget>
          </item>
@@ -168,6 +192,12 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
           </widget>
          </item>
          <item row="1" column="4">
@@ -175,12 +205,24 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
           </widget>
          </item>
          <item row="1" column="3">
           <widget class="QDoubleSpinBox" name="t0">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
            </property>
           </widget>
          </item>
@@ -199,6 +241,12 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
           </widget>
          </item>
          <item row="0" column="4">
@@ -206,12 +254,24 @@
            <property name="alignment">
             <set>Qt::AlignCenter</set>
            </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
           </widget>
          </item>
          <item row="0" column="3">
           <widget class="QDoubleSpinBox" name="s0">
            <property name="alignment">
             <set>Qt::AlignCenter</set>
+           </property>
+           <property name="minimum">
+            <double>-99.989999999999995</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
            </property>
           </widget>
          </item>
