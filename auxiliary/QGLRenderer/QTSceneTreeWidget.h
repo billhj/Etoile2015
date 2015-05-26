@@ -25,6 +25,13 @@ signals:
 		QStandardItemModel* p_standardModel;
 		Scene* p_scene;
 	};
+
+	struct EntityInfo
+	{
+		Entity* p_entity;
+	};
+
+	Q_DECLARE_METATYPE(EntityInfo)
 }
 
 #endif // SCENETREEWIDGET_H

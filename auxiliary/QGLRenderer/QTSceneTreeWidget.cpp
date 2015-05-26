@@ -58,10 +58,13 @@ namespace Etoile
 		{
 			Entity* entity = p_scene->getEntities()[i];
 			QFileInfo file(QString().fromStdString(entity->getName()));
-			QStandardItem * row = new QStandardItem(file.fileName());
-			row->setData(QVariant(entity->getIndex()));
+			QStandardItem * row = new QStandardItem(QString::number(entity->getIndex()).append(" ").append(file.fileName()).append(" ").append(QString().fromStdString(entity->getName())));
+			EntityInfo info;
+			info.p_entity = entity;
+			row->setData(QVariant::fromValue(info));
 			sceneRow->appendRow(row);
 		}
+		ui.treeView->expandAll();
 	}
 
 	void QTSceneTreeWidget::setScene(Scene* scene)
@@ -73,7 +76,8 @@ namespace Etoile
 	void QTSceneTreeWidget::treeview_onclick(QModelIndex index)
 	{
 		QStandardItem *	item = p_standardModel->itemFromIndex(index);
-		int entityIndex = item->data().toInt();
-		emit entitySelected(entityIndex);
+		EntityInfo info = item->data().value<EntityInfo>();
+		if(NULL == info.p_entity) return;
+		emit entitySelected(info.p_entity->getIndex());
 	}
 }

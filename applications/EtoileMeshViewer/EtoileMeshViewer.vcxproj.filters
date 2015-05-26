@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="EtoileMeshViewer.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_CameraWidget.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_EtoileMeshViewer.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_MeshViewer.cpp" />
+    <ClCompile Include="GeneratedFiles\qrc_EtoileMeshViewer.cpp" />
+    <ClCompile Include="GeneratedFiles\Release\moc_CameraWidget.cpp" />
+    <ClCompile Include="GeneratedFiles\Release\moc_EtoileMeshViewer.cpp" />
+    <ClCompile Include="GeneratedFiles\Release\moc_MeshViewer.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\auxiliary\meshIO\OBJMeshLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\core\Core.h" />
+    <ClInclude Include="GeneratedFiles\ui_EtoileMeshViewer.h" />
+    <ClInclude Include="..\..\auxiliary\meshIO\MeshLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\meshIO\OBJMeshLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="EtoileMeshViewer.h" />
+    <CustomBuild Include="EtoileMeshViewer.ui" />
+    <CustomBuild Include="CameraWidget.h" />
+    <CustomBuild Include="MeshViewer.h" />
+    <CustomBuild Include="EtoileMeshViewer.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+  </ItemGroup>
+</Project>

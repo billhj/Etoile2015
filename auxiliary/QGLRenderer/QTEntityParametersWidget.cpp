@@ -24,6 +24,7 @@ namespace Etoile
 	{
 		Entity* entity = SceneManager::getInstance()->getCurrentScene()->getEntity(idx);
 		setEntity(entity);
+		ui.titleEdit->setText(QString::fromStdString(entity->getName()));
 		updateTransformView();
 	}
 
