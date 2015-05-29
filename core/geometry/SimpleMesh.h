@@ -39,16 +39,25 @@ namespace Etoile
 			ColorRGBA m_specular;
 			ColorRGBA m_ambient;
 			float m_shininess;
+			float m_transparency;
 			std::string m_diffuseTextureFilePath;
 			std::string m_specularTextureFilePath;
 			std::string m_ambientTextureFilePath;
 			std::string m_displacementTextureFilePath;
+			std::string m_bumpTextureFilePath;
+		};
+
+		struct MatGroup
+		{
+			std::vector<Face> m_faces;
+			int m_materialIndex;
 		};
 
 
 		std::vector<VertexPosition> m_positions;
 		std::vector<VertexNormal> m_normals;
 		std::vector<TextureCoordinate> m_texcoords;
-		std::vector<Face> m_faces;
+		std::vector<MatGroup> m_groups;
+		std::vector<Material> m_materials;
 	};
 }
