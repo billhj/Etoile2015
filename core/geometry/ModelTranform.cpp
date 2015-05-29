@@ -32,7 +32,7 @@ namespace Etoile
 	ModelTransform::ModelTransform(const ModelTransform& obj): Component(TRANSFORM_COMPONENT)
 	{
 		(*this) = obj;
-		setTransform();
+		updateAll();
 	}
 
 	ModelTransform::ModelTransform(const Vec3f& translate, const Quaternionf& rotation, const Vec3f& scale, ModelTransform* ref):  p_ref(ref), Component(TRANSFORM_COMPONENT)
@@ -41,7 +41,7 @@ namespace Etoile
 		setScale(scale);
 		setTranslation(translate);
 		setRotation(rotation);
-		setTransform();
+		updateAll();
 	}
 
 	void ModelTransform::set(const Vec3f& translate, const Quaternionf& rotation, const Vec3f& scale, ModelTransform* ref)
@@ -59,6 +59,7 @@ namespace Etoile
 			setTranslation(translate);
 			setRotation(rotation);
 		}
+		updateAll();
 	}
 
 	ModelTransform& ModelTransform::operator=(const ModelTransform& obj)
@@ -68,6 +69,7 @@ namespace Etoile
 		setTranslation(obj.getTranslation());
 		setRotation(obj.getRotation());
 		setReferenceObject(obj.getReferenceObject());
+		updateAll();
 		return *this;
 	}
 
@@ -111,26 +113,6 @@ namespace Etoile
 		return model;
 	}
 
-
-	Quaternionf ModelTransform::getOrientation()
-	{
-		if(p_ref != NULL)
-		{
-			return p_ref->getOrientation() * m_rotation;
-		}
-		return m_rotation;
-	}
-
-	Vec3f ModelTransform::getPosition()
-	{
-		if(p_ref != NULL)
-		{
-			return p_ref->getPosition() + p_ref->getOrientation() * (m_translation.scale(p_ref->getScale()));
-		}
-		return m_translation;
-	}
-
-
 	void ModelTransform::setOrientation(const Quaternionf& orientation)
 	{
 		if(p_ref != NULL)
@@ -156,5 +138,46 @@ namespace Etoile
 		{
 			setTranslation(pos);
 		}
+	}
+
+	Quaternionf ModelTransform::getOrientation()
+	{
+		return m_orientation;
+	}
+
+	Vec3f ModelTransform::getPosition()
+	{
+		return m_position;
+	}
+
+	void ModelTransform::updateOrientation()
+	{
+		if(p_ref != NULL)
+		{
+			m_orientation = p_ref->getOrientation() * m_rotation;
+		}
+		else
+		{
+			m_orientation = m_rotation;
+		}
+	}
+
+	void ModelTransform::updatePosition()
+	{
+		if(p_ref != NULL)
+		{
+			m_position = p_ref->getPosition() + p_ref->getOrientation() * (m_translation.scale(p_ref->getScale()));
+		}
+		else
+		{
+			m_position = m_translation;
+		}
+	}
+
+	void ModelTransform::updateAll()
+	{
+		updateOrientation();
+		updatePosition();
+		updateTransform();
 	}
 }

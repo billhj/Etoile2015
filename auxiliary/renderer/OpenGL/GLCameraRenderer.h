@@ -42,9 +42,6 @@ namespace Etoile
 			Vec3f nbr = f->m_nbr;
 			Vec3f ntl = f->m_ntl;
 			Vec3f ntr = f->m_ntr;
-
-
-
 		}
 
 

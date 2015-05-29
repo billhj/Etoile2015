@@ -103,6 +103,7 @@ namespace Etoile
 	{
 
 		p_camera->getTransform()->translate(p_camera->getViewDirection() * delta);
+		p_camera->getTransform()->updateAll();
 
 	}
 
@@ -126,6 +127,7 @@ namespace Etoile
 			}
 		}
 		p_camera->getTransform()->translate(p_camera->getTransform()->getOrientation().rotate(trans));
+		p_camera->getTransform()->updateAll();
 
 	}
 
@@ -152,6 +154,7 @@ namespace Etoile
 		Quaternionf invRot(invAxis, rot.angle());
 		Vec3f trans = invRot.rotate(cameraPos-pivot);
 		p_camera->getTransform()->setPosition(pivot + trans);
+		p_camera->getTransform()->updateAll();
 	}
 
 	void TrackingBallCameraManipulator::setSpinActive(bool active)

@@ -30,6 +30,7 @@ namespace Etoile
 		reset();
 		p_transform->setPosition(position);
 		p_transform->setOrientation(orientation);
+		p_transform->updateAll();
 		m_pivot = getViewDirection() * 2 + p_transform->getPosition();
 	}
 
@@ -93,6 +94,7 @@ namespace Etoile
 	void Camera::setPosition(const Vec3f& position)
 	{
 		p_transform->setPosition(position);
+		p_transform->updateAll();
 	}
 
 	Vec3f Camera::getPosition()
@@ -104,6 +106,7 @@ namespace Etoile
 	void Camera::setOrientation(const Quaternionf& q)
 	{
 		p_transform->setOrientation(q);
+		p_transform->updateAll();
 	}
 
 	Quaternionf Camera::getOrientation()
@@ -171,6 +174,7 @@ namespace Etoile
 		Quaternionf q;
 		q.setFromRotatedBasis(xAxis, xAxis.cross3(direction), -direction);
 		p_transform->setOrientation(q);
+		p_transform->updateAll();
 	}
 
 	float Camera::sceneRadius()

@@ -32,6 +32,7 @@ namespace Etoile
 		void setRotation(const Quaternionf& rotation);
 		Quaternionf getRotation() const {return m_rotation;}
 		void rotate(const Quaternionf& rotation);
+		Matrix4f getLocalModelMatrix(){return m_modelTransform_local;}
 		Matrix4f getModelMatrix();
 		Matrix4f getGLModelMatrix();
 		void setTransform(const Vec3f& scale, const Quaternionf& rotate, const Vec3f& translate)
@@ -48,11 +49,23 @@ namespace Etoile
 
 		void updateTransform()
 		{
-			m_modelTransform = Matrix4f().makeTranslation(m_translation) * Matrix4f().makeAxisRotation(m_rotation.axis(), m_rotation.angle()) * Matrix4f().makeScale(m_scale);
+			m_modelTransform_local = Matrix4f().makeTranslation(m_translation) * Matrix4f().makeAxisRotation(m_rotation.axis(), m_rotation.angle()) * Matrix4f().makeScale(m_scale);
+			if(p_ref != NULL)
+			{
+				m_modelTransform = p_ref->getModelMatrix() * m_modelTransform_local;
+			}
+			else
+			{
+				m_modelTransform = m_modelTransform_local;
+			}
 		}
 
 		Quaternionf getOrientation();
 		Vec3f getPosition();
+
+		void updateOrientation();
+		void updatePosition();
+		void updateAll();
 
 		void setOrientation(const Quaternionf& orientation);
 		void setPosition(const Vec3f& pos);
@@ -61,7 +74,10 @@ namespace Etoile
 		Vec3f m_translation;  //local
 		Quaternionf m_rotation;  //local
 		Matrix4f m_modelTransform;
+		Matrix4f m_modelTransform_local;
 		ModelTransform* p_ref;
+		Quaternionf m_orientation;
+		Vec3f m_position;
 	};
 
 }
