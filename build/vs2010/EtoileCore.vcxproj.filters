@@ -211,7 +211,9 @@
     <ClInclude Include="..\..\core\util\StdRedirector.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\core\geometry\SimpleMesh.h" />
+    <ClInclude Include="..\..\core\geometry\SimpleMesh.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">

@@ -15,7 +15,9 @@ namespace Etoile
 {
 
 	typedef Vec3f VertexPosition;
+	typedef Vec3f VertexPosition;
 	typedef Vec3f VertexNormal;
+	typedef Vec3f FaceNormal;
 	typedef Vec3f TextureCoordinate;
 	typedef Vec4f ColorRGBA;
 
@@ -31,10 +33,13 @@ namespace Etoile
 		struct Face
 		{
 			std::vector<Vertex> m_verticesInfo;
+			int m_materialIndex;
+			FaceNormal m_facenormal;
 		};
 	
 		struct Material
 		{
+			std::string m_name;
 			ColorRGBA m_diffuse;
 			ColorRGBA m_specular;
 			ColorRGBA m_ambient;
@@ -49,15 +54,17 @@ namespace Etoile
 
 		struct MatGroup
 		{
-			std::vector<Face> m_faces;
+			std::vector<int> m_faceIndex;
 			int m_materialIndex;
 		};
 
-
+		int m_facecount;
 		std::vector<VertexPosition> m_positions;
 		std::vector<VertexNormal> m_normals;
 		std::vector<TextureCoordinate> m_texcoords;
-		std::vector<MatGroup> m_groups;
+		std::vector<Face> m_faces;
+		std::vector<MatGroup> m_matgroups;
 		std::vector<Material> m_materials;
+		std::vector<std::vector<int>> m_neighbourfacesIndices;
 	};
 }
