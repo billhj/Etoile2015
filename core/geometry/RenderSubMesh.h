@@ -39,7 +39,6 @@ namespace Etoile
 			m_vdata = sub.m_vdata;
 			m_ndata = sub.m_ndata;
 			m_tdata = sub.m_tdata;
-			m_tcdata = sub.m_tcdata;
 		}
 
 		virtual void release()
@@ -50,7 +49,6 @@ namespace Etoile
 			m_vdata.clear();
 			m_ndata.clear();
 			m_tdata.clear();
-			m_tcdata.clear();
 		}
 
 		void setMaterial(Material& m)
@@ -117,8 +115,7 @@ namespace Etoile
 		std::vector<int> m_normal_index_face;
 		std::vector<int> m_texcoord_index_face;
 		std::vector<Vec3f> m_vdata, m_ndata;
-		std::vector<Vec2f> m_tdata;
-		std::vector<Vec3f> m_tcdata;
+		std::vector<Vec3f> m_tdata;
 		std::string m_name;
 		AxisAlignedBoundingBoxf m_aabb;
 		Material m_material;

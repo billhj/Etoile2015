@@ -242,7 +242,7 @@ namespace Etoile{
 
 						elemtexcoord->QueryDoubleAttribute("u", &u);
 						elemtexcoord->QueryDoubleAttribute("v", &v);
-						Vec2f uv(u,v);
+						Vec3f uv(u,v,0);
 						submesh->m_tdata[n] = uv;
 						n++;
 

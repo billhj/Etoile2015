@@ -574,7 +574,7 @@ namespace Etoile
 
 				if ( !stream.fail() ){
 
-					_texcoords.push_back(Vec2f(u, v));
+					_texcoords.push_back(Vec3f(u, v, 0));
 
 				}else{
 
@@ -711,7 +711,7 @@ namespace Etoile
 				}
 				else
 				{
-					submesh->m_tdata.push_back(Vec2f());
+					submesh->m_tdata.push_back(Vec3f());
 				}
 				submesh->addTextureCoordinateIndex(submesh->m_tdata.size() - 1);
 			}

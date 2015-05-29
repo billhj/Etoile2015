@@ -131,10 +131,10 @@ namespace Etoile
 	{
 		VBORenderSubMesh* vbosubmesh = dynamic_cast<VBORenderSubMesh*>(submesh);
 
-		if(submesh->m_tcdata.size() < 1 || submesh->m_vdata.size() < 1) return;
+		if(submesh->m_tdata.size() < 1 || submesh->m_vdata.size() < 1) return;
 
 		if(NULL == vbosubmesh) return;
-		vbosubmesh->p_texcoordColorVBO->use();
+		vbosubmesh->p_texcoordVBO->use();
 		glColorPointer(3, GL_FLOAT, 0, 0);
 		vbosubmesh->p_vertexVBO->use();
 		glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -155,7 +155,7 @@ namespace Etoile
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 
-		vbosubmesh->p_texcoordColorVBO->unUse();
+		vbosubmesh->p_texcoordVBO->unUse();
 		vbosubmesh->p_vertexVBO->unUse();
 
 		printOpenGLError();

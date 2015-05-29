@@ -67,7 +67,7 @@ namespace Etoile
 		{
 			const std::vector<Vec3f>& vertices = submesh->m_vdata;
 			const std::vector<Vec3f>& normals = submesh->m_ndata;
-			const std::vector<Vec2f>& texs = submesh->m_tdata;
+			const std::vector<Vec3f>& texs = submesh->m_tdata;
 			const std::vector<int>& faceIndices = submesh->m_vertices_index_face;
 
 			Material& material = submesh->getMaterial();
@@ -83,7 +83,7 @@ namespace Etoile
 			glBegin(GL_TRIANGLES);
 			for(unsigned int i = 0; i < faceIndices.size(); ++i)
 			{
-				glTexCoord2fv( &texs[faceIndices[i]][0] );
+				glTexCoord3fv( &texs[faceIndices[i]][0] );
 				glNormal3fv( &normals[faceIndices[i]][0] );
 				glVertex3fv( &vertices[faceIndices[i]][0] );
 			}
@@ -123,7 +123,7 @@ namespace Etoile
 		void drawSubMeshTexcoord(RenderSubMesh* submesh)
 		{
 			const std::vector<Vec3f>& vertices = submesh->m_vdata;
-			const std::vector<Vec3f>& texs = submesh->m_tcdata;
+			const std::vector<Vec3f>& texs = submesh->m_tdata;
 
 			if(texs.size() < 1 || vertices.size() < 1) return;
 

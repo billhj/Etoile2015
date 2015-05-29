@@ -46,7 +46,7 @@ namespace Etoile
 	void ImmediateMeshRenderer::drawSubMeshTexcoord(RenderSubMesh* submesh)
 	{
 		const std::vector<Vec3f>& vertices = submesh->m_vdata;
-		const std::vector<Vec3f>& texs = submesh->m_tcdata;
+		const std::vector<Vec3f>& texs = submesh->m_tdata;
 
 		if(texs.size() < 1 || vertices.size() < 1) return;
 

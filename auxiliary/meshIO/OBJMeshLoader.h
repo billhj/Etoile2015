@@ -76,7 +76,7 @@ namespace Etoile
 		std::vector<std::vector<int> > _neighbourfacesIndices;
 		std::vector<Vec3f> _vertices;
 		std::vector<Vec3f> _normals;
-		std::vector<Vec2f> _texcoords;
+		std::vector<Vec3f> _texcoords;
 		double _smoothThreshold;
 
 	};

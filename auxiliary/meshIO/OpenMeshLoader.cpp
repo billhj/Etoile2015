@@ -165,7 +165,7 @@ namespace Etoile
 
 				submesh->m_ndata.push_back(Vec3f(nn.data()[0], nn.data()[1], nn.data()[2]));
 
-				submesh->m_tdata.push_back(Vec2f(tt.data()[0], tt.data()[1]));
+				submesh->m_tdata.push_back(Vec3f(tt.data()[0], tt.data()[1], 0));
 
 				submesh->m_vdata.push_back(Vec3f(pp.data()[0], pp.data()[1], pp.data()[2]));
 

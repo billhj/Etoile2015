@@ -33,13 +33,13 @@ namespace Etoile
 		m_vdata.push_back(Vec3f(  1.0,  1.0, -1));
 		m_vdata.push_back(Vec3f( -1.0, -1.0, -1));
 
-		m_tdata.push_back(Vec2f(1.0, 0.0));
-		m_tdata.push_back(Vec2f(0.0, 0.0));
-		m_tdata.push_back(Vec2f(1.0, 1.0));
+		m_tdata.push_back(Vec3f(1.0, 0.0, 0));
+		m_tdata.push_back(Vec3f(0.0, 0.0, 0));
+		m_tdata.push_back(Vec3f(1.0, 1.0, 0));
 
-		m_tdata.push_back(Vec2f(0.0, 1.0));
-		m_tdata.push_back(Vec2f(1.0, 1.0));
-		m_tdata.push_back(Vec2f(0.0, 0.0));
+		m_tdata.push_back(Vec3f(0.0, 1.0, 0));
+		m_tdata.push_back(Vec3f(1.0, 1.0, 0));
+		m_tdata.push_back(Vec3f(0.0, 0.0, 0));
 
 		m_tcdata.push_back(Vec3f(1.0f, 0.0f, 0));
 		m_tcdata.push_back(Vec3f(0.0f, 0.0f, 0));
@@ -74,9 +74,9 @@ namespace Etoile
 		m_vdata.push_back(Vec3f( 1.0, -1.0, 0.0));
 		m_vdata.push_back(Vec3f( 0.0f,  1.0, 0.0));
 
-		m_tdata.push_back(Vec2f(1.0f, 0.0f));
-		m_tdata.push_back(Vec2f(0.0f, 0.0f));
-		m_tdata.push_back(Vec2f(1.0f, 1.0f));
+		m_tdata.push_back(Vec3f(1.0f, 0.0f, 0));
+		m_tdata.push_back(Vec3f(0.0f, 0.0f, 0));
+		m_tdata.push_back(Vec3f(1.0f, 1.0f, 0));
 
 		m_tcdata.push_back(Vec3f(1.0f, 0.0f, 0));
 		m_tcdata.push_back(Vec3f(0.0f, 0.0f, 0));
@@ -103,9 +103,9 @@ namespace Etoile
 		m_vdata.push_back(Vec3f(1.0, 1.0, -1.0));
 		m_vdata.push_back(Vec3f(1.0, 1.0, 1.0));
 
-		m_tdata.push_back(Vec2f(1.0f, 0.0f));
-		m_tdata.push_back(Vec2f(0.0f, 0.0f));
-		m_tdata.push_back(Vec2f(1.0f, 1.0f));
+		m_tdata.push_back(Vec3f(1.0f, 0.0f, 0));
+		m_tdata.push_back(Vec3f(0.0f, 0.0f, 0));
+		m_tdata.push_back(Vec3f(1.0f, 1.0f, 0));
 
 		m_tcdata.push_back(Vec3f(1.0f, 0.0f, 0));
 		m_tcdata.push_back(Vec3f(0.0f, 0.0f, 0));
@@ -140,13 +140,13 @@ namespace Etoile
 				float z0 = (j + m_line) / (2.0 * m_line);
 				float z1 = (j + m_line + 1.0) / (2.0 * m_line);
 
-				m_tdata.push_back(Vec2f(1, 0));
-				m_tdata.push_back(Vec2f(0, 0));
-				m_tdata.push_back(Vec2f(1, 1));
+				m_tdata.push_back(Vec3f(1, 0, 0));
+				m_tdata.push_back(Vec3f(0, 0, 0));
+				m_tdata.push_back(Vec3f(1, 1, 0));
 
-				m_tdata.push_back(Vec2f(0, 1));
-				m_tdata.push_back(Vec2f(1, 1));
-				m_tdata.push_back(Vec2f(0, 0));
+				m_tdata.push_back(Vec3f(0, 1, 0));
+				m_tdata.push_back(Vec3f(1, 1, 0));
+				m_tdata.push_back(Vec3f(0, 0, 0));
 
 				m_tcdata.push_back(Vec3f(1.0f, 0.0f, 0));
 				m_tcdata.push_back(Vec3f(0.0f, 0.0f, 0));
@@ -156,13 +156,13 @@ namespace Etoile
 				m_tcdata.push_back(Vec3f(1.0f, 1.0f, 0));
 				m_tcdata.push_back(Vec3f(0.0f, 0.0f, 0));
 
-				/*m_tdata.push_back(Vec2f(x1, z0));
-				m_tdata.push_back(Vec2f(x0, z0));
-				m_tdata.push_back(Vec2f(x1, z1));
+				/*m_tdata.push_back(Vec3f(x1, z0));
+				m_tdata.push_back(Vec3f(x0, z0));
+				m_tdata.push_back(Vec3f(x1, z1));
 
-				m_tdata.push_back(Vec2f(x0, z1));
-				m_tdata.push_back(Vec2f(x1, z1));
-				m_tdata.push_back(Vec2f(x0, z0));*/
+				m_tdata.push_back(Vec3f(x0, z1));
+				m_tdata.push_back(Vec3f(x1, z1));
+				m_tdata.push_back(Vec3f(x0, z0));*/
 
 				m_ndata.push_back(Vec3f( 0.0, 1.0, 0));
 				m_ndata.push_back(Vec3f( 0.0, 1.0, 0));

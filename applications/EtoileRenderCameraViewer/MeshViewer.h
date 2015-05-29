@@ -69,7 +69,6 @@ public:
 		submesh->m_vdata = triangle->m_vdata;
 		submesh->m_tdata = triangle->m_tdata;
 		submesh->m_ndata = triangle->m_ndata;
-		submesh->m_tcdata = triangle->m_tcdata;
 		submesh->m_vertices_index_face = triangle->m_vertices_index_face;
 
 		renderer = new ImmediateMeshRenderer("triangle");
