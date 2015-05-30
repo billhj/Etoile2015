@@ -302,5 +302,8 @@
     <ClCompile Include="..\..\core\Image\TGAImageLoader.cpp">
       <Filter>image</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\core\geometry\SimpleMesh.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

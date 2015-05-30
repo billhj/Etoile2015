@@ -98,6 +98,7 @@
     <ClCompile Include="..\..\core\geometry\RenderManager.cpp" />
     <ClCompile Include="..\..\core\geometry\Scene.cpp" />
     <ClCompile Include="..\..\core\geometry\SceneManager.cpp" />
+    <ClCompile Include="..\..\core\geometry\SimpleMesh.cpp" />
     <ClCompile Include="..\..\core\geometry\TextureManager.cpp" />
     <ClCompile Include="..\..\core\geometry\TrackingBallCameraManipulator.cpp" />
     <ClCompile Include="..\..\core\Image\PFMImageLoader.cpp" />

@@ -13,6 +13,7 @@
 
 namespace Etoile
 {
+
 	enum TextureMaterial
 	{
 		DIFFUSE_MAP,
@@ -23,7 +24,6 @@ namespace Etoile
 	};
 
 	typedef Vec3f VertexPosition;
-	typedef Vec3f VertexPosition;
 	typedef Vec3f VertexNormal;
 	typedef Vec3f FaceNormal;
 	typedef Vec3f TextureCoordinate;
@@ -31,7 +31,6 @@ namespace Etoile
 
 	struct SimpleMesh
 	{
-
 		struct Vertex
 		{
 			int m_posIndex;
@@ -42,11 +41,11 @@ namespace Etoile
 		struct Face
 		{
 			std::vector<Vertex> m_verticesInfo;
-			int m_materialIndex;
 			FaceNormal m_facenormal;
 			int m_groupIndex;
+			int m_materialIndex;
 		};
-	
+
 		struct Material
 		{
 			std::string m_name;
@@ -60,9 +59,11 @@ namespace Etoile
 
 		struct Group
 		{
-			std::vector<int> m_faceIndex;
-			int m_materialIndex;
+			std::string m_groupName;
 			int m_groupIndex;
+			int m_materialIndex;
+			std::vector<int> m_faceIndices;
+			std::vector<int> m_vertexIndicesOfFaces;
 		};
 
 		int m_facecount;
@@ -73,5 +74,16 @@ namespace Etoile
 		std::vector<Group> m_groups;
 		std::vector<Material> m_materials;
 		std::vector<std::vector<int>> m_neighbourfacesIndices;
+
+		static Vec3f calculateNormal(Vec3f v0, Vec3f v1, Vec3f v2);
+		static void regroupVertexAttributes(SimpleMesh* mesh);
+		static void triangulate(SimpleMesh* mesh);
+		static void createConnectivities(SimpleMesh* mesh);
+		static void calculateFaceNormals(SimpleMesh* mesh);
+		static void computeVertexNormals(SimpleMesh* mesh);
+		static void meshToUnitCube(SimpleMesh* mesh);
+		static void buildVertexIndices(SimpleMesh* mesh);
 	};
+
+	
 }

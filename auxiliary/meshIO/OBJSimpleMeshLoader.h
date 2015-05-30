@@ -20,8 +20,6 @@
 
 namespace Etoile
 {
-
-
 	class OBJSimpleMeshLoader
 	{
 	public:
@@ -31,25 +29,24 @@ namespace Etoile
 
 	protected:
 
+		SimpleMesh* read(std::istream& in);
 		void handle_mtllib(std::stringstream& stream, SimpleMesh* mesh);
 		int readMaterial(std::fstream& in, SimpleMesh* mesh);
 		std::string extractSubString(const std::string& input, int first, int last);
 
 		SimpleMesh::Face handle_face(const std::string& lineString);
+		void trimString( std::string& _string) ;
 
-		
-
-		SimpleMesh* read(std::istream& in);
 
 		void regroupVertexAttributes(SimpleMesh* mesh);
 		void triangulate(SimpleMesh* mesh);
 		void createConnectivities(SimpleMesh* mesh);
 		void calculateFaceNormals(SimpleMesh* mesh);
 		void computeVertexNormals(SimpleMesh* mesh);
-
 		void meshToUnitCube(SimpleMesh* mesh);
+		void buildVertexIndices(SimpleMesh* mesh);
 
-		void trimString( std::string& _string) ;
+		
 
 		std::string _path;
 
