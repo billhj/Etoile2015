@@ -63,6 +63,7 @@ namespace Etoile
 
 		std::string matname;
 		int materialIndex = -1;
+		int groupIndex = -1;
 
 		int lineIndex = 0;
 
@@ -107,17 +108,20 @@ namespace Etoile
 				}else{
 					materialIndex = 0;
 				}
+				mesh->m_groups[groupIndex].m_materialIndex = materialIndex;
 			}
 			//PB is the files for materials, using usemtl or not, the obj file is not uniform
 			else if ( keyWrd == "g")
 			{
-				/*std::string objectName;
+				std::string objectName;
 				stream >> objectName;
 				materialIndex = -1;
-				if(!objectName.empionty())
+				if(!stream.fail())
 				{
-				std::cout << "found object: " << objectName << std::endl;
-				}*/
+					groupIndex = mesh->m_groups.size();
+					mesh->m_groups.push_back(SimpleMesh::Group());
+					mesh->m_groups[groupIndex].m_groupIndex = groupIndex;
+				}
 			}
 
 			// vertex
@@ -184,7 +188,7 @@ namespace Etoile
 				std::getline(stream,faceLine);
 				SimpleMesh::Face face = handle_face(faceLine);
 				face.m_materialIndex = materialIndex;
-				mesh->m_matgroups[materialIndex].m_faceIndex.push_back(mesh->m_faces.size());
+				mesh->m_groups[groupIndex].m_faceIndex.push_back(mesh->m_faces.size());
 				mesh->m_faces.push_back(face);
 				//            if( (_faces.size() + 1 ) % 10000 == 0)
 				//                std::cout << "Face count : " <<_faces.size()<<std::endl;
@@ -259,8 +263,6 @@ namespace Etoile
 		
 		m_materialNameMap["empty"] = 0;
 		mesh->m_materials.push_back(SimpleMesh::Material());
-		mesh->m_matgroups.push_back(SimpleMesh::MatGroup());
-		mesh->m_matgroups.back().m_materialIndex = 0;
 		SimpleMesh::Material* currentMat = &(mesh->m_materials.back());
 		currentMat->m_name = "empty";
 		int nb_material = 1;
@@ -300,9 +302,6 @@ namespace Etoile
 				mesh->m_materials.push_back(SimpleMesh::Material());
 				SimpleMesh::Material* currentMat = &(mesh->m_materials.back());
 				currentMat->m_name = key;
-
-				mesh->m_matgroups.push_back(SimpleMesh::MatGroup());
-				mesh->m_matgroups.back().m_materialIndex = nb_material;
 				nb_material++;
 			}
 
@@ -375,7 +374,7 @@ namespace Etoile
 				if(!textureName.empty())
 				{
 					std::string s = _path + textureName;
-					currentMat->m_diffuseTextureFilePath = s;
+					currentMat->m_maps[DIFFUSE_MAP] = s;
 				}
 			}
 			else if (keyWrd == "map_Ks") // map images
@@ -386,7 +385,7 @@ namespace Etoile
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					currentMat->m_specularTextureFilePath = s;
+					currentMat->m_maps[SPECULAR_MAP] = s;
 				}
 			}
 			else if (keyWrd == "map_bump") // map images
@@ -397,7 +396,7 @@ namespace Etoile
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					currentMat->m_bumpTextureFilePath = s;
+					currentMat->m_maps[BUMP_MAP] = s;
 				}
 			}
 			else if (keyWrd == "Tr") // transparency value

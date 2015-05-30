@@ -13,6 +13,14 @@
 
 namespace Etoile
 {
+	enum TextureMaterial
+	{
+		DIFFUSE_MAP,
+		SPECULAR_MAP,
+		AMBIENT_MAP,
+		BUMP_MAP,
+		DISPLACEMENT_MAP,
+	};
 
 	typedef Vec3f VertexPosition;
 	typedef Vec3f VertexPosition;
@@ -23,6 +31,7 @@ namespace Etoile
 
 	struct SimpleMesh
 	{
+
 		struct Vertex
 		{
 			int m_posIndex;
@@ -35,6 +44,7 @@ namespace Etoile
 			std::vector<Vertex> m_verticesInfo;
 			int m_materialIndex;
 			FaceNormal m_facenormal;
+			int m_groupIndex;
 		};
 	
 		struct Material
@@ -45,17 +55,14 @@ namespace Etoile
 			ColorRGBA m_ambient;
 			float m_shininess;
 			float m_transparency;
-			std::string m_diffuseTextureFilePath;
-			std::string m_specularTextureFilePath;
-			std::string m_ambientTextureFilePath;
-			std::string m_displacementTextureFilePath;
-			std::string m_bumpTextureFilePath;
+			std::vector<std::string> m_maps;
 		};
 
-		struct MatGroup
+		struct Group
 		{
 			std::vector<int> m_faceIndex;
 			int m_materialIndex;
+			int m_groupIndex;
 		};
 
 		int m_facecount;
@@ -63,7 +70,7 @@ namespace Etoile
 		std::vector<VertexNormal> m_normals;
 		std::vector<TextureCoordinate> m_texcoords;
 		std::vector<Face> m_faces;
-		std::vector<MatGroup> m_matgroups;
+		std::vector<Group> m_groups;
 		std::vector<Material> m_materials;
 		std::vector<std::vector<int>> m_neighbourfacesIndices;
 	};
