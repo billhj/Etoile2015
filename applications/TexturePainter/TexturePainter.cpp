@@ -63,7 +63,7 @@ void TexturePainter::pipetteColorPicked()
 #include "renderer/OpenGL/VBOMeshRenderer.h"
 #include "geometry/RenderManager.h"
 #include "geometry/SceneManager.h"
-#include "QTUI/QTTextureLoader.h"
+//#include "QTUI/QTTextureLoader.h"
 
 
 void TexturePainter::addMesh()
@@ -72,8 +72,8 @@ void TexturePainter::addMesh()
 	//QFile file(name);
 	if(name.isEmpty()) return;
 	OBJMeshLoader loader;
-	QTTextureLoader qtextureLoader;
-	loader.setTextureLoader(&qtextureLoader);
+	/*QTTextureLoader qtextureLoader;
+	loader.setTextureLoader(&qtextureLoader);*/
 
 	RenderMesh* mesh = new RenderMesh(name.toStdString());
 	loader.loadFromFile(name.toStdString(), mesh);

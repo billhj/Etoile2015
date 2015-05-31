@@ -68,7 +68,8 @@ namespace Etoile
 			int m_groupIndex;
 			int m_materialIndex;
 			std::vector<int> m_faceIndices;
-			std::vector<int> m_vertexIndicesOfFaces;
+			int m_offset_vertexIndices;
+			int m_count_vertexIndices;
 		};
 
 		int m_facecount;
@@ -78,7 +79,8 @@ namespace Etoile
 		std::vector<Face> m_faces;
 		std::vector<Group> m_groups;
 		std::vector<Material> m_materials;
-		std::vector<std::vector<int>> m_neighbourfacesIndices;
+		std::vector<std::vector<int>> m_neighbourfacesIndices;;
+		std::vector<int> m_vertexIndices;
 
 		static Vec3f calculateNormal(Vec3f v0, Vec3f v1, Vec3f v2);
 		static void regroupVertexAttributes(SimpleMesh* mesh);

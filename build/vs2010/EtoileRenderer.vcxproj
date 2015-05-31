@@ -26,10 +26,12 @@
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLLightRenderer.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLMeshRenderPass.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLMeshRenderer.h" />
+    <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLSimpleMeshRenderer.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLSLGpuProgram.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLTexture.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLTexture2D.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLTextureArray.h" />
+    <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLTextureCreator.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLTextureCube.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\ImmediateMeshRenderer.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\IndexVBO.h" />
@@ -55,6 +57,7 @@
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\GeometryShader.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\glfunctions.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\glInfo.cpp" />
+    <ClCompile Include="..\..\auxiliary\renderer\OpenGL\GLSimpleMeshRenderer.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\GLSLGpuProgram.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\GLTexture.cpp" />
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\GLTexture2D.cpp" />

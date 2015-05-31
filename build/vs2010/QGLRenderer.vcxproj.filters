@@ -163,9 +163,6 @@
     <ClInclude Include="GeneratedFiles\ui_QTSceneTreeWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\auxiliary\QTUI\QTTextureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_QTToolsWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>

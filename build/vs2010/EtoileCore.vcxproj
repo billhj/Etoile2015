@@ -47,6 +47,7 @@
     <ClInclude Include="..\..\core\geometry\VertexBoneAssignment.h" />
     <ClInclude Include="..\..\core\Image\Image.h" />
     <ClInclude Include="..\..\core\Image\ImageLoader.h" />
+    <ClInclude Include="..\..\core\Image\ImageManager.h" />
     <ClInclude Include="..\..\core\Image\PFMImageLoader.h" />
     <ClInclude Include="..\..\core\Image\TGAImageLoader.h" />
     <ClInclude Include="..\..\core\math\ExponentialMap.h" />

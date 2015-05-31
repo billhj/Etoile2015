@@ -15,6 +15,15 @@ namespace Etoile
 {
 	class Texture
 	{
+	public: 
+		enum TextureType
+		{
+			TEXTURE_2D,
+			TEXTURE_3D,
+			TEXTURE_ARRAY,
+			TEXTURE_CUBE
+		};
+
 	public:
 		Texture(): m_width(0), m_height(0), m_layer(0), m_isCreated(false)
 		{
@@ -73,12 +82,14 @@ namespace Etoile
 		virtual void draw(int w, int h) = 0;
 		virtual void draw() = 0;
 		bool isCreated(){return m_isCreated;}
+		TextureType type(){return m_type;}
 	protected:
 		int m_width, m_height, m_layer;
 		bool m_mipmaped;
 		int m_index;
 		std::string m_filepath;
 		bool m_isCreated;
+		TextureType m_type;
 	};
 
 

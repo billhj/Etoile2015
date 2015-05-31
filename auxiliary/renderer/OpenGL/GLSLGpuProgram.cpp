@@ -473,13 +473,13 @@ namespace Etoile
 			_pShader->bind();
 			printOpenGLError();
 			size_t nComponentPerVertex = 3;
-			size_t nTextureCoordComponentPerVertex = 2;
+			size_t nTextureCoordComponentPerVertex = 3;
 
 			GLint locationTex = getAttributLocation("In_TextureCoord");
 			if(locationTex != -1)
 			{
 				texCoord->use();
-				glVertexAttribPointer( locationTex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+				glVertexAttribPointer( locationTex, 3, GL_FLOAT, GL_FALSE, 0, 0);
 				printOpenGLError();
 				glEnableVertexAttribArray(locationTex);
 			}

@@ -32,7 +32,7 @@ namespace Etoile
 		void run() 
 		{
 			
-			OBJMeshLoader loader;
+			/*OBJMeshLoader loader;
 			QTTextureLoader qtextureLoader;
 			loader.setTextureLoader(&qtextureLoader);
 
@@ -44,7 +44,7 @@ namespace Etoile
 
 			Entity* entity = new Entity(m_filepath);
 			entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
-			RenderManager::getInstance()->addIntoObjectRendererList(renderer);
+			RenderManager::getInstance()->addIntoObjectRendererList(renderer);*/
 
 			emit meshReady();
 		}

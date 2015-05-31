@@ -24,10 +24,12 @@ namespace Etoile
 	GLTextureArray::GLTextureArray(): GLTexture()
 	{
 		printOpenGLError();
+		m_type = TEXTURE_ARRAY;
 	}
 
 	GLTextureArray::GLTextureArray(GLuint id): GLTexture(id)
 	{
+		m_type = TEXTURE_ARRAY;
 	}
 
 	bool GLTextureArray::create( int iWidth, int iHeight, int iLayer, GLenum internalFormat, GLenum pixeldataformat, GLenum type, float* data, bool bCreateMipMap)

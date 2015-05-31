@@ -214,6 +214,9 @@
     <ClInclude Include="..\..\core\geometry\SimpleMesh.h">
       <Filter>geometry</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\Image\ImageManager.h">
+      <Filter>image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">

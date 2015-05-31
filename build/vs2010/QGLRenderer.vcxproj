@@ -90,7 +90,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\auxiliary\QTUI\QManipulatorEventManager.h" />
     <ClInclude Include="..\..\auxiliary\QTUI\QManipulatorEventPerformer.h" />
-    <ClInclude Include="..\..\auxiliary\QTUI\QTTextureLoader.h" />
     <ClInclude Include="..\..\auxiliary\QTUI\TrackingBallQEventPerformer.h" />
     <ClInclude Include="GeneratedFiles\ui_QTToolsWidget.h" />
     <CustomBuild Include="..\..\auxiliary\QTUI\QTToolsWidget.h">

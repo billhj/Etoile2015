@@ -72,7 +72,7 @@ namespace Etoile
 		}
 
 		vbosubmesh->p_texcoordVBO->use();
-		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		glTexCoordPointer(3, GL_FLOAT, 0, 0);
 		vbosubmesh->p_normalVBO->use();
 		glNormalPointer(GL_FLOAT, 0, 0);
 		vbosubmesh->p_vertexVBO->use();
@@ -183,7 +183,7 @@ namespace Etoile
 	VBO* texCoordVBO = new VBO(sizeTextureCord * 2, &(submesh->getTextureCoords()[0][0]), usage);
 	info->m_texCoordVBO._pVBO = texCoordVBO;
 	info->m_texCoordVBO._attributeName = "In_TextureCoord";
-	info->m_texCoordVBO._numberComponents = 2;
+	info->m_texCoordVBO._numberComponents = 3;
 	info->m_texCoordVBO._primitive = GL_TRIANGLES;
 
 	VBO* vertexVBO = new VBO(sizeComponent * 3, &(submesh->getVertices()[0][0]), usage);
@@ -243,7 +243,7 @@ namespace Etoile
 			}
 
 			vbosubmesh->p_texcoordVBO->use();
-			glTexCoordPointer(2, GL_FLOAT, 0, 0);
+			glTexCoordPointer(3, GL_FLOAT, 0, 0);
 			vbosubmesh->p_normalVBO->use();
 			glNormalPointer(GL_FLOAT, 0, 0);
 			vbosubmesh->p_vertexVBO->use();

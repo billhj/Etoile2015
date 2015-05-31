@@ -200,20 +200,22 @@ namespace Etoile
 
 	void SimpleMesh::buildVertexIndices(SimpleMesh* mesh)
 	{
+		mesh->m_vertexIndices.clear();
+
 		for(unsigned int i = 0; i < mesh->m_groups.size(); ++i)
 		{
-			mesh->m_groups[i].m_vertexIndicesOfFaces.clear();
-		}
-
-		for(unsigned int i = 0; i < mesh->m_faces.size(); ++i)
-		{
-			SimpleMesh::Face& face = mesh->m_faces[i];
-			for(unsigned int j = 0; j < face.m_verticesInfo.size(); ++j)
+			SimpleMesh::Group& group = mesh->m_groups[i];
+			group.m_offset_vertexIndices = mesh->m_vertexIndices.size();
+			for(unsigned int j = 0; j < group.m_faceIndices.size(); ++j)
 			{
-				SimpleMesh::Vertex& vertex = face.m_verticesInfo[j];
-				mesh->m_groups[face.m_groupIndex].m_vertexIndicesOfFaces.push_back(vertex.m_posIndex);
+				SimpleMesh::Face& face = mesh->m_faces[group.m_faceIndices[j]];
+				for(unsigned int j = 0; j < face.m_verticesInfo.size(); ++j)
+				{
+					SimpleMesh::Vertex& vertex = face.m_verticesInfo[j];
+					mesh->m_vertexIndices.push_back(vertex.m_posIndex);
+				}
 			}
+			group.m_count_vertexIndices = mesh->m_vertexIndices.size() - group.m_offset_vertexIndices;
 		}
-	
 	}
 }

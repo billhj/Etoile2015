@@ -23,12 +23,12 @@ namespace Etoile
 {
 	GLTextureCube::GLTextureCube(): GLTexture()
 	{
-
+		m_type = TEXTURE_CUBE;
 	}
 
 	GLTextureCube::GLTextureCube(GLuint id): GLTexture(id)
 	{
-
+		m_type = TEXTURE_CUBE;
 	}
 	/*
 	bool GLTextureCube::loadTexture(const std::string& filepath, GLenum internalFormat, bool bCreateMipMap)

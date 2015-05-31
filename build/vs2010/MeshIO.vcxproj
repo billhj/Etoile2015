@@ -16,7 +16,6 @@
     <ClInclude Include="..\..\auxiliary\meshIO\OBJMeshLoader.h" />
     <ClInclude Include="..\..\auxiliary\meshIO\OBJSimpleMeshLoader.h" />
     <ClInclude Include="..\..\auxiliary\meshIO\OpenMeshLoader.h" />
-    <ClInclude Include="..\..\auxiliary\meshIO\TextureLoader.h" />
     <ClInclude Include="..\..\auxiliary\meshIO\XMLMeshLoader.h" />
   </ItemGroup>
   <ItemGroup>

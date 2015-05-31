@@ -51,7 +51,7 @@ namespace Etoile
 		size_t sizeComponent = m_vdata.size();
 		size_t sizeTextureCord = m_tdata.size();
 		p_normalVBO = new VBO(sizeComponent * 3, &(m_ndata[0][0]), m_usage);
-		p_texcoordVBO = new VBO(sizeTextureCord * 2, &(m_tdata[0][0]), m_usage);
+		p_texcoordVBO = new VBO(sizeTextureCord * 3, &(m_tdata[0][0]), m_usage);
 		p_vertexVBO = new VBO(sizeComponent * 3, &(m_vdata[0][0]), m_usage);
 	    p_indexVBO = new IndexVBO(m_vertices_index_face.size(), &(m_vertices_index_face[0]), m_usage);
 

@@ -24,8 +24,9 @@
 namespace Etoile
 {
 
-	TextureManager::TextureManager()
+	TextureManager::TextureManager() 
 	{
+		p_creator = NULL;
 	}
 
 	unsigned int TextureManager::addTexture(Texture* t)

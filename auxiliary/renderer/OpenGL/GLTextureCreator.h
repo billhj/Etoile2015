@@ -1,24 +1,24 @@
 /**
 * Copyright(C) 2009-2012                
 * @author Jing HUANG
-* @file QTTextureLoader.h
+* @file GLTextureCreator.h
 * @brief 
 * @date 1/2/2011
 */
 
 #pragma once
 #include "renderer/OpenGL/GLTexture2D.h"
-#include "MeshIO/TextureLoader.h"
-#include "QTUI/ReadImage.h"
+#include "geometry/TextureManager.h"
+#include "Image/ImageManager.h"
 
 namespace Etoile
 {
-	class QTTextureLoader : public TextureLoader
+	class GLTextureCreator : public TextureCreator
 	{
 	protected:
 		Texture* empty;
 	public:
-		QTTextureLoader()
+		GLTextureCreator()
 		{
 			float emptyMap[16] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
 			float checkboard[64] = {0,0,0,0, 1,1,1,1, 0,0,0,0, 1,1,1,1, 
@@ -34,11 +34,12 @@ namespace Etoile
 			empty = t2;
 		}
 
-		~QTTextureLoader(){}
-		virtual Texture* loadFromFile(const std::string& fileName) override
+		~GLTextureCreator(){}
+		virtual Texture* createFromFile(const std::string& fileName) override
 		{
 			Image image;
-			bool b_image = ReadImage::loadImageFromFile(fileName, image);
+			ImageLoader* loader = ImageManager::getInstance()->getCurrentImageLoader();
+			bool b_image = loader->loadImageFromFile(fileName, image);
 			if(b_image != true)
 			{
 				std::cout<<"can not load texture : "<<fileName<<std::endl;

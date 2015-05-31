@@ -23,12 +23,12 @@ namespace Etoile
 {
 	GLTexture2D::GLTexture2D() : GLTexture()
 	{
-
+		m_type = TEXTURE_2D;
 	}
 
 	GLTexture2D::GLTexture2D(GLuint id) : GLTexture(id)
 	{
-
+		m_type = TEXTURE_2D;
 	}
 
 	bool GLTexture2D::create( int iWidth, int iHeight, int iLayer, GLenum internalFormat, GLenum pixeldataformat, GLenum type, float* data, bool bCreateMipMap)

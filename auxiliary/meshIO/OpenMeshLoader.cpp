@@ -245,7 +245,8 @@ namespace Etoile
 				//_materialNameMap[currentMat] = _materials.size() - 1;
 				/*GLTexture2D* t = new GLTexture2D();
 				t->setFilePath(path);*/
-				mat.setDiffuseTexture(_pTextureLoader->loadFromFile(path));
+				if(NULL != TextureManager::getInstance()->getCurrentTextureCreator())
+					mat.setDiffuseTexture(TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(path));
 				index_texture++;
 			}
 
