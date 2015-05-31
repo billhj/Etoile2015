@@ -72,6 +72,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\auxiliary\image\QTImageLoader.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_MeshViewer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -121,6 +122,8 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\auxiliary\image\GeneralImageLoader.h" />
+    <ClInclude Include="..\..\auxiliary\image\QTImageLoader.h" />
     <ClInclude Include="GeneratedFiles\ui_TexturePainter.h" />
     <CustomBuild Include="MeshViewer.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

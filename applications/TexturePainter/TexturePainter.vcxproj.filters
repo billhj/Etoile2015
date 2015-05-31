@@ -59,6 +59,9 @@
     <ClCompile Include="MeshViewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\auxiliary\image\QTImageLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="TexturePainter.h">
@@ -77,6 +80,12 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_TexturePainter.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\image\QTImageLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\image\GeneralImageLoader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

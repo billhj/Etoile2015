@@ -2,6 +2,8 @@
 #include <qlabel.h>
 #include <QFileDialog>
 #include <QSettings>
+#include "renderer/OpenGL/GLTextureCreator.h"
+#include "image/GeneralImageLoader.h"
 
 TexturePainter::TexturePainter(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
@@ -9,6 +11,8 @@ TexturePainter::TexturePainter(QWidget *parent, Qt::WFlags flags)
 	ui.setupUi(this);
 	load();
 	this->showMaximized();
+	ImageManager::getInstance()->setImageLoader(new GeneralImageLoader());
+	TextureManager::getInstance()->setTextureCreator(new GLTextureCreator());
 }
 
 TexturePainter::~TexturePainter()
