@@ -15,11 +15,9 @@
     <ClCompile Include="..\..\auxiliary\QTUI\QManipulatorEventManager.cpp" />
     <ClCompile Include="..\..\auxiliary\QTUI\QTEntityParametersWidget.cpp" />
     <ClCompile Include="..\..\auxiliary\QTUI\QTFileWidget.cpp" />
-    <ClCompile Include="..\..\auxiliary\QTUI\QTImageLoader.cpp" />
     <ClCompile Include="..\..\auxiliary\QTUI\QTIOWidget.cpp" />
     <ClCompile Include="..\..\auxiliary\QTUI\QTSceneTreeWidget.cpp" />
     <ClCompile Include="..\..\auxiliary\QTUI\QTToolsWidget.cpp" />
-    <ClCompile Include="..\..\auxiliary\QTUI\ReadImage.cpp" />
     <ClCompile Include="..\..\auxiliary\QTUI\TrackingBallQEventPerformer.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_QGLRenderWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -92,9 +90,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\auxiliary\QTUI\QManipulatorEventManager.h" />
     <ClInclude Include="..\..\auxiliary\QTUI\QManipulatorEventPerformer.h" />
-    <ClInclude Include="..\..\auxiliary\QTUI\QTImageLoader.h" />
     <ClInclude Include="..\..\auxiliary\QTUI\QTTextureLoader.h" />
-    <ClInclude Include="..\..\auxiliary\QTUI\ReadImage.h" />
     <ClInclude Include="..\..\auxiliary\QTUI\TrackingBallQEventPerformer.h" />
     <ClInclude Include="GeneratedFiles\ui_QTToolsWidget.h" />
     <CustomBuild Include="..\..\auxiliary\QTUI\QTToolsWidget.h">

@@ -17,7 +17,6 @@ namespace Etoile
 	public:
 		std::vector<Vec3f> m_vdata, m_ndata;
 		std::vector<Vec3f> m_tdata;
-		std::vector<Vec3f> m_tcdata;
 		std::vector<int> m_vertices_index_face;
 	};
 
