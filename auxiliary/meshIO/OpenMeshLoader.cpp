@@ -245,8 +245,13 @@ namespace Etoile
 				//_materialNameMap[currentMat] = _materials.size() - 1;
 				/*GLTexture2D* t = new GLTexture2D();
 				t->setFilePath(path);*/
-				if(NULL != TextureManager::getInstance()->getCurrentTextureCreator())
-					mat.setDiffuseTexture(TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(path));
+				try{
+					if(NULL != TextureManager::getInstance()->getCurrentTextureCreator())
+						mat.setDiffuseTexture(TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(path));
+				}catch(exception& e)
+				{
+					std::cerr<<"TextureCreator not defined"<<std::endl;
+				}
 				index_texture++;
 			}
 

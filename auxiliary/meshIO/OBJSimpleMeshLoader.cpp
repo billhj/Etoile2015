@@ -7,6 +7,12 @@
 */
 
 #include "OBJSimpleMeshLoader.h"
+#include <iostream>
+#include <exception>
+#include "Image/ImageManager.h"
+#include "geometry/TextureManager.h"
+#include "geometry/Texture.h"
+
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
 */
@@ -387,6 +393,16 @@ namespace Etoile
 					SimpleMesh::Material& mat = mesh->m_materials[currentMatIndex];
 					mat.m_maps[DIFFUSE_MAP] = s;
 					mat.m_binding[DIFFUSE_MAP] = "DiffuseMap";
+					try
+					{
+						mat.m_images[DIFFUSE_MAP] = Image();
+						ImageManager::getInstance()->getCurrentImageLoader()->loadImageFromFile(s, mat.m_images[DIFFUSE_MAP]);
+						Texture* t = TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(s);
+						mat.m_indicesInRessouce[DIFFUSE_MAP] = t->getTexturePoolIndex();
+					}catch(exception& e)
+					{
+						std::cerr<<"TextureCreator not defined"<<std::endl;
+					}
 				}
 			}
 			else if (keyWrd == "map_Ks") // map images
@@ -400,6 +416,15 @@ namespace Etoile
 					SimpleMesh::Material& mat = mesh->m_materials[currentMatIndex];
 					mat.m_maps[SPECULAR_MAP] = s;
 					mat.m_binding[SPECULAR_MAP] = "SpecularMap";
+					try{
+						mat.m_images[SPECULAR_MAP] = Image();
+						ImageManager::getInstance()->getCurrentImageLoader()->loadImageFromFile(s, mat.m_images[SPECULAR_MAP]);
+						Texture* t = TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(s);
+						mat.m_indicesInRessouce[SPECULAR_MAP] = t->getTexturePoolIndex();
+					}catch(exception& e)
+					{
+						std::cerr<<"TextureCreator not defined"<<std::endl;
+					}
 				}
 			}
 			else if (keyWrd == "map_bump") // map images
@@ -413,6 +438,15 @@ namespace Etoile
 					SimpleMesh::Material& mat = mesh->m_materials[currentMatIndex];
 					mat.m_maps[BUMP_MAP] = s;
 					mat.m_binding[BUMP_MAP] = "BumpMap";
+					try{
+						mat.m_images[BUMP_MAP] = Image();
+						ImageManager::getInstance()->getCurrentImageLoader()->loadImageFromFile(s, mat.m_images[BUMP_MAP]);
+						Texture* t = TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(s);
+						mat.m_indicesInRessouce[BUMP_MAP] = t->getTexturePoolIndex();
+					}catch(exception& e)
+					{
+						std::cerr<<"TextureCreator not defined"<<std::endl;
+					}
 				}
 			}
 			else if (keyWrd == "Tr") // transparency value

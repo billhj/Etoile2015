@@ -31,7 +31,7 @@ namespace Etoile
 		virtual void renderOneFrame();
 		virtual void PostRender();
 
-		virtual void renderTexcoordPicking();
+		virtual void renderTexcoord();
 
 		
 		void updateObjectRendererList(Scene* scene);

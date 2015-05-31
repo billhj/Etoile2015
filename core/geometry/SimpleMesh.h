@@ -11,10 +11,11 @@
 #include <vector>
 #include "Image/Image.h"
 #include "math/MathHead.h"
+#include "Component.h"
 
 namespace Etoile
 {
-
+#define MAXNUMBER_TEXTUREMATERIAL 10
 	enum TextureMaterial
 	{
 		DIFFUSE_MAP,
@@ -30,7 +31,7 @@ namespace Etoile
 	typedef Vec3f TextureCoordinate;
 	typedef Vec4f ColorRGBA;
 
-	struct SimpleMesh
+	struct SimpleMesh : public Component
 	{
 		struct Vertex
 		{
@@ -60,6 +61,17 @@ namespace Etoile
 			std::vector<int> m_indicesInRessouce;
 			std::vector<std::string> m_binding;
 
+			Material()
+			{
+				m_maps.resize(MAXNUMBER_TEXTUREMATERIAL);
+				m_images.resize(MAXNUMBER_TEXTUREMATERIAL);
+				m_indicesInRessouce.resize(MAXNUMBER_TEXTUREMATERIAL);
+				m_binding.resize(MAXNUMBER_TEXTUREMATERIAL);
+				for(unsigned int i = 0 ; i < MAXNUMBER_TEXTUREMATERIAL; ++i)
+				{
+					m_indicesInRessouce[i] = -1;
+				}
+			}
 		};
 
 		struct Group
@@ -71,6 +83,11 @@ namespace Etoile
 			int m_offset_vertexIndices;
 			int m_count_vertexIndices;
 		};
+
+		SimpleMesh() : Component(ComponentType::MESH_COMPONENT)
+		{
+		
+		}
 
 		int m_facecount;
 		std::vector<VertexPosition> m_positions;

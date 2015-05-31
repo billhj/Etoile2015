@@ -8,6 +8,8 @@
 
 #include "OBJMeshLoader.h"
 #include "geometry/TextureManager.h"
+#include <iostream>
+#include <exception>
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
 */
@@ -310,8 +312,15 @@ namespace Etoile
 					std::string s = _path + textureName;
 					/*GLTexture2D* t = new GLTexture2D();
 					t->setFilePath(s);*/
-					if(NULL != TextureManager::getInstance()->getCurrentTextureCreator())
-						mat.setDiffuseTexture(TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(s));
+					try
+					{
+						if(NULL != TextureManager::getInstance()->getCurrentTextureCreator())
+							mat.setDiffuseTexture(TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(s));
+					}catch(exception& e)
+					{
+						std::cerr<<"TextureCreator not defined"<<std::endl;
+					}
+
 				}else
 				{
 					//mat.setDiffuseTexture(_pTextureLoader->loadFromFile("emptyMap"));
@@ -328,8 +337,13 @@ namespace Etoile
 					std::string s = _path + textureName;
 					/*GLTexture2D* t = new GLTexture2D();
 					t->setFilePath(s);*/
-					if(NULL != TextureManager::getInstance()->getCurrentTextureCreator())
-						mat.setSpecularTexture(TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(s));
+					try{
+						if(NULL != TextureManager::getInstance()->getCurrentTextureCreator())
+							mat.setSpecularTexture(TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(s));
+					}catch(exception& e)
+					{
+						std::cerr<<"TextureCreator not defined"<<std::endl;
+					}
 					//_texturePathMap[textureName] = s;
 
 				}else
@@ -351,8 +365,13 @@ namespace Etoile
 					std::string s = _path + textureName;
 					/*GLTexture2D* t = new GLTexture2D();
 					t->setFilePath(s);*/
-					if(NULL != TextureManager::getInstance()->getCurrentTextureCreator())
-						mat.setBumpMap(TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(s));
+					try{
+						if(NULL != TextureManager::getInstance()->getCurrentTextureCreator())
+							mat.setBumpMap(TextureManager::getInstance()->getCurrentTextureCreator()->createFromFile(s));
+					}catch(exception& e)
+					{
+						std::cerr<<"TextureCreator not defined"<<std::endl;
+					}
 					//_texturePathMap[textureName] = s;
 
 				}else

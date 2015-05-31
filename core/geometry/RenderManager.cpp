@@ -58,7 +58,7 @@ namespace Etoile
 		}
 	}
 
-	void RenderManager::renderTexcoordPicking()
+	void RenderManager::renderTexcoord()
 	{
 		for(unsigned int i = 0; i < m_renderObjList.size(); ++i)
 		{

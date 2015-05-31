@@ -8,6 +8,8 @@
 
 #include "GLSimpleMeshRenderer.h"
 #include "glhead.h"
+#include "geometry/TextureManager.h"
+#include "geometry/Texture.h"
 
 namespace Etoile
 {
@@ -46,6 +48,11 @@ namespace Etoile
 #endif
 	}
 
+	void GLSimpleMeshRenderer::draw()
+	{
+		drawSimpleMesh(p_mesh);
+	}
+
 	void useMaterial(SimpleMesh::Material& mat)
 	{
 		glMaterialfv(GL_FRONT, GL_AMBIENT, &mat.m_ambient[0]);
@@ -55,6 +62,11 @@ namespace Etoile
 		//make sure need to use  applying glEnable(GL_POLYGON_STIPPLE);
 		glEnable(GL_POLYGON_STIPPLE);
 		glPolygonStipple(__stippleMask[int(mat.m_transparency * __screenDoorMaskRange)]);
+		int index = mat.m_indicesInRessouce[TextureMaterial::DIFFUSE_MAP];
+		if(index >= 0)
+		{
+			TextureManager::getInstance()->getTextureByIndex(index)->use();
+		}
 	}
 
 	void GLSimpleMeshRenderer::setSimpleMesh(SimpleMesh* mesh)
@@ -121,7 +133,7 @@ namespace Etoile
 		}
 	}
 #else
-	void drawSimpleMesh(SimpleMesh* mesh)
+	void GLSimpleMeshRenderer::drawSimpleMesh(SimpleMesh* mesh)
 	{
 		for(unsigned int i = 0; i < mesh->m_groups.size(); ++i)
 		{

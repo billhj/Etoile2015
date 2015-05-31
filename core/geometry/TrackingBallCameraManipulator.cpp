@@ -60,7 +60,7 @@ namespace Etoile
 		*/
 		//Vec3f d = p1 - p2;
 		//float t = d.length() / (2.0f * TRACKBALLSIZE);
-		const float angle = 2.0 * asin(sqrt(a.length() / p1.length() / p2.length())) / 10;
+		const float angle = 2.0 * asin(sqrt(a.length() / p1.length() / p2.length())) / 20;
 		/*
 		* Avoid problems with out-of-control values...
 		*/

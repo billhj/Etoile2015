@@ -25,9 +25,10 @@ namespace Etoile
 		~GLSimpleMeshRenderer();
 		void setSimpleMesh(SimpleMesh* mesh);
 		void draw();
+		void drawSimpleMesh(SimpleMesh* mesh);
 #ifdef USING_GLEW
 		void setSimpleMesh(SimpleMesh* mesh, GLenum usage = GL_STATIC_DRAW_ARB);
-		void drawSimpleMesh(SimpleMesh* mesh);
+		
 		VBO* p_vertexVBO;
 		VBO* p_normalVBO;
 		VBO* p_texcoordVBO;

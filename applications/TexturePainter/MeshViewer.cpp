@@ -118,7 +118,7 @@ void MeshViewer::texCoordPicking()
 	glDisable(GL_LIGHTING);
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	RenderManager::getInstance()->renderTexcoordPicking();
+	RenderManager::getInstance()->renderTexcoord();
 	//GLfloat pixel[3];
 	Picker::processPickFloat(m_x, m_y, m_pixel);
 	//std::cout<<pixel[0]<<"  "<<pixel[1]<<"  "<<pixel[3]<<std::endl;

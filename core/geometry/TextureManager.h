@@ -7,7 +7,7 @@
 */
 
 #pragma once
-#include "ResourceManager.h"
+#include <vector>
 
 namespace Etoile
 {
