@@ -10,9 +10,29 @@
 #include "glhead.h"
 #include "geometry/TextureManager.h"
 #include "geometry/Texture.h"
+#include "geometry/ModelTransform.h"
+#include "geometry/Entity.h"
 
 namespace Etoile
 {
+	void useTransform(ModelTransform* t)
+	{
+		if(t)
+		{
+			Matrix4f modelM = t->getGLModelMatrix();
+			glPushMatrix();
+			glMultMatrixf(&modelM[0][0]);
+		}
+	}
+
+	void unUseTransform(ModelTransform* t)
+	{
+		if(t)
+		{
+			glPopMatrix();
+		}
+	}
+
 	GLSimpleMeshRenderer::GLSimpleMeshRenderer(const std::string& name) : ObjectRenderer(name), p_mesh(NULL)
 	{
 #ifdef USING_GLEW
@@ -50,7 +70,12 @@ namespace Etoile
 
 	void GLSimpleMeshRenderer::draw()
 	{
+		if(p_mesh == NULL) return;
+		//Matrix4f modelM;
+		ModelTransform* t = this->getEntity()->getTransformation();
+		useTransform(t);
 		drawSimpleMesh(p_mesh);
+		unUseTransform(t);
 	}
 
 	void useMaterial(SimpleMesh::Material& mat)
@@ -62,11 +87,6 @@ namespace Etoile
 		//make sure need to use  applying glEnable(GL_POLYGON_STIPPLE);
 		glEnable(GL_POLYGON_STIPPLE);
 		glPolygonStipple(__stippleMask[int(mat.m_transparency * __screenDoorMaskRange)]);
-		int index = mat.m_indicesInRessouce[TextureMaterial::DIFFUSE_MAP];
-		if(index >= 0)
-		{
-			TextureManager::getInstance()->getTextureByIndex(index)->use();
-		}
 	}
 
 	void GLSimpleMeshRenderer::setSimpleMesh(SimpleMesh* mesh)
@@ -98,39 +118,67 @@ namespace Etoile
 			SimpleMesh::Group& group = mesh->m_groups[i];
 			SimpleMesh::Material& mat = mesh->m_materials[group.m_materialIndex];
 			useMaterial(mat);
-
-			p_texcoordVBO->use();
-			glTexCoordPointer(3, GL_FLOAT, 0, 0);
-			p_normalVBO->use();
-			glNormalPointer(GL_FLOAT, 0, 0);
-			p_vertexVBO->use();
-			glVertexPointer(3, GL_FLOAT, 0, 0);
-
-			printOpenGLError();
-
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glEnableClientState(GL_NORMAL_ARRAY);
-			glEnableClientState(GL_VERTEX_ARRAY);
-
-			printOpenGLError();
-
-			p_indexVBO->use();
-			glDrawElements( GL_TRIANGLES, group.m_count_vertexIndices, GL_UNSIGNED_INT, (GLvoid*)(group.m_offset_vertexIndices));
-			p_indexVBO->unUse();
-
-			printOpenGLError();
-
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			glDisableClientState(GL_NORMAL_ARRAY);
-			glDisableClientState(GL_VERTEX_ARRAY);
-
-
-			p_texcoordVBO->unUse();
-			p_normalVBO->unUse();
-			p_vertexVBO->unUse();
-
-			printOpenGLError();
+			int index = mat.m_indicesInRessouce[TextureMaterial::DIFFUSE_MAP];
+			if(index >= 0)
+			{
+				TextureManager::getInstance()->getTextureByIndex(index)->use();
+			}
+			glBegin(GL_TRIANGLES);
+			for(unsigned int j = 0; j < group.m_faceIndices.size(); ++j)
+			{
+				SimpleMesh::Face& face = mesh->m_faces[j];
+				for(unsigned int k = 0; k < face.m_verticesInfo.size(); ++k)
+				{
+					SimpleMesh::Vertex& v = face.m_verticesInfo[k];
+					glTexCoord3fv(&mesh->m_texcoords[v.m_texcoordIndex][0]);
+					glNormal3fv(&mesh->m_normals[v.m_normalIndex][0]);
+					glVertex3fv(&mesh->m_positions[v.m_posIndex][0]);
+				}
+			}
+			glEnd();
+			if(index >= 0)
+			{
+				TextureManager::getInstance()->getTextureByIndex(index)->unUse();
+			}
 		}
+		/*for(unsigned int i = 0; i < mesh->m_groups.size(); ++i)
+		{
+		SimpleMesh::Group& group = mesh->m_groups[i];
+		SimpleMesh::Material& mat = mesh->m_materials[group.m_materialIndex];
+		useMaterial(mat);
+
+		p_texcoordVBO->use();
+		glTexCoordPointer(3, GL_FLOAT, 0, 0);
+		p_normalVBO->use();
+		glNormalPointer(GL_FLOAT, 0, 0);
+		p_vertexVBO->use();
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+
+		printOpenGLError();
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		printOpenGLError();
+
+		p_indexVBO->use();
+		glDrawElements( GL_TRIANGLES, group.m_count_vertexIndices, GL_UNSIGNED_INT, (GLvoid*)(group.m_offset_vertexIndices));
+		p_indexVBO->unUse();
+
+		printOpenGLError();
+
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+
+		p_texcoordVBO->unUse();
+		p_normalVBO->unUse();
+		p_vertexVBO->unUse();
+
+		printOpenGLError();
+		}*/
 	}
 #else
 	void GLSimpleMeshRenderer::drawSimpleMesh(SimpleMesh* mesh)
@@ -157,5 +205,5 @@ namespace Etoile
 	}
 #endif
 
-	
+
 }

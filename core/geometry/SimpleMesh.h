@@ -54,7 +54,7 @@ namespace Etoile
 			ColorRGBA m_diffuse;
 			ColorRGBA m_specular;
 			ColorRGBA m_ambient;
-			float m_shininess;
+			int m_shininess;
 			float m_transparency;
 			std::vector<std::string> m_maps;
 			std::vector<Image> m_images;
@@ -63,6 +63,8 @@ namespace Etoile
 
 			Material()
 			{
+				m_shininess = 64;
+				m_transparency = 0;
 				m_maps.resize(MAXNUMBER_TEXTUREMATERIAL);
 				m_images.resize(MAXNUMBER_TEXTUREMATERIAL);
 				m_indicesInRessouce.resize(MAXNUMBER_TEXTUREMATERIAL);
@@ -86,10 +88,9 @@ namespace Etoile
 
 		SimpleMesh() : Component(ComponentType::MESH_COMPONENT)
 		{
-		
+
 		}
 
-		int m_facecount;
 		std::vector<VertexPosition> m_positions;
 		std::vector<VertexNormal> m_normals;
 		std::vector<TextureCoordinate> m_texcoords;
@@ -107,6 +108,7 @@ namespace Etoile
 		static void computeVertexNormals(SimpleMesh* mesh);
 		static void meshToUnitCube(SimpleMesh* mesh);
 		static void buildVertexIndices(SimpleMesh* mesh);
+		static void fillMaterial(SimpleMesh* mesh);
 	};
 
 	

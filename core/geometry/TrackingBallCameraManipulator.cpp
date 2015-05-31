@@ -31,7 +31,7 @@ namespace Etoile
 	  return d < size_limit ? sqrt(size2 - d) : size_limit/sqrt(d);*/
 	}
 
-	Quaternionf trackBall(float p1x, float p1y, float p2x, float p2y) {
+	Quaternionf trackBall(float p1x, float p1y, float p2x, float p2y, float speed) {
 		//std::cout<<p1x <<" "<<p1y<<" " << p2x<<" " << p2y <<std::endl;
 		Quaternionf q;
 
@@ -60,7 +60,7 @@ namespace Etoile
 		*/
 		//Vec3f d = p1 - p2;
 		//float t = d.length() / (2.0f * TRACKBALLSIZE);
-		const float angle = 2.0 * asin(sqrt(a.length() / p1.length() / p2.length())) / 20;
+		const float angle = 2.0 * asin(sqrt(a.length() / p1.length() / p2.length())) / 20 * speed;
 		/*
 		* Avoid problems with out-of-control values...
 		*/
@@ -139,7 +139,7 @@ namespace Etoile
 			(p_x - p_camera->getWidth() * 0.5) / p_camera->getWidth(),
 			(p_camera->getHeight() * 0.5 - p_y) / p_camera->getHeight(),
 			(c_x - p_camera->getWidth() * 0.5) / p_camera->getWidth(),
-			(p_camera->getHeight() * 0.5 - c_y) / p_camera->getHeight());
+			(p_camera->getHeight() * 0.5 - c_y) / p_camera->getHeight(), m_speed);
 		
 		rotateWithOnePoint(m_spin, pivot);
 		//std::cout<<p_camera->getTransform()->getOrientation().rotate(Vec3f(0,0,-2)) + p_camera->getTransform()->getPosition()<<std::endl;

@@ -122,7 +122,7 @@ namespace Etoile
 					mesh->m_groups.push_back(SimpleMesh::Group());
 					mesh->m_groups[groupIndex].m_groupIndex = groupIndex;
 					mesh->m_groups[groupIndex].m_groupName = matname;
-					mesh->m_groups[groupIndex].m_materialIndex = -materialIndex;
+					mesh->m_groups[groupIndex].m_materialIndex = materialIndex;
 				}
 			}
 			//PB is the files for materials, using usemtl or not, the obj file is not uniform
@@ -199,7 +199,7 @@ namespace Etoile
 			else if (keyWrd == "f")
 			{
 				
-				mesh->m_facecount++;
+				//mesh->m_facecount++;
 				// read full line after detecting a face
 				std::string faceLine;
 				std::getline(stream,faceLine);
@@ -219,7 +219,7 @@ namespace Etoile
 			"Vertex count : " << mesh->m_positions.size()<<" "<<
 			"Tex count : " << mesh->m_texcoords.size()<<" "<<
 			"Normal count : " << mesh->m_normals.size()<<" "<<
-			"Face count : " <<mesh->m_facecount<<std::endl;
+			"Face count : " <<mesh->m_faces.size()<<std::endl;
 
 		regroupVertexAttributes(mesh);
 		std::cout<<"regroup attributes done!" << std::endl;
@@ -238,6 +238,8 @@ namespace Etoile
 		}
 
 		meshToUnitCube(mesh);
+		buildVertexIndices(mesh);
+		SimpleMesh::fillMaterial(mesh);
 		return mesh;
 	}
 
@@ -327,7 +329,7 @@ namespace Etoile
 
 				if( !stream.fail() )
 				{
-					mesh->m_materials[currentMatIndex].m_diffuse = ColorRGBA(f1, f2, f3, 0);
+					mesh->m_materials[currentMatIndex].m_diffuse = ColorRGBA(f1, f2, f3, 1);
 				}
 			}
 
@@ -337,7 +339,7 @@ namespace Etoile
 
 				if( !stream.fail() )
 				{
-					mesh->m_materials[currentMatIndex].m_ambient = ColorRGBA(f1, f2, f3, 0);
+					mesh->m_materials[currentMatIndex].m_ambient = ColorRGBA(f1, f2, f3, 1);
 				}
 			}
 
@@ -347,7 +349,7 @@ namespace Etoile
 
 				if( !stream.fail() )
 				{
-					mesh->m_materials[currentMatIndex].m_specular = ColorRGBA(f1, f2, f3, 0);
+					mesh->m_materials[currentMatIndex].m_specular = ColorRGBA(f1, f2, f3, 1);
 				}
 			}
 

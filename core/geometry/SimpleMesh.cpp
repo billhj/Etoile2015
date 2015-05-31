@@ -37,6 +37,18 @@ namespace Etoile
 		}
 		if(mesh->m_normals.size() == 0)
 		{
+			for(unsigned int i = 0; i < mesh->m_faces.size(); ++i)
+			{
+				SimpleMesh::Face& face = mesh->m_faces[i];
+				for(int j = 0; j < face.m_verticesInfo.size(); ++j)
+				{
+					SimpleMesh::Vertex& vertexInfo = face.m_verticesInfo[j];
+					if(vertexInfo.m_normalIndex != vertexInfo.m_posIndex)
+					{
+						vertexInfo.m_normalIndex = vertexInfo.m_posIndex;
+					}
+				}
+			}
 			return;
 		}
 		else if(mesh->m_normals.size() != mesh->m_positions.size())
@@ -78,6 +90,7 @@ namespace Etoile
 					for(unsigned int j = 0; j < 3; ++j)
 					{
 						int vIndex = triangleIndices[triangle][j];
+						newface.m_verticesInfo.push_back(SimpleMesh::Vertex());
 						newface.m_verticesInfo[j].m_posIndex = face.m_verticesInfo[vIndex].m_posIndex;
 						newface.m_verticesInfo[j].m_normalIndex = face.m_verticesInfo[vIndex].m_normalIndex;
 						newface.m_verticesInfo[j].m_texcoordIndex = face.m_verticesInfo[vIndex].m_texcoordIndex;	
@@ -129,9 +142,9 @@ namespace Etoile
 			int i0 = face.m_verticesInfo[0].m_normalIndex;
 			int i1 = face.m_verticesInfo[1].m_normalIndex;
 			int i2 = face.m_verticesInfo[2].m_normalIndex;
-			Vec3f v0 = mesh->m_normals[i0];
-			Vec3f v1 = mesh->m_normals[i1];
-			Vec3f v2 = mesh->m_normals[i2];
+			Vec3f v0 = mesh->m_positions[i0];
+			Vec3f v1 = mesh->m_positions[i1];
+			Vec3f v2 = mesh->m_positions[i2];
 			face.m_facenormal = calculateNormal(v0, v1, v2);
 		}
 	}
@@ -216,6 +229,18 @@ namespace Etoile
 				}
 			}
 			group.m_count_vertexIndices = mesh->m_vertexIndices.size() - group.m_offset_vertexIndices;
+		}
+	}
+
+	void SimpleMesh::fillMaterial(SimpleMesh* mesh)
+	{
+		for(unsigned int i = 0; i < mesh->m_groups.size(); ++i)
+		{
+			SimpleMesh::Group& group = mesh->m_groups[i];
+			if(group.m_materialIndex == -1)
+			{
+				group.m_materialIndex = 0;
+			}
 		}
 	}
 }

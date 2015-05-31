@@ -20,6 +20,7 @@ namespace Etoile
 		bool m_zoom;
 		bool m_rotate;
 		bool m_spin_active;
+		float m_speed;
 		//bool m_spin_started;
 
 		Quaternionf m_spin;
@@ -27,6 +28,7 @@ namespace Etoile
 		TrackingBallCameraManipulator() : CameraManipulator()
 		{
 			m_move = m_zoom = m_rotate = m_spin_active = false;
+			m_speed = 1;
 		}
 
 		void zoom(float delta);

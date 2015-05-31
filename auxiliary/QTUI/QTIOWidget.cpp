@@ -20,11 +20,13 @@ namespace Etoile
 		: QWidget(parent)
 	{
 		ui.setupUi(this);
-		p_redirector = new StdRedirector<>( std::cout, outcallback, ui.ioTextEdit);
+		p_redirector = NULL;
+		//p_redirector = new StdRedirector<>( std::cout, outcallback, ui.ioTextEdit);
 	}
 
 	QTIOWidget::~QTIOWidget()
 	{
-		delete p_redirector;
+		if(p_redirector != NULL)
+			delete p_redirector;
 	}
 }

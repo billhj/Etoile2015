@@ -65,29 +65,40 @@ void TexturePainter::pipetteColorPicked()
 #include "meshIO/OBJMeshLoader.h"
 #include "renderer/OpenGL/ImmediateMeshRenderer.h"
 #include "renderer/OpenGL/VBOMeshRenderer.h"
+#include "renderer/OpenGL/GLSimpleMeshRenderer.h"
 #include "geometry/RenderManager.h"
 #include "geometry/SceneManager.h"
-//#include "QTUI/QTTextureLoader.h"
-
+#include "meshIO/OBJSimpleMeshLoader.h"
 
 void TexturePainter::addMesh()
 {
 	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("Mesh (*.obj)"));
 	//QFile file(name);
 	if(name.isEmpty()) return;
-	OBJMeshLoader loader;
-	/*QTTextureLoader qtextureLoader;
-	loader.setTextureLoader(&qtextureLoader);*/
 
+	Scene* scene = SceneManager::getInstance()->getCurrentScene();
+	/*{
+	OBJSimpleMeshLoader loadersimple;
+	SimpleMesh* simplemesh = loadersimple.loadFromFile(name.toStdString());
+	Entity* entity = new Entity(name.toStdString()+"simple", scene);
+	entity->setComponent(ComponentType::MESH_COMPONENT, simplemesh);
+	GLSimpleMeshRenderer* glrender = new GLSimpleMeshRenderer();
+	glrender->setSimpleMesh(simplemesh);
+	entity->setComponent(ComponentType::RENDER_COMPONENT, glrender);
+	RenderManager::getInstance()->addIntoObjectRendererList(glrender);
+	}*/
+
+	OBJMeshLoader loader;
 	RenderMesh* mesh = new RenderMesh(name.toStdString());
 	loader.loadFromFile(name.toStdString(), mesh);
 
 	VBOMeshRenderer* renderer = new VBOMeshRenderer();
 	renderer->setRenderMesh(mesh);
-	Scene* scene = SceneManager::getInstance()->getCurrentScene();
+
 	Entity* entity = new Entity(name.toStdString(), scene);
 	entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
 	RenderManager::getInstance()->addIntoObjectRendererList(renderer);
+
 	ui.sceneTreeView->setScene(scene);ui.sceneTreeView->updateModel();
 }
 
