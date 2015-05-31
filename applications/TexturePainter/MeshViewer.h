@@ -8,7 +8,7 @@
 
 #include "renderer/OpenGL/glhead.h"
 #include "renderer/OpenGL/glInfo.h"
-#include "QGLRenderer/QGLRenderWidget.h"
+#include "QTUI/QGLRenderWidget.h"
 #include <QPushButton>
 
 using namespace Etoile;

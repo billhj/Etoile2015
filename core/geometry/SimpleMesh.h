@@ -9,6 +9,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "Image/Image.h"
 #include "math/MathHead.h"
 
 namespace Etoile
@@ -55,6 +56,10 @@ namespace Etoile
 			float m_shininess;
 			float m_transparency;
 			std::vector<std::string> m_maps;
+			std::vector<Image> m_images;
+			std::vector<int> m_indicesInRessouce;
+			std::vector<std::string> m_binding;
+
 		};
 
 		struct Group

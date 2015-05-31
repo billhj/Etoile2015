@@ -9,7 +9,7 @@
 #pragma once
 #include "renderer/OpenGL/GLTexture2D.h"
 #include "MeshIO/TextureLoader.h"
-#include "QGLRenderer/ReadImage.h"
+#include "QTUI/ReadImage.h"
 
 namespace Etoile
 {

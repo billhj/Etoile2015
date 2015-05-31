@@ -13,7 +13,7 @@
 #include "renderer/OpenGL/ImmediateMeshRenderer.h"
 #include "renderer/OpenGL/VBOMeshRenderer.h"
 #include "geometry/RenderManager.h"
-#include "QGLRenderer/QTTextureLoader.h"
+#include "QTUI/QTTextureLoader.h"
 
 namespace Etoile
 {

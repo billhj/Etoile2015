@@ -250,19 +250,19 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="parametersDockWidget">
-     <property name="windowTitle">
-       <string>Parameters</string>
-     </property>
-     <attribute name="dockWidgetArea">
-       <number>2</number>
-     </attribute>
-     <widget class="QWidget" name="dockWidgetContents_3">
-       <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
-           <widget class="QTEntityParametersWidget" name="parametersView" native="true"/>
-         </item>
-       </layout>
-     </widget>
+   <property name="windowTitle">
+    <string>Parameters</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QTEntityParametersWidget" name="parametersView" native="true"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QDockWidget" name="sceneTreeDockWidget">
    <property name="windowTitle">
@@ -297,7 +297,6 @@
     </layout>
    </widget>
   </widget>
-  
   <action name="action_Open">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
@@ -574,19 +573,19 @@
   <customwidget>
    <class>QTFileWidget</class>
    <extends>QWidget</extends>
-   <header>QGLRenderer/QTFileWidget.h</header>
+   <header>QTUI/QTFileWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>QTIOWidget</class>
    <extends>QWidget</extends>
-   <header>QGLRenderer/QTIOWidget.h</header>
+   <header>QTUI/QTIOWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>QTSceneTreeWidget</class>
    <extends>QWidget</extends>
-   <header>QGLRenderer/QTSceneTreeWidget.h</header>
+   <header>QTUI/QTSceneTreeWidget.h</header>
    <container>1</container>
    <slots>
     <signal>entitySelected(int)</signal>
@@ -595,7 +594,7 @@
   <customwidget>
    <class>QTToolsWidget</class>
    <extends>QWidget</extends>
-   <header>QGLRenderer/QTToolsWidget.h</header>
+   <header>QTUI/QTToolsWidget.h</header>
    <container>1</container>
    <slots>
     <signal>toolsButtonClicked(QAbstractButton*)</signal>
@@ -604,7 +603,7 @@
   <customwidget>
    <class>QTEntityParametersWidget</class>
    <extends>QWidget</extends>
-   <header>QGLRenderer/QTEntityParametersWidget.h</header>
+   <header>QTUI/QTEntityParametersWidget.h</header>
    <container>1</container>
    <slots>
     <slot>setEntity(int)</slot>

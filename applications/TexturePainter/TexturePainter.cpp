@@ -63,7 +63,7 @@ void TexturePainter::pipetteColorPicked()
 #include "renderer/OpenGL/VBOMeshRenderer.h"
 #include "geometry/RenderManager.h"
 #include "geometry/SceneManager.h"
-#include "QGLRenderer/QTTextureLoader.h"
+#include "QTUI/QTTextureLoader.h"
 
 
 void TexturePainter::addMesh()

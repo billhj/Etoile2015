@@ -7,7 +7,6 @@
 */
 
 #include "OBJSimpleMeshLoader.h"
-//#include "renderer/OpenGL/GLTexture2D.h"
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
 */
