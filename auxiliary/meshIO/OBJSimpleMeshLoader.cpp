@@ -275,9 +275,8 @@ namespace Etoile
 		
 		m_materialNameMap["empty"] = 0;
 		mesh->m_materials.push_back(SimpleMesh::Material());
-		SimpleMesh::Material* currentMat = &(mesh->m_materials.back());
-		currentMat->m_name = "empty";
-		int nb_material = 1;
+		int currentMatIndex = 0;
+		mesh->m_materials[0].m_name = "empty";
 
 		while( in && !in.eof() )
 		{
@@ -310,11 +309,10 @@ namespace Etoile
 			else if (keyWrd == "newmtl") // begin new material definition
 			{
 				stream >> key;
-				m_materialNameMap[key] = nb_material;
+				currentMatIndex = mesh->m_materials.size();
+				m_materialNameMap[key] = currentMatIndex;
 				mesh->m_materials.push_back(SimpleMesh::Material());
-				SimpleMesh::Material* currentMat = &(mesh->m_materials.back());
-				currentMat->m_name = key;
-				nb_material++;
+				mesh->m_materials[currentMatIndex].m_name = key;
 			}
 
 			else if (keyWrd == "Kd") // diffuse color
@@ -323,7 +321,7 @@ namespace Etoile
 
 				if( !stream.fail() )
 				{
-					currentMat->m_diffuse = ColorRGBA(f1, f2, f3, 0);
+					mesh->m_materials[currentMatIndex].m_diffuse = ColorRGBA(f1, f2, f3, 0);
 				}
 			}
 
@@ -333,7 +331,7 @@ namespace Etoile
 
 				if( !stream.fail() )
 				{
-					currentMat->m_ambient = ColorRGBA(f1, f2, f3, 0);
+					mesh->m_materials[currentMatIndex].m_ambient = ColorRGBA(f1, f2, f3, 0);
 				}
 			}
 
@@ -343,7 +341,7 @@ namespace Etoile
 
 				if( !stream.fail() )
 				{
-					currentMat->m_specular = ColorRGBA(f1, f2, f3, 0);
+					mesh->m_materials[currentMatIndex].m_specular = ColorRGBA(f1, f2, f3, 0);
 				}
 			}
 
@@ -357,7 +355,7 @@ namespace Etoile
 				stream >> f1;
 				if( !stream.fail() )
 				{
-					currentMat->m_shininess = f1;
+					mesh->m_materials[currentMatIndex].m_shininess = f1;
 				} // just skip this
 			}
 
@@ -386,7 +384,9 @@ namespace Etoile
 				if(!textureName.empty())
 				{
 					std::string s = _path + textureName;
-					currentMat->m_maps[DIFFUSE_MAP] = s;
+					SimpleMesh::Material& mat = mesh->m_materials[currentMatIndex];
+					mat.m_maps[DIFFUSE_MAP] = s;
+					mat.m_binding[DIFFUSE_MAP] = "DiffuseMap";
 				}
 			}
 			else if (keyWrd == "map_Ks") // map images
@@ -397,7 +397,9 @@ namespace Etoile
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					currentMat->m_maps[SPECULAR_MAP] = s;
+					SimpleMesh::Material& mat = mesh->m_materials[currentMatIndex];
+					mat.m_maps[SPECULAR_MAP] = s;
+					mat.m_binding[SPECULAR_MAP] = "SpecularMap";
 				}
 			}
 			else if (keyWrd == "map_bump") // map images
@@ -408,7 +410,9 @@ namespace Etoile
 				if ( ! textureName.empty() )
 				{
 					std::string s = _path + textureName;
-					currentMat->m_maps[BUMP_MAP] = s;
+					SimpleMesh::Material& mat = mesh->m_materials[currentMatIndex];
+					mat.m_maps[BUMP_MAP] = s;
+					mat.m_binding[BUMP_MAP] = "BumpMap";
 				}
 			}
 			else if (keyWrd == "Tr") // transparency value
@@ -416,7 +420,7 @@ namespace Etoile
 				stream >> f1;
 				if( !stream.fail() )
 				{
-					currentMat->m_transparency = f1;
+					mesh->m_materials[currentMatIndex].m_transparency = f1;
 				}
 			}
 			else if (keyWrd == "d") // transparency value
@@ -424,11 +428,11 @@ namespace Etoile
 				stream >> f1;
 				if( !stream.fail() )
 				{
-					currentMat->m_transparency = f1;
+					mesh->m_materials[currentMatIndex].m_transparency = f1;
 				}
 			}
 		}
-		return nb_material;
+		return mesh->m_materials.size();
 	}
 
 
