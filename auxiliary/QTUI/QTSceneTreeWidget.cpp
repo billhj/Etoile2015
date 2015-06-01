@@ -65,6 +65,9 @@ namespace Etoile
 			sceneRow->appendRow(row);
 		}
 		ui.treeView->expandAll();
+		//ui.treeView->selectionModel()->setCurrentIndex(m_currentModelIndex, QItemSelectionModel::NoUpdate);
+		ui.treeView->setExpanded(m_currentModelIndex, true);
+		//ui.treeView->expand(m_currentModelIndex);
 	}
 
 	void QTSceneTreeWidget::setScene(Scene* scene)
@@ -75,6 +78,7 @@ namespace Etoile
 
 	void QTSceneTreeWidget::treeview_onclick(QModelIndex index)
 	{
+		m_currentModelIndex = index;
 		QStandardItem *	item = p_standardModel->itemFromIndex(index);
 		EntityInfo info = item->data().value<EntityInfo>();
 		if(NULL == info.p_entity) return;

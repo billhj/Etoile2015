@@ -24,6 +24,7 @@ signals:
 		Ui::QTSceneTreeWidget ui;
 		QStandardItemModel* p_standardModel;
 		Scene* p_scene;
+		QModelIndex m_currentModelIndex;
 	};
 
 	struct EntityInfo

@@ -30,6 +30,7 @@ namespace Etoile
 	private:
 		Ui::QTEntityParametersWidget ui;
 		Entity* p_entity;
+
 	};
 }
 
