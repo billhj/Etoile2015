@@ -39,6 +39,7 @@ namespace Etoile
 				if(item->boundingRect().intersects(QRectF(m_start, m_end)))
 				{
 					item->setSelected(true);
+					m_selectedFrames.push_back(((QTTimelineItem*)item)->m_frame);
 				}else
 				{
 					item->setSelected(false);
@@ -54,6 +55,7 @@ namespace Etoile
 		{
 			item->setSelected(false);
 		}
+		m_selectedFrames.clear();
 		m_startSelection = true;
 		m_start = mouseEvent->scenePos();
 		if(m_startSelection)
@@ -65,7 +67,7 @@ namespace Etoile
 				{
 					item->setSelected(true);
 					m_currentFrame = ((QTTimelineItem*)item)->m_frame;
-
+					m_selectedFrames.push_back(m_currentFrame);
 				}else
 				{
 					item->setSelected(false);

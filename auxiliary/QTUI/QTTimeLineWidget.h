@@ -57,10 +57,13 @@ namespace Etoile
 
 	class QTTimeLineScene : public QGraphicsScene
 	{
+		friend class QTTimeLineWidget;
+
 		Q_OBJECT
 
 		int m_range;
 		int m_currentFrame;
+		std::vector<int> m_selectedFrames;
 		//QGraphicsItemGroup * p_group;
 		bool m_startSelection;
 		QPointF m_start;
@@ -101,11 +104,18 @@ signals:
 	class QTTimeLineWidget : public QWidget
 	{
 		Q_OBJECT
-
 	public:
 		QTTimeLineWidget(QWidget *parent = 0);
 		~QTTimeLineWidget();
 		void init();
+		int getSelectedFrame()
+		{
+			return m_scene.m_currentFrame;
+		}
+		const std::vector<int>& getSelectedFrames()
+		{
+			return m_scene.m_selectedFrames;
+		}
 	private:
 		Ui::QTTimeLineWidget ui;
 		QTTimeLineScene m_scene;
