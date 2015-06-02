@@ -41,6 +41,7 @@
     <ClInclude Include="..\..\core\geometry\SceneManager.h" />
     <ClInclude Include="..\..\core\geometry\RenderSubMesh.h" />
     <ClInclude Include="..\..\core\geometry\SimpleMesh.h" />
+    <ClInclude Include="..\..\core\geometry\Skeleton.h" />
     <ClInclude Include="..\..\core\geometry\Texture.h" />
     <ClInclude Include="..\..\core\geometry\TextureManager.h" />
     <ClInclude Include="..\..\core\geometry\TrackingBallCameraManipulator.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="..\..\core\geometry\Scene.cpp" />
     <ClCompile Include="..\..\core\geometry\SceneManager.cpp" />
     <ClCompile Include="..\..\core\geometry\SimpleMesh.cpp" />
+    <ClCompile Include="..\..\core\geometry\Skeleton.cpp" />
     <ClCompile Include="..\..\core\geometry\TextureManager.cpp" />
     <ClCompile Include="..\..\core\geometry\TrackingBallCameraManipulator.cpp" />
     <ClCompile Include="..\..\core\Image\PFMImageLoader.cpp" />

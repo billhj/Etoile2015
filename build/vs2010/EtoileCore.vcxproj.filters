@@ -217,6 +217,9 @@
     <ClInclude Include="..\..\core\Image\ImageManager.h">
       <Filter>image</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\geometry\Skeleton.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -306,6 +309,9 @@
       <Filter>image</Filter>
     </ClCompile>
     <ClCompile Include="..\..\core\geometry\SimpleMesh.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\geometry\Skeleton.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
   </ItemGroup>
