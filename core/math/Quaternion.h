@@ -46,6 +46,11 @@ namespace Etoile
 			m_q[0]=q0;    m_q[1]=q1;    m_q[2]=q2;    m_q[3]=q3; 
 		}
 
+		Quaternion(T*  q)
+		{ 
+			m_q[0]=q[0];    m_q[1]=q[1];    m_q[2]=q[2];    m_q[3]=q[3]; 
+		}
+
 		/*! Copy constructor. */
 		Quaternion(const Quaternion& Q)
 		{ 

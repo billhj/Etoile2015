@@ -48,6 +48,12 @@ namespace Etoile
 			m_data[1] = d1; 
 		}
 
+		Vec2(T*  d) 
+		{
+			m_data[0] = d[0];
+			m_data[1] = d[1];
+		}
+
 		~Vec2() { }
 
 		// ACCESSORS

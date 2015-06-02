@@ -52,6 +52,14 @@ namespace Etoile
 			m_data[3] = d3; 
 		}
 
+		Vec4(T*  d) 
+		{
+			m_data[0] = d[0];
+			m_data[1] = d[1];
+			m_data[2] = d[2];
+			m_data[3] = d[3]; 
+		}
+
 		/*Vec4(const Vec3<T> &V, T  w) 
 		{
 			m_data[0] = V.x();
