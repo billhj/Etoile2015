@@ -3,6 +3,30 @@
 
 namespace Etoile
 {
+	int activeFrame = -1;
+	void QTTimelineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+		QWidget *widget)
+	{
+		painter->setPen(this->pen());
+		if(activeFrame == m_frame)
+		{
+			m_brush.setColor(Qt::red);
+		}
+		else if(this->isSelected())
+		{
+			m_brush.setColor(Qt::cyan);
+			painter->drawText(this->rect().x(), this->rect().y(), 100, 80, Qt::AlignHCenter, QString::number(m_frame));
+		}else
+		{
+			int i = this->rect().x() / this->rect().width();
+			m_brush.setColor( i%2 == 0 ? QColor(100,100,100) : QColor(200,200,200));
+		}
+
+		painter->setBrush(m_brush);
+		painter->drawRect(this->rect());
+	}
+
+
 	QTTimeLineWidget::QTTimeLineWidget(QWidget *parent)
 		: QWidget(parent)
 	{
@@ -94,8 +118,13 @@ namespace Etoile
 		{
 		item->setSelected(false);
 		}*/
-		//QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
+		QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
 	}
 
+
+	void QTTimeLineWidget::setActiveFrame(int frame)
+	{
+		activeFrame = frame;
+	}
 
 }

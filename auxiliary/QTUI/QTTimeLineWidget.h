@@ -34,23 +34,7 @@ namespace Etoile
 			m_brush.setColor( i%2 > 0 ? QColor(100,100,100) : QColor(200,200,200));
 		}
 
-		void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-			QWidget *widget)
-		{
-			painter->setPen(this->pen());
-			if(this->isSelected())
-			{
-				m_brush.setColor(Qt::cyan);
-				painter->drawText(this->rect().x(), this->rect().y(), 100, 80, Qt::AlignHCenter, QString::number(m_frame));
-			}else
-			{
-				int i = this->rect().x() / this->rect().width();
-				m_brush.setColor( i%2 == 0 ? QColor(100,100,100) : QColor(200,200,200));
-			}
-			
-			painter->setBrush(m_brush);
-			painter->drawRect(this->rect());
-		}
+		void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 	};
 
@@ -116,6 +100,7 @@ signals:
 		{
 			return m_scene.m_selectedFrames;
 		}
+		void setActiveFrame(int frame);
 	private:
 		Ui::QTTimeLineWidget ui;
 		QTTimeLineScene m_scene;

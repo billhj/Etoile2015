@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\auxiliary\meshIO\BinaryMeshLoader.h" />
+    <ClInclude Include="..\..\auxiliary\meshIO\GeneralLoader.h" />
     <ClInclude Include="..\..\auxiliary\meshIO\MeshLoader.h" />
     <ClInclude Include="..\..\auxiliary\meshIO\OBJMeshLoader.h" />
     <ClInclude Include="..\..\auxiliary\meshIO\OBJSimpleMeshLoader.h" />

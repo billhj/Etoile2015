@@ -62,13 +62,7 @@ void TexturePainter::pipetteColorPicked()
 	ui.toolsWidget->setColorButtonStyleSheet(styleSheet);
 }
 
-#include "meshIO/OBJMeshLoader.h"
-#include "renderer/OpenGL/ImmediateMeshRenderer.h"
-#include "renderer/OpenGL/VBOMeshRenderer.h"
-#include "renderer/OpenGL/GLSimpleMeshRenderer.h"
-#include "geometry/RenderManager.h"
-#include "geometry/SceneManager.h"
-#include "meshIO/OBJSimpleMeshLoader.h"
+#include "meshIO/GeneralLoader.h"
 
 void TexturePainter::addMesh()
 {
@@ -88,16 +82,7 @@ void TexturePainter::addMesh()
 	RenderManager::getInstance()->addIntoObjectRendererList(glrender);
 	}*/
 
-	OBJMeshLoader loader;
-	RenderMesh* mesh = new RenderMesh(name.toStdString());
-	loader.loadFromFile(name.toStdString(), mesh);
-
-	VBOMeshRenderer* renderer = new VBOMeshRenderer();
-	renderer->setRenderMesh(mesh);
-
-	Entity* entity = new Entity(name.toStdString(), scene);
-	entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
-	RenderManager::getInstance()->addIntoObjectRendererList(renderer);
+	GeneralLoader::loadFromFile(name.toStdString());
 
 	ui.sceneTreeView->setScene(scene);ui.sceneTreeView->updateModel();
 }
