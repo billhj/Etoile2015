@@ -297,6 +297,21 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="timelineDockWidget">
+   <property name="windowTitle">
+    <string>Timeline</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_8">
+    <layout class="QGridLayout" name="gridLayout_5">
+     <item row="0" column="0">
+      <widget class="QTTimeLineWidget" name="timelineView" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="action_Open">
    <property name="icon">
     <iconset resource="TexturePainter.qrc">
@@ -550,6 +565,7 @@
   </action>
   <zorder>parametersDockWidget</zorder>
   <zorder>sceneTreeDockWidget</zorder>
+  <zorder>timelineDockWidget</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -608,6 +624,12 @@
    <slots>
     <slot>setEntity(int)</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>QTTimeLineWidget</class>
+   <extends>QWidget</extends>
+   <header>QTUI/QTTimeLineWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

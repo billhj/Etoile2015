@@ -99,6 +99,15 @@
     <ClCompile Include="..\..\auxiliary\QTUI\TrackingBallQEventPerformer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\auxiliary\QTUI\QTTimeLineWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QTTimeLineWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QTTimeLineWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\auxiliary\QTUI\QGLRenderWidget.h">
@@ -140,6 +149,12 @@
     <CustomBuild Include="..\..\auxiliary\QTUI\QTToolsWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\..\auxiliary\QTUI\QTTimeLineWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\auxiliary\QTUI\QTTimeLineWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_QGLRenderWidget.h">
@@ -168,6 +183,9 @@
     </ClInclude>
     <ClInclude Include="..\..\auxiliary\QTUI\TrackingBallQEventPerformer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_QTTimeLineWidget.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
