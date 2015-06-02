@@ -100,6 +100,7 @@
     <addaction name="actionFiles"/>
     <addaction name="actionSceneTree"/>
     <addaction name="actionNodes"/>
+    <addaction name="actionTimeLine"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -563,6 +564,17 @@
     <string>Right</string>
    </property>
   </action>
+  <action name="actionTimeLine">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>TimeLine</string>
+   </property>
+  </action>
   <zorder>parametersDockWidget</zorder>
   <zorder>sceneTreeDockWidget</zorder>
   <zorder>timelineDockWidget</zorder>
@@ -937,6 +949,22 @@
     <hint type="destinationlabel">
      <x>628</x>
      <y>331</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTimeLine</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>timelineDockWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>617</x>
+     <y>569</y>
     </hint>
    </hints>
   </connection>

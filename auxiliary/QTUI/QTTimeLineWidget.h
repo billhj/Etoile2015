@@ -45,7 +45,7 @@ namespace Etoile
 
 		Q_OBJECT
 
-		int m_range;
+			int m_range;
 		int m_currentFrame;
 		std::vector<int> m_selectedFrames;
 		//QGraphicsItemGroup * p_group;
@@ -61,28 +61,34 @@ namespace Etoile
 		}
 
 		public slots:
-		void reset()
-		{
-			m_startSelection = false;
-			this->clear();
-			for(int i = -100; i < m_range; ++i)
+			void reset()
 			{
-				QTTimelineItem *rect = new QTTimelineItem(QRectF(i * 5, 0, 5, 100), i);
-				this->addItem(rect);
+				m_startSelection = false;
+				this->clear();
+				for(int i = -100; i < m_range; ++i)
+				{
+					QTTimelineItem *rect = new QTTimelineItem(QRectF(i * 5, 0, 5, 100), i);
+					this->addItem(rect);
+					if(i % 20 == 0)
+					{
+						QGraphicsTextItem* text = this->addText(QString::number(i));
+						text->setDefaultTextColor(QColor(200,150,150));
+						text->setPos(rect->rect().left() - 3, rect->rect().bottom());
+					}
+				}
 			}
-		}
 
-		public slots:
-			void setRange(int);
-			virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent);
+			public slots:
+				void setRange(int);
+				virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent);
 
-			virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
+				virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
 
-			virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent);
+				virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent);
 
-			virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEvent);
+				virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEvent);
 signals:
-			void currentFrameChanged(int frameNb);
+				void currentFrameChanged(int frameNb);
 	};
 
 	class QTTimeLineWidget : public QWidget
