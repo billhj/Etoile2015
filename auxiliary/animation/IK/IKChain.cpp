@@ -22,31 +22,30 @@
 namespace Etoile
 {
 
-	IKChain::Joint::Joint(IKChain* sk, int parent, const std::string& name)
+	IKChain::Joint::Joint(IKChain* sk, int parent, int dof, const std::string& name)
 	{
 		p_owner = sk;
 		m_index = sk->m_joints.size();
 		sk->m_joints.push_back(this);
 		m_index_parent = parent;
 		m_name = name;
-	}
+		m_dof = dof;
 
-	void IKChain::Joint::init(int degree)
-	{
-		if(degree == 1)
+		m_dims.resize(m_dof);
+		for(int i = 0; i < m_dof; ++i)
 		{
-			m_dof = 1;
-			m_axis.push_back(Eigen::Vector3f(1,0,0));
-			m_anglelimites.push_back(Eigen::Vector2f(-3.14,3.14));
-		}else
-		{
-			m_dof = 3;
-			m_axis.push_back(Eigen::Vector3f(0,0,1));
-			m_axis.push_back(Eigen::Vector3f(0,1,0));
-			m_axis.push_back(Eigen::Vector3f(1,0,0));
-			m_anglelimites.push_back(Eigen::Vector2f(-3.14,3.14));
-			m_anglelimites.push_back(Eigen::Vector2f(-3.14,3.14));
-			m_anglelimites.push_back(Eigen::Vector2f(-3.14,3.14));
+			m_dims[i].m_anglelimites = Eigen::Vector2f(-3.14,3.14);
+			m_dims[i].m_idx = sk->m_localRotations.size();
+			if(i == 0)
+			{
+				m_dims[i].m_lastIdx = sk->m_joints[parent]->m_dims.back().m_idx;
+			}
+			sk->m_localRotations.push_back(Eigen::Matrix3f());
+			sk->m_globalOrientations.push_back(Eigen::Matrix3f());
+			sk->m_localTranslations.push_back(Eigen::Vector3f());
+			sk->m_globalPositions.push_back(Eigen::Vector3f());
 		}
 	}
+
+	
 }

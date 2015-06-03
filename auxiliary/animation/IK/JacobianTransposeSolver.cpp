@@ -27,7 +27,7 @@ namespace Etoile
 	bool JacobianTransposeSolver::compute(IKChain* chain, Vector3f target, bool enableConstraints)
 	{
 		int tries = 0;
-		int columnDim = chain->m_joints.size() * 3;
+		int columnDim = chain->m_localRotations.size();
 		MatrixXf jacobian(3, columnDim);
 
 		chain->update();
@@ -40,7 +40,7 @@ namespace Etoile
 			distance.norm() > m_targetThreshold)
 		{
 			Vector3f dT = distance * beta;
-			for(unsigned int i = 0; i <  chain->m_joints.size(); ++i)
+			/*for(unsigned int i = 0; i <  chain->m_joints.size(); ++i)
 			{
 				Vector3f& jointPos = chain->m_globalPositions[i];
 				Vector3f boneVector = endpos - jointPos;
@@ -87,12 +87,13 @@ namespace Etoile
 				joint->m_values[2] = castPiRange(joint->m_values[2] + dR(j));
 				++j;
 
-				chain->m_localRotations[i] = ;
+				//chain->m_localRotations[i] = ;
 				chain->updateJoint(i);
 			}
 
 			endpos = chain->m_globalPositions.back();
 			distance = (target - endpos);
+			*/
 		}
 
 		if (tries == m_maxTries)

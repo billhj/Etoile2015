@@ -15,36 +15,48 @@ namespace Etoile
 
 	struct IKChain
 	{
+
+		struct Dim
+		{
+			int m_lastIdx;
+			int m_idx;
+			Eigen::Vector3f m_axis;
+			Eigen::Vector2f m_anglelimites;
+			float m_value;
+		};
+
 		struct Joint
 		{
-			Joint(IKChain* sk, int parent, const std::string& name);
-			void init(int degree = 3);
+			Joint(IKChain* sk, int parent, int dof, const std::string& name);
 			std::string m_name;
 			int m_index;
 			int m_index_parent;
 			IKChain* p_owner;
 			int m_dof;
-			std::vector<Eigen::Vector3f> m_axis;
-			std::vector<Eigen::Vector2f> m_anglelimites;
-			std::vector<float> m_values;
+			std::vector<Dim> m_dims;
 		};
 
 		IKChain(const std::string& name) : m_name(name)
 		{
 		
 		}
+
 		void updateJoint(int idx)
 		{
-			int parentId = m_joints[idx]->m_index_parent;
-			if(parentId < 0)
+			Joint* current = m_joints[idx];
+			for(int i = 0; i < current->m_dims.size(); ++i)
 			{
-				m_globalPositions[idx] = m_localTranslations[idx];
-				m_globalOrientations[idx] = m_localRotations[idx];
-			}
-			else
-			{
-				m_globalPositions[idx] = m_globalPositions[parentId] + m_globalOrientations[parentId] * m_localTranslations[idx];
-				m_globalOrientations[idx] = m_globalOrientations[parentId] * m_localRotations[idx];
+				Dim& dim = current->m_dims[i];
+				if(dim.m_lastIdx >= 0)
+				{
+					m_globalPositions[i] = m_globalPositions[dim.m_lastIdx] + m_globalOrientations[dim.m_lastIdx] * m_localTranslations[i];
+					m_globalOrientations[i] = m_globalOrientations[dim.m_lastIdx] * m_localRotations[i];	
+				}
+				else
+				{
+					m_globalPositions[i] = m_localTranslations[i];
+					m_globalOrientations[i] = m_localRotations[i];
+				}
 			}
 		}
 
