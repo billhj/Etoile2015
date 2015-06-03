@@ -113,7 +113,7 @@ signals:
 		{
 			return m_scene.m_selectedFrames;
 		}
-		void setActiveFrame(int frame);
+		
 		void setStartValue(int value)
 		{
 			ui.start->blockSignals(true);
@@ -128,6 +128,7 @@ signals:
 			ui.end->blockSignals(false);
 		}
 public slots:
+	void setActiveFrame(int frame);
 	void needToSetStartEndActive(int)
 	{
 		m_scene.setStartEndActive(ui.start->value(), ui.end->value());

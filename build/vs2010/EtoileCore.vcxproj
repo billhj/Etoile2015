@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLLightRenderer.h" />
+    <ClInclude Include="..\..\core\animation\Frame.h" />
     <ClInclude Include="..\..\core\geometry\AxisAlignedBoundingBox.h" />
     <ClInclude Include="..\..\core\geometry\Camera.h" />
     <ClInclude Include="..\..\core\geometry\CameraManipulator.h" />

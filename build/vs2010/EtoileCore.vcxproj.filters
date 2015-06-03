@@ -220,6 +220,9 @@
     <ClInclude Include="..\..\core\geometry\Skeleton.h">
       <Filter>geometry</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\animation\Frame.h">
+      <Filter>animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -233,6 +236,9 @@
     </Filter>
     <Filter Include="image">
       <UniqueIdentifier>{4c2508c9-faa2-4405-8eea-784e22473dc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{4cbf8253-6616-4ceb-89f0-970ba772e904}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
