@@ -30,4 +30,23 @@ namespace Etoile
 		m_index_parent = parent;
 		m_name = name;
 	}
+
+	void Joint::init(int degree)
+	{
+		if(degree == 1)
+		{
+			m_dof = 1;
+			m_axis.push_back(Vec3f(1,0,0));
+			m_anglelimites.push_back(Vec2f(-3.14,3.14));
+		}else
+		{
+			m_dof = 3;
+			m_axis.push_back(Vec3f(0,0,1));
+			m_axis.push_back(Vec3f(0,1,0));
+			m_axis.push_back(Vec3f(1,0,0));
+			m_anglelimites.push_back(Vec2f(-3.14,3.14));
+			m_anglelimites.push_back(Vec2f(-3.14,3.14));
+			m_anglelimites.push_back(Vec2f(-3.14,3.14));
+		}
+	}
 }

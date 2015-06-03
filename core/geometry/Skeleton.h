@@ -16,12 +16,15 @@ namespace Etoile
 	struct Joint
 	{
 		Joint(Skeleton* sk, int parent, const std::string& name);
-
+		void init(int degree = 3);
 		std::string m_name;
 		int m_index;
 		int m_index_parent;
 		Skeleton* p_owner;
 		int m_dof;
+		std::vector<Vec3f> m_axis;
+		std::vector<Vec2f> m_anglelimites;
+		std::vector<float> m_values;
 	};
 
 
