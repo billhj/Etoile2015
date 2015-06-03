@@ -21,6 +21,8 @@ namespace Etoile
 			void openFile();
 			void newFile();
 			void removeFile();
+signals:
+			void fileToOpen(QString file);
 	private:
 		Ui::QTFileWidget ui;
 		QFileSystemModel * p_filemodel;

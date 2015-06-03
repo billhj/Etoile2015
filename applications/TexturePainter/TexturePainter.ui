@@ -716,7 +716,7 @@
    <sender>actionAddMesh</sender>
    <signal>triggered()</signal>
    <receiver>TexturePainterClass</receiver>
-   <slot>addMesh()</slot>
+   <slot>openFile()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -968,10 +968,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Open</sender>
+   <signal>triggered()</signal>
+   <receiver>TexturePainterClass</receiver>
+   <slot>openFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>322</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>selectColor()</slot>
   <slot>pipetteColorPicked()</slot>
-  <slot>addMesh()</slot>
+  <slot>openFile()</slot>
  </slots>
 </ui>

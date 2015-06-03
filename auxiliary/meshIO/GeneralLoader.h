@@ -18,6 +18,7 @@
 #include "meshIO/OBJSimpleMeshLoader.h"
 #include "renderer/OpenGL/GLSkeletonRenderer.h"
 #include "meshIO/SkeletonTextFileLoader.h"
+#include "util/File.h"
 
 namespace Etoile
 {
@@ -26,7 +27,21 @@ namespace Etoile
 	public:
 		GeneralLoader(){}
 		~GeneralLoader(){}
+
 		static Entity* loadFromFile(const std::string& fileName) 
+		{
+			std::string ex = File::getFileExtension(fileName);
+			if(ex.compare("obj") == 0)
+			{
+				return loadMeshFromFile(fileName);
+			}
+			else if(ex.compare("sk") == 0)
+			{
+				return loadSkeletonFromFile(fileName);
+			}
+		}
+
+		static Entity* loadMeshFromFile(const std::string& fileName) 
 		{
 			Scene* scene = SceneManager::getInstance()->getCurrentScene();
 			OBJMeshLoader loader;

@@ -1,5 +1,4 @@
 #include "QTFileWidget.h"
-
 namespace Etoile
 {
 
@@ -9,15 +8,19 @@ namespace Etoile
 		ui.setupUi(this);
 		QString path = QDir::currentPath();
 
-		p_dirmodel = new QFileSystemModel(this);
-		p_dirmodel->setRootPath(path);
-		p_dirmodel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
-		ui.treeView->setModel(p_dirmodel);
-
 		p_filemodel = new QFileSystemModel(this);
 		p_filemodel->setRootPath(path);
 		p_filemodel->setFilter(QDir::NoDotAndDotDot | QDir::Files);
 		ui.listView->setModel(p_filemodel);
+		//ui.listView->setRootIndex(p_filemodel->index(path));
+
+		p_dirmodel = new QFileSystemModel(this);
+		p_dirmodel->setRootPath(path);
+		p_dirmodel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
+		ui.treeView->setModel(p_dirmodel);
+		ui.treeView->expand(p_dirmodel->index(path));
+		//ui.treeView->setRootIndex(p_dirmodel->index(path));
+		
 	}
 
 	QTFileWidget::~QTFileWidget()
@@ -39,9 +42,11 @@ namespace Etoile
 	}
 
 #include <QDebug>
+
 	void QTFileWidget::openFile()
 	{
 		QString filepath = p_filemodel->filePath(m_fileIndex);
+		emit fileToOpen(filepath);
 		//qDebug()<<filepath;
 	}
 

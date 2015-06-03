@@ -13,6 +13,7 @@ TexturePainter::TexturePainter(QWidget *parent, Qt::WFlags flags)
 	this->showMaximized();
 	ImageManager::getInstance()->setImageLoader(new GeneralImageLoader());
 	TextureManager::getInstance()->setTextureCreator(new GLTextureCreator());
+	connect(ui.fileView, SIGNAL(fileToOpen(QString)), this, SLOT(openFile(QString)));
 }
 
 TexturePainter::~TexturePainter()
@@ -64,13 +65,13 @@ void TexturePainter::pipetteColorPicked()
 
 #include "meshIO/GeneralLoader.h"
 
-void TexturePainter::addMesh()
+void TexturePainter::openFile()
 {
 	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("Mesh (*.obj)"));
 	//QFile file(name);
 	if(name.isEmpty()) return;
-
-	Scene* scene = SceneManager::getInstance()->getCurrentScene();
+	openFile(name);
+	
 	/*{
 	OBJSimpleMeshLoader loadersimple;
 	SimpleMesh* simplemesh = loadersimple.loadFromFile(name.toStdString());
@@ -81,9 +82,12 @@ void TexturePainter::addMesh()
 	entity->setComponent(ComponentType::RENDER_COMPONENT, glrender);
 	RenderManager::getInstance()->addIntoObjectRendererList(glrender);
 	}*/
+}
 
-	GeneralLoader::loadFromFile(name.toStdString());
-
+void TexturePainter::openFile(QString file)
+{
+	GeneralLoader::loadFromFile(file.toStdString());
+	Scene* scene = SceneManager::getInstance()->getCurrentScene();
 	ui.sceneTreeView->setScene(scene);ui.sceneTreeView->updateModel();
 }
 

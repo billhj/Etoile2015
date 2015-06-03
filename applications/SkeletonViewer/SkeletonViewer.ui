@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SkeletonViewClass</class>
+ <class>SkeletonViewerClass</class>
  <widget class="QMainWindow" name="SkeletonViewerClass">
   <property name="geometry">
    <rect>
@@ -649,22 +649,6 @@
  </resources>
  <connections>
   <connection>
-   <sender>action_Close</sender>
-   <signal>triggered()</signal>
-   <receiver>TexturePainterClass</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionShowAxis</sender>
    <signal>triggered()</signal>
    <receiver>centralWidget</receiver>
@@ -693,38 +677,6 @@
     <hint type="destinationlabel">
      <x>299</x>
      <y>217</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>centralWidget</sender>
-   <signal>colorPicked()</signal>
-   <receiver>TexturePainterClass</receiver>
-   <slot>pipetteColorPicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>521</x>
-     <y>266</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>521</x>
-     <y>324</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionAddMesh</sender>
-   <signal>triggered()</signal>
-   <receiver>TexturePainterClass</receiver>
-   <slot>addMesh()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>521</x>
-     <y>324</y>
     </hint>
    </hints>
   </connection>
@@ -968,10 +920,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Open</sender>
+   <signal>triggered()</signal>
+   <receiver>SkeletonViewerClass</receiver>
+   <slot>openFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>322</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAddMesh</sender>
+   <signal>triggered()</signal>
+   <receiver>SkeletonViewerClass</receiver>
+   <slot>openFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>322</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>selectColor()</slot>
   <slot>pipetteColorPicked()</slot>
-  <slot>addMesh()</slot>
+  <slot>openFile(QString)</slot>
+  <slot>openFile()</slot>
  </slots>
 </ui>

@@ -62,6 +62,7 @@ namespace Etoile
 		{
 			Skeleton* sk = new Skeleton(m_fileName);
 			std::string line;
+			int lineNb = 0;
 			while( in && !in.eof() )
 			{
 				std::getline(in,line);
@@ -90,9 +91,10 @@ namespace Etoile
 
 				}catch(exception& e)
 				{
+					std::cout<<"SkeletonTextFileLoader: exception "<< lineNb<<" name "<<std::endl;
 					continue;
 				}
-			
+				++lineNb;
 			}
 			if(sk->m_joints.size()<1)
 			{

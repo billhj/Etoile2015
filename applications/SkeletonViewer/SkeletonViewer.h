@@ -16,7 +16,8 @@ protected:
     void closeEvent(QCloseEvent *event);
 	public slots:
 		void pipetteColorPicked();
-		void addMesh();
+		void openFile();
+		void openFile(QString file);
 private:
 	Ui::SkeletonViewerClass ui;
 	QString m_fileDir;

@@ -257,7 +257,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B69F62EB-5310-4231-A747-B2E5D06615C8}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
-    <ProjectName>QtUI</ProjectName>
+    <ProjectName>QTUI</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
