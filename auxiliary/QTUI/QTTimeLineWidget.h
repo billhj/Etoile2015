@@ -45,19 +45,25 @@ namespace Etoile
 
 		Q_OBJECT
 
-			int m_range;
+		int m_range;
 		int m_currentFrame;
 		std::vector<int> m_selectedFrames;
 		//QGraphicsItemGroup * p_group;
 		bool m_startSelection;
 		QPointF m_start;
 		QPointF m_end;
+		QTTimeLineWidget* p_parent;
 	public:
 		QTTimeLineScene(): QGraphicsScene()
 		{
 			m_range = 200;
 			m_currentFrame = 0;
 			reset();
+		}
+
+		void setContainer(QTTimeLineWidget* parent)
+		{
+			p_parent = parent;
 		}
 
 		public slots:
@@ -79,6 +85,7 @@ namespace Etoile
 			}
 
 			public slots:
+				void setStartEndActive(int start, int end);
 				void setRange(int);
 				virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent);
 
@@ -107,6 +114,24 @@ signals:
 			return m_scene.m_selectedFrames;
 		}
 		void setActiveFrame(int frame);
+		void setStartValue(int value)
+		{
+			ui.start->blockSignals(true);
+			ui.start->setValue(value);
+			ui.start->blockSignals(false);
+		}
+
+		void setEndValue(int value)
+		{
+			ui.end->blockSignals(true);
+			ui.end->setValue(value);
+			ui.end->blockSignals(false);
+		}
+public slots:
+	void needToSetStartEndActive(int)
+	{
+		m_scene.setStartEndActive(ui.start->value(), ui.end->value());
+	}
 	private:
 		Ui::QTTimeLineWidget ui;
 		QTTimeLineScene m_scene;

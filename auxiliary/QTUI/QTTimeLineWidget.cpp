@@ -32,6 +32,7 @@ namespace Etoile
 	{
 		ui.setupUi(this);
 		ui.graphicsView->setScene(&m_scene);
+		m_scene.setContainer(this);
 		//ui.graphicsView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 		//ui.graphicsView->setRenderHint(QPainter::Antialiasing, true);
 		init();
@@ -40,6 +41,7 @@ namespace Etoile
 	void QTTimeLineWidget::init()
 	{
 		connect(&m_scene, SIGNAL(currentFrameChanged(int)), this->ui.current, SLOT(setValue(int)));
+		needToSetStartEndActive(0);
 	}
 
 	QTTimeLineWidget::~QTTimeLineWidget()
@@ -53,6 +55,18 @@ namespace Etoile
 		reset();
 	}
 
+	void QTTimeLineScene::setStartEndActive(int start, int end)
+	{
+		foreach(QGraphicsItem* item , this->items())
+		{
+			int nb = ((QTTimelineItem*)item)->m_frame;
+			if(nb >= start && nb <= end)
+				item->setSelected(true);
+			else
+				item->setSelected(false);
+		}
+	}
+
 	void QTTimeLineScene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
 	{
 		if(m_startSelection)
@@ -64,6 +78,17 @@ namespace Etoile
 				{
 					item->setSelected(true);
 					m_selectedFrames.push_back(((QTTimelineItem*)item)->m_frame);
+					if(item->boundingRect().contains(m_end))
+					{
+						if(m_currentFrame <= ((QTTimelineItem*)item)->m_frame)
+						{
+							p_parent->setEndValue(((QTTimelineItem*)item)->m_frame);
+						}else
+						{
+							//p_parent->setEndValue(m_currentFrame);
+							p_parent->setStartValue(((QTTimelineItem*)item)->m_frame);
+						}
+					}
 				}else
 				{
 					item->setSelected(false);
@@ -92,6 +117,8 @@ namespace Etoile
 					item->setSelected(true);
 					m_currentFrame = ((QTTimelineItem*)item)->m_frame;
 					m_selectedFrames.push_back(m_currentFrame);
+					p_parent->setStartValue(m_currentFrame);
+					p_parent->setEndValue(m_currentFrame);
 				}else
 				{
 					item->setSelected(false);

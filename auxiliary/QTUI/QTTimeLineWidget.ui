@@ -69,6 +69,9 @@
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
+        <property name="maximum">
+         <number>9999999</number>
+        </property>
        </widget>
       </item>
       <item>
@@ -105,7 +108,7 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="maximum">
-         <number>1000000</number>
+         <number>9999999</number>
         </property>
         <property name="value">
          <number>100</number>
@@ -160,5 +163,41 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>start</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>QTTimeLineWidget</receiver>
+   <slot>needToSetStartEndActive(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>159</x>
+     <y>10</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>323</x>
+     <y>66</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>end</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>QTTimeLineWidget</receiver>
+   <slot>needToSetStartEndActive(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>357</x>
+     <y>10</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>323</x>
+     <y>66</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>needToSetStartEndActive(int)</slot>
+ </slots>
 </ui>
