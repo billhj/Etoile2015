@@ -15,11 +15,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenMeshCore", "..\..\exter
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileRenderCameraViewer", "..\..\applications\EtoileRenderCameraViewer\EtoileRenderCameraViewer.vcxproj", "{153551F2-D9DB-440C-BE47-550AC6F64205}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QGLRenderer", "QGLRenderer.vcxproj", "{B69F62EB-5310-4231-A747-B2E5D06615C8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QtUI", "QGLRenderer.vcxproj", "{B69F62EB-5310-4231-A747-B2E5D06615C8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TexturePainter", "..\..\applications\TexturePainter\TexturePainter.vcxproj", "{45E94DCD-E203-457C-A907-0F55B7525A57}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MeshIO", "MeshIO.vcxproj", "{BD803612-9DA6-44B9-8878-56A0DD59E036}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SkeletonViewer", "..\..\applications\SkeletonViewer\SkeletonViewer.vcxproj", "{B32B7FE5-2D72-443D-84B5-E281BF9E2C00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{BD803612-9DA6-44B9-8878-56A0DD59E036}.Debug|Win32.Build.0 = Debug|Win32
 		{BD803612-9DA6-44B9-8878-56A0DD59E036}.Release|Win32.ActiveCfg = Release|Win32
 		{BD803612-9DA6-44B9-8878-56A0DD59E036}.Release|Win32.Build.0 = Release|Win32
+		{B32B7FE5-2D72-443D-84B5-E281BF9E2C00}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B32B7FE5-2D72-443D-84B5-E281BF9E2C00}.Debug|Win32.Build.0 = Debug|Win32
+		{B32B7FE5-2D72-443D-84B5-E281BF9E2C00}.Release|Win32.ActiveCfg = Release|Win32
+		{B32B7FE5-2D72-443D-84B5-E281BF9E2C00}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

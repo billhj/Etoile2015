@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/axis.png</file>
+        <file>Resources/brush.png</file>
+        <file>Resources/brush2.png</file>
+        <file>Resources/clipboard46.png</file>
+        <file>Resources/copy12.png</file>
+        <file>Resources/cut.png</file>
+        <file>Resources/document79.png</file>
+        <file>Resources/door13.png</file>
+        <file>Resources/floppy13.png</file>
+        <file>Resources/floppy15.png</file>
+        <file>Resources/garbage4.png</file>
+        <file>Resources/grid.png</file>
+        <file>Resources/magicselection.png</file>
+        <file>Resources/move.png</file>
+        <file>Resources/open127.png</file>
+        <file>Resources/pencil.png</file>
+        <file>Resources/pipette2.png</file>
+        <file>Resources/redo.png</file>
+        <file>Resources/undo.png</file>
+    </qresource>
+</RCC>

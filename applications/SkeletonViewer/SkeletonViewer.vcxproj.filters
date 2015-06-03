@@ -38,15 +38,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TexturePainter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_TexturePainter.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_TexturePainter.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MeshViewer.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -59,91 +50,100 @@
     <ClCompile Include="..\..\auxiliary\image\QTImageLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SkeletonViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SkeletonViewer.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SkeletonViewer.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_SkeletonViewer.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="TexturePainter.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="TexturePainter.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="MeshViewer.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\SkeletonViewer\SkeletonViewer.qrc">
+    <CustomBuild Include="SkeletonViewer.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SkeletonViewer.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SkeletonViewer.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GeneratedFiles\ui_TexturePainter.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\auxiliary\image\QTImageLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\auxiliary\image\GeneralImageLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_SkeletonViewer.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\SkeletonViewer\Resources\axis.png">
+    <None Include="Resources\axis.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\brush.png">
+    <None Include="Resources\brush.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\brush2.png">
+    <None Include="Resources\brush2.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\clipboard46.png">
+    <None Include="Resources\clipboard46.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\copy12.png">
+    <None Include="Resources\copy12.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\cut.png">
+    <None Include="Resources\cut.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\document79.png">
+    <None Include="Resources\document79.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\door13.png">
+    <None Include="Resources\door13.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\floppy13.png">
+    <None Include="Resources\floppy13.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\floppy15.png">
+    <None Include="Resources\floppy15.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\garbage4.png">
+    <None Include="Resources\garbage4.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\grid.png">
+    <None Include="Resources\grid.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\magicselection.png">
+    <None Include="Resources\magicselection.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\move.png">
+    <None Include="Resources\move.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\open127.png">
+    <None Include="Resources\open127.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\pencil.png">
+    <None Include="Resources\pencil.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\pipette2.png">
+    <None Include="Resources\pipette2.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\redo.png">
+    <None Include="Resources\redo.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\undo.png">
+    <None Include="Resources\undo.png">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
