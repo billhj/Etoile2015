@@ -9,10 +9,11 @@
 #pragma once
 #include <vector>
 #include "math/MathHead.h"
+#include "Component.h"
 
 namespace Etoile
 {
-	class Skeleton;
+	struct Skeleton;
 	struct Joint
 	{
 		Joint(Skeleton* sk, int parent, const std::string& name);
@@ -28,8 +29,12 @@ namespace Etoile
 	};
 
 
-	struct Skeleton
+	struct Skeleton : public Component
 	{
+		Skeleton(const std::string& name) : Component(SKELETON_COMPONENT), m_name(name)
+		{
+		
+		}
 		void updateJoint(int idx)
 		{
 			int parentId = m_joints[idx]->m_index_parent;
@@ -50,5 +55,6 @@ namespace Etoile
 		std::vector<Quaternionf> m_globalOrientations;
 		std::vector<Vec3f> m_localTranslations;
 		std::vector<Vec3f> m_globalPositions;
+		std::string m_name;
 	};
 }

@@ -27,6 +27,7 @@
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLMeshRenderPass.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLMeshRenderer.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLSimpleMeshRenderer.h" />
+    <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLSkeletonRenderer.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLSLGpuProgram.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLTexture.h" />
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLTexture2D.h" />

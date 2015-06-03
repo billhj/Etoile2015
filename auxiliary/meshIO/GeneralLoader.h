@@ -16,6 +16,8 @@
 #include "geometry/RenderManager.h"
 #include "geometry/SceneManager.h"
 #include "meshIO/OBJSimpleMeshLoader.h"
+#include "renderer/OpenGL/GLSkeletonRenderer.h"
+#include "meshIO/SkeletonTextFileLoader.h"
 
 namespace Etoile
 {
@@ -41,6 +43,28 @@ namespace Etoile
 			}else
 			{
 				delete mesh;
+				return NULL;
+			}
+		}
+
+		static Entity* loadSkeletonFromFile(const std::string& fileName) 
+		{
+			Scene* scene = SceneManager::getInstance()->getCurrentScene();
+			SkeletonTextFileLoader loader;
+			Skeleton* sk = loader.loadFromFile(fileName);
+			
+			//bool created = loader.loadFromFile(fileName, mesh);
+			if(sk != NULL){
+				GLSkeletonRenderer* skeletonRenderer = new GLSkeletonRenderer(fileName);
+				skeletonRenderer->setSkeleton(sk);
+
+				Entity* entity = new Entity(fileName, scene);
+				entity->setComponent(ComponentType::RENDER_COMPONENT, skeletonRenderer);
+				entity->setComponent(ComponentType::SKELETON_COMPONENT, sk);
+				RenderManager::getInstance()->addIntoObjectRendererList(skeletonRenderer);
+				return entity;
+			}else
+			{
 				return NULL;
 			}
 		}
