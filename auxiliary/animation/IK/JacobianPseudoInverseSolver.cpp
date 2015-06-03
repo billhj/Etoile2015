@@ -7,7 +7,6 @@
 */
 
 #include "JacobianPseudoInverseSolver.h"
-#include "math/MathHead.h"
 
 namespace Etoile
 {
