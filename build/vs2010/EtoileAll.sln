@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SkeletonViewer", "..\..\app
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QTUI", "QTUI.vcxproj", "{B69F62EB-5310-4231-A747-B2E5D06615C8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileAnimation", "EtoileAnimation.vcxproj", "{EB16B270-4A07-4664-8E68-653713770DB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -73,6 +75,10 @@ Global
 		{B69F62EB-5310-4231-A747-B2E5D06615C8}.Debug|Win32.Build.0 = Debug|Win32
 		{B69F62EB-5310-4231-A747-B2E5D06615C8}.Release|Win32.ActiveCfg = Release|Win32
 		{B69F62EB-5310-4231-A747-B2E5D06615C8}.Release|Win32.Build.0 = Release|Win32
+		{EB16B270-4A07-4664-8E68-653713770DB1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EB16B270-4A07-4664-8E68-653713770DB1}.Debug|Win32.Build.0 = Debug|Win32
+		{EB16B270-4A07-4664-8E68-653713770DB1}.Release|Win32.ActiveCfg = Release|Win32
+		{EB16B270-4A07-4664-8E68-653713770DB1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
