@@ -8,11 +8,11 @@
 
 #pragma once
 #include <vector>
+#include "math/MathHead.h"
 
 namespace Etoile
 {
 	class Skeleton;
-	class Transform;
 	struct Joint
 	{
 		Joint(Skeleton* sk, int parent, const std::string& name);
@@ -27,14 +27,25 @@ namespace Etoile
 
 	struct Skeleton
 	{
-		/*void updateJoint(int idx)
+		void updateJoint(int idx)
 		{
 			int parentId = m_joints[idx]->m_index_parent;
-			m_globalTransform[idx] = m_globalTransform[parentId] * m_localTransform[idx];
-		}*/
+			if(parentId < 0)
+			{
+				m_globalPositions[idx] = m_localTranslations[idx];
+				m_globalOrientations[idx] = m_localRotations[idx];
+			}
+			else
+			{
+				m_globalPositions[idx] = m_globalPositions[parentId] + m_globalOrientations[parentId] * m_localTranslations[idx];
+				m_globalOrientations[idx] = m_globalOrientations[parentId] * m_localRotations[idx];
+			}
+		}
 
 		std::vector<Joint*> m_joints;
-		std::vector<Transform> m_localTransform;
-		std::vector<Transform> m_globalTransform;
+		std::vector<Quaternionf> m_localRotations;
+		std::vector<Quaternionf> m_globalOrientations;
+		std::vector<Vec3f> m_localTranslations;
+		std::vector<Vec3f> m_globalPositions;
 	};
 }
