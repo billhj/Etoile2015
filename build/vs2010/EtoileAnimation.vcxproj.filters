@@ -1,3 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ik">
+      <UniqueIdentifier>{c862344f-8107-452d-8de0-6a829273f71e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\auxiliary\animation\IK\IKChain.cpp">
+      <Filter>ik</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.cpp">
+      <Filter>ik</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.cpp">
+      <Filter>ik</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\auxiliary\animation\IK\IKSolver.h">
+      <Filter>ik</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\IKChain.h">
+      <Filter>ik</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.h">
+      <Filter>ik</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.h">
+      <Filter>ik</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

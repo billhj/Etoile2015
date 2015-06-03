@@ -1,0 +1,74 @@
+/**
+* Copyright(C) 2009-2012                
+* @author Jing HUANG
+* @file IKSolver.h
+* @brief 
+* @date 1/2/2011
+*/
+
+#pragma once
+#include <vector>
+#include "IKChain.h"
+
+namespace Etoile
+{
+	enum IKSolverType
+	{
+		CCD,
+		JACOBIAN_DLS,
+		JACOBIAN_PSEUDO_INVERSE,
+		JACOBIAN_TRANSPOSE,
+		MASS_SPRING
+	};
+
+	class IKSolver
+	{
+	protected:
+		int m_maxTries;
+		float m_targetThreshold;
+		float m_stepweight;
+
+	public:
+		virtual std::string getIKSolverName() = 0;
+		inline IKSolver(int maxTries = 50, float targetThreshold = 0.5)
+			: m_maxTries(maxTries),
+			m_targetThreshold(targetThreshold)
+		{ 
+			m_stepweight = 1;
+		}
+
+		virtual bool compute(IKChain* chain, Eigen::Vector3f, bool) = 0;
+
+		inline float getSingleStepValue() const
+		{
+			return m_stepweight;
+		}
+
+		void setSingleStepValue(float v)
+		{
+			this->m_stepweight = v;
+		}
+
+		inline float getTargetThreshold() const
+		{
+			return m_targetThreshold;
+		}
+
+		void setTargetThreshold(float targetThreshold)
+		{
+			this->m_targetThreshold = targetThreshold;
+		}
+
+		inline int getMaxNumberOfTries() const
+		{
+			return m_maxTries;
+		}
+
+		inline void setMaxNumberOfTries(int tries)
+		{
+			this->m_maxTries = tries;
+		}
+
+	};
+}
+

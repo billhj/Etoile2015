@@ -10,6 +10,17 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\auxiliary\animation\IK\IKChain.cpp" />
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.cpp" />
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\auxiliary\animation\IK\IKChain.h" />
+    <ClInclude Include="..\..\auxiliary\animation\IK\IKSolver.h" />
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.h" />
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EB16B270-4A07-4664-8E68-653713770DB1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -54,7 +65,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\extern;..\..\core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\extern;..\..\core;..\..\auxiliary</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -71,7 +82,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\extern;..\..\core</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\extern;..\..\core;..\..\auxiliary</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
