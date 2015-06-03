@@ -64,10 +64,8 @@ namespace Etoile
 			// Save OpenGL state
 			glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-			GLboolean lighting, colorMaterial;
-			glGetBooleanv(GL_LIGHTING, &lighting);
+			GLboolean colorMaterial;
 			glGetBooleanv(GL_COLOR_MATERIAL, &colorMaterial);
-			glDisable(GL_LIGHTING);
 			glDisable(GL_COLOR_MATERIAL);
 
 			// Set neutral GL state
@@ -80,7 +78,7 @@ namespace Etoile
 			glDisable(GL_TEXTURE_GEN_S);
 			glDisable(GL_TEXTURE_GEN_T);
 
-			glDisable(GL_DEPTH_TEST);
+			//glDisable(GL_DEPTH_TEST);
 
 			for(unsigned int i = 0; i < sk->m_joints.size(); ++i)
 			{
@@ -93,7 +91,7 @@ namespace Etoile
 					float color[4];
 					color[0] = 0.8f;  color[1] = 0.1f;  color[2] = 0.1f;  color[3] = 1.0f;
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-					drawSphere_convenient(pos.x(), pos.y(), pos.z(), 10, 10, 10);
+					drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.1, 10, 10);
 				}
 				else
 				{
@@ -103,21 +101,19 @@ namespace Etoile
 						float color[4];
 						color[0] = 0.1f;  color[1] = 0.1f;  color[2] = 1.0f;  color[3] = 1.0f;
 						glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-						drawCylinder_convenient(pos.x(), pos.y(), pos.z(), posParent.x(), posParent.y(), posParent.z(), 10, 10);
+						drawCylinder_convenient(pos.x(), pos.y(), pos.z(), posParent.x(), posParent.y(), posParent.z(), 0.05, 10);
 					}
 					{
 						float color[4];
 						color[0] = 0.8f;  color[1] = 0.1f;  color[2] = 0.1f;  color[3] = 1.0f;
 						glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-						drawSphere_convenient(pos.x(), pos.y(), pos.z(), 10, 10, 10);
+						drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.1, 10, 10);
 					}
 				}
 			}
 
 			if (colorMaterial)
 				glEnable(GL_COLOR_MATERIAL);
-			if (!lighting)
-				glDisable(GL_LIGHTING);
 			glPopAttrib();
 		}
 

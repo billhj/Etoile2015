@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TexturePainter</string>
+   <string>SkeletonViewer</string>
   </property>
   <widget class="MeshViewer" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">

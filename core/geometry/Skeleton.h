@@ -50,6 +50,14 @@ namespace Etoile
 			}
 		}
 
+		void update()
+		{
+			for(unsigned int i = 0; i < m_joints.size(); ++i)
+			{
+				updateJoint(i);
+			}
+		}
+
 		std::vector<Joint*> m_joints;
 		std::vector<Quaternionf> m_localRotations;
 		std::vector<Quaternionf> m_globalOrientations;

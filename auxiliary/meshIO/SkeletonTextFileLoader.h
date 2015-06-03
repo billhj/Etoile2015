@@ -87,7 +87,10 @@ namespace Etoile
 					stream >> y;
 					stream >> z;
 					Joint* j = new Joint(sk, idxP, name);
-					sk->m_localTranslations[j->m_index] = Vec3f(x,y,z);
+					sk->m_localTranslations.push_back(Vec3f(x,y,z));
+					sk->m_globalPositions.push_back(Vec3f());
+					sk->m_localRotations.push_back(Quaternionf());
+					sk->m_globalOrientations.push_back(Quaternionf());
 
 				}catch(exception& e)
 				{
@@ -96,6 +99,7 @@ namespace Etoile
 				}
 				++lineNb;
 			}
+			sk->update();
 			if(sk->m_joints.size()<1)
 			{
 				delete sk;

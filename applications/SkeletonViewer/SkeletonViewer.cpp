@@ -67,7 +67,7 @@ void SkeletonViewer::pipetteColorPicked()
 
 void SkeletonViewer::openFile()
 {
-	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("Mesh (*.obj)"));
+	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("File (*.obj; *.sk)"));
 	//QFile file(name);
 	if(name.isEmpty()) return;
 	openFile(name);
