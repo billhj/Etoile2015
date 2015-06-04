@@ -16,7 +16,6 @@ namespace Etoile
 		int tries = 0;
 		int columnDim = chain->m_localRotations.size();
 		MatrixXf jacobian(3, columnDim);
-
 		chain->update();
 		Vector3f& endpos = chain->m_globalPositions.back();
 		Vector3f distance = (target-endpos);
@@ -43,16 +42,16 @@ namespace Etoile
 						axis = chain->m_globalOrientations[lastDim] * axis;
 					}
 					Vector3f axisXYZgradient = axis.cross(boneVector);
-					jacobian(0, dim.m_idx) = axisXYZgradient(0);// * m_stepweight;
-					jacobian(1, dim.m_idx) = axisXYZgradient(1);// * m_stepweight;
-					jacobian(2, dim.m_idx) = axisXYZgradient(2);// * m_stepweight;
+					jacobian(0, dim.m_idx) = 0 == axisXYZgradient(0)? 0.000001: axisXYZgradient(0);// * m_stepweight;
+					jacobian(1, dim.m_idx) = 0 == axisXYZgradient(1)? 0.000001: axisXYZgradient(1);// * m_stepweight;
+					jacobian(2, dim.m_idx) = 0 == axisXYZgradient(2)? 0.000001: axisXYZgradient(2);// * m_stepweight;
 				}
 			}
 #if( defined( _DEBUG ) || defined( DEBUG ) )
-			std::cout<<"jacobian: "<<jacobian<<std::endl;
+			//std::cout<<"jacobian: "<<jacobian<<std::endl;
 #endif
 			MatrixXf jacobianTranspose = jacobian.transpose();
-			MatrixXf dR = jacobianTranspose * dT;
+			VectorXf dR = jacobianTranspose * dT;
 
 			for(unsigned int i = 0; i < columnDim; ++i)
 			{
@@ -64,7 +63,7 @@ namespace Etoile
 			endpos = chain->m_globalPositions.back();
 			distance = (target - endpos);
 #if( defined( _DEBUG ) || defined( DEBUG ) )
-			std::cout<<"endpos: "<<endpos.transpose()<<"     distance:  " << distance.norm()<<std::endl;
+			//std::cout<<"endpos: "<<endpos.transpose()<<"     distance:  " << distance.norm()<<std::endl;
 #endif
 		}
 
@@ -73,7 +72,7 @@ namespace Etoile
 			return false;
 		}
 #if( defined( _DEBUG ) || defined( DEBUG ) )
-		std::cout<<"iterations: "<<tries<<std::endl;
+		std::cout<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
 #endif
 		return true;
 	}
