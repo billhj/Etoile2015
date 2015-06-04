@@ -74,7 +74,7 @@ namespace Etoile
 				float v2 = dR.transpose() * dR;
 				lamda = v / v2;
 #if( defined( _DEBUG ) || defined( DEBUG ) )
-				std::cout<<"lamda: "<<lamda<<std::endl;
+				//std::cout<<"lamda: "<<lamda<<std::endl;
 #endif
 			}
 			MatrixXf dls = jacobianTranspose * ( a +  lamda * lamda * MatrixXf::Identity(a.rows(), a.cols())).inverse();

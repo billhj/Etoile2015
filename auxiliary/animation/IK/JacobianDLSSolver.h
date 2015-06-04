@@ -15,7 +15,7 @@ namespace Etoile
 	class JacobianDLSSolver : public IKSolver
 	{
 	public:
-		JacobianDLSSolver(int maxTries = 50, float targetThreshold = 0.5):IKSolver(maxTries, targetThreshold){}
+		JacobianDLSSolver(int maxTries = 50, float targetThreshold = 0.005):IKSolver(maxTries, targetThreshold){}
 		virtual std::string getIKSolverName(){ return "JacobianDLS";}
 		virtual bool compute(IKChain* chain, Eigen::Vector3f, bool) override;
 	};
