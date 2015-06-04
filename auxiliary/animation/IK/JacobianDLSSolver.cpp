@@ -7,111 +7,105 @@
 */
 
 #include "JacobianDLSSolver.h"
-#include "math/MathHead.h"
+#include <ctime>
 
 namespace Etoile
 {
 
-	bool JacobianDLSSolver::compute(std::vector<Joint*>& _links, Vec3f target, bool enableConstraints)
+	using namespace Eigen;
+	bool JacobianDLSSolver::compute(IKChain* chain, Eigen::Vector3f target, bool enableConstraints)
 	{
-		/*for(unsigned int i = 0; i < _links.size(); ++i)
-		{
-			_links[i]->reset();
-		}*/
-		int size = _links.size() - 1;
-		Vec3f rootPos, curEnd = _links[size]->getWorldPosition(), targetVector, curVector, endPos = target;
-		float distance;
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+		clock_t time = clock();
+#endif
 		int tries = 0;
+		int columnDim = chain->m_localRotations.size();
+		MatrixXf jacobian(3, columnDim);
+		chain->update();
+		Vector3f& endpos = chain->m_globalPositions.back();
+		Vector3f distance = (target-endpos);
 
-		//MatrixMN jacobian(6, _links.size());
-		//std::vector<Vec3f> axis(_links.size());
+		float beta = 0.5f;
 
-		MatrixMNf jacobian(3, size);
-		std::vector<Vec3f> axis(size);
-
-		Vec3f difference = endPos - curEnd;
-		distance = difference.length();
-
-		while (++tries < _maxTries &&
-			distance > _targetThreshold)
+		while (++tries < m_maxTries &&
+			distance.norm() > m_targetThreshold)
 		{
-
-			//compute the jacobian
-			for(int i = 0; i < size; i++)
+			Vector3f dT = distance * beta;
+			for(unsigned int i = 0; i <  chain->m_joints.size(); ++i)
 			{
-				rootPos = _links[i]->getWorldPosition();	// Position of current node
-
-				curVector    = curEnd - rootPos;	// Vector current link -> current effector position
-				targetVector =  endPos - rootPos;	// Vector current link -> target
-
-				curVector.normalize();
-				targetVector.normalize();
-
-				//Vec3f axis = targetVector.CrossProduct(curVector);
-				//rotation axis
-				axis[i] = curVector.cross3( targetVector);
-				axis[i].normalize();
-
-				Vec3f entry = -curVector.cross3(axis[i]);
-				entry.normalize();
-				axis[i] = _links[i]->getWorldRotation().inverse() * axis[i];
-				//VecNf v(6);
-				//for( int j = 0; j < 3; j++ )
-				//{
-				//	v[j] = *((float*)entry + j);
-				//	v[j + 3] = *((float*)axis[i] + j);
-				//}
-
-				VecNf v(3, &entry[0]);
-
-				jacobian.setColumn(i, v);
-			}
-
-			//setting the force
-			VecNf force(3);
-			force[0] = difference.x() * _stepweight;
-			force[1] = difference.y() * _stepweight;
-			force[2] = difference.z() * _stepweight;
-
-			float dumpingLambda = 0.3;
-
-			MatrixMNf JT = jacobian.transpose();
-			MatrixMNf U = jacobian * JT;
-			U.addToDiagonal(dumpingLambda);
-			VecNf y(3);
-			U.solveSystem(y, force);
-
-			//computing q'
-			VecNf q = JT * y;
-
-			//Integrate and apply changes
-			for(int i = 0; i < size; i++ )
-			{
-				Quaternionf rotation(axis[i], q[i] * 0.01);
-				rotation.normalize();
-				_links[i]->rotate(rotation);
-				if(enableConstraints)
+				IKChain::Joint* joint = chain->m_joints[i];
+				std::vector<IKChain::Dim>& dims = joint->m_dims;
+				for(unsigned int j = 0; j < dims.size(); ++j)
 				{
-					checkDOFsRestrictions(_links[i], _links[i]->getDOFConstraints());
+					IKChain::Dim& dim = dims[j];
+					Vector3f& jointPos = chain->m_globalPositions[dim.m_idx];
+					Vector3f boneVector = endpos - jointPos;
+
+					Vector3f axis = chain->m_axis[dim.m_idx];
+					int lastDim = dim.m_lastIdx;
+					if(lastDim >= 0)
+					{
+						axis = chain->m_globalOrientations[lastDim] * axis;
+					}
+					Vector3f axisXYZgradient = axis.cross(boneVector);
+					jacobian(0, dim.m_idx) = 0 == axisXYZgradient(0)? 0.000001: axisXYZgradient(0);// * m_stepweight;
+					jacobian(1, dim.m_idx) = 0 == axisXYZgradient(1)? 0.000001: axisXYZgradient(1);// * m_stepweight;
+					jacobian(2, dim.m_idx) = 0 == axisXYZgradient(2)? 0.000001: axisXYZgradient(2);// * m_stepweight;
 				}
-				//_links[i]->update();
 			}
-			for(unsigned int i = 0; i < _links.size(); i++ )
+			//#if( defined( _DEBUG ) || defined( DEBUG ) )
+			//			std::cout<<"jacobian: "<<std::endl<<jacobian<<std::endl;
+			//#endif
+
+
+			MatrixXf jacobianTranspose = jacobian.transpose();
+			MatrixXf a =  jacobian * jacobianTranspose;
+
+			MatrixXf aInv = a.inverse();
+			MatrixXf pseudoInverse = jacobianTranspose * aInv;
+			VectorXf dR = pseudoInverse * dT;
+
+
+			float lamda = 1;
+			//compute Lamda
 			{
-				_links[i]->update();
+				Vector3f JTheta = jacobian * dR - dT;
+				float v = JTheta.transpose() * JTheta;
+				float v2 = dR.transpose() * dR;
+				lamda = v / v2;
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+				std::cout<<"lamda: "<<lamda<<std::endl;
+#endif
+			}
+			MatrixXf dls = jacobianTranspose * ( a +  lamda * lamda * MatrixXf::Identity(a.rows(), a.cols())).inverse();
+			dR = dls * dT;
 
+			for(unsigned int i = 0; i < columnDim; ++i)
+			{
+				chain->m_values[i] = castPiRange(chain->m_values[i] + dR[i]);
+				chain->m_values[i] = clamp(chain->m_values[i], chain->m_anglelimites[i][0], chain->m_anglelimites[i][1]);
+				chain->m_localRotations[i] = AngleAxisf(chain->m_values[i], chain->m_axis[i]);	
 			}
 
-			curEnd = _links[size]->getWorldPosition();
-			difference = endPos - curEnd;
-			distance = difference.length();
+			chain->update();
+			endpos = chain->m_globalPositions.back();
+			distance = (target - endpos);
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+			//std::cout<<"endpos: "<<endpos.transpose()<<"     distance:  " << distance.norm()<<std::endl;
+#endif
 		}
-
-		if (tries == _maxTries)
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+		time = clock() - time;
+		int ms = double(time) / CLOCKS_PER_SEC * 1000;
+		std::cout<<"timee elapsed: "<<ms<<std::endl;
+#endif
+		if (tries == m_maxTries)
 		{
 			return false;
 		}
-
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+		std::cout<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
+#endif
 		return true;
 	}
 

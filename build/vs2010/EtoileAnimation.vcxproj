@@ -12,12 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\auxiliary\animation\IK\IKChain.cpp" />
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianDLSSolver.cpp" />
     <ClCompile Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.cpp" />
     <ClCompile Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\auxiliary\animation\IK\IKChain.h" />
     <ClInclude Include="..\..\auxiliary\animation\IK\IKSolver.h" />
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianDLSSolver.h" />
     <ClInclude Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.h" />
     <ClInclude Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.h" />
   </ItemGroup>

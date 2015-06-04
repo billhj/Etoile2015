@@ -71,6 +71,9 @@
     <ClCompile Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianDLSSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MeshViewer.h">
@@ -103,6 +106,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianDLSSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
