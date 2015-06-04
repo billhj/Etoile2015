@@ -223,6 +223,9 @@
     <ClInclude Include="..\..\core\animation\Frame.h">
       <Filter>animation</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\animation\BVH.h">
+      <Filter>animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -319,6 +322,9 @@
     </ClCompile>
     <ClCompile Include="..\..\core\geometry\Skeleton.cpp">
       <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\core\animation\BVH.cpp">
+      <Filter>animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
