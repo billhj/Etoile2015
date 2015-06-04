@@ -8,6 +8,7 @@
 
 #pragma once
 #include <vector>
+#include <iostream>
 #include <Eigen/Dense>
 
 namespace Etoile
@@ -44,18 +45,18 @@ namespace Etoile
 		void updateJoint(int idx)
 		{
 			Joint* current = m_joints[idx];
-			for(int i = 0; i < current->m_dims.size(); ++i)
+			for(unsigned int i = 0; i < current->m_dims.size(); ++i)
 			{
 				Dim& dim = current->m_dims[i];
 				if(dim.m_lastIdx >= 0)
 				{
-					m_globalPositions[i] = m_globalPositions[dim.m_lastIdx] + m_globalOrientations[dim.m_lastIdx] * m_localTranslations[i];
-					m_globalOrientations[i] = m_globalOrientations[dim.m_lastIdx] * m_localRotations[i];	
+					m_globalPositions[dim.m_idx] = m_globalPositions[dim.m_lastIdx] + m_globalOrientations[dim.m_lastIdx] * m_localTranslations[dim.m_idx];
+					m_globalOrientations[dim.m_idx] = m_globalOrientations[dim.m_lastIdx] * m_localRotations[dim.m_idx];	
 				}
 				else
 				{
-					m_globalPositions[i] = m_localTranslations[i];
-					m_globalOrientations[i] = m_localRotations[i];
+					m_globalPositions[dim.m_idx] = m_localTranslations[dim.m_idx];
+					m_globalOrientations[dim.m_idx] = m_localRotations[dim.m_idx];
 				}
 			}
 		}
@@ -74,6 +75,10 @@ namespace Etoile
 		std::vector<Eigen::Vector3f> m_localTranslations;
 		std::vector<Eigen::Vector3f> m_globalPositions;
 		std::string m_name;
+
+
+		bool loadFromFile(const std::string& fileName);
+		void read(std::istream& in);
 	public:
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};

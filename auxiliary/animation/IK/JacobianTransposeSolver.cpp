@@ -10,19 +10,6 @@
 
 namespace Etoile
 {
-	float castPiRange(float value)
-	{
-		while(value > 3.14159265)
-		{
-			value -= 3.14159265;
-		}
-		while(value < -3.14159265)
-		{
-			value += 3.14159265;
-		}
-		return value;
-	}
-
 	using namespace Eigen;
 	bool JacobianTransposeSolver::compute(IKChain* chain, Vector3f target, bool enableConstraints)
 	{
@@ -40,67 +27,61 @@ namespace Etoile
 			distance.norm() > m_targetThreshold)
 		{
 			Vector3f dT = distance * beta;
-			/*for(unsigned int i = 0; i <  chain->m_joints.size(); ++i)
+			for(unsigned int i = 0; i <  chain->m_joints.size(); ++i)
 			{
-				Vector3f& jointPos = chain->m_globalPositions[i];
-				Vector3f boneVector = endpos - jointPos;
 				IKChain::Joint* joint = chain->m_joints[i];
-				Vector3f axis0 = joint->m_axis[0], axis1 = joint->m_axis[1], axis2 = joint->m_axis[2];
-				int parentIndex = joint->m_index_parent;
-				if(parentIndex >= 0)
+				std::vector<IKChain::Dim>& dims = joint->m_dims;
+				for(unsigned int j = 0; j < dims.size(); ++j)
 				{
-					axis0 = chain->m_globalOrientations[parentIndex] * axis0;
-					axis1 = chain->m_globalOrientations[parentIndex] * axis1;
-					axis2 = chain->m_globalOrientations[parentIndex] * axis2;
+					IKChain::Dim& dim = dims[j];
+					Vector3f& jointPos = chain->m_globalPositions[dim.m_idx];
+					Vector3f boneVector = endpos - jointPos;
+					Vector3f axis = dim.m_axis;
+					int lastDim = dim.m_lastIdx;
+					if(lastDim >= 0)
+					{
+						axis = chain->m_globalOrientations[lastDim] * axis;
+					}
+					Vector3f axisXYZgradient = axis.cross(boneVector);
+					jacobian(0, dim.m_idx) = axisXYZgradient(0);// * m_stepweight;
+					jacobian(1, dim.m_idx) = axisXYZgradient(1);// * m_stepweight;
+					jacobian(2, dim.m_idx) = axisXYZgradient(2);// * m_stepweight;
 				}
-
-				Vector3f axis0XYZ = axis0.cross(boneVector);
-				int column = i * 3;
-				jacobian(0, column) = axis0XYZ(0);
-				jacobian(1, column) = axis0XYZ(1);
-				jacobian(2, column) = axis0XYZ(2);
-
-				Vector3f axis1XYZ = axis1.cross(boneVector);
-				++column;
-				jacobian(0, column) = axis1XYZ(0);
-				jacobian(1, column) = axis1XYZ(1);
-				jacobian(2, column) = axis1XYZ(2);
-
-				Vector3f axis2XYZ = axis2.cross(boneVector);
-				++column;
-				jacobian(0, column) = axis2XYZ(0);
-				jacobian(1, column) = axis2XYZ(1);
-				jacobian(2, column) = axis2XYZ(2);
 			}
-
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+			std::cout<<"jacobian: "<<jacobian<<std::endl;
+#endif
 			MatrixXf jacobianTranspose = jacobian.transpose();
 			MatrixXf dR = jacobianTranspose * dT;
 
-			int j = 0;
+			int m = 0;
 			for(unsigned int i = 0; i < chain->m_joints.size(); ++i)
 			{
 				IKChain::Joint* joint = chain->m_joints[i];
-				joint->m_values[0] = castPiRange(joint->m_values[0] + dR(j));
-				++j;
-				joint->m_values[1] = castPiRange(joint->m_values[1] + dR(j));
-				++j;
-				joint->m_values[2] = castPiRange(joint->m_values[2] + dR(j));
-				++j;
 
-				//chain->m_localRotations[i] = ;
+				std::vector<IKChain::Dim>& dims = joint->m_dims;
+				for(unsigned int j = 0; j < dims.size(); ++j, ++m)
+				{
+					dims[j].m_value = castPiRange(dims[j].m_value + dR(m));
+					chain->m_localRotations[dims[j].m_idx] = AngleAxisf(dims[j].m_value, dims[j].m_axis);;
+				}
 				chain->updateJoint(i);
 			}
 
 			endpos = chain->m_globalPositions.back();
 			distance = (target - endpos);
-			*/
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+			std::cout<<"endpos: "<<endpos.transpose()<<"     distance:  " << distance.norm()<<std::endl;
+#endif
 		}
 
 		if (tries == m_maxTries)
 		{
 			return false;
 		}
-
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+		std::cout<<"iterations: "<<tries<<std::endl;
+#endif
 		return true;
 	}
 

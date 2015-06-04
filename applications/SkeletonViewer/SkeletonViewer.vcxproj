@@ -72,6 +72,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\auxiliary\animation\IK\IKChain.cpp" />
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.cpp" />
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.cpp" />
     <ClCompile Include="..\..\auxiliary\image\QTImageLoader.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_MeshViewer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -96,6 +99,9 @@
     <ClCompile Include="SkeletonViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\auxiliary\animation\IK\IKChain.h" />
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.h" />
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.h" />
     <ClInclude Include="..\..\auxiliary\image\GeneralImageLoader.h" />
     <ClInclude Include="..\..\auxiliary\image\QTImageLoader.h" />
     <ClInclude Include="GeneratedFiles\ui_SkeletonViewer.h" />

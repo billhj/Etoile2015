@@ -62,6 +62,15 @@
     <ClCompile Include="GeneratedFiles\qrc_SkeletonViewer.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\IKChain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MeshViewer.h">
@@ -86,6 +95,15 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_SkeletonViewer.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\IKChain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianPseudoInverseSolver.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

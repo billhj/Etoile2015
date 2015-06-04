@@ -7,6 +7,8 @@
 */
 
 #include "IKChain.h"
+#include <fstream>
+#include <exception>
 
 /**
 * @brief For tracking memory leaks under windows using the crtdbg
@@ -38,14 +40,120 @@ namespace Etoile
 			m_dims[i].m_idx = sk->m_localRotations.size();
 			if(i == 0)
 			{
+				if( parent >= 0)
+				{
 				m_dims[i].m_lastIdx = sk->m_joints[parent]->m_dims.back().m_idx;
+				}
+				else
+				{
+					m_dims[i].m_lastIdx = -1;
+				}
+			}else
+			{
+				m_dims[i].m_lastIdx = m_dims[i - 1].m_idx;
 			}
-			sk->m_localRotations.push_back(Eigen::Matrix3f());
-			sk->m_globalOrientations.push_back(Eigen::Matrix3f());
-			sk->m_localTranslations.push_back(Eigen::Vector3f());
-			sk->m_globalPositions.push_back(Eigen::Vector3f());
+
+			sk->m_localRotations.push_back(Eigen::Matrix3f::Identity());
+			sk->m_globalOrientations.push_back(Eigen::Matrix3f::Identity());
+			sk->m_localTranslations.push_back(Eigen::Vector3f::Zero());
+			sk->m_globalPositions.push_back(Eigen::Vector3f::Zero());
 		}
 	}
 
-	
+
+	bool IKChain::loadFromFile(const std::string& fileName)
+	{
+		std::fstream in(fileName.c_str(), std::ios_base::in );
+
+		if (!in.is_open() || !in.good())
+		{
+			std::cerr << "[SkeletonTextFileLoader] : cannot not open file "
+				<< fileName
+				<< std::endl;
+			return false;
+		}
+
+		{
+#if defined(WIN32)
+			std::string::size_type dot = fileName.find_last_of("\\/");
+#else
+			std::string::size_type dot = fileName.rfind("/");
+#endif
+			/*m_path = (dot == std::string::npos)
+			? "./"
+			: std::string(fileName.substr(0,dot+1));*/
+		}
+
+		read(in);
+
+		in.close();
+		return true;
+	}
+
+	void IKChain::read(std::istream& in)
+	{
+		std::string line;
+		int lineNb = 0;
+		while( in && !in.eof() )
+		{
+			std::getline(in,line);
+			if ( in.bad() ){
+				std::cout << "  Warning! Could not read file properly!"<<std::endl;
+			}
+
+			if ( line.size() == 0 || line[0] == '#' || isspace(line[0]) || line.empty() ) {
+				continue;
+			}
+
+			std::stringstream stream(line);
+			try
+			{
+				std::string name;
+				stream >> name;
+				int idxP;
+				stream >> idxP;
+				int dof;
+				stream >> dof;
+				float x,y,z;
+				stream >> x;
+				stream >> y;
+				stream >> z;
+				Joint* j = new Joint(this, idxP, dof, name);
+				m_localTranslations[j->m_dims[0].m_idx] = Eigen::Vector3f(x,y,z);
+				std::cout<< "Joint: "<<name <<" dof: "<<dof<< " parent: "<<idxP<<" localTrans: "<< m_localTranslations[j->m_dims[0].m_idx].transpose() <<std::endl;
+				for(int i = 0; i < dof; ++i)
+				{
+					std::getline(in,line);
+					/*if ( line.size() == 0 || line[0] == '#' || isspace(line[0]) || line.empty() ) {
+						continue;
+					}*/
+					std::stringstream stream(line);
+
+					float x,y,z;
+					stream >> x;
+					stream >> y;
+					stream >> z;
+					j->m_dims[i].m_axis = Eigen::Vector3f(x,y,z);
+					std::cout<<i<< " axis: "<<j->m_dims[i].m_axis.transpose()<<std::endl;
+
+					float minV,maxV;
+					stream >> minV;
+					stream >> maxV;
+					if(!stream.fail())
+					{
+						j->m_dims[i].m_anglelimites = Eigen::Vector2f(minV,maxV);
+						std::cout<<" limits: "<<j->m_dims[i].m_anglelimites.transpose()<<std::endl;
+					}
+				}
+
+			}catch(std::exception& e)
+			{
+				std::cout<<"IKChain: exception "<< lineNb<<" name "<<std::endl;
+				continue;
+			}
+			++lineNb;
+		}
+		this->update();
+	}
+
 }

@@ -30,11 +30,11 @@ namespace Etoile
 
 	public:
 		virtual std::string getIKSolverName() = 0;
-		inline IKSolver(int maxTries = 50, float targetThreshold = 0.5)
+		inline IKSolver(int maxTries = 50, float targetThreshold = 0.005)
 			: m_maxTries(maxTries),
 			m_targetThreshold(targetThreshold)
 		{ 
-			m_stepweight = 1;
+			m_stepweight = 0.5;
 		}
 
 		virtual bool compute(IKChain* chain, Eigen::Vector3f, bool) = 0;
@@ -69,6 +69,18 @@ namespace Etoile
 			this->m_maxTries = tries;
 		}
 
+		float castPiRange(float value)
+		{
+			while(value > 3.14159265)
+			{
+				value -= 3.14159265;
+			}
+			while(value < -3.14159265)
+			{
+				value += 3.14159265;
+			}
+			return value;
+		}
 	};
 }
 
