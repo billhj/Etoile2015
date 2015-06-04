@@ -20,7 +20,7 @@ namespace Etoile
 		int columnDim = chain->m_localRotations.size();
 		MatrixXf jacobian(3, columnDim);
 
-		VectorXf values(columnDim);
+	/*	VectorXf values(columnDim);
 		VectorXf limitsMin(columnDim);
 		VectorXf limitsMax(columnDim);
 		for(int i = 0; i < columnDim; ++i)
@@ -28,7 +28,7 @@ namespace Etoile
 			values(i) = chain->m_values[i];
 			limitsMin(i) = chain->m_anglelimites[i][0];
 			limitsMax(i) = chain->m_anglelimites[i][1];
-		}
+		}*/
 
 		chain->update();
 		Vector3f& endpos = chain->m_globalPositions.back();
@@ -75,7 +75,7 @@ namespace Etoile
 			MatrixXf nullspace = I - j_j;*/
 			VectorXf dR = pseudoInverse * dT;
 
-			/*std::cout<<"dR: "<<dR<<std::endl;
+/*			std::cout<<"dR: "<<dR.transpose()<<std::endl;
 
 			values+=dR;
 
@@ -99,8 +99,9 @@ namespace Etoile
 
 			for(unsigned int i = 0; i < columnDim; ++i)
 			{
-				values[i] = castPiRange(values[i]);
-				chain->m_localRotations[i] = AngleAxisf(values[i], chain->m_axis[i]);	
+				chain->m_values[i] = castPiRange(chain->m_values[i] + dR[i]);
+				chain->m_values[i] = clamp(chain->m_values[i], chain->m_anglelimites[i][0], chain->m_anglelimites[i][1]);
+				chain->m_localRotations[i] = AngleAxisf(chain->m_values[i], chain->m_axis[i]);	
 			}
 
 			chain->update();
@@ -116,12 +117,12 @@ namespace Etoile
 		std::cout<<"timee elapsed: "<<ms<<std::endl;
 #endif
 
-		for(int i = 0; i < columnDim; ++i)
+	/*	for(int i = 0; i < columnDim; ++i)
 		{
 			 chain->m_values[i] = values(i);
 			 chain->m_anglelimites[i][0] = limitsMin(i);
 			 chain->m_anglelimites[i][1] = limitsMax(i);
-		}
+		}*/
 		if (tries == m_maxTries)
 		{
 			return false;

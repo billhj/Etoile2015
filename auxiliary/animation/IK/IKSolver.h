@@ -81,6 +81,19 @@ namespace Etoile
 			}
 			return value;
 		}
+
+		float clamp(float value, float minV, float maxV)
+		{
+			if(value > maxV)
+			{
+				value = maxV;
+			}
+			if(value < minV)
+			{
+				value = minV;
+			}
+			return value;
+		}
 	};
 }
 
