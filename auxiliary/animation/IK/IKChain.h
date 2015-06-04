@@ -21,9 +21,6 @@ namespace Etoile
 		{
 			int m_lastIdx;
 			int m_idx;
-			Eigen::Vector3f m_axis;
-			Eigen::Vector2f m_anglelimites;
-			float m_value;
 		};
 
 		struct Joint
@@ -75,6 +72,10 @@ namespace Etoile
 		std::vector<Eigen::Vector3f> m_localTranslations;
 		std::vector<Eigen::Vector3f> m_globalPositions;
 		std::string m_name;
+
+		std::vector<Eigen::Vector3f> m_axis;
+		std::vector<Eigen::Vector2f> m_anglelimites;
+		std::vector<float> m_values;
 
 
 		bool loadFromFile(const std::string& fileName);

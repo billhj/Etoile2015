@@ -27,7 +27,7 @@ namespace Etoile
 			distance.norm() > m_targetThreshold)
 		{
 			Vector3f dT = distance * beta;
-			for(unsigned int i = 0; i <  chain->m_joints.size(); ++i)
+			for(unsigned int i = 0; i < chain->m_joints.size(); ++i)
 			{
 				IKChain::Joint* joint = chain->m_joints[i];
 				std::vector<IKChain::Dim>& dims = joint->m_dims;
@@ -36,7 +36,7 @@ namespace Etoile
 					IKChain::Dim& dim = dims[j];
 					Vector3f& jointPos = chain->m_globalPositions[dim.m_idx];
 					Vector3f boneVector = endpos - jointPos;
-					Vector3f axis = dim.m_axis;
+					Vector3f axis = chain->m_axis[dim.m_idx];
 					int lastDim = dim.m_lastIdx;
 					if(lastDim >= 0)
 					{
@@ -54,20 +54,13 @@ namespace Etoile
 			MatrixXf jacobianTranspose = jacobian.transpose();
 			MatrixXf dR = jacobianTranspose * dT;
 
-			int m = 0;
-			for(unsigned int i = 0; i < chain->m_joints.size(); ++i)
+			for(unsigned int i = 0; i < columnDim; ++i)
 			{
-				IKChain::Joint* joint = chain->m_joints[i];
-
-				std::vector<IKChain::Dim>& dims = joint->m_dims;
-				for(unsigned int j = 0; j < dims.size(); ++j, ++m)
-				{
-					dims[j].m_value = castPiRange(dims[j].m_value + dR(m));
-					chain->m_localRotations[dims[j].m_idx] = AngleAxisf(dims[j].m_value, dims[j].m_axis);;
-				}
-				chain->updateJoint(i);
+				chain->m_values[i] = castPiRange(chain->m_values[i] + dR(i));
+				chain->m_localRotations[i] = AngleAxisf(chain->m_values[i], chain->m_axis[i]);	
 			}
 
+			chain->update();
 			endpos = chain->m_globalPositions.back();
 			distance = (target - endpos);
 #if( defined( _DEBUG ) || defined( DEBUG ) )

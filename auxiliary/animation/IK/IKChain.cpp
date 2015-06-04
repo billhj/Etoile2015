@@ -36,13 +36,13 @@ namespace Etoile
 		m_dims.resize(m_dof);
 		for(int i = 0; i < m_dof; ++i)
 		{
-			m_dims[i].m_anglelimites = Eigen::Vector2f(-3.14,3.14);
+			
 			m_dims[i].m_idx = sk->m_localRotations.size();
 			if(i == 0)
 			{
 				if( parent >= 0)
 				{
-				m_dims[i].m_lastIdx = sk->m_joints[parent]->m_dims.back().m_idx;
+					m_dims[i].m_lastIdx = sk->m_joints[parent]->m_dims.back().m_idx;
 				}
 				else
 				{
@@ -53,10 +53,13 @@ namespace Etoile
 				m_dims[i].m_lastIdx = m_dims[i - 1].m_idx;
 			}
 
+			sk->m_axis.push_back(Eigen::Vector3f::Zero());
+			sk->m_anglelimites.push_back(Eigen::Vector2f(-3.14,3.14));
 			sk->m_localRotations.push_back(Eigen::Matrix3f::Identity());
 			sk->m_globalOrientations.push_back(Eigen::Matrix3f::Identity());
 			sk->m_localTranslations.push_back(Eigen::Vector3f::Zero());
 			sk->m_globalPositions.push_back(Eigen::Vector3f::Zero());
+			sk->m_values.push_back(0);
 		}
 	}
 
@@ -133,16 +136,16 @@ namespace Etoile
 					stream >> x;
 					stream >> y;
 					stream >> z;
-					j->m_dims[i].m_axis = Eigen::Vector3f(x,y,z);
-					std::cout<<i<< " axis: "<<j->m_dims[i].m_axis.transpose()<<std::endl;
+					m_axis[j->m_dims[i].m_idx] = Eigen::Vector3f(x,y,z);
+					std::cout<<i<< " axis: "<<m_axis[j->m_dims[i].m_idx].transpose()<<std::endl;
 
 					float minV,maxV;
 					stream >> minV;
 					stream >> maxV;
 					if(!stream.fail())
 					{
-						j->m_dims[i].m_anglelimites = Eigen::Vector2f(minV,maxV);
-						std::cout<<" limits: "<<j->m_dims[i].m_anglelimites.transpose()<<std::endl;
+						m_anglelimites[j->m_dims[i].m_idx] = Eigen::Vector2f(minV,maxV);
+						std::cout<<" limits: "<<m_anglelimites[j->m_dims[i].m_idx].transpose()<<std::endl;
 					}
 				}
 
