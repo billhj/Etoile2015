@@ -70,12 +70,12 @@ namespace Etoile
 			MatrixXf aInv = a.inverse();
 			MatrixXf pseudoInverse = jacobianTranspose * aInv;
 
-			MatrixXf j_j = pseudoInverse * jacobian;
+			/*MatrixXf j_j = pseudoInverse * jacobian;
 			MatrixXf I = MatrixXf::Identity(j_j.rows(), j_j.cols());
-			MatrixXf nullspace = I - j_j;
+			MatrixXf nullspace = I - j_j;*/
 			VectorXf dR = pseudoInverse * dT;
 
-			std::cout<<"dR: "<<dR<<std::endl;
+			/*std::cout<<"dR: "<<dR<<std::endl;
 
 			values+=dR;
 
@@ -95,7 +95,7 @@ namespace Etoile
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		std::cout<<"minAlph: "<<minAlph<<std::endl;
 		std::cout<<"maxAlph: "<<maxAlph<<std::endl;
-#endif
+#endif*/
 
 			for(unsigned int i = 0; i < columnDim; ++i)
 			{
