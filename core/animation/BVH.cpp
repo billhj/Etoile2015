@@ -36,6 +36,7 @@ namespace Etoile
 		m_name = name;
 		m_dof = dof;
 		m_dims.resize(m_dof);
+		m_childrenNb = 0;
 		for(int i = 0; i < dof; ++i)
 		{
 			m_dims[i].m_index = bvh->m_dims;	
@@ -43,9 +44,26 @@ namespace Etoile
 		}
 	}
 
-	BVH::BVH()
+	BVH::Joint::Joint(BVH* bvh, int parent, const std::string& name)
 	{
+		m_isleaf = false;
+		p_owner = bvh;
+		m_index = bvh->m_joints.size();
+		bvh->m_joints.push_back(this);
+		m_index_parent = parent;
+		m_name = name;
+		m_childrenNb = 0;
+	}
 
+	void BVH::Joint::init(int dof)
+	{
+		m_dof = dof;
+		m_dims.resize(m_dof);
+		for(int i = 0; i < dof; ++i)
+		{
+			m_dims[i].m_index = p_owner->m_dims;	
+			++p_owner->m_dims;
+		}
 	}
 
 	bool BVH::loadFromBVHFile(const std::string& filepath)
@@ -128,7 +146,7 @@ namespace Etoile
 	void BVH::readJoint(std::istream& in, const std::string& name)
 	{
 		int parent = m_index.size() > 0 ? m_index.top() : -1;
-		m_index.push(m_index.size());
+
 		std::string line;
 		std::string keyWrd;
 		float x,y,z;
@@ -184,6 +202,7 @@ namespace Etoile
 					current->m_offset[0] = x;
 					current->m_offset[1] = y;
 					current->m_offset[2] = z;
+					current->m_level = m_index.size();
 					for(int i = 0; i < dim; ++i)
 					{
 						stream >> keyWrd;
@@ -194,6 +213,51 @@ namespace Etoile
 			}
 		}
 
+		m_index.push(current->m_index);
+		bool loop = true;
+		{
+			while(loop)
+			{
+				readLine(in,line);
+				std::stringstream stream(line);
+				stream >> keyWrd;
+				if(!stream.fail())
+				{
+					if (keyWrd =="JOINT")
+					{
+						stream >> keyWrd;
+						readJoint(in, keyWrd);
+					}
+					else if(keyWrd =="End")
+					{
+						stream >> keyWrd;
+						readEnd(in, keyWrd);
+					}if (keyWrd =="}")
+					{
+						loop = false;
+						m_index.pop();
+						if(parent > -1)
+							m_joints[parent]->m_childrenNb++;
+					}
+
+				}
+			}
+		}
+
+
+
+	}
+
+
+
+	void BVH::readEnd(std::istream& in, const std::string& name)
+	{
+		int parent = m_index.size() > 0 ? m_index.top() : -1;
+		std::string line;
+		std::string keyWrd;
+		float x,y,z;
+		int dim;
+		Joint* current;
 
 		{
 			readLine(in,line);
@@ -201,317 +265,132 @@ namespace Etoile
 			stream >> keyWrd;
 			if(!stream.fail())
 			{
-				if (keyWrd =="JOINT")
+				if ( keyWrd =="{")
 				{
-					stream >> keyWrd;
-					readJoint(in, keyWrd);
-				}
-				else if(keyWrd =="End")
-				{
-				
-				}
-				else if(keyWrd =="}")
-				{
-				
+#if defined(_DEBUG) || defined(DEBUG)
+					std::cout<<"{ " <<std::endl;
+#endif
 				}
 			}
 		}
 
+		{
+			readLine(in,line);
+			std::stringstream stream(line);
+			stream >> keyWrd;
+			if(!stream.fail())
+			{
+				if (keyWrd =="OFFSET")
+				{
+#if defined(_DEBUG) || defined(DEBUG)
+					std::cout<<"OFFSET" <<std::endl;
+#endif
+					stream >> x;
+					stream >> y;
+					stream >> z;
 
+					current = new Joint(this, parent, 0, name);
+					current->m_offset[0] = x;
+					current->m_offset[1] = y;
+					current->m_offset[2] = z;
+					current->m_isleaf = true;
+					current->m_level = m_index.size();
+				}
+			}
+		}
+
+		{
+			readLine(in,line);
+			std::stringstream stream(line);
+			stream >> keyWrd;
+			if(!stream.fail())
+			{
+				if (keyWrd =="}")
+				{
+					//m_index.pop();
+					if(parent > -1)
+						m_joints[parent]->m_childrenNb++;
+				}
+
+			}
+		}
 
 	}
 
-	// need to find the load problem, file need empty space or /n to read eachline,
-	// solved by linechar[sizeLine - 1] = ' ';
-	void BVH::loadSkeleton(std::istream& in)
+
+
+
+	bool BVH::saveToBVHFile(const std::string& filepath)
 	{
-		int lineIndex = 0;
-		std::string line;
+		if(m_joints.size() <= 0 ) return false;
 
-		Joints jointlist;
-		int popJointId = -1;
-		Joint* currentJoint = NULL;
-
-		BVHFrame frame;
-		std::string _incre = "+";
+		std::ofstream out;
+		out.open(filepath);
 #if defined(_DEBUG) || defined(DEBUG)
-		std::cout<< "[BVH] : start loading skeleton " <<std::endl;
+		std::cout<< "[BVH] : start writing : "<< filepath <<std::endl;
 #endif
-		while( in && !in.eof() )
-		{
-			lineIndex++;
-			std::getline(in,line);
-			if ( in.bad() ){
-				std::cout << "  Warning! Could not read file properly! BVH part: skeleton"<<std::endl;
-			}
-
-			trimString(line);
-			if ( line.size() == 0 || line[0] == '#' || isspace(line[0]) || line.empty() ) 
-			{
-				continue;
-			}
-
-			std::string keyWrd;
-			std::stringstream stream(line);
-			stream >> keyWrd;
-
-			if(keyWrd == "HIERARCHY")
-			{
+		write(out);
+		out.close();
 #if defined(_DEBUG) || defined(DEBUG)
-				std::cout<<"HIERARCHY " <<std::endl;
+		std::cout<< "[BVH] : writing is successful "<<std::endl;
 #endif
-			}
-			else if ( keyWrd =="{")
-			{
-#if defined(_DEBUG) || defined(DEBUG)
-				std::cout<<"{ " <<std::endl;
-#endif
-				jointlist.push_back(currentJoint);
-			}
-			else if ( keyWrd== "}")
-			{
-#if defined(_DEBUG) || defined(DEBUG)
-				std::cout<<"} " <<std::endl;
-#endif
-				Joint* joint = jointlist.back();
-				jointlist.pop_back();
-				popJointId = joint->getParentId();
-			}
-			else if ( ( keyWrd == "ROOT" ) || ( keyWrd == "JOINT" ) )
-			{
-#if defined(_DEBUG) || defined(DEBUG)
-				std::cout<<"add Joint: ";
-#endif
-				std::string name;
-				stream >> name;
-
-				int id = _pSkeleton->createJoint(name, popJointId);
-				std::cout<<name;
-				currentJoint = _pSkeleton->getJoint(id);
-				popJointId = id;
-				if(id == 0){_rootName = name;}
-
-			}
-			else if ( keyWrd == "End" )
-			{
-#if defined(_DEBUG) || defined(DEBUG)
-				std::cout<<"add Joint: ";
-#endif
-				std::string name;
-				stream >> name;
-				_incre += "+";
-				std::cout<< name + _incre;
-				int id = _pSkeleton->createJoint(name + _incre, popJointId);
-				currentJoint = _pSkeleton->getJoint(id);
-				popJointId = id;
-			}
-			else if ( keyWrd == "OFFSET" )
-			{
-#if defined(_DEBUG) || defined(DEBUG)
-				std::cout<<"offset: ";
-#endif
-				float x, y, z;
-				stream >> x;
-				stream >> y;
-				stream >> z;
-#if defined(_DEBUG) || defined(DEBUG)
-				std::cout<< x <<" " << y << " "<< z <<" ";
-#endif
-				currentJoint->setLocalPosition(Vec3f(x,y,z));
-				currentJoint->update();
-			}
-			else if ( keyWrd == "CHANNELS" )
-			{
-#if defined(_DEBUG) || defined(DEBUG)
-				std::cout<<"channels: ";
-#endif
-				JointMotion jointmotion;
-				jointmotion._jointName = currentJoint->getName();
-
-				int nbChannels;
-				stream >> nbChannels;
-				std::cout<<nbChannels<<" "<<std::endl;
-				for (int i = 0; i < nbChannels; i++ )
-				{
-
-					Channel  channel;
-					channel._value = 0;
-
-					stream >> keyWrd;
-					if ( keyWrd == "Xrotation" )
-						channel._type = X_ROTATION;
-					else if ( keyWrd == "Yrotation" )
-						channel._type = Y_ROTATION;
-					else if ( keyWrd == "Zrotation" )
-						channel._type = Z_ROTATION;
-					else if ( keyWrd == "Xposition" )
-						channel._type = X_POSITION;
-					else if ( keyWrd == "Yposition" )
-						channel._type = Y_POSITION;
-					else if ( keyWrd == "Zposition" )
-						channel._type = Z_POSITION;
-
-					jointmotion._channels.push_back(channel);
-				}
-				frame.addJointMotion(jointmotion);
-			}
-			else if ( keyWrd == "MOTION" )
-			{
-#if defined(_DEBUG) || defined(DEBUG)
-				std::cout<< "[BVH] : start loading frames " <<std::endl;
-#endif
-				loadFrames(in, frame);
-				break;
-			}
-			//delete[] linechar;
-
-		}
+		return true;
 	}
 
-
-	void BVH::loadFrames(std::istream& in, BVHFrame& frame)
+	void BVH::write(std::ostream& out)
 	{
-		std::string line;
-
-		int num_frame = 0;
+		std::vector<int> nb_children;
+		for(unsigned int i = 0; i < m_joints.size(); ++i)
 		{
-			std::getline(in,line);
-			if ( in.bad() ){
-				std::cout << "  Warning! Could not read file properly! BVH part: Frames"<<std::endl;
-			}
-			trimString(line);
-			while ( line.size() == 0 || line[0] == '#' || isspace(line[0]) || line.empty() ) {
-				std::getline(in,line);
-				if ( in.bad() ){
-					std::cout << "  Warning! Could not read file properly! BVH part: Frames"<<std::endl;
-				}
-				trimString(line);
-			}
-			std::string keyWrd;
-			std::stringstream stream(line);
-			stream >> keyWrd;
-
-			if (string::npos == keyWrd.find("Frames")) return;
-			stream >> num_frame;
-#if defined(_DEBUG) || defined(DEBUG)
-			std::cout<< "frames : "<< num_frame <<std::endl;
-#endif
-			//delete []linechar;
+			nb_children.push_back(m_joints[i]->m_childrenNb);
 		}
 
-		float interval = 0;
+		std::string incent = "\t";
+		out<<"HIERARCHY\n";
+		Joint* current = m_joints[0];
+		out<<"ROOT "<<current->m_name<<"\n";
+		out<<"{\n";
+		out<<incent<<"OFFSET "<<current->m_offset[0]<<" "<<current->m_offset[1]<<" "<<current->m_offset[2]<<"\n";
+		out<<incent<<"CHANNELS "<<current->m_dof<<" ";
+		for(int j = 0; j < current->m_dof; ++j)
 		{
-			std::getline(in,line);
-			std::string keyWrd;
-			std::stringstream stream(line);
-			stream >> keyWrd;
-			if(keyWrd == "Frame")
-			{
-
-			}
-			stream >> keyWrd;
-			if (string::npos == keyWrd.find("Time")) 
-			{
-
-			}
-			stream >> interval;
-#if defined(_DEBUG) || defined(DEBUG)
-			std::cout<< "interval : "<< interval <<std::endl;
-#endif
-			//delete []linechar;
+			out<<current->m_dims[j].m_name<<" ";
 		}
+		out<<"\n";
 
-
-		//_skeletonframes->setInterval(interval);
-
-		for(int i = 0; i < num_frame; ++i)
+		for(unsigned int i = 1; i < m_joints.size(); ++i)
 		{
-
-			std::getline(in,line);
-			std::stringstream stream(line);
-
-			for(unsigned j = 0; j < frame.getJointMotions().size(); ++j)
+			Joint* current = m_joints[i];
+			int parent = current->m_index_parent;
+			--nb_children[parent];
+			if(current->m_dof > 0)
 			{
-				JointMotion& motion = frame.getJointMotionByIndex(j);
-				for(unsigned k = 0; k < motion._channels.size(); ++k)
+				out<< std::string(current->m_level,'\t')  <<"JOINT "<<current->m_name<<"\n";
+				out<< std::string(current->m_level,'\t')  <<"{\n";
+				out<< std::string(current->m_level,'\t')  <<incent<<"OFFSET "<<current->m_offset[0]<<" "<<current->m_offset[1]<<" "<<current->m_offset[2]<<"\n";
+				out<< std::string(current->m_level,'\t')  <<incent<<"CHANNELS "<<current->m_dof<<" ";
+				for(int j = 0; j < current->m_dof; ++j)
 				{
-					stream >> motion._channels[k]._value;
+					out<<current->m_dims[j].m_name<<" ";
+				}
+				out<<"\n";
+			}else
+			{
+				out<< std::string(current->m_level,'\t')  <<"End "<<current->m_name<<"\n";
+				out<< std::string(current->m_level,'\t')  <<"{\n";
+				out<< std::string(current->m_level,'\t')  <<incent<<"OFFSET "<<current->m_offset[0]<<" "<<current->m_offset[1]<<" "<<current->m_offset[2]<<"\n";
+				out<< std::string(current->m_level,'\t')  <<"}\n";
+
+				while(parent >= 0)
+				{
+					if(nb_children[parent] == 0)
+					{
+						out<< std::string( m_joints[parent]->m_level,'\t')  <<"}\n";
+					}
+					parent = m_joints[parent]->m_index_parent;
 				}
 			}
-			KeyFrame* sframe = new KeyFrame(i * interval);
-			sframe->setRootJoint(_rootName);
-			fromBVHFrameToSkeletonFrame(frame, *sframe);
-			_skeletonframes->insertKeyFrame(sframe);
-			//delete []linechar;
-		}
-
-	}
-
-
-	void BVH::fromBVHFrameToSkeletonFrame(BVHFrame& frame, KeyFrame& skeletonframe)
-	{
-		JointMotions& motions = frame.getJointMotions();
-		for(unsigned int i = 0; i < motions.size(); ++i)
-		{
-			JointMotion& motion = motions[i];
-			std::string name = motion._jointName;
-			//Joint* joint = _pSkeleton->getJoint(name);
-			Quaternionf rotation;
-			Vec3f position;
-			for(unsigned int j = 0; j < motion._channels.size(); ++j)
-			{
-				Channel& ch = motion._channels[j];
-				ChannelType type = ch._type;
-				float rotationValue = ch._value / 180.0 * 3.14159265;
-
-				if (type == X_POSITION)
-				{
-					position[0] = ch._value;
-				}
-				else if (type == Y_POSITION)
-				{
-					position[1] = ch._value;
-				}
-				else if (type == Z_POSITION)
-				{
-					position[2] = ch._value;
-				}
-				else if (type == X_ROTATION)
-				{
-					Quaternionf q;
-					q.setAxisAngle(Vec3f(1,0,0), rotationValue);
-					//rotation =  q * rotation;
-					rotation =  rotation * q;
-				}
-				else if (type == Y_ROTATION)
-				{
-					Quaternionf q;
-					q.setAxisAngle(Vec3f(0,1,0), rotationValue);
-					//rotation =  q * rotation;
-					rotation =  rotation * q;
-
-				}
-				else if (type == Z_ROTATION)
-				{
-					Quaternionf q;
-					q.setAxisAngle(Vec3f(0,0,1), rotationValue);
-					//rotation =  q * rotation;
-					rotation =  rotation * q;
-				}
-
-			}
-			//        joint->setOriginalPosition(position);
-			//        joint->rotate(rotation);
-			//        joint->updateLocally();
-
-			FrameParameters info;
-			info._localRotation = rotation;
-			info._translation = position;
-
-			skeletonframe.addFrameParameters(name, info);
 		}
 	}
-
-
 
 }

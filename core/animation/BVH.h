@@ -25,6 +25,8 @@ namespace Etoile
 		struct Joint
 		{
 			Joint(BVH* bvh, int parent, int dof, const std::string& name);
+			Joint(BVH* bvh, int parent, const std::string& name);
+			void init(int dof);
 			std::string m_name;
 			int m_index;
 			int m_index_parent;
@@ -33,17 +35,23 @@ namespace Etoile
 			std::vector<Dim> m_dims;
 			float m_offset[3];
 			bool m_isleaf;
+			int m_level;
+			int m_childrenNb;
 		};
 
 		std::vector<Joint*> m_joints;
 	public:
 		BVH():m_dims(0){}
 		bool loadFromBVHFile(const std::string& filepath);
+		bool saveToBVHFile(const std::string& filepath);
 	private:
 		void trimString( std::string& string);
 		void read(std::istream& in);
 		void readJoint(std::istream& in, const std::string& name);
+		void readEnd(std::istream& in, const std::string& name);
 		void readLine(std::istream& in, std::string& line);
+
+		void write(std::ostream& out);
 		std::string m_filepath;
 		int m_dims;
 		std::stack<int> m_index;
