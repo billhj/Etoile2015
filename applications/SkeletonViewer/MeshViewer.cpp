@@ -17,6 +17,7 @@
 #include "geometry/Primitive.h"
 #include "geometry/Camera.h"
 #include "renderer/OpenGL/Picker.h"
+#include "animation/AnimationManager.h"
 #include <QMouseEvent>
 
 using namespace Etoile;
@@ -92,7 +93,7 @@ void MeshViewer::drawOnTexture()
 
 void MeshViewer::draw()
 {
-
+	AnimationManager::getInstance()->update();
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 

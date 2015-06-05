@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\GLLightRenderer.h" />
+    <ClInclude Include="..\..\core\animation\AnimationManager.h" />
     <ClInclude Include="..\..\core\animation\BVH.h" />
     <ClInclude Include="..\..\core\animation\Frame.h" />
     <ClInclude Include="..\..\core\geometry\AxisAlignedBoundingBox.h" />
