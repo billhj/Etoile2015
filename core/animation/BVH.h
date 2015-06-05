@@ -13,6 +13,10 @@
 
 namespace Etoile
 {
+	struct Frame
+	{
+		std::vector<float> m_values;
+	};
 
 	struct BVH
 	{
@@ -40,6 +44,10 @@ namespace Etoile
 		};
 
 		std::vector<Joint*> m_joints;
+		std::vector<Frame> m_frames;
+		float m_frametime; 
+		int m_frameNb;
+		int m_dims;
 	public:
 		BVH():m_dims(0){}
 		bool loadFromBVHFile(const std::string& filepath);
@@ -50,10 +58,11 @@ namespace Etoile
 		void readJoint(std::istream& in, const std::string& name);
 		void readEnd(std::istream& in, const std::string& name);
 		void readLine(std::istream& in, std::string& line);
+		void readFrames(std::istream& in);
 
 		void write(std::ostream& out);
 		std::string m_filepath;
-		int m_dims;
+		
 		std::stack<int> m_index;
 	};
 

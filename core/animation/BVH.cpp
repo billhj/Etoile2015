@@ -127,9 +127,18 @@ namespace Etoile
 					stream >> keyWrd;
 					readJoint(in, keyWrd);
 				}
+				else if(keyWrd == "MOTION")
+				{
+#if defined(_DEBUG) || defined(DEBUG)
+					std::cout<<"MOTION " <<std::endl;
+#endif
+					stream >> keyWrd;
+					readFrames(in);
+				}
 			}
 		}
 	}
+
 
 	void BVH::readLine(std::istream& in, std::string& line)
 	{
@@ -317,6 +326,53 @@ namespace Etoile
 
 	}
 
+	void BVH::readFrames(std::istream& in)
+	{
+		std::string line;
+		std::string keyWrd;
+		float v;
+		{
+			readLine(in,line);
+			std::stringstream stream(line);
+			stream >> keyWrd;
+			if(!stream.fail())
+			{
+				if (keyWrd =="Frames:")
+				{
+					stream >> this->m_frameNb;
+				}
+
+			}
+		}
+		{
+			readLine(in,line);
+			std::stringstream stream(line);
+			stream >> keyWrd;
+			if(!stream.fail())
+			{
+				if (keyWrd =="Frame")
+				{
+					stream >> keyWrd;
+					if(keyWrd == "Time:")
+					{
+						stream >> this->m_frametime;
+					}
+				}
+			}
+		}
+		m_frames.resize(m_frameNb);
+		for(int i = 0 ; i < this->m_frameNb; ++i)
+		{
+			readLine(in,line);
+			std::stringstream stream(line);
+			Frame& frame = m_frames[i];
+			frame.m_values.resize(this->m_dims);
+			for(int j = 0; j < m_dims; ++j)
+			{
+				stream >> frame.m_values[j];
+			}
+		}
+	}
 
 
 
@@ -339,6 +395,7 @@ namespace Etoile
 
 	void BVH::write(std::ostream& out)
 	{
+		//write HIERARCHY
 		std::vector<int> nb_children;
 		for(unsigned int i = 0; i < m_joints.size(); ++i)
 		{
@@ -390,6 +447,20 @@ namespace Etoile
 					parent = m_joints[parent]->m_index_parent;
 				}
 			}
+		}
+
+		//write MOTION
+		out<<"MOTION\n";
+		out<<"Frames:\t"<<m_frameNb<<"\n";
+		out<<"Frame Time:\t"<<m_frametime<<"\n";
+		for(int i = 0 ; i < m_frameNb; ++i)
+		{
+			Frame& frame = m_frames[i];
+			for(int j = 0; j < m_dims; ++j)
+			{
+				out<< frame.m_values[j] <<"\t";
+			}
+			out<<"\n";
 		}
 	}
 
