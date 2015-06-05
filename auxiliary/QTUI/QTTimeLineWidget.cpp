@@ -126,9 +126,19 @@ namespace Etoile
 		}
 	}
 
-	int QTTimeLineWidget::getSelectedFrame()
+	int QTTimeLineWidget::getActiveFrame()
 	{
 		return activeFrame;
+	}
+
+	int QTTimeLineWidget::getStartFrame()
+	{
+		return startFrame;
+	}
+
+	int QTTimeLineWidget::getEndFrame()
+	{
+		return endFrame;
 	}
 
 	void QTTimeLineWidget::setStartFrame(int value)

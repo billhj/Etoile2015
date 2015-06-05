@@ -93,7 +93,9 @@ namespace Etoile
 		QTTimeLineWidget(QWidget *parent = 0);
 		~QTTimeLineWidget();
 		void init();
-		int getSelectedFrame();
+		int getActiveFrame();
+		int getStartFrame();
+		int getEndFrame();
 		public slots:
 			void setActiveFrame(int frame);
 			void setStartFrame(int value);
