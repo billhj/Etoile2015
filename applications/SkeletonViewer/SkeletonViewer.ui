@@ -642,6 +642,9 @@
    <extends>QWidget</extends>
    <header>QTUI/QTTimeLineWidget.h</header>
    <container>1</container>
+   <slots>
+    <signal>activeFrameChanged(int)</signal>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources>
@@ -952,11 +955,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>timelineView</sender>
+   <signal>activeFrameChanged(int)</signal>
+   <receiver>SkeletonViewerClass</receiver>
+   <slot>changeFrameNb(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>616</x>
+     <y>580</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>350</x>
+     <y>322</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>selectColor()</slot>
   <slot>pipetteColorPicked()</slot>
   <slot>openFile(QString)</slot>
   <slot>openFile()</slot>
+  <slot>changeFrameNb(int)</slot>
  </slots>
 </ui>

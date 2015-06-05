@@ -21,7 +21,7 @@
 #include <QMouseEvent>
 
 using namespace Etoile;
-MeshViewer::MeshViewer(QWidget *parent) : QGLRenderWidget(parent), m_pickOn(false)
+MeshViewer::MeshViewer(QWidget *parent) : QGLRenderWidget(parent), m_pickOn(false), m_frameNb(0)
 {
 	m_pixel = new GLfloat[3];
 }
@@ -93,7 +93,7 @@ void MeshViewer::drawOnTexture()
 
 void MeshViewer::draw()
 {
-	AnimationManager::getInstance()->update();
+	AnimationManager::getInstance()->update(m_frameNb);
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 

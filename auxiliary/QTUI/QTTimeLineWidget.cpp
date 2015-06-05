@@ -5,7 +5,7 @@ namespace Etoile
 {
 	int startFrame = 0;;
 	int endFrame = 100;
-	int activeFrame = -1;
+	int activeFrame = 0;
 
 	void QTTimelineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 		QWidget *widget)
@@ -124,6 +124,7 @@ namespace Etoile
 		{
 			m_scene.setRange(m_scene.m_range + 100);
 		}
+		emit activeFrameChanged(activeFrame);
 	}
 
 	int QTTimeLineWidget::getActiveFrame()

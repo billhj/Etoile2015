@@ -96,3 +96,8 @@ void SkeletonViewer::closeEvent(QCloseEvent *event)
 	save();
 	QMainWindow::closeEvent(event);
 }
+
+void SkeletonViewer::changeFrameNb(int v)
+{
+	ui.centralWidget->m_frameNb = v;
+}

@@ -48,6 +48,7 @@ namespace Etoile
 		float m_frametime; 
 		int m_frameNb;
 		int m_dims;
+		bool m_isMeter;
 	public:
 		BVH():m_dims(0){}
 		bool loadFromBVHFile(const std::string& filepath);
@@ -62,7 +63,6 @@ namespace Etoile
 
 		void write(std::ostream& out);
 		std::string m_filepath;
-		
 		std::stack<int> m_index;
 	};
 

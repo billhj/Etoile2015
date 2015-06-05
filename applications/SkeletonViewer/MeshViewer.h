@@ -58,4 +58,6 @@ private:
 	TOOLS m_tool;
 	bool m_pickOn;
 	GLfloat* m_pixel;
+
+	int m_frameNb;
 };

@@ -100,6 +100,8 @@ namespace Etoile
 			void setActiveFrame(int frame);
 			void setStartFrame(int value);
 			void setEndFrame(int value);
+signals:
+			void activeFrameChanged(int);
 	private:
 		Ui::QTTimeLineWidget ui;
 		QTTimeLineScene m_scene;

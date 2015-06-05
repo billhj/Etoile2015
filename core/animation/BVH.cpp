@@ -191,6 +191,10 @@ namespace Etoile
 					stream >> x;
 					stream >> y;
 					stream >> z;
+					if(x > 5 || y > 5 || z > 5)
+					{
+						m_isMeter = false;
+					}
 				}
 			}
 		}
