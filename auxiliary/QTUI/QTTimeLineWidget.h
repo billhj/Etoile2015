@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QThread>
 #include "ui_QTTimeLineWidget.h"
 
 namespace Etoile
@@ -45,19 +46,12 @@ namespace Etoile
 
 		Q_OBJECT
 
-		int m_range;
-		int m_currentFrame;
-		std::vector<int> m_selectedFrames;
-		//QGraphicsItemGroup * p_group;
-		bool m_startSelection;
-		QPointF m_start;
-		QPointF m_end;
+			int m_range;
 		QTTimeLineWidget* p_parent;
 	public:
 		QTTimeLineScene(): QGraphicsScene()
 		{
 			m_range = 200;
-			m_currentFrame = 0;
 			reset();
 		}
 
@@ -69,7 +63,6 @@ namespace Etoile
 		public slots:
 			void reset()
 			{
-				m_startSelection = false;
 				this->clear();
 				for(int i = -100; i < m_range; ++i)
 				{
@@ -85,17 +78,12 @@ namespace Etoile
 			}
 
 			public slots:
-				void setStartEndActive(int start, int end);
+
 				void setRange(int);
 				virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent);
-
 				virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
-
 				virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent);
-
 				virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEvent);
-signals:
-				void currentFrameChanged(int frameNb);
 	};
 
 	class QTTimeLineWidget : public QWidget
@@ -105,34 +93,11 @@ signals:
 		QTTimeLineWidget(QWidget *parent = 0);
 		~QTTimeLineWidget();
 		void init();
-		int getSelectedFrame()
-		{
-			return m_scene.m_currentFrame;
-		}
-		const std::vector<int>& getSelectedFrames()
-		{
-			return m_scene.m_selectedFrames;
-		}
-		
-		void setStartValue(int value)
-		{
-			ui.start->blockSignals(true);
-			ui.start->setValue(value);
-			ui.start->blockSignals(false);
-		}
-
-		void setEndValue(int value)
-		{
-			ui.end->blockSignals(true);
-			ui.end->setValue(value);
-			ui.end->blockSignals(false);
-		}
-public slots:
-	void setActiveFrame(int frame);
-	void needToSetStartEndActive(int)
-	{
-		m_scene.setStartEndActive(ui.start->value(), ui.end->value());
-	}
+		int getSelectedFrame();
+		public slots:
+			void setActiveFrame(int frame);
+			void setStartFrame(int value);
+			void setEndFrame(int value);
 	private:
 		Ui::QTTimeLineWidget ui;
 		QTTimeLineScene m_scene;

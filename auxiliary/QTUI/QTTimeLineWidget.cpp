@@ -3,7 +3,10 @@
 
 namespace Etoile
 {
+	int startFrame = 0;;
+	int endFrame = 100;
 	int activeFrame = -1;
+
 	void QTTimelineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 		QWidget *widget)
 	{
@@ -12,7 +15,7 @@ namespace Etoile
 		{
 			m_brush.setColor(Qt::red);
 		}
-		else if(this->isSelected())
+		else if(startFrame <= m_frame && m_frame <= endFrame)
 		{
 			m_brush.setColor(Qt::cyan);
 			painter->drawText(this->rect().x(), this->rect().y(), 100, 80, Qt::AlignHCenter, QString::number(m_frame));
@@ -41,7 +44,6 @@ namespace Etoile
 	void QTTimeLineWidget::init()
 	{
 		connect(&m_scene, SIGNAL(currentFrameChanged(int)), this->ui.current, SLOT(setValue(int)));
-		needToSetStartEndActive(0);
 	}
 
 	QTTimeLineWidget::~QTTimeLineWidget()
@@ -55,87 +57,46 @@ namespace Etoile
 		reset();
 	}
 
-	void QTTimeLineScene::setStartEndActive(int start, int end)
-	{
-		foreach(QGraphicsItem* item , this->items())
-		{
-			int nb = ((QTTimelineItem*)item)->m_frame;
-			if(nb >= start && nb <= end)
-				item->setSelected(true);
-			else
-				item->setSelected(false);
-		}
-	}
-
 	void QTTimeLineScene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
 	{
-		if(m_startSelection)
+		if(mouseEvent->buttons() == Qt::LeftButton)
 		{
-			m_end = mouseEvent->scenePos();
 			foreach(QGraphicsItem* item , this->items())
 			{
-				if(item->boundingRect().intersects(QRectF(m_start, m_end)))
+				if(item->boundingRect().contains(mouseEvent->scenePos()))
 				{
 					item->setSelected(true);
-					m_selectedFrames.push_back(((QTTimelineItem*)item)->m_frame);
-					if(item->boundingRect().contains(m_end))
-					{
-						if(m_currentFrame <= ((QTTimelineItem*)item)->m_frame)
-						{
-							p_parent->setEndValue(((QTTimelineItem*)item)->m_frame);
-						}else
-						{
-							//p_parent->setEndValue(m_currentFrame);
-							p_parent->setStartValue(((QTTimelineItem*)item)->m_frame);
-						}
-					}
+					activeFrame = ((QTTimelineItem*)item)->m_frame;
 				}else
 				{
 					item->setSelected(false);
 				}
 			}
+			p_parent->setActiveFrame(activeFrame);
 		}
 	}
 
 	void QTTimeLineScene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
 	{	
-
 		foreach(QGraphicsItem* item , this->items())
 		{
-			item->setSelected(false);
-		}
-		m_selectedFrames.clear();
-		m_startSelection = true;
-		m_start = mouseEvent->scenePos();
-		if(m_startSelection)
-		{
-			m_end = mouseEvent->scenePos();
-			foreach(QGraphicsItem* item , this->items())
+			if(item->boundingRect().contains(mouseEvent->scenePos()))
 			{
-				if(item->boundingRect().contains(m_start))
-				{
-					item->setSelected(true);
-					m_currentFrame = ((QTTimelineItem*)item)->m_frame;
-					m_selectedFrames.push_back(m_currentFrame);
-					p_parent->setStartValue(m_currentFrame);
-					p_parent->setEndValue(m_currentFrame);
-				}else
-				{
-					item->setSelected(false);
-				}
+				item->setSelected(true);
+				activeFrame = ((QTTimelineItem*)item)->m_frame;
+
+			}else
+			{
+				item->setSelected(false);
 			}
 		}
-		emit currentFrameChanged(m_currentFrame);
-		if(m_currentFrame > m_range - 100)
-		{
-			setRange(m_range + 100);
-		}
+
+		p_parent->setActiveFrame(activeFrame);
 		//QGraphicsScene::mousePressEvent(mouseEvent);
 	}
 
 	void QTTimeLineScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
 	{
-		m_startSelection = false;
 		//	QGraphicsScene::mouseReleaseEvent(mouseEvent);
 	}
 
@@ -152,6 +113,53 @@ namespace Etoile
 	void QTTimeLineWidget::setActiveFrame(int frame)
 	{
 		activeFrame = frame;
+		if(ui.current->value() != frame)
+		{
+			ui.current->blockSignals(true);
+			ui.current->setValue(frame);
+			ui.current->blockSignals(false);
+		}
+		this->update();
+		if(activeFrame > m_scene.m_range - 50)
+		{
+			m_scene.setRange(m_scene.m_range + 100);
+		}
 	}
 
+	int QTTimeLineWidget::getSelectedFrame()
+	{
+		return activeFrame;
+	}
+
+	void QTTimeLineWidget::setStartFrame(int value)
+	{
+		startFrame = value;
+		if(ui.start->value() != value)
+		{
+			ui.start->blockSignals(true);
+			ui.start->setValue(value);
+			ui.start->blockSignals(false);
+		}
+		this->update();
+		if(startFrame > m_scene.m_range - 50)
+		{
+			m_scene.setRange(m_scene.m_range + 100);
+		}
+	}
+
+	void QTTimeLineWidget::setEndFrame(int value)
+	{
+		endFrame = value;
+		if(ui.end->value() != value)
+		{
+			ui.end->blockSignals(true);
+			ui.end->setValue(value);
+			ui.end->blockSignals(false);
+		}
+		this->update();
+		if(endFrame > m_scene.m_range - 50)
+		{
+			m_scene.setRange(m_scene.m_range + 100);
+		}
+	}
 }

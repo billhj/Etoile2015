@@ -168,7 +168,7 @@
    <sender>start</sender>
    <signal>valueChanged(int)</signal>
    <receiver>QTTimeLineWidget</receiver>
-   <slot>needToSetStartEndActive(int)</slot>
+   <slot>setStartFrame(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>159</x>
@@ -184,7 +184,7 @@
    <sender>end</sender>
    <signal>valueChanged(int)</signal>
    <receiver>QTTimeLineWidget</receiver>
-   <slot>needToSetStartEndActive(int)</slot>
+   <slot>setEndFrame(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>357</x>
@@ -196,8 +196,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>current</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>QTTimeLineWidget</receiver>
+   <slot>setActiveFrame(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>555</x>
+     <y>10</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>323</x>
+     <y>66</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>needToSetStartEndActive(int)</slot>
+  <slot>setStartFrame(int)</slot>
+  <slot>setEndFrame(int)</slot>
+  <slot>setActiveFrame(int)</slot>
  </slots>
 </ui>
