@@ -1,6 +1,7 @@
 #include "QTTimeLineWidget.h"
 #include <QGraphicsRectItem>
 
+
 namespace Etoile
 {
 	int startFrame = 0;;
@@ -39,11 +40,34 @@ namespace Etoile
 		//ui.graphicsView->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 		//ui.graphicsView->setRenderHint(QPainter::Antialiasing, true);
 		init();
+		p_timer = new QTimer(this);
+		connect(p_timer, SIGNAL(timeout()), this, SLOT(updateActiveFrame()));
+		
+	}
+
+	void QTTimeLineWidget::updateActiveFrame()
+	{
+		++activeFrame;
+		if(activeFrame > endFrame)
+		{
+			activeFrame = startFrame;
+		}
+		setActiveFrame(activeFrame);
+	}
+
+	void QTTimeLineWidget::startTimer()
+	{
+		p_timer->start(20);
+	}
+
+	void QTTimeLineWidget::stopTimer()
+	{
+		p_timer->stop();
 	}
 
 	void QTTimeLineWidget::init()
 	{
-		connect(&m_scene, SIGNAL(currentFrameChanged(int)), this->ui.current, SLOT(setValue(int)));
+		connect(this, SIGNAL(activeFrameChanged(int)), this->ui.current, SLOT(setValue(int)));
 	}
 
 	QTTimeLineWidget::~QTTimeLineWidget()

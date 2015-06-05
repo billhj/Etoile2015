@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\auxiliary\QTUI\QManipulatorEventManager.h" />
     <ClInclude Include="..\..\auxiliary\QTUI\QManipulatorEventPerformer.h" />
+    <ClInclude Include="resource.h" />
     <CustomBuild Include="..\..\auxiliary\QTUI\QTTimeLineWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing QTTimeLineWidget.h...</Message>

@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
-#include <QThread>
+#include <QTimer>
 #include "ui_QTTimeLineWidget.h"
 
 namespace Etoile
@@ -100,12 +100,15 @@ namespace Etoile
 			void setActiveFrame(int frame);
 			void setStartFrame(int value);
 			void setEndFrame(int value);
+			void updateActiveFrame();
+			void startTimer();
+			void stopTimer();
 signals:
 			void activeFrameChanged(int);
 	private:
 		Ui::QTTimeLineWidget ui;
 		QTTimeLineScene m_scene;
-
+		QTimer * p_timer;
 	};
 
 }
