@@ -35,6 +35,10 @@ namespace Etoile
 		{
 		
 		}
+
+		bool loadFromFile(const std::string& fileName);
+		
+
 		void updateJoint(int idx)
 		{
 			int parentId = m_joints[idx]->m_index_parent;
@@ -64,5 +68,8 @@ namespace Etoile
 		std::vector<Vec3f> m_localTranslations;
 		std::vector<Vec3f> m_globalPositions;
 		std::string m_name;
+		std::string m_path;
+	protected:
+		void read(std::istream& in);
 	};
 }

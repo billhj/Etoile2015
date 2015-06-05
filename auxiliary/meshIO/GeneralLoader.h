@@ -19,6 +19,9 @@
 #include "renderer/OpenGL/GLSkeletonRenderer.h"
 #include "meshIO/SkeletonTextFileLoader.h"
 #include "util/File.h"
+#include "animation/BVH.h"
+#include "animation/BVHSkeletonAnimator.h"
+#include "animation/SkeletonConverter.h"
 
 namespace Etoile
 {
@@ -38,6 +41,9 @@ namespace Etoile
 			else if(ex.compare("sk") == 0)
 			{
 				return loadSkeletonFromFile(fileName);
+			}else if(ex == "bvh")
+			{
+				return loadBVHFromFile(fileName);
 			}
 		}
 
@@ -83,6 +89,33 @@ namespace Etoile
 				return NULL;
 			}
 		}
+
+
+		static Entity* loadBVHFromFile(const std::string& fileName) 
+		{
+			Scene* scene = SceneManager::getInstance()->getCurrentScene();
+			BVH * bvh = new BVH();
+			bvh->loadFromBVHFile(fileName);
+			Skeleton* sk = new Skeleton(fileName);
+			SkeletonConverter::convertFromBVHToSkeleton(bvh, sk);
+			//bool created = loader.loadFromFile(fileName, mesh);
+			if(sk != NULL){
+				GLSkeletonRenderer* skeletonRenderer = new GLSkeletonRenderer(fileName);
+				skeletonRenderer->setSkeleton(sk);
+
+				Entity* entity = new Entity(fileName, scene);
+				entity->setComponent(ComponentType::RENDER_COMPONENT, skeletonRenderer);
+				entity->setComponent(ComponentType::SKELETON_COMPONENT, sk);
+				RenderManager::getInstance()->addIntoObjectRendererList(skeletonRenderer);
+				BVHSkeletonAnimator* animator = new BVHSkeletonAnimator(bvh, sk);
+				AnimationManager::getInstance()->addIntoAnimatorList(animator);
+				return entity;
+			}else
+			{
+				return NULL;
+			}
+		}
+
 
 	};
 

@@ -20,6 +20,7 @@ namespace Etoile
 	{
 	protected:
 		Skeleton* p_skeleton;
+		float scale;
 	public:
 		GLSkeletonRenderer(const std::string& name = "") : ObjectRenderer(name), p_skeleton(NULL)
 		{
@@ -35,6 +36,7 @@ namespace Etoile
 			if(p_skeleton == NULL) return;
 			//Matrix4f modelM;
 			ModelTransform* t = this->getEntity()->getTransformation();
+			scale = t->getScale().length();
 			useTransform(t);
 			drawSkeleton(p_skeleton);
 			unUseTransform(t);
@@ -91,7 +93,7 @@ namespace Etoile
 					float color[4];
 					color[0] = 0.8f;  color[1] = 0.1f;  color[2] = 0.1f;  color[3] = 1.0f;
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-					drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.1, 10, 10);
+					drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.1/scale, 10, 10);
 				}
 				else
 				{
@@ -101,13 +103,13 @@ namespace Etoile
 						float color[4];
 						color[0] = 0.1f;  color[1] = 0.1f;  color[2] = 1.0f;  color[3] = 1.0f;
 						glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-						drawCylinder_convenient(pos.x(), pos.y(), pos.z(), posParent.x(), posParent.y(), posParent.z(), 0.05, 10);
+						drawCylinder_convenient(pos.x(), pos.y(), pos.z(), posParent.x(), posParent.y(), posParent.z(), 0.05/scale, 10);
 					}
 					{
 						float color[4];
 						color[0] = 0.8f;  color[1] = 0.1f;  color[2] = 0.1f;  color[3] = 1.0f;
 						glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-						drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.1, 10, 10);
+						drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.1/scale, 10, 10);
 					}
 				}
 			}

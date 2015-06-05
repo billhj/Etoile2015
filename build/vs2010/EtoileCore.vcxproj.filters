@@ -229,6 +229,12 @@
     <ClInclude Include="..\..\core\animation\AnimationManager.h">
       <Filter>animation</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\core\animation\BVHSkeletonAnimator.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\core\animation\SkeletonConverter.h">
+      <Filter>animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
