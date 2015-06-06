@@ -315,7 +315,7 @@
   </widget>
   <action name="action_Open">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/open127.png</normaloff>:/Resources/open127.png</iconset>
    </property>
    <property name="text">
@@ -324,7 +324,7 @@
   </action>
   <action name="action_Close">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/door13.png</normaloff>:/Resources/door13.png</iconset>
    </property>
    <property name="text">
@@ -343,7 +343,7 @@
   </action>
   <action name="actionCopy">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/copy12.png</normaloff>:/Resources/copy12.png</iconset>
    </property>
    <property name="text">
@@ -352,7 +352,7 @@
   </action>
   <action name="actionPaste">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/clipboard46.png</normaloff>:/Resources/clipboard46.png</iconset>
    </property>
    <property name="text">
@@ -361,7 +361,7 @@
   </action>
   <action name="actionDelete">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/garbage4.png</normaloff>:/Resources/garbage4.png</iconset>
    </property>
    <property name="text">
@@ -370,7 +370,7 @@
   </action>
   <action name="actionUndo">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/undo.png</normaloff>:/Resources/undo.png</iconset>
    </property>
    <property name="text">
@@ -379,7 +379,7 @@
   </action>
   <action name="actionRedo">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/redo.png</normaloff>:/Resources/redo.png</iconset>
    </property>
    <property name="text">
@@ -388,7 +388,7 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/document79.png</normaloff>:/Resources/document79.png</iconset>
    </property>
    <property name="text">
@@ -397,7 +397,7 @@
   </action>
   <action name="actionCut">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/cut.png</normaloff>:/Resources/cut.png</iconset>
    </property>
    <property name="text">
@@ -412,7 +412,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/axis.png</normaloff>:/Resources/axis.png</iconset>
    </property>
    <property name="text">
@@ -427,7 +427,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/grid.png</normaloff>:/Resources/grid.png</iconset>
    </property>
    <property name="text">
@@ -436,7 +436,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/floppy13.png</normaloff>:/Resources/floppy13.png</iconset>
    </property>
    <property name="text">
@@ -445,7 +445,7 @@
   </action>
   <action name="actionSave_as_Copy">
    <property name="icon">
-    <iconset resource="TexturePainter.qrc">
+    <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
      <normaloff>:/Resources/floppy15.png</normaloff>:/Resources/floppy15.png</iconset>
    </property>
    <property name="text">
@@ -645,7 +645,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="TexturePainter.qrc"/>
+  <include location="../../auxiliary/QTUI/QTUI.qrc"/>
  </resources>
  <connections>
   <connection>

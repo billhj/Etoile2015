@@ -31,6 +31,11 @@
       <Extensions>ui</Extensions>
       <ParseFiles>true</ParseFiles>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\auxiliary\QTUI\QGLRenderWidget.cpp">
@@ -108,6 +113,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_QTTimeLineWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_QTUI.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\auxiliary\QTUI\QGLRenderWidget.h">
@@ -155,6 +163,9 @@
     <CustomBuild Include="..\..\auxiliary\QTUI\QTTimeLineWidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\..\auxiliary\QTUI\QTUI.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_QGLRenderWidget.h">
@@ -190,5 +201,64 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\auxiliary\QTUI\Resources\axis.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\brush.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\brush2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\clipboard46.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\copy12.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\cut.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\document79.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\door13.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\floppy13.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\floppy15.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\garbage4.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\grid.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\magicselection.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\move.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\open127.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\pencil.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\pipette2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\redo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\auxiliary\QTUI\Resources\undo.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

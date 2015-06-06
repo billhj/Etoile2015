@@ -219,7 +219,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../applications/TexturePainter/TexturePainter.qrc">
+             <iconset resource="QTUI.qrc">
               <normaloff>:/Resources/pipette2.png</normaloff>:/Resources/pipette2.png</iconset>
             </property>
             <property name="checkable">
@@ -266,7 +266,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../applications/TexturePainter/TexturePainter.qrc">
+             <iconset resource="QTUI.qrc">
               <normaloff>:/Resources/magicselection.png</normaloff>:/Resources/magicselection.png</iconset>
             </property>
             <property name="checkable">
@@ -304,7 +304,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../applications/TexturePainter/TexturePainter.qrc">
+             <iconset resource="QTUI.qrc">
               <normaloff>:/Resources/brush.png</normaloff>:/Resources/brush.png</iconset>
             </property>
             <property name="checkable">
@@ -342,7 +342,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../applications/TexturePainter/TexturePainter.qrc">
+             <iconset resource="QTUI.qrc">
               <normaloff>:/Resources/pencil.png</normaloff>:/Resources/pencil.png</iconset>
             </property>
             <property name="checkable">
@@ -374,7 +374,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../applications/TexturePainter/TexturePainter.qrc">
+             <iconset resource="QTUI.qrc">
               <normaloff>:/Resources/brush2.png</normaloff>:/Resources/brush2.png</iconset>
             </property>
             <property name="checkable">
@@ -462,7 +462,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../applications/TexturePainter/TexturePainter.qrc">
+             <iconset resource="QTUI.qrc">
               <normaloff>:/Resources/move.png</normaloff>:/Resources/move.png</iconset>
             </property>
             <property name="checkable">
@@ -704,7 +704,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../../applications/TexturePainter/TexturePainter.qrc"/>
+  <include location="QTUI.qrc"/>
  </resources>
  <connections>
   <connection>

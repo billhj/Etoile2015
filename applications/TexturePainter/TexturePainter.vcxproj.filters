@@ -13,11 +13,6 @@
       <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
       <Extensions>ui</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
-      <Extensions>qrc;*</Extensions>
-      <ParseFiles>false</ParseFiles>
-    </Filter>
     <Filter Include="Generated Files">
       <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
       <Extensions>moc;h;cpp</Extensions>
@@ -32,6 +27,11 @@
       <UniqueIdentifier>{f88f6397-5eb4-4f3e-ae48-5b14d48d8275}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,7 +59,7 @@
     <ClCompile Include="..\..\auxiliary\image\QTImageLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\qrc_SkeletonViewer.cpp">
+    <ClCompile Include="GeneratedFiles\qrc_QTUI.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -73,7 +73,7 @@
     <CustomBuild Include="MeshViewer.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\SkeletonViewer\SkeletonViewer.qrc">
+    <CustomBuild Include="..\..\auxiliary\QTUI\QTUI.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -89,61 +89,61 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\SkeletonViewer\Resources\axis.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\axis.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\brush.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\brush.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\brush2.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\brush2.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\clipboard46.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\clipboard46.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\copy12.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\copy12.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\cut.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\cut.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\document79.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\document79.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\door13.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\door13.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\floppy13.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\floppy13.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\floppy15.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\floppy15.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\garbage4.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\garbage4.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\grid.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\grid.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\magicselection.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\magicselection.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\move.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\move.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\open127.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\open127.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\pencil.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\pencil.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\pipette2.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\pipette2.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\redo.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\redo.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\SkeletonViewer\Resources\undo.png">
+    <None Include="..\..\auxiliary\QTUI\Resources\undo.png">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
