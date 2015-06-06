@@ -89,14 +89,10 @@ namespace Etoile
 			{
 				if(item->boundingRect().contains(mouseEvent->scenePos()))
 				{
-					item->setSelected(true);
-					activeFrame = ((QTTimelineItem*)item)->m_frame;
-				}else
-				{
-					item->setSelected(false);
+					p_parent->setActiveFrame(((QTTimelineItem*)item)->m_frame);
 				}
 			}
-			p_parent->setActiveFrame(activeFrame);
+			
 		}
 	}
 
@@ -106,16 +102,11 @@ namespace Etoile
 		{
 			if(item->boundingRect().contains(mouseEvent->scenePos()))
 			{
-				item->setSelected(true);
-				activeFrame = ((QTTimelineItem*)item)->m_frame;
-
-			}else
-			{
-				item->setSelected(false);
+				p_parent->setActiveFrame(((QTTimelineItem*)item)->m_frame);
 			}
 		}
 
-		p_parent->setActiveFrame(activeFrame);
+		//p_parent->setActiveFrame(activeFrame);
 		//QGraphicsScene::mousePressEvent(mouseEvent);
 	}
 

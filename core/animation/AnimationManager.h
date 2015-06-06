@@ -22,7 +22,7 @@ namespace Etoile
 
 	class AnimationManager
 	{
-		AnimationManager(){}
+		AnimationManager(){m_lastFrame = -1;}
 	public:
 		static AnimationManager* getInstance()
 		{
@@ -75,6 +75,8 @@ namespace Etoile
 
 		void update(int idx)
 		{
+			if(idx == m_lastFrame) return;
+			m_lastFrame = idx;
 			for(unsigned int i = 0; i < m_animatorList.size(); ++i)
 			{
 				m_animatorList[i] ->update(idx);
@@ -84,5 +86,6 @@ namespace Etoile
 	protected:
 		std::string m_name;
 		std::vector<Animator*> m_animatorList;
+		int m_lastFrame;
 	};
 }
