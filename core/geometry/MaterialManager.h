@@ -12,12 +12,10 @@
 namespace Etoile
 {
 	class Material;
-	class MaterialManager
+	class MaterialManager : public ResourceManager<Material>
 	{
 	private:
 		MaterialManager();
-	protected:
-		std::vector<Material*> m_datas;
 	public:
 		static MaterialManager* getInstance()
 		{

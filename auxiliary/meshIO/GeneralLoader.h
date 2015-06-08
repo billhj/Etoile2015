@@ -59,7 +59,7 @@ namespace Etoile
 
 				Entity* entity = new Entity(fileName, scene);
 				entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
-				RenderManager::getInstance()->addIntoObjectRendererList(renderer);
+				RenderManager::getInstance()->add(renderer);
 				return entity;
 			}else
 			{
@@ -82,7 +82,7 @@ namespace Etoile
 				Entity* entity = new Entity(fileName, scene);
 				entity->setComponent(ComponentType::RENDER_COMPONENT, skeletonRenderer);
 				entity->setComponent(ComponentType::SKELETON_COMPONENT, sk);
-				RenderManager::getInstance()->addIntoObjectRendererList(skeletonRenderer);
+				RenderManager::getInstance()->add(skeletonRenderer);
 				return entity;
 			}else
 			{
@@ -106,7 +106,7 @@ namespace Etoile
 				Entity* entity = new Entity(fileName, scene);
 				entity->setComponent(ComponentType::RENDER_COMPONENT, skeletonRenderer);
 				entity->setComponent(ComponentType::SKELETON_COMPONENT, sk);
-				RenderManager::getInstance()->addIntoObjectRendererList(skeletonRenderer);
+				RenderManager::getInstance()->add(skeletonRenderer);
 				BVHSkeletonAnimator* animator = new BVHSkeletonAnimator(bvh, sk);
 				AnimationManager::getInstance()->addIntoAnimatorList(animator);
 				return entity;

@@ -30,23 +30,16 @@ namespace Etoile
 
 	unsigned int MaterialManager::addMaterial(Material* t)
 	{
-		int size = m_datas.size();
-		m_datas.push_back(t);
-		return size;
+		return add(t);
 	}
 
 	Material* MaterialManager::getMaterialByIndex(unsigned int idx)
 	{
-		if(idx < m_datas.size())
-			return m_datas[idx];
-		return NULL;
+		return get(idx);
 	}
 
 	void MaterialManager::addMaterials(std::vector<Material*> resources)
 	{
-		for(unsigned int i = 0; i < resources.size(); ++i)
-		{
-			addMaterial(resources[i]);
-		}
+		add(resources);
 	}
 }

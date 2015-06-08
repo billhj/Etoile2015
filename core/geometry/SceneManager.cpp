@@ -14,7 +14,7 @@ namespace Etoile
 
 	void SceneManager::addScene(Scene* scene)
 	{
-		add(scene->getName(), scene);
+		add(scene);
 	}
 
 	void SceneManager::setCurrrentScene(Scene* current)

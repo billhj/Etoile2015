@@ -134,6 +134,7 @@ namespace Etoile
 			ui.current->setValue(frame);
 			ui.current->blockSignals(false);
 		}
+		m_scene.update();
 		this->update();
 		if(activeFrame > m_scene.m_range - 50)
 		{

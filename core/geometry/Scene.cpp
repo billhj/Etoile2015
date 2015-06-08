@@ -42,7 +42,6 @@ namespace Etoile
 
 	void Scene::setName(const std::string& name)
 	{
-		SceneManager::getInstance()->renameElement(m_name, name);
 		m_name = name;
 	}
 

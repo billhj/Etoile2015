@@ -23,7 +23,7 @@ namespace Etoile
 		}
 
 		unsigned int addGpuProgram(GpuProgram* t);
-		GpuProgram* getGpuProgramByName(const std::string& name);
+		//GpuProgram* getGpuProgramByName(const std::string& name);
 		GpuProgram* getGpuProgramByIndex(unsigned int idx);
 		void addGpuPrograms(std::vector<GpuProgram*> resources);
 	};

@@ -10,6 +10,7 @@
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
 #include <assert.h>
+#include <exception>
 #include <vector>
 #include <map>
 #include <string>
@@ -20,84 +21,83 @@ namespace Etoile
 	class ResourceManager
 	{
 	public:
-		DataType* getByIndex(unsigned int idx)
+		DataType* get(unsigned int idx)
 		{
 			assert(idx < m_datas.size());
 			return m_datas[idx];
 		}
 
-
-		DataType* getByName(const std::string& name)
+		void clear()
 		{
-			std::map<std::string, int>::iterator itor = m_names_idx.find(name);
-			if(itor != m_names_idx.end())
+			for(unsigned int i = 0; i < m_datas.size(); ++i)
 			{
-				return m_datas[(*itor).second];
+				delete m_datas[i];
 			}
-			return NULL;
+			m_datas.clear();
 		}
 
-		int getIndex(const std::string& name)
+		/***
+		*	find data by memory adresse
+		*/
+		int find(DataType* data)
 		{
-			std::map<std::string, int>::iterator itor = m_names_idx.find(name);
-			if(itor != m_names_idx.end())
+			if(m_datas.size() > 0)
 			{
-				return (*itor).second;
+				int offset = sizeof(data - m_datas[0]) / sizeof(DataType);
+				if(offset > m_datas.size() || offset < 0) return -1;
+				if(data == m_datas[offset])
+				{
+					return offset;
+				}
 			}
 			return -1;
+			/*try
+			{
+				int offset = sizeof(data - m_datas[0]) / sizeof(DataType);
+				if(data == m_datas[offset])
+				{
+					return offset;
+				}
+			}
+			catch(std::exception& ex)
+			{
+				return -1;
+			}*/
 		}
 
-		unsigned int add(const std::string& name, DataType* data)
+		/***
+		*	add data by checking memory adresse
+		*/
+		unsigned int add(DataType* data)
 		{
-			std::map<std::string, int>::iterator itor = m_names_idx.find(name);
-			if(itor != m_names_idx.end())
+			int index = find(data);
+			if(index >= 0) return index;
+			index = m_datas.size();
+			m_datas.push_back(data);
+			return index;
+		}
+
+		void add(const std::vector<DataType*>& resources)
+		{
+			for(unsigned int i = 0; i < resources.size(); ++i)
 			{
-				int idx = (*itor).second;
-				DataType* olddata = m_datas[idx];
-				if(olddata != data)
-				{
-					m_datas[idx] = data;
-					delete olddata;
-				}
-				return idx;
-			}
-			else
-			{
-				int idx = m_datas.size();
-				m_datas.push_back(data);
-				m_names_idx[name] = idx;
-				return idx;
+				add(resources[i]);
 			}
 		}
 
-		void remove(const std::string& name, bool deleteData = true)
+		/***
+		*	remove data by checking memory adresse
+		*/
+		void remove(DataType* data)
 		{
-			std::map<std::string, int>::iterator itor = m_names_idx.find(name);
-			if(itor != m_names_idx.end())
-			{
-				int idx = (*itor).second;
-				DataType* olddata = m_datas[idx];
-				if(deleteData)
-				{
-					delete olddata;
-					m_datas[idx] = NULL;
-				}
-				m_names_idx.erase(itor);
-			}
+			int index = find(data);
+			if(index >= 0) m_datas.erase(m_datas.begin() + index);
 		}
 
 		std::vector<DataType*>& getDataList(){return m_datas;}
 		const std::vector<DataType*>& getConstDataList() const {return m_datas;}
-		void renameElement(const std::string& oldName, const std::string& newName)
-		{
-			int idx = getIndex(oldName);
-			remove(oldName, false);
-			m_names_idx[newName] = idx;
-		}
-
 	protected:
 		std::vector<DataType*> m_datas;
-		std::map<std::string, int> m_names_idx;
 	};
 }
 

@@ -85,7 +85,7 @@ public:
 		Entity* entity = new Entity();
 		entity->setComponent(ComponentType::RENDER_COMPONENT, renderer);
 		renderer->setRenderMesh(mesh);
-		RenderManager::getInstance()->addIntoObjectRendererList(renderer);
+		RenderManager::getInstance()->add(renderer);
 		p_camera = new Camera(Vec3f(0,0,-1), Vec3f(0,1,0), Vec3f(0,0,2));
 		//p_camera->getTransform()->setPosition(Vec3f(0,0,2));
 		

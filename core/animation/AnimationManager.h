@@ -9,6 +9,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "geometry/ResourceManager.h"
 #include "geometry/Component.h"
 namespace Etoile
 {
@@ -20,7 +21,7 @@ namespace Etoile
 		virtual void update(int) = 0;
 	};
 
-	class AnimationManager
+	class AnimationManager : public ResourceManager<Animator>
 	{
 		AnimationManager(){m_lastFrame = -1;}
 	public:
@@ -31,45 +32,22 @@ namespace Etoile
 		}
 		
 		virtual ~AnimationManager(){}
-		virtual void clear()
-		{
-			for(unsigned int i = 0; i < m_animatorList.size(); ++i)
-			{
-				delete m_animatorList[i];
-			}
-			m_animatorList.clear();
-		}
 		
-		void addIntoAnimatorList(Animator* animator)
+		unsigned int  addIntoAnimatorList(Animator* animator)
 		{
-			if(m_animatorList.size() > 0)
-			{
-				int offset = sizeof(animator - m_animatorList[0]) / sizeof(Animator);
-				if(animator == m_animatorList[offset - 1])
-				{
-					return;
-				}
-			}
-			m_animatorList.push_back(animator);
+			return add(animator);
 		}
 
 		void removeFromObjectAnimatorList(Animator* animator)
 		{
-			if(m_animatorList.size() > 0)
-			{
-				int offset = sizeof(animator - m_animatorList[0]) / sizeof(Animator);
-				if(animator == m_animatorList[offset])
-				{
-					m_animatorList.erase(m_animatorList.begin()+offset);
-				}
-			}
+			remove(animator);
 		}
 
 		void update()
 		{
-			for(unsigned int i = 0; i < m_animatorList.size(); ++i)
+			for(unsigned int i = 0; i < m_datas.size(); ++i)
 			{
-				m_animatorList[i] ->update();
+				m_datas[i] ->update();
 			}
 		}
 
@@ -77,15 +55,14 @@ namespace Etoile
 		{
 			if(idx == m_lastFrame) return;
 			m_lastFrame = idx;
-			for(unsigned int i = 0; i < m_animatorList.size(); ++i)
+			for(unsigned int i = 0; i < m_datas.size(); ++i)
 			{
-				m_animatorList[i] ->update(idx);
+				m_datas[i] ->update(idx);
 			}
 		}
 
 	protected:
 		std::string m_name;
-		std::vector<Animator*> m_animatorList;
 		int m_lastFrame;
 	};
 }

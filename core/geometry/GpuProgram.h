@@ -31,7 +31,7 @@ namespace Etoile
 		}
 		~GpuProgram(){}
 		const std::string getName(){return m_name;}
-		void setName(const std::string& name){ GpuProgramManager::getInstance()->renameElement(m_name, name); m_name = name;}
+		void setName(const std::string& name){m_name = name;}
 		virtual void reCompile() = 0;
 		virtual void use() = 0;
 		virtual void unUse() = 0;
