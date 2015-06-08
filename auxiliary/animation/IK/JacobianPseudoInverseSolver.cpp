@@ -11,13 +11,13 @@
 namespace Etoile
 {
 	using namespace Eigen;
-	bool JacobianPseudoInverseSolver::compute(IKChain* chain, Eigen::Vector3f target, bool enableConstraints)
+	bool JacobianPseudoInverseSolver::compute(Eigen::Vector3f target, bool enableConstraints)
 	{
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		clock_t time = clock();
 #endif
 		int tries = 0;
-		int columnDim = chain->m_localRotations.size();
+		int columnDim = p_chain->m_localRotations.size();
 		MatrixXf jacobian(3, columnDim);
 
 	/*	VectorXf values(columnDim);
@@ -30,8 +30,8 @@ namespace Etoile
 			limitsMax(i) = chain->m_anglelimites[i][1];
 		}*/
 
-		chain->update();
-		Vector3f& endpos = chain->m_globalPositions.back();
+		p_chain->update();
+		Vector3f& endpos = p_chain->m_globalPositions.back();
 		Vector3f distance = (target-endpos);
 
 		float beta = 0.5f;
@@ -40,21 +40,21 @@ namespace Etoile
 			distance.norm() > m_targetThreshold)
 		{
 			Vector3f dT = distance * beta;
-			for(unsigned int i = 0; i <  chain->m_joints.size(); ++i)
+			for(unsigned int i = 0; i <  p_chain->m_joints.size(); ++i)
 			{
-				IKChain::Joint* joint = chain->m_joints[i];
+				IKChain::Joint* joint = p_chain->m_joints[i];
 				std::vector<IKChain::Dim>& dims = joint->m_dims;
 				for(unsigned int j = 0; j < dims.size(); ++j)
 				{
 					IKChain::Dim& dim = dims[j];
-					Vector3f& jointPos = chain->m_globalPositions[dim.m_idx];
+					Vector3f& jointPos = p_chain->m_globalPositions[dim.m_idx];
 					Vector3f boneVector = endpos - jointPos;
 
-					Vector3f axis = chain->m_axis[dim.m_idx];
+					Vector3f axis = p_chain->m_axis[dim.m_idx];
 					int lastDim = dim.m_lastIdx;
 					if(lastDim >= 0)
 					{
-						axis = chain->m_globalOrientations[lastDim] * axis;
+						axis = p_chain->m_globalOrientations[lastDim] * axis;
 					}
 					Vector3f axisXYZgradient = axis.cross(boneVector);
 					jacobian(0, dim.m_idx) = 0 == axisXYZgradient(0)? 0.000001: axisXYZgradient(0);// * m_stepweight;
@@ -99,13 +99,13 @@ namespace Etoile
 
 			for(unsigned int i = 0; i < columnDim; ++i)
 			{
-				chain->m_values[i] = castPiRange(chain->m_values[i] + dR[i]);
-				chain->m_values[i] = clamp(chain->m_values[i], chain->m_anglelimites[i][0], chain->m_anglelimites[i][1]);
-				chain->m_localRotations[i] = AngleAxisf(chain->m_values[i], chain->m_axis[i]);	
+				p_chain->m_values[i] = castPiRange(p_chain->m_values[i] + dR[i]);
+				p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);
+				p_chain->m_localRotations[i] = AngleAxisf(p_chain->m_values[i], p_chain->m_axis[i]);	
 			}
 
-			chain->update();
-			endpos = chain->m_globalPositions.back();
+			p_chain->update();
+			endpos = p_chain->m_globalPositions.back();
 			distance = (target - endpos);
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 			//std::cout<<"endpos: "<<endpos.transpose()<<"     distance:  " << distance.norm()<<std::endl;

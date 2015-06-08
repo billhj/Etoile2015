@@ -27,17 +27,16 @@ namespace Etoile
 		int m_maxTries;
 		float m_targetThreshold;
 		float m_stepweight;
-
+		IKChain * p_chain;
 	public:
 		virtual std::string getIKSolverName() = 0;
-		inline IKSolver(int maxTries = 50, float targetThreshold = 0.005)
-			: m_maxTries(maxTries),
-			m_targetThreshold(targetThreshold)
+		inline IKSolver(IKChain* chain, int maxTries = 50, float targetThreshold = 0.005, float stepweight= 0.5)
+			: p_chain(chain), m_maxTries(maxTries),
+			m_targetThreshold(targetThreshold), m_stepweight(stepweight)
 		{ 
-			m_stepweight = 0.5;
 		}
 
-		virtual bool compute(IKChain* chain, Eigen::Vector3f, bool) = 0;
+		virtual bool compute(Eigen::Vector3f, bool) = 0;
 
 		inline float getSingleStepValue() const
 		{
