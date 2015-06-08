@@ -11,7 +11,7 @@
 namespace Etoile
 {
 	using namespace Eigen;
-	bool JacobianPseudoInverseSolver::compute(Eigen::Vector3f target, bool enableConstraints)
+	bool JacobianPseudoInverseSolver::solve(Eigen::Vector3f target, bool enableConstraints)
 	{
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		clock_t time = clock();

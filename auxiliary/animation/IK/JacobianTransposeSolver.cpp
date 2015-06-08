@@ -11,7 +11,7 @@
 namespace Etoile
 {
 	using namespace Eigen;
-	bool JacobianTransposeSolver::compute(Vector3f target, bool enableConstraints)
+	bool JacobianTransposeSolver::solve(Vector3f target, bool enableConstraints)
 	{
 		int tries = 0;
 		int columnDim = p_chain->m_localRotations.size();

@@ -36,7 +36,7 @@ namespace Etoile
 		{ 
 		}
 
-		virtual bool compute(Eigen::Vector3f, bool) = 0;
+		virtual bool solve(Eigen::Vector3f, bool) = 0;
 
 		inline float getSingleStepValue() const
 		{

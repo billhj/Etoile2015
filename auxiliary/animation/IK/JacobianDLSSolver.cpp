@@ -13,7 +13,7 @@ namespace Etoile
 {
 
 	using namespace Eigen;
-	bool JacobianDLSSolver::compute(Eigen::Vector3f target, bool enableConstraints)
+	bool JacobianDLSSolver::solve(Eigen::Vector3f target, bool enableConstraints)
 	{
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		clock_t time = clock();
@@ -77,7 +77,7 @@ namespace Etoile
 				//std::cout<<"lamda: "<<lamda<<std::endl;
 #endif
 			}
-			MatrixXf dls = jacobianTranspose * ( a +  lamda * lamda * MatrixXf::Identity(a.rows(), a.cols())).inverse();
+			MatrixXf dls = jacobianTranspose * ( a +  lamda * MatrixXf::Identity(a.rows(), a.cols())).inverse();
 			dR = dls * dT;
 
 			for(unsigned int i = 0; i < columnDim; ++i)
