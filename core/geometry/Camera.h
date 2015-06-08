@@ -74,6 +74,8 @@ namespace Etoile
 		void computeTransformationMatrix();
 		void computeProjectionMatrix();
 		void computeModelViewMatrix();
+		Vec4f getScreenCoordinateFrom3DPosition(Vec4f);
+		Vec4f get3DPositionFromScreenCoordinate(Vec4f ref, int x, int y);
 
 		ModelTransform* getTransform(){return p_transform;}
 		CameraManipulator* getManipulator(){return p_manipulator;}

@@ -231,6 +231,25 @@ namespace Etoile
 		m_modelviewMatrix[3][3] = 1.0;
 	}
 
+	Vec4f Camera::getScreenCoordinateFrom3DPosition(Vec4f ref)
+	{
+		Vec4f r = m_projectionMatrix * (m_modelviewMatrix * ref);
+		r[0] = (r.x() / r.w()  + 1.0f)  * 0.5f * m_screenWidth;
+		r[1] = (r.y() / r.w()  + 1.0f)  * 0.5f * m_screenHeight;
+		return r;
+	}
+
+	Vec4f Camera::get3DPositionFromScreenCoordinate(Vec4f ref, int x, int y)
+	{
+		Matrix4f mat = m_projectionMatrix * m_modelviewMatrix;
+		Vec4f r = mat * ref;
+		r[0] = (x / r.w()  + 1.0f)  * 0.5f * m_screenWidth;
+		r[1] = (y / r.w()  + 1.0f)  * 0.5f * m_screenHeight;
+		Matrix4f inv;
+		mat.inverse(inv);
+		return inv * r;
+	}
+
 	void Camera::setTopView(float distance)
 	{
 		this->setupCameraOrientation(Vec3f(0,0,0),Vec3f(0,0,-1), Vec3f(0,distance,0));
