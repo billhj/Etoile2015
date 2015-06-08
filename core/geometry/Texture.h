@@ -27,13 +27,13 @@ namespace Etoile
 	public:
 		Texture(): m_width(0), m_height(0), m_layer(0), m_isCreated(false)
 		{
-			m_index = TextureManager::getInstance()->addTexture(this);
+			m_index = TextureManager::getInstance()->add(this);
 		}
 
 		Texture(Texture& t)
 		{
 			set(t);
-			m_index = TextureManager::getInstance()->addTexture(this);
+			m_index = TextureManager::getInstance()->add(this);
 		}
 
 		void set(Texture& t)

@@ -22,9 +22,6 @@ namespace Etoile
 			return &manager;
 		}
 		~SceneManager(void);
-		void addScene(Scene*);
-		std::vector<Scene*>& getSceneList(){return getDataList();}
-		const std::vector<Scene*>& getSceneList() const {return getConstDataList();}
 		void setCurrrentScene(Scene* current);
 		Scene* getCurrentScene();
 	private:

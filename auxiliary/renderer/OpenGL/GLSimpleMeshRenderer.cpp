@@ -121,7 +121,7 @@ namespace Etoile
 			int index = mat.m_indicesInRessouce[TextureMaterial::DIFFUSE_MAP];
 			if(index >= 0)
 			{
-				TextureManager::getInstance()->getTextureByIndex(index)->use();
+				TextureManager::getInstance()->get(index)->use();
 			}
 			glBegin(GL_TRIANGLES);
 			for(unsigned int j = 0; j < group.m_faceIndices.size(); ++j)
@@ -138,7 +138,7 @@ namespace Etoile
 			glEnd();
 			if(index >= 0)
 			{
-				TextureManager::getInstance()->getTextureByIndex(index)->unUse();
+				TextureManager::getInstance()->get(index)->unUse();
 			}
 		}
 		/*for(unsigned int i = 0; i < mesh->m_groups.size(); ++i)

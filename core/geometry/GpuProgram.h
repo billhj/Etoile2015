@@ -21,13 +21,13 @@ namespace Etoile
 	public:
 		GpuProgram(const std::string& name): m_name(name)
 		{
-			GpuProgramManager::getInstance()->addGpuProgram(this);
+			GpuProgramManager::getInstance()->add(this);
 		}
 
 		GpuProgram(GpuProgram& g)
 		{
 			m_name = g.m_name+"_copy";
-			GpuProgramManager::getInstance()->addGpuProgram(this);
+			GpuProgramManager::getInstance()->add(this);
 		}
 		~GpuProgram(){}
 		const std::string getName(){return m_name;}

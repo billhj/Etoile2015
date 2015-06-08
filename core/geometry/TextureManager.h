@@ -8,6 +8,7 @@
 
 #pragma once
 #include <vector>
+#include "ResourceManager.h"
 
 namespace Etoile
 {
@@ -18,12 +19,11 @@ namespace Etoile
 		virtual Texture* createFromFile(const std::string& ref) = 0;
 	};
 
-	class TextureManager
+	class TextureManager : public ResourceManager<Texture>
 	{
 	private:
 		TextureManager();
 	protected:
-		std::vector<Texture*> m_datas;
 		TextureCreator* p_creator;
 	public:
 		static TextureManager* getInstance()
@@ -32,10 +32,6 @@ namespace Etoile
 			return &manager;
 		}
 
-		unsigned int addTexture(Texture* t);
-		Texture* getTextureByIndex(unsigned int idx);
-		void addTextures(std::vector<Texture*> resources);
-		const std::vector<Texture*>& getTextures();
 		void setTextureCreator(TextureCreator* creator)
 		{
 			p_creator = creator;

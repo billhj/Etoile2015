@@ -28,32 +28,4 @@ namespace Etoile
 	{
 		p_creator = NULL;
 	}
-
-	unsigned int TextureManager::addTexture(Texture* t)
-	{
-		int size = m_datas.size();
-		m_datas.push_back(t);
-		return size;
-	}
-
-	
-	Texture* TextureManager::getTextureByIndex(unsigned int idx)
-	{
-		if(idx < m_datas.size())
-			return m_datas[idx];
-		return NULL;
-	}
-
-	void TextureManager::addTextures(std::vector<Texture*> resources)
-	{
-		for(unsigned int i = 0; i < resources.size(); ++i)
-		{
-			addTexture(resources[i]);
-		}
-	}
-
-	const std::vector<Texture*>& TextureManager::getTextures()
-	{
-		return m_datas;
-	}
 }

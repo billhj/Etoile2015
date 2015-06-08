@@ -43,14 +43,14 @@ namespace Etoile
 		/*setDiffuseTexture("emptyMap");
 		setSpecularTexture("emptyMap");
 		setBumpMap("emptyMap");*/
-		m_index = MaterialManager::getInstance()->addMaterial(this);
+		m_index = MaterialManager::getInstance()->add(this);
 		
 	}
 
 	Material::Material(Material& m)
 	{
 		set(m);
-		m_index = MaterialManager::getInstance()->addMaterial(this);
+		m_index = MaterialManager::getInstance()->add(this);
 	}
 
 	void Material::set(Material& m)

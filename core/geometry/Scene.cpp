@@ -5,7 +5,7 @@ namespace Etoile
 {
 	Scene::Scene(const std::string& name): m_name(name)
 	{
-		SceneManager::getInstance()->addScene(this);
+		SceneManager::getInstance()->add(this);
 	}
 
 

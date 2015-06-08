@@ -28,18 +28,4 @@ namespace Etoile
 	{
 	}
 
-	unsigned int MaterialManager::addMaterial(Material* t)
-	{
-		return add(t);
-	}
-
-	Material* MaterialManager::getMaterialByIndex(unsigned int idx)
-	{
-		return get(idx);
-	}
-
-	void MaterialManager::addMaterials(std::vector<Material*> resources)
-	{
-		add(resources);
-	}
 }

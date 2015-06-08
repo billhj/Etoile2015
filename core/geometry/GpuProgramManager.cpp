@@ -28,26 +28,11 @@ namespace Etoile
 	{
 	}
 
-	unsigned int GpuProgramManager::addGpuProgram(GpuProgram* t)
-	{
-		return add(t);
-	}
 
 	/*GpuProgram* GpuProgramManager::getGpuProgramByName(const std::string& name)
 	{
 		return (GpuProgram*)getByName(name);
 	}*/
 
-	GpuProgram* GpuProgramManager::getGpuProgramByIndex(unsigned int idx)
-	{
-		return (GpuProgram*)get(idx);
-	}
 
-	void GpuProgramManager::addGpuPrograms(std::vector<GpuProgram*> resources)
-	{
-		for(unsigned int i = 0; i < resources.size(); ++i)
-		{
-			addGpuProgram(resources[i]);
-		}
-	}
 }
