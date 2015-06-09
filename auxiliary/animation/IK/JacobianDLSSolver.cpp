@@ -66,18 +66,18 @@ namespace Etoile
 			VectorXf dR = pseudoInverse * dT;
 
 
-			float lamda = 1;
-			//compute Lamda
-			{
-				Vector3f JTheta = jacobian * dR - dT;
-				float v = JTheta.transpose() * JTheta;
-				float v2 = dR.transpose() * dR;
-				lamda = v / v2;
-#if( defined( _DEBUG ) || defined( DEBUG ) )
-				//std::cout<<"lamda: "<<lamda<<std::endl;
-#endif
-			}
-			MatrixXf dls = jacobianTranspose * ( a +  lamda * MatrixXf::Identity(a.rows(), a.cols())).inverse();
+//			float lamda = 1;
+//			//compute Lamda
+//			{
+//				Vector3f JTheta = jacobian * dR - dT;
+//				float v = JTheta.transpose() * JTheta;
+//				float v2 = dR.transpose() * dR;
+//				lamda = v / v2;
+//#if( defined( _DEBUG ) || defined( DEBUG ) )
+//				//std::cout<<"lamda: "<<lamda<<std::endl;
+//#endif
+//			}
+			MatrixXf dls = jacobianTranspose * ( a +  m_dampling * m_dampling * MatrixXf::Identity(a.rows(), a.cols())).inverse();
 			dR = dls * dT;
 
 			for(unsigned int i = 0; i < columnDim; ++i)
