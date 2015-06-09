@@ -72,11 +72,11 @@ namespace Etoile
 		{
 			while(value > 3.14159265)
 			{
-				value -= 3.14159265;
+				value -= 3.14159265 * 2;
 			}
 			while(value < -3.14159265)
 			{
-				value += 3.14159265;
+				value += 3.14159265 * 2;
 			}
 			return value;
 		}
@@ -84,13 +84,13 @@ namespace Etoile
 		float clamp(float value, float minV, float maxV)
 		{
 			if (value > maxV) {
-				value -= 3.14159265;
+				value -= 3.14159265 * 2;
 				if (value < minV){
 					value = maxV;
 				}
 			}
 			if (value < minV) {
-				value += 3.14159265;
+				value += 3.14159265 * 2;
 				if (value > maxV) {
 					value = minV;
 				}
