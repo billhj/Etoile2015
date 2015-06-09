@@ -83,13 +83,17 @@ namespace Etoile
 
 		float clamp(float value, float minV, float maxV)
 		{
-			if(value > maxV)
-			{
-				value = maxV;
+			if (value > maxV) {
+				value -= 3.14159265;
+				if (value < minV){
+					value = maxV;
+				}
 			}
-			if(value < minV)
-			{
-				value = minV;
+			if (value < minV) {
+				value += 3.14159265;
+				if (value > maxV) {
+					value = minV;
+				}
 			}
 			return value;
 		}
