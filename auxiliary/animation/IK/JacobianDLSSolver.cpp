@@ -64,8 +64,9 @@ namespace Etoile
 			/*MatrixXf aInv = a.inverse();
 			MatrixXf pseudoInverse = jacobianTranspose * aInv;
 			VectorXf dR = pseudoInverse * dT;*/
-
+			std::cout<<"a: "<<std::endl<<a<<std::endl;
 			MatrixXf dls = jacobianTranspose * ( a +  m_dampling * MatrixXf::Identity(a.rows(), a.cols())).inverse();
+			std::cout<<"dls: "<<std::endl<<dls<<std::endl;
 			VectorXf dR = dls * dT;
 
 			for(unsigned int i = 0; i < columnDim; ++i)
