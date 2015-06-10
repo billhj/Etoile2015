@@ -54,44 +54,33 @@ namespace Etoile
 				}
 			}
 			//#if( defined( _DEBUG ) || defined( DEBUG ) )
-			//			std::cout<<"jacobian: "<<std::endl<<jacobian<<std::endl;
+						//std::cout<<"jacobian: "<<std::endl<<jacobian<<std::endl;
 			//#endif
 
 
 			MatrixXf jacobianTranspose = jacobian.transpose();
 			MatrixXf a =  jacobian * jacobianTranspose;
 
-			MatrixXf aInv = a.inverse();
+			/*MatrixXf aInv = a.inverse();
 			MatrixXf pseudoInverse = jacobianTranspose * aInv;
-			VectorXf dR = pseudoInverse * dT;
+			VectorXf dR = pseudoInverse * dT;*/
 
-
-//			float lamda = 1;
-//			//compute Lamda
-//			{
-//				Vector3f JTheta = jacobian * dR - dT;
-//				float v = JTheta.transpose() * JTheta;
-//				float v2 = dR.transpose() * dR;
-//				lamda = v / v2;
-//#if( defined( _DEBUG ) || defined( DEBUG ) )
-//				//std::cout<<"lamda: "<<lamda<<std::endl;
-//#endif
-//			}
-			MatrixXf dls = jacobianTranspose * ( a +  m_dampling * m_dampling * MatrixXf::Identity(a.rows(), a.cols())).inverse();
-			dR = dls * dT;
+			MatrixXf dls = jacobianTranspose * ( a +  m_dampling * MatrixXf::Identity(a.rows(), a.cols())).inverse();
+			VectorXf dR = dls * dT;
 
 			for(unsigned int i = 0; i < columnDim; ++i)
 			{
 				p_chain->m_values[i] = castPiRange(p_chain->m_values[i] + dR[i]);
-				p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);
+				//p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);
 				p_chain->m_localRotations[i] = AngleAxisf(p_chain->m_values[i], p_chain->m_axis[i]);	
+				std::cout<< p_chain->m_values[i]<<"\t";
 			}
-
+			std::cout<<std::endl;
 			p_chain->update();
 			endpos = p_chain->m_globalPositions.back();
 			distance = (target - endpos);
 #if( defined( _DEBUG ) || defined( DEBUG ) )
-			//std::cout<<"endpos: "<<endpos.transpose()<<"     distance:  " << distance.norm()<<std::endl;
+			std::cout<<"endpos: "<<endpos.transpose()<<"     distance:  " << distance.norm()<<std::endl;
 #endif
 		}
 #if( defined( _DEBUG ) || defined( DEBUG ) )

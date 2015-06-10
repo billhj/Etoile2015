@@ -1,17 +1,19 @@
 /**
 * Copyright(C) 2009-2012                
 * @author Jing HUANG
-* @file JacobianPseudoInverseSolver.cpp
+* @file JacobianDLSSVDSolver.cpp
 * @brief 
 * @date 1/2/2011
 */
 
-#include "JacobianPseudoInverseSolver.h"
+#include "JacobianDLSSVDSolver.h"
 #include <ctime>
+
 namespace Etoile
 {
+	float epsilon = 1.2;
 	using namespace Eigen;
-	bool JacobianPseudoInverseSolver::solve(Eigen::Vector3f target, bool enableConstraints)
+	bool JacobianDLSSVDSolver::solve(Eigen::Vector3f target, bool enableConstraints)
 	{
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		clock_t time = clock();
@@ -19,17 +21,16 @@ namespace Etoile
 		int tries = 0;
 		int columnDim = p_chain->m_localRotations.size();
 		MatrixXf jacobian(3, columnDim);
-
 		p_chain->update();
 		Vector3f& endpos = p_chain->m_globalPositions.back();
 		Vector3f distance = (target-endpos);
 
-		//float beta = 0.5f;
+		float beta = 0.5f;
 
 		while (++tries < m_maxTries &&
 			distance.norm() > m_targetThreshold)
 		{
-			Vector3f dT = distance;
+			Vector3f dT = distance * beta;
 			for(unsigned int i = 0; i <  p_chain->m_joints.size(); ++i)
 			{
 				IKChain::Joint* joint = p_chain->m_joints[i];
@@ -52,22 +53,35 @@ namespace Etoile
 					jacobian(2, dim.m_idx) = 0 == axisXYZgradient(2)? 0.000001: axisXYZgradient(2);// * m_stepweight;
 				}
 			}
+
+			JacobiSVD<MatrixXf> svd(jacobian,  ComputeFullU| ComputeFullV);
+			VectorXf s =  svd.singularValues();
+			MatrixXf u =  svd.matrixU();
+			MatrixXf v =  svd.matrixV();
 	
-			MatrixXf jacobianTranspose = jacobian.transpose();
-			MatrixXf a =  jacobian * jacobianTranspose;
-			MatrixXf aInv = a.inverse();
-			MatrixXf pseudoInverse = jacobianTranspose * aInv;
-			std::cout<<"pseudoInverse: "<<std::endl<<pseudoInverse<<std::endl;
+			double lamda2 = 0;
+			double minvalue = 1000;
+			for (int i = 0; i < s.size(); ++i) {
+                double value = s(i);
+                if (value < minvalue) {
+                    minvalue = value;
+                }
+            }
+            if (minvalue >= epsilon) {
+                lamda2 = 0;
+            } else {
+                lamda2 = (1 - (minvalue / epsilon)) * m_dampling_max;
+            }
 
+			MatrixXf e(u.cols(),v.rows()); e.setZero();
+			for (int i = 0; i < s.size(); ++i) {
+                double value = s(i);
+                e(i, i) = value / (value * value + lamda2);
+            }
 
-			JacobiSVD<MatrixXf> svd(jacobian, ComputeFullU| ComputeFullV);
+			MatrixXf dls = v * e.transpose() * u.transpose();
+			VectorXf dR = dls * dT;
 
-			MatrixXf pseudoInverse2;
-			svd.solve(pseudoInverse2);
-			std::cout<<"pseudoInverse2: "<<std::endl<<pseudoInverse2<<std::endl;
-
-			VectorXf dR = pseudoInverse * dT;
-	
 			for(unsigned int i = 0; i < columnDim; ++i)
 			{
 				p_chain->m_values[i] = castPiRange(p_chain->m_values[i] + dR[i]);
@@ -79,7 +93,7 @@ namespace Etoile
 			endpos = p_chain->m_globalPositions.back();
 			distance = (target - endpos);
 #if( defined( _DEBUG ) || defined( DEBUG ) )
-			//std::cout<<"endpos: "<<endpos.transpose()<<std::endl;
+			//std::cout<<"endpos: "<<endpos.transpose()<<"     distance:  " << distance.norm()<<std::endl;
 #endif
 		}
 #if( defined( _DEBUG ) || defined( DEBUG ) )
@@ -87,26 +101,15 @@ namespace Etoile
 		int ms = double(time) / CLOCKS_PER_SEC * 1000;
 		std::cout<<"timee elapsed: "<<ms<<std::endl;
 #endif
-#if( defined( _DEBUG ) || defined( DEBUG ) )
-		std::cout<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
-#endif
 		if (tries == m_maxTries)
 		{
 			return false;
 		}
-
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+		std::cout<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
+#endif
 		return true;
 	}
 
 
-	//	MatrixXf JacobianPseudoInverseSolver::computeRotations(Eigen::MatrixXf jacobian, Eigen::Vector3f dT)
-	//	{
-	//		
-	////#if( defined( _DEBUG ) || defined( DEBUG ) )
-	////		std::cout<<"a: "<<std::endl<<a<<std::endl;
-	////		std::cout<<"aInv: "<<std::endl<<aInv<<std::endl;
-	////			std::cout<<"pseudoInverse: "<<std::endl<<pseudoInverse<<std::endl;
-	////#endif
-	//		return pseudoInverse * dT;
-	//	}
 }

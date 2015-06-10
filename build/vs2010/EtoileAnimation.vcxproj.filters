@@ -18,6 +18,9 @@
     <ClCompile Include="..\..\auxiliary\animation\IK\JacobianDLSSolver.cpp">
       <Filter>ik</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianDLSSVDSolver.cpp">
+      <Filter>ik</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\auxiliary\animation\IK\IKSolver.h">
@@ -33,6 +36,9 @@
       <Filter>ik</Filter>
     </ClInclude>
     <ClInclude Include="..\..\auxiliary\animation\IK\JacobianDLSSolver.h">
+      <Filter>ik</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianDLSSVDSolver.h">
       <Filter>ik</Filter>
     </ClInclude>
   </ItemGroup>

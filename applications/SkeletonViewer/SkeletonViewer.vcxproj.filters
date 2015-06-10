@@ -74,6 +74,9 @@
     <ClCompile Include="GeneratedFiles\qrc_QTUI.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianDLSSVDSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MeshViewer.h">
@@ -109,6 +112,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\auxiliary\animation\IK\JacobianDLSSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianDLSSVDSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
