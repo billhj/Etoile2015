@@ -25,7 +25,7 @@ namespace Etoile
 	class FileSearch
 	{
 	public:
-		std::vector<FileInfo> search(std::string curr_directory, std::string extension)
+		static std::vector<FileInfo> search(std::string curr_directory, std::string extension)
 		{
 			std::vector<FileInfo> filenames;
 			DIR* dir_point = opendir(curr_directory.c_str());

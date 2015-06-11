@@ -133,6 +133,7 @@ namespace Etoile
 	{
 		std::string strReturn;
 		size_t nPos = refFile.find_last_of( '.' ) + 1;
+		if(nPos == 0){return strReturn;}
 		size_t iExtLength = refFile.length() - nPos;
 		strReturn.insert( 0, refFile.c_str(), nPos, iExtLength );
 		if ( bToLower ) {
