@@ -10,9 +10,24 @@
 #include <vector>
 #include <iostream>
 #include <Eigen/Dense>
+//#include <Eigen/StdVector>
 
 namespace Etoile
 {
+	
+	typedef Eigen::MatrixXd MatrixX_;
+	typedef Eigen::Matrix3d Matrix3_;
+	typedef Eigen::VectorXd VectorX_;
+	typedef Eigen::Vector3d Vector3_;
+	typedef Eigen::Vector2d Vector2_;
+	typedef Eigen::AngleAxisd AngleAxis_;
+
+//	
+//EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(MatrixX_)
+//EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(Matrix3_)
+//EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(VectorX_)
+//EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(Vector3_)
+//EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(Vector2_)
 
 	struct IKChain
 	{
@@ -67,15 +82,15 @@ namespace Etoile
 		}
 
 		std::vector<Joint*> m_joints;
-		std::vector<Eigen::Matrix3f> m_localRotations;
-		std::vector<Eigen::Matrix3f> m_globalOrientations;
-		std::vector<Eigen::Vector3f> m_localTranslations;
-		std::vector<Eigen::Vector3f> m_globalPositions;
+		std::vector<Matrix3_, Eigen::aligned_allocator<Matrix3_> > m_localRotations;
+		std::vector<Matrix3_, Eigen::aligned_allocator<Matrix3_> > m_globalOrientations;
+		std::vector<Vector3_, Eigen::aligned_allocator<Vector3_> > m_localTranslations;
+		std::vector<Vector3_, Eigen::aligned_allocator<Vector3_> > m_globalPositions;
 		std::string m_name;
 
-		std::vector<Eigen::Vector3f> m_axis;
-		std::vector<Eigen::Vector2f> m_anglelimites;
-		std::vector<float> m_values;
+		std::vector<Vector3_, Eigen::aligned_allocator<Vector3_> > m_axis;
+		std::vector<Vector2_, Eigen::aligned_allocator<Vector2_> > m_anglelimites;
+		std::vector<double> m_values;
 
 
 		bool loadFromFile(const std::string& fileName);

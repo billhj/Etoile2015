@@ -25,35 +25,35 @@ namespace Etoile
 	{
 	protected:
 		int m_maxTries;
-		float m_targetThreshold;
-		float m_stepweight;
+		double m_targetThreshold;
+		double m_stepweight;
 		IKChain * p_chain;
 	public:
 		virtual std::string getIKSolverName() = 0;
-		inline IKSolver(IKChain* chain, int maxTries = 50, float targetThreshold = 0.005, float stepweight= 0.5)
+		inline IKSolver(IKChain* chain, int maxTries = 50, double targetThreshold = 0.005, double stepweight= 0.5)
 			: p_chain(chain), m_maxTries(maxTries),
 			m_targetThreshold(targetThreshold), m_stepweight(stepweight)
 		{ 
 		}
 
-		virtual bool solve(Eigen::Vector3f, bool) = 0;
+		virtual bool solve(Vector3_, bool) = 0;
 
-		inline float getSingleStepValue() const
+		inline double getSingleStepValue() const
 		{
 			return m_stepweight;
 		}
 
-		void setSingleStepValue(float v)
+		void setSingleStepValue(double v)
 		{
 			this->m_stepweight = v;
 		}
 
-		inline float getTargetThreshold() const
+		inline double getTargetThreshold() const
 		{
 			return m_targetThreshold;
 		}
 
-		void setTargetThreshold(float targetThreshold)
+		void setTargetThreshold(double targetThreshold)
 		{
 			this->m_targetThreshold = targetThreshold;
 		}
@@ -68,7 +68,7 @@ namespace Etoile
 			this->m_maxTries = tries;
 		}
 
-		float castPiRange(float value)
+		double castPiRange(double value)
 		{
 			while(value > 3.14159265)
 			{
@@ -81,7 +81,7 @@ namespace Etoile
 			return value;
 		}
 
-		float clamp(float value, float minV, float maxV)
+		double clamp(double value, double minV, double maxV)
 		{
 			if (value > maxV) {
 				value -= 3.14159265 * 2;

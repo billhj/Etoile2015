@@ -14,13 +14,13 @@ namespace Etoile
 
 	class JacobianDLSSolver : public IKSolver
 	{
-		float m_dampling;
+		double m_dampling;
 	public:
-		JacobianDLSSolver(IKChain* chain, int maxTries = 150, float targetThreshold = 0.005, float stepweight= 0.5, float dampling = 0.9):IKSolver(chain, maxTries, targetThreshold, stepweight),
+		JacobianDLSSolver(IKChain* chain, int maxTries = 1000, double targetThreshold = 0.005, double stepweight= 0.5, double dampling = 0.9):IKSolver(chain, maxTries, targetThreshold, stepweight),
 		m_dampling(dampling){}
 		virtual std::string getIKSolverName(){ return "JacobianDLS";}
-		virtual bool solve(Eigen::Vector3f, bool) override;
-		void setDamping(float dampling){ m_dampling = dampling; }
-		float getDamping(){return m_dampling;}
+		virtual bool solve(Vector3_, bool) override;
+		void setDamping(double dampling){ m_dampling = dampling; }
+		double getDamping(){return m_dampling;}
 	};
 }

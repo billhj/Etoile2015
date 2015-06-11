@@ -53,12 +53,12 @@ namespace Etoile
 				m_dims[i].m_lastIdx = m_dims[i - 1].m_idx;
 			}
 
-			sk->m_axis.push_back(Eigen::Vector3f::Zero());
-			sk->m_anglelimites.push_back(Eigen::Vector2f(-3.14,3.14));
-			sk->m_localRotations.push_back(Eigen::Matrix3f::Identity());
-			sk->m_globalOrientations.push_back(Eigen::Matrix3f::Identity());
-			sk->m_localTranslations.push_back(Eigen::Vector3f::Zero());
-			sk->m_globalPositions.push_back(Eigen::Vector3f::Zero());
+			sk->m_axis.push_back(Vector3_::Zero());
+			sk->m_anglelimites.push_back(Vector2_(-3.14,3.14));
+			sk->m_localRotations.push_back(Matrix3_::Identity());
+			sk->m_globalOrientations.push_back(Matrix3_::Identity());
+			sk->m_localTranslations.push_back(Vector3_::Zero());
+			sk->m_globalPositions.push_back(Vector3_::Zero());
 			sk->m_values.push_back(0);
 		}
 	}
@@ -117,12 +117,12 @@ namespace Etoile
 				stream >> idxP;
 				int dof;
 				stream >> dof;
-				float x,y,z;
+				double x,y,z;
 				stream >> x;
 				stream >> y;
 				stream >> z;
 				Joint* j = new Joint(this, idxP, dof, name);
-				m_localTranslations[j->m_dims[0].m_idx] = Eigen::Vector3f(x,y,z);
+				m_localTranslations[j->m_dims[0].m_idx] = Vector3_(x,y,z);
 				std::cout<< "Joint: "<<name <<" dof: "<<dof<< " parent: "<<idxP<<" localTrans: "<< m_localTranslations[j->m_dims[0].m_idx].transpose() <<std::endl;
 				for(int i = 0; i < dof; ++i)
 				{
@@ -132,19 +132,19 @@ namespace Etoile
 					}*/
 					std::stringstream stream(line);
 
-					float x,y,z;
+					double x,y,z;
 					stream >> x;
 					stream >> y;
 					stream >> z;
-					m_axis[j->m_dims[i].m_idx] = Eigen::Vector3f(x,y,z);
+					m_axis[j->m_dims[i].m_idx] = Vector3_(x,y,z);
 					std::cout<<i<< " axis: "<<m_axis[j->m_dims[i].m_idx].transpose()<<std::endl;
 
-					float minV,maxV;
+					double minV,maxV;
 					stream >> minV;
 					stream >> maxV;
 					if(!stream.fail())
 					{
-						m_anglelimites[j->m_dims[i].m_idx] = Eigen::Vector2f(minV,maxV);
+						m_anglelimites[j->m_dims[i].m_idx] = Vector2_(minV,maxV);
 						std::cout<<" limits: "<<m_anglelimites[j->m_dims[i].m_idx].transpose()<<std::endl;
 					}
 				}
