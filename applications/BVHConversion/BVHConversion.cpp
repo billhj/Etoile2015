@@ -7,6 +7,7 @@
 #include "util/FileSearch.h"
 #include <string>
 #include <iostream>
+#include "OctreeDataCreation.h"
 
 #ifndef UNICODE  
   typedef std::string String; 
@@ -24,6 +25,15 @@
 	bvh.saveToBVHFile(filename +"_zyx.bvh");
   }
 
+  void createBVHData(const std::string& s)
+  {
+	Etoile::BVH bvh;
+	bvh.loadFromBVHFile(s);
+	std::string path = Etoile::File::getFilePath(s);
+	std::string filename = Etoile::File::getFileNameWithoutExtension(s);
+	createBVHDataFile(bvh, filename+".data");
+  }
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	for (int i = 1; i<argc; ++i)
@@ -38,6 +48,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			for(unsigned int i = 0; i < fileinfos.size(); ++i)
 			{
 				dealBVH(fileinfos[i]._path);
+				//createBVHData(fileinfos[i]._path);
 			}
 		}else
 		{
