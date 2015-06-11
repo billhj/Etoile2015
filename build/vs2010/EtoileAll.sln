@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtoileAnimation", "EtoileAn
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QTUI", "QTUI.vcxproj", "{B69F62EB-5310-4231-A747-B2E5D06615C8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BVHConversion", "..\..\applications\BVHConversion\BVHConversion.vcxproj", "{72F0399A-60A1-4C7C-8107-2472DBF96214}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -129,6 +131,12 @@ Global
 		{B69F62EB-5310-4231-A747-B2E5D06615C8}.Release|Win32.Build.0 = Release|Win32
 		{B69F62EB-5310-4231-A747-B2E5D06615C8}.Release|x64.ActiveCfg = Release|x64
 		{B69F62EB-5310-4231-A747-B2E5D06615C8}.Release|x64.Build.0 = Release|x64
+		{72F0399A-60A1-4C7C-8107-2472DBF96214}.Debug|Win32.ActiveCfg = Debug|Win32
+		{72F0399A-60A1-4C7C-8107-2472DBF96214}.Debug|Win32.Build.0 = Debug|Win32
+		{72F0399A-60A1-4C7C-8107-2472DBF96214}.Debug|x64.ActiveCfg = Debug|Win32
+		{72F0399A-60A1-4C7C-8107-2472DBF96214}.Release|Win32.ActiveCfg = Release|Win32
+		{72F0399A-60A1-4C7C-8107-2472DBF96214}.Release|Win32.Build.0 = Release|Win32
+		{72F0399A-60A1-4C7C-8107-2472DBF96214}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

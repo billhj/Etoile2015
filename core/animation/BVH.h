@@ -40,7 +40,9 @@ namespace Etoile
 			float m_offset[3];
 			bool m_isleaf;
 			int m_level;
-			int m_childrenNb;
+			//int m_childrenNb;
+
+			void changeOrdertoZYX();
 		};
 
 		std::vector<Joint*> m_joints;
@@ -53,6 +55,7 @@ namespace Etoile
 		BVH():m_dims(0){}
 		bool loadFromBVHFile(const std::string& filepath);
 		bool saveToBVHFile(const std::string& filepath);
+		void changeOrderToZYX();
 	private:
 		void trimString( std::string& string);
 		void read(std::istream& in);

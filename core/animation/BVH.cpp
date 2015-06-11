@@ -11,6 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include <assert.h>
+#include "math/MathHead.h"
 
 namespace Etoile
 {
@@ -36,7 +37,6 @@ namespace Etoile
 		m_name = name;
 		m_dof = dof;
 		m_dims.resize(m_dof);
-		m_childrenNb = 0;
 		for(int i = 0; i < dof; ++i)
 		{
 			m_dims[i].m_index = bvh->m_dims;	
@@ -52,7 +52,6 @@ namespace Etoile
 		bvh->m_joints.push_back(this);
 		m_index_parent = parent;
 		m_name = name;
-		m_childrenNb = 0;
 	}
 
 	void BVH::Joint::init(int dof)
@@ -63,6 +62,60 @@ namespace Etoile
 		{
 			m_dims[i].m_index = p_owner->m_dims;	
 			++p_owner->m_dims;
+		}
+	}
+
+	void BVH::Joint::changeOrdertoZYX()
+	{
+		std::vector<int> indices;
+		std::vector<Vec3f> axis;
+		for(int i = 0; i < m_dof; ++i)
+		{
+			int indx = m_dims[i].m_index;
+			if(m_dims[i].m_name== "Zrotation")
+			{
+				Vec3f v(0,0,1);
+				axis.push_back(v);
+				indices.push_back(indx);
+			}else if(m_dims[i].m_name== "Yrotation")
+			{
+				Vec3f v(0,1,0);
+				axis.push_back(v);
+				indices.push_back(indx);
+			}else if(m_dims[i].m_name== "Xrotation")
+			{
+				Vec3f v(1,0,0);
+				axis.push_back(v);
+				indices.push_back(indx);
+			}
+		}
+		if(indices.size() > 0)
+		{
+			m_dims[0].m_name = "Zrotation";
+			m_dims[1].m_name = "Yrotation";
+			m_dims[2].m_name = "Xrotation";
+
+		
+			for(int j = 0; j < p_owner->m_frames.size(); ++j){
+				Frame& f = p_owner->m_frames[j];
+				float value0 = f.m_values[indices[0]] * 3.14159265 / 180.0;
+				float value1 = f.m_values[indices[1]] * 3.14159265 / 180.0;
+				float value2 = f.m_values[indices[2]] * 3.14159265 / 180.0;
+				Quaternionf q = Quaternionf(axis[0], value0) * Quaternionf(axis[1], value1) * Quaternionf(axis[2], value2);
+				Vec3f v = q.getEulerAngleXYZBYAngle();
+				f.m_values[indices[0]] = v.z();
+				f.m_values[indices[1]] = v.y();
+				f.m_values[indices[2]] = v.x();
+			}	
+		}
+	}
+
+	void BVH::changeOrderToZYX()
+	{
+		for(unsigned int i = 1; i < m_joints.size(); ++i)
+		{
+			Joint* current = m_joints[i];
+			current->changeOrdertoZYX();
 		}
 	}
 
@@ -115,23 +168,23 @@ namespace Etoile
 			{
 				if(keyWrd == "HIERARCHY")
 				{
-#if defined(_DEBUG) || defined(DEBUG)
-					std::cout<<"HIERARCHY " <<std::endl;
-#endif
+//#if defined(_DEBUG) || defined(DEBUG)
+//					std::cout<<"HIERARCHY " <<std::endl;
+//#endif
 				}
 				else if(keyWrd == "ROOT")
 				{
-#if defined(_DEBUG) || defined(DEBUG)
-					std::cout<<"Root " <<std::endl;
-#endif
+//#if defined(_DEBUG) || defined(DEBUG)
+//					std::cout<<"Root " <<std::endl;
+//#endif
 					stream >> keyWrd;
 					readJoint(in, keyWrd);
 				}
 				else if(keyWrd == "MOTION")
 				{
-#if defined(_DEBUG) || defined(DEBUG)
-					std::cout<<"MOTION " <<std::endl;
-#endif
+//#if defined(_DEBUG) || defined(DEBUG)
+//					std::cout<<"MOTION " <<std::endl;
+//#endif
 					stream >> keyWrd;
 					readFrames(in);
 				}
@@ -170,9 +223,9 @@ namespace Etoile
 			{
 				if ( keyWrd =="{")
 				{
-#if defined(_DEBUG) || defined(DEBUG)
-					std::cout<<"{ " <<std::endl;
-#endif
+//#if defined(_DEBUG) || defined(DEBUG)
+//					std::cout<<"{ " <<std::endl;
+//#endif
 				}
 			}
 		}
@@ -185,9 +238,9 @@ namespace Etoile
 			{
 				if (keyWrd =="OFFSET")
 				{
-#if defined(_DEBUG) || defined(DEBUG)
-					std::cout<<"OFFSET" <<std::endl;
-#endif
+//#if defined(_DEBUG) || defined(DEBUG)
+//					std::cout<<"OFFSET" <<std::endl;
+//#endif
 					stream >> x;
 					stream >> y;
 					stream >> z;
@@ -207,9 +260,9 @@ namespace Etoile
 			{
 				if (keyWrd =="CHANNELS")
 				{
-#if defined(_DEBUG) || defined(DEBUG)
-					std::cout<<"CHANNELS" <<std::endl;
-#endif
+//#if defined(_DEBUG) || defined(DEBUG)
+//					std::cout<<"CHANNELS" <<std::endl;
+//#endif
 					stream >> dim;
 					current = new Joint(this, parent, dim, name);
 					current->m_offset[0] = x;
@@ -249,8 +302,6 @@ namespace Etoile
 					{
 						loop = false;
 						m_index.pop();
-						if(parent > -1)
-							m_joints[parent]->m_childrenNb++;
 					}
 
 				}
@@ -280,9 +331,9 @@ namespace Etoile
 			{
 				if ( keyWrd =="{")
 				{
-#if defined(_DEBUG) || defined(DEBUG)
-					std::cout<<"{ " <<std::endl;
-#endif
+//#if defined(_DEBUG) || defined(DEBUG)
+//					std::cout<<"{ " <<std::endl;
+//#endif
 				}
 			}
 		}
@@ -295,9 +346,9 @@ namespace Etoile
 			{
 				if (keyWrd =="OFFSET")
 				{
-#if defined(_DEBUG) || defined(DEBUG)
-					std::cout<<"OFFSET" <<std::endl;
-#endif
+//#if defined(_DEBUG) || defined(DEBUG)
+//					std::cout<<"OFFSET" <<std::endl;
+//#endif
 					stream >> x;
 					stream >> y;
 					stream >> z;
@@ -321,8 +372,6 @@ namespace Etoile
 				if (keyWrd =="}")
 				{
 					//m_index.pop();
-					if(parent > -1)
-						m_joints[parent]->m_childrenNb++;
 				}
 
 			}
@@ -400,10 +449,10 @@ namespace Etoile
 	void BVH::write(std::ostream& out)
 	{
 		//write HIERARCHY
-		std::vector<int> nb_children;
-		for(unsigned int i = 0; i < m_joints.size(); ++i)
+		std::vector<int> nb_children(m_joints.size());
+		for(unsigned int i = 1; i < m_joints.size(); ++i)
 		{
-			nb_children.push_back(m_joints[i]->m_childrenNb);
+			++nb_children[m_joints[i]->m_index_parent];
 		}
 
 		std::string incent = "\t";
@@ -447,6 +496,9 @@ namespace Etoile
 					if(nb_children[parent] == 0)
 					{
 						out<< std::string( m_joints[parent]->m_level,'\t')  <<"}\n";
+					}else
+					{
+						break;
 					}
 					parent = m_joints[parent]->m_index_parent;
 				}
@@ -462,7 +514,7 @@ namespace Etoile
 			Frame& frame = m_frames[i];
 			for(int j = 0; j < m_dims; ++j)
 			{
-				out<< frame.m_values[j] <<"\t";
+				out<< frame.m_values[j] <<"  ";
 			}
 			out<<"\n";
 		}
