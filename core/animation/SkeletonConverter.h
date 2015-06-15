@@ -88,6 +88,7 @@ namespace Etoile
 			skeleton->update();
 		}
 
+		
 		static void updateSkeletonToBVHFrame(Skeleton* skeleton, BVH* bvh,  int framenb)
 		{
 			Frame& frame = bvh->m_frames[framenb];
@@ -107,5 +108,48 @@ namespace Etoile
 				}
 			}
 		}
+
+		static void updateBVHFrameToRelativeBodySkeleton(BVH* bvh, Skeleton* skeleton, int framenb)
+		{
+			Frame& frame = bvh->m_frames[framenb];
+			for(unsigned int i = 1; i < bvh->m_joints.size(); ++i)
+			{
+				BVH::Joint* joint = bvh->m_joints[i];
+				Joint* jsk = skeleton->m_joints[i];
+				Quaternionf q;
+				for(unsigned int j = 0; j < joint->m_dims.size(); ++j)
+				{
+					BVH::Dim& dim = joint->m_dims[j];
+					float v = frame.m_values[dim.m_index];
+					if(dim.m_name == "Xposition")
+					{
+						skeleton->m_localTranslations[i][0] = bvh->m_isMeter ? v : v / 100.0;
+					}
+					else if(dim.m_name == "Yposition")
+					{
+						skeleton->m_localTranslations[i][1] = bvh->m_isMeter ? v : v / 100.0;
+					}
+					else if(dim.m_name == "Zposition")
+					{
+						skeleton->m_localTranslations[i][2] = bvh->m_isMeter ? v : v / 100.0;
+					}
+					else if(dim.m_name == "Zrotation")
+					{
+						q = q * Quaternionf(Vec3f(0,0,1),degreeToRadian(v));
+					}
+					else if(dim.m_name == "Xrotation")
+					{
+						q = q * Quaternionf(Vec3f(1,0,0),degreeToRadian(v));
+					}
+					else if(dim.m_name == "Yrotation")
+					{
+						q = q * Quaternionf(Vec3f(0,1,0),degreeToRadian(v));
+					}
+				}
+				skeleton->m_localRotations[i] = q;
+			}
+			skeleton->update();
+		}
+
 	};
 }

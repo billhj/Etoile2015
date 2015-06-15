@@ -8,6 +8,7 @@
 
 #pragma once
 #include <vector>
+#include <map>
 #include "math/MathHead.h"
 #include "Component.h"
 
@@ -62,6 +63,23 @@ namespace Etoile
 			}
 		}
 
+		int getJointIndex(const std::string& name)
+		{
+			std::map<std::string, int>::iterator itor = m_name_index.find(name);
+			if(itor != m_name_index.end())
+			{
+				return itor->second;
+			}
+			return -1;
+		}
+
+		Joint* getJoint(const std::string& name)
+		{
+			int indx = getJointIndex(name);
+			if(indx < 0) return NULL;
+			return m_joints[indx];
+		}
+
 		std::vector<Joint*> m_joints;
 		std::vector<Quaternionf> m_localRotations;
 		std::vector<Quaternionf> m_globalOrientations;
@@ -69,6 +87,7 @@ namespace Etoile
 		std::vector<Vec3f> m_globalPositions;
 		std::string m_name;
 		std::string m_path;
+		std::map<std::string, int> m_name_index;
 	protected:
 		void read(std::istream& in);
 	};

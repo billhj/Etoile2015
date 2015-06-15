@@ -132,8 +132,9 @@ namespace Etoile
 	std::string File::getFileExtension( const std::string& refFile, bool bToLower )
 	{
 		std::string strReturn;
-		size_t nPos = refFile.find_last_of( '.' ) + 1;
+		size_t nPos = refFile.find_last_of( '.' );
 		if(nPos == 0){return strReturn;}
+		nPos+=1;
 		size_t iExtLength = refFile.length() - nPos;
 		strReturn.insert( 0, refFile.c_str(), nPos, iExtLength );
 		if ( bToLower ) {

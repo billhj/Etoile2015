@@ -29,6 +29,7 @@ namespace Etoile
 	{
 		p_owner = sk;
 		m_index = sk->m_joints.size();
+		p_owner->m_name_index[name] = m_index;
 		sk->m_joints.push_back(this);
 		m_index_parent = parent;
 		m_name = name;

@@ -32,6 +32,7 @@
 	std::string path = Etoile::File::getFilePath(s);
 	std::string filename = Etoile::File::getFileNameWithoutExtension(s);
 	createBVHDataFile(bvh, filename+".data");
+	createRelativeBodyBVHDataFile(bvh, filename+".data2");
   }
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -47,8 +48,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
 			for(unsigned int i = 0; i < fileinfos.size(); ++i)
 			{
-				dealBVH(fileinfos[i]._path);
-				//createBVHData(fileinfos[i]._path);
+				//dealBVH(fileinfos[i]._path);
+				createBVHData(fileinfos[i]._path);
 			}
 		}else
 		{
