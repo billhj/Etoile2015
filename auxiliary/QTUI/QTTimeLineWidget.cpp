@@ -90,6 +90,7 @@ namespace Etoile
 				if(item->boundingRect().contains(mouseEvent->scenePos()))
 				{
 					p_parent->setActiveFrame(((QTTimelineItem*)item)->m_frame);
+					break;
 				}
 			}
 			
@@ -100,9 +101,13 @@ namespace Etoile
 	{	
 		foreach(QGraphicsItem* item , this->items())
 		{
-			if(item->boundingRect().contains(mouseEvent->scenePos()))
+			if(NULL!=dynamic_cast<QTTimelineItem*>(item))
 			{
-				p_parent->setActiveFrame(((QTTimelineItem*)item)->m_frame);
+				if(item->boundingRect().contains(mouseEvent->scenePos()))
+				{
+					p_parent->setActiveFrame(((QTTimelineItem*)item)->m_frame);
+					break;
+				}
 			}
 		}
 
@@ -134,12 +139,13 @@ namespace Etoile
 			ui.current->setValue(frame);
 			ui.current->blockSignals(false);
 		}
-		m_scene.update();
-		this->update();
 		if(activeFrame > m_scene.m_range - 50)
 		{
 			m_scene.setRange(m_scene.m_range + 100);
 		}
+		
+		m_scene.update();
+		this->update();
 		emit activeFrameChanged(activeFrame);
 	}
 
@@ -167,11 +173,11 @@ namespace Etoile
 			ui.start->setValue(value);
 			ui.start->blockSignals(false);
 		}
-		this->update();
 		if(startFrame > m_scene.m_range - 50)
 		{
 			m_scene.setRange(m_scene.m_range + 100);
 		}
+		this->update();
 	}
 
 	void QTTimeLineWidget::setEndFrame(int value)
@@ -183,10 +189,10 @@ namespace Etoile
 			ui.end->setValue(value);
 			ui.end->blockSignals(false);
 		}
-		this->update();
 		if(endFrame > m_scene.m_range - 50)
 		{
 			m_scene.setRange(m_scene.m_range + 100);
 		}
+		this->update();
 	}
 }
