@@ -53,6 +53,16 @@ namespace Etoile
 		bool m_isMeter;
 	public:
 		BVH():m_dims(0){}
+		BVH(BVH& bvh)
+		{
+			m_frames = bvh.m_frames;
+			m_frameNb = bvh.m_frameNb;
+			m_frametime = bvh.m_frametime;
+			m_dims = bvh.m_dims;
+			m_joints = bvh.m_joints;
+			m_isMeter = bvh.m_isMeter;
+		}
+
 		bool loadFromBVHFile(const std::string& filepath);
 		bool saveToBVHFile(const std::string& filepath);
 		void changeOrderToZYX();
