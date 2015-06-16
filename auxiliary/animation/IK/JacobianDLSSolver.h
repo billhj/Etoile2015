@@ -20,6 +20,7 @@ namespace Etoile
 		m_dampling(dampling){}
 		virtual std::string getIKSolverName(){ return "JacobianDLS";}
 		virtual bool solve(Vector3_, bool) override;
+		virtual bool solve(Vector3_, Vector3_, bool) override;
 		void setDamping(double dampling){ m_dampling = dampling; }
 		double getDamping(){return m_dampling;}
 	};

@@ -16,6 +16,7 @@ namespace Etoile
 	{
 		CCD,
 		JACOBIAN_DLS,
+		JACOBIAN_DLSSVD,
 		JACOBIAN_PSEUDO_INVERSE,
 		JACOBIAN_TRANSPOSE,
 		MASS_SPRING
@@ -37,6 +38,8 @@ namespace Etoile
 		}
 
 		virtual bool solve(Vector3_, bool) = 0;
+
+		virtual bool solve(Vector3_, Vector3_, bool) = 0;
 
 		inline double getSingleStepValue() const
 		{
