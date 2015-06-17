@@ -101,7 +101,6 @@ namespace Etoile
 					Vec3f& pos = sk->m_globalPositions[index];
 					Vec3f offset = posParent - pos;
 					float len = offset.length();
-					offset.normalize();
 					offset /= 100.0;
 					{
 						float color[4];
