@@ -23,15 +23,12 @@ namespace Etoile
 				Joint* j = new Joint(skeleton, joint->m_index_parent, joint->m_dof, joint->m_name);
 				if(!bvh->m_isMeter)
 				{
-					skeleton->m_localTranslations.push_back(Vec3f(joint->m_offset[0] / 100.0,joint->m_offset[1] / 100.0,joint->m_offset[2] / 100.0));
+					skeleton->m_localTranslations[i] = (Vec3f(joint->m_offset[0] / 100.0,joint->m_offset[1] / 100.0,joint->m_offset[2] / 100.0));
 				}
 				else
 				{
-					skeleton->m_localTranslations.push_back(Vec3f(joint->m_offset[0],joint->m_offset[1],joint->m_offset[2]));
+					skeleton->m_localTranslations[i] = (Vec3f(joint->m_offset[0],joint->m_offset[1],joint->m_offset[2]));
 				}
-				skeleton->m_globalPositions.push_back(Vec3f());
-				skeleton->m_localRotations.push_back(Quaternionf());
-				skeleton->m_globalOrientations.push_back(Quaternionf());
 			}
 			skeleton->update();
 		}

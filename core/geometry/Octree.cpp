@@ -72,6 +72,8 @@ namespace Etoile
 		{
 			if(node->isLeaf())
 			{
+				
+
 				AxisAlignedBoundingBox aabb[8];
 				T xMin = node->getAABB().minimum().x();
 				T yMin = node->getAABB().minimum().y();
@@ -82,18 +84,35 @@ namespace Etoile
 				T xMax = node->getAABB().maximum().x();
 				T yMax = node->getAABB().maximum().y();
 				T zMax = node->getAABB().maximum().y();
-				aabb[0].setInterval(Vec3<T>(xMin,yMin,zMin), Vec3<T>(xC,yC,zC));
-				aabb[0].setInterval(Vec3<T>(xC,yMin,zMin), Vec3<T>(xMax,yC,zC));
-				aabb[0].setInterval(Vec3<T>(xMin,yC,zMin), Vec3<T>(xC,yMax,zC));
-				aabb[0].setInterval(Vec3<T>(xC,yC,zMin), Vec3<T>(xMax,yMax,zC));
-				aabb[0].setInterval(Vec3<T>(xMin,yMin,zC), Vec3<T>(xC,yC,zMax));
-				aabb[0].setInterval(Vec3<T>(xC,yMin,zC), Vec3<T>(xMax,yC,zMax));
-				aabb[0].setInterval(Vec3<T>(xMin,yC,zC), Vec3<T>(xC,yMax,zMax));
-				aabb[0].setInterval(Vec3<T>(xC,yC,zC), Vec3<T>(xMax,yMax,zMax));
+
+				std::pair<T, T> x[2];
+				x[0] = std::pair<T, T>(xMin, xC);
+				x[1] = std::pair<T, T>(xC, xMax);
+
+				std::pair<T, T> y[2];
+				y[0] = std::pair<T, T>(yMin, yC);
+				y[1] = std::pair<T, T>(yC, yMax);
+
+				std::pair<T, T> z[2];
+				z[0] = std::pair<T, T>(zMin, zC);
+				z[1] = std::pair<T, T>(zC, zMax);
+
+
+				aabb[0].setInterval(Vec3<T>(x[0][0],y[0][0],z[0][0]), Vec3<T>(x[0][1],y[0][1],z[0][1]));
+				aabb[1].setInterval(Vec3<T>(x[1][0],y[0][0],z[0][0]), Vec3<T>(x[1][1],y[0][1],z[0][1]));
+
+				aabb[2].setInterval(Vec3<T>(x[0][0],y[1][0],z[0][0]), Vec3<T>(x[0][1],y[1][1],z[0][1]));
+				aabb[3].setInterval(Vec3<T>(x[1][0],y[1][0],z[0][0]), Vec3<T>(x[1][1],y[1][1],z[0][1]));
+
+				aabb[4].setInterval(Vec3<T>(x[0][0],y[0][0],z[1][0]), Vec3<T>(x[0][1],y[0][1],z[1][1]));
+				aabb[5].setInterval(Vec3<T>(x[1][0],y[0][0],z[1][0]), Vec3<T>(x[1][1],y[0][1],z[1][1]));
+
+				aabb[6].setInterval(Vec3<T>(x[0][0],y[1][0],z[1][0]), Vec3<T>(x[0][1],y[1][1],z[1][1]));
+				aabb[7].setInterval(Vec3<T>(x[1][0],y[1][0],z[1][0]), Vec3<T>(x[1][1],y[1][1],z[1][1]));
 				
 				for (int i= 0; i < 8; i++)
 				{
-					node->getChildren()[i] = new Octree(aabb[i], node->getLevel() + 1, i, node->getMaxLevels(), node->getMaxNbOfElements());
+					node->getChildren()[i] = new Octree(aabb[i], node->getLevel() + 1, i, node->getMaxLevels() - 1, node->getMaxNbOfElements());
 				}
 
 				for(int i = 0 ; i < node->getPoints().size(); ++i)

@@ -47,7 +47,7 @@ namespace Etoile
 
 	void QTTimeLineWidget::updateActiveFrame()
 	{
-		++activeFrame;
+		activeFrame = ((double)activeFrame) + ui.speed->value();
 		if(activeFrame > endFrame)
 		{
 			activeFrame = startFrame;

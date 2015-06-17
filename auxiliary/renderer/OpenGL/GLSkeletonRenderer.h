@@ -91,25 +91,30 @@ namespace Etoile
 				{
 					Vec3f& pos = sk->m_globalPositions[index];
 					float color[4];
-					color[0] = 0.8f;  color[1] = 0.1f;  color[2] = 0.1f;  color[3] = 1.0f;
+					color[0] = 0.8f;  color[1] = 0.8f;  color[2] = 0.1f;  color[3] = 0.4f;
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-					drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.1/scale, 10, 10);
+					drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.15/scale, 10, 10);
 				}
 				else
 				{
 					Vec3f& posParent = sk->m_globalPositions[parent];
 					Vec3f& pos = sk->m_globalPositions[index];
+					Vec3f offset = posParent - pos;
+					float len = offset.length();
+					offset.normalize();
+					offset /= 100.0;
 					{
 						float color[4];
-						color[0] = 0.1f;  color[1] = 0.1f;  color[2] = 1.0f;  color[3] = 1.0f;
+						color[0] = 0.8f;  color[1] = 0.8f;  color[2] = 0.0f;  color[3] = 1.0f;
 						glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-						drawCylinder_convenient(pos.x(), pos.y(), pos.z(), posParent.x(), posParent.y(), posParent.z(), 0.05/scale, 10);
+						
+						drawCylinder_convenient(pos.x() + offset.x(), pos.y()+ offset.y(), pos.z()+ offset.z(), posParent.x() - offset.x(), posParent.y() - offset.y(), posParent.z() - offset.z(), 0.3*len / scale, 10);
 					}
 					{
 						float color[4];
-						color[0] = 0.8f;  color[1] = 0.1f;  color[2] = 0.1f;  color[3] = 1.0f;
+						color[0] = 0.8f;  color[1] = 0.8f;  color[2] = 0.0f;  color[3] = 0.4f;
 						glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-						drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.1/scale, 10, 10);
+						drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.3*len/scale, 10, 10);
 					}
 				}
 			}

@@ -15,7 +15,7 @@
   typedef std::wstring String; 
 #endif
 
-  void dealBVH(const std::string& s)
+  void changeOrderToZYX(const std::string& s)
   {
 	Etoile::BVH bvh;
 	std::string path = Etoile::File::getFilePath(s);
@@ -35,6 +35,8 @@
 	createRelativeBodyBVHDataFile(bvh, filename+".data2");
   }
 
+#define TRANSFORM_TO_ZYX
+#ifdef TRANSFORM_TO_ZYX
 int _tmain(int argc, _TCHAR* argv[])
 {
 	for (int i = 1; i<argc; ++i)
@@ -48,7 +50,33 @@ int _tmain(int argc, _TCHAR* argv[])
 			std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
 			for(unsigned int i = 0; i < fileinfos.size(); ++i)
 			{
-				//dealBVH(fileinfos[i]._path);
+				changeOrderToZYX(fileinfos[i]._path);
+			}
+		}else
+		{
+			changeOrderToZYX(s);
+		}
+	}
+
+
+	return 0;
+}
+#endif
+
+#ifdef CREATE_TXT_DATA
+int _tmain(int argc, _TCHAR* argv[])
+{
+	for (int i = 1; i<argc; ++i)
+	{
+		std::wstring para = (argv[i]);
+		std::string s( para.begin(), para.end() );
+		std::cout<<s<<std::endl;
+		std::string fileext = Etoile::File::getFileExtension(s);
+		if(fileext=="")
+		{
+			std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
+			for(unsigned int i = 0; i < fileinfos.size(); ++i)
+			{
 				createBVHData(fileinfos[i]._path);
 			}
 		}else
@@ -60,4 +88,5 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	return 0;
 }
+#endif
 
