@@ -273,6 +273,23 @@ namespace Etoile
 					{
 						stream >> keyWrd;
 						current->m_dims[i].m_name = keyWrd;
+						if(current->m_dims[i].m_name== "Zrotation")
+						{
+							current->m_dims[i].m_axis[0] = 0;
+							current->m_dims[i].m_axis[1] = 0;
+							current->m_dims[i].m_axis[2] = 1;
+							
+						}else if(current->m_dims[i].m_name== "Yrotation")
+						{
+							current->m_dims[i].m_axis[0] = 0;
+							current->m_dims[i].m_axis[1] = 1;
+							current->m_dims[i].m_axis[2] = 0;
+						}else if(current->m_dims[i].m_name== "Xrotation")
+						{
+							current->m_dims[i].m_axis[0] = 1;
+							current->m_dims[i].m_axis[1] = 0;
+							current->m_dims[i].m_axis[2] = 0;
+						}
 					}
 
 				}
@@ -519,5 +536,109 @@ namespace Etoile
 			out<<"\n";
 		}
 	}
+
+
+
+
+
+
+
+
+	bool BVH::loadTextFile(const std::string& filepath)
+	{
+		m_filepath = filepath;
+		std::fstream in(m_filepath.c_str(), std::ios_base::in );
+
+		if (!in.is_open() || !in.good())
+		{
+			std::cerr << "[Skeleton] : cannot not open file "
+				<< m_filepath
+				<< std::endl;
+			return false;
+		}
+
+	/*	{
+#if defined(WIN32)
+			std::string::size_type dot = m_filepath.find_last_of("\\/");
+#else
+			std::string::size_type dot = fileName.rfind("/");
+#endif
+			m_filepath = (dot == std::string::npos)
+				? "./"
+				: std::string(m_filepath.substr(0,dot+1));
+		}*/
+
+		std::string line;
+		int lineNb = 0;
+		while( in && !in.eof() )
+		{
+			std::getline(in,line);
+			if ( in.bad() ){
+				std::cout << "  Warning! Could not read file properly!"<<std::endl;
+			}
+
+			if ( line.size() == 0 || line[0] == '#' || isspace(line[0]) || line.empty() ) {
+				continue;
+			}
+
+			std::stringstream stream(line);
+			try
+			{
+				std::string name;
+				stream >> name;
+				int idxP;
+				stream >> idxP;
+				int dof;
+				stream >> dof;
+				Joint* j = new Joint(this, idxP, dof, name);
+
+				stream >> j->m_offset[0];
+				stream >> j->m_offset[1];
+				stream >> j->m_offset[2];
+				
+			}catch(exception& e)
+			{
+				std::cout<<"SkeletonTextFileLoader: exception "<< lineNb<<" name "<<std::endl;
+				continue;
+			}
+			++lineNb;
+		}
+		in.close();
+		return true;
+	}
+
+	bool BVH::saveTextFile(const std::string& filepath)
+	{
+		if(m_joints.size() <= 0 ) return false;
+
+		std::ofstream out;
+		out.open(filepath);
+
+		for(unsigned int i = 0; i < m_joints.size(); ++i)
+		{
+			Joint* joint = m_joints[i];
+			out<<joint->m_name<<" "<<joint->m_index_parent<<" "<<joint->m_dof<<" "<<joint->m_offset[0]<<" "<<joint->m_offset[1]<<" "<<joint->m_offset[2]<<std::endl;
+			for(int j = 0; j < joint->m_dof; ++j)
+			{
+				out<<joint->m_dims[j].m_axis[0]<<" "<<joint->m_dims[j].m_axis[1]<<" "<<joint->m_dims[j].m_axis[2]<<" "<<joint->m_dims[j].m_limits[0]<<" "<<joint->m_dims[j].m_limits[1]<<std::endl;
+			}
+		}
+
+
+		out.close();
+		return true;
+	
+	}
+
+
+
+
+
+
+
+
+
+
+
 
 }

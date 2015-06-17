@@ -25,7 +25,7 @@
 namespace Etoile
 {
 
-	Joint::Joint(Skeleton* sk, int parent, const std::string& name)
+	Joint::Joint(Skeleton* sk, int parent, int dof, const std::string& name)
 	{
 		p_owner = sk;
 		m_index = sk->m_joints.size();
@@ -33,9 +33,20 @@ namespace Etoile
 		sk->m_joints.push_back(this);
 		m_index_parent = parent;
 		m_name = name;
+		m_dof = dof;
+		for(int i = 0; i < dof; ++i)
+		{
+			m_axis.push_back(Vec3f(0,0,0));
+			m_anglelimites.push_back(Vec2f(-3.14,3.14));
+		}
+		sk->m_localTranslations.push_back(Vec3f());
+		sk->m_globalPositions.push_back(Vec3f());
+		sk->m_localRotations.push_back(Quaternionf());
+		sk->m_globalOrientations.push_back(Quaternionf());
+
 	}
 
-	void Joint::init(int degree)
+	/*void Joint::init(int degree)
 	{
 		if(degree == 1)
 		{
@@ -52,10 +63,10 @@ namespace Etoile
 			m_anglelimites.push_back(Vec2f(-3.14,3.14));
 			m_anglelimites.push_back(Vec2f(-3.14,3.14));
 		}
-	}
+	}*/
 
 
-	bool Skeleton::loadFromFile(const std::string& fileName)
+	bool Skeleton::loadFromTextFile(const std::string& fileName)
 	{
 		m_path = fileName;
 		std::fstream in(fileName.c_str(), std::ios_base::in );
@@ -106,16 +117,14 @@ namespace Etoile
 				stream >> name;
 				int idxP;
 				stream >> idxP;
-				float x,y,z;
-				stream >> x;
-				stream >> y;
-				stream >> z;
-				Joint* j = new Joint(this, idxP, name);
-				m_localTranslations.push_back(Vec3f(x,y,z));
-				m_globalPositions.push_back(Vec3f());
-				m_localRotations.push_back(Quaternionf());
-				m_globalOrientations.push_back(Quaternionf());
-
+				int dof;
+				stream >> dof;
+				Joint* j = new Joint(this, idxP, dof, name);
+				float x, y, z;
+				stream >> m_localTranslations[j->m_index][0];
+				stream >> m_localTranslations[j->m_index][1];
+				stream >> m_localTranslations[j->m_index][2];
+			
 			}catch(exception& e)
 			{
 				std::cout<<"SkeletonTextFileLoader: exception "<< lineNb<<" name "<<std::endl;
@@ -124,5 +133,28 @@ namespace Etoile
 			++lineNb;
 		}
 		update();
+	}
+
+
+	bool Skeleton::writeToTextFile(const std::string& fileName)
+	{
+		if(m_joints.size() <= 0 ) return false;
+
+		std::ofstream out;
+		out.open(fileName);
+
+		for(unsigned int i = 0; i < m_joints.size(); ++i)
+		{
+			Joint* joint = m_joints[i];
+			out<<joint->m_name<<" "<<joint->m_index_parent<<" "<<joint->m_dof<<" "<<this->m_localTranslations[i][0]<<" "<<this->m_localTranslations[i][1]<<" "<<this->m_localTranslations[i][2]<<std::endl;
+			for(int j = 0; j < joint->m_dof; ++j)
+			{
+				out<<joint->m_axis[0]<<" "<<joint->m_axis[1]<<" "<<joint->m_axis[2]<<" "<<joint->m_anglelimites[0]<<" "<<joint->m_anglelimites[1]<<std::endl;
+			}
+		}
+
+
+		out.close();
+		return true;
 	}
 }

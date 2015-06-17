@@ -20,7 +20,7 @@ namespace Etoile
 			for(unsigned int i = 0; i < bvh->m_joints.size(); ++i)
 			{
 				BVH::Joint* joint = bvh->m_joints[i];
-				Joint* j = new Joint(skeleton, joint->m_index_parent, joint->m_name);
+				Joint* j = new Joint(skeleton, joint->m_index_parent, joint->m_dof, joint->m_name);
 				if(!bvh->m_isMeter)
 				{
 					skeleton->m_localTranslations.push_back(Vec3f(joint->m_offset[0] / 100.0,joint->m_offset[1] / 100.0,joint->m_offset[2] / 100.0));

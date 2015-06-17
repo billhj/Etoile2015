@@ -17,8 +17,8 @@ namespace Etoile
 	struct Skeleton;
 	struct Joint
 	{
-		Joint(Skeleton* sk, int parent, const std::string& name);
-		void init(int degree = 3);
+		Joint(Skeleton* sk, int parent, int dof, const std::string& name);
+		//void init(int degree = 3);
 		std::string m_name;
 		int m_index;
 		int m_index_parent;
@@ -37,7 +37,8 @@ namespace Etoile
 		
 		}
 
-		bool loadFromFile(const std::string& fileName);
+		bool loadFromTextFile(const std::string& fileName);
+		bool writeToTextFile(const std::string& fileName);
 		
 
 		void updateJoint(int idx)

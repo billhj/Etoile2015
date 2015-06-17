@@ -82,16 +82,14 @@ namespace Etoile
 					stream >> name;
 					int idxP;
 					stream >> idxP;
-					float x,y,z;
-					stream >> x;
-					stream >> y;
-					stream >> z;
-					Joint* j = new Joint(sk, idxP, name);
-					sk->m_localTranslations.push_back(Vec3f(x,y,z));
-					sk->m_globalPositions.push_back(Vec3f());
-					sk->m_localRotations.push_back(Quaternionf());
-					sk->m_globalOrientations.push_back(Quaternionf());
-
+					int dof;
+					stream >> dof;
+					Joint* j = new Joint(sk, idxP, dof, name);
+					float x, y, z;
+					stream >> sk->m_localTranslations[j->m_index][0];
+					stream >> sk->m_localTranslations[j->m_index][1];
+					stream >> sk->m_localTranslations[j->m_index][2];
+				
 				}catch(exception& e)
 				{
 					std::cout<<"SkeletonTextFileLoader: exception "<< lineNb<<" name "<<std::endl;

@@ -22,8 +22,15 @@ namespace Etoile
 	{
 		struct Dim
 		{
+			Dim()
+			{
+				m_limits[0] = -3.14;
+				m_limits[1] = 3.14;
+			}
 			std::string m_name;
 			int m_index;
+			float m_axis[3];
+			float m_limits[2];
 		};
 
 		struct Joint
@@ -66,6 +73,10 @@ namespace Etoile
 		bool loadFromBVHFile(const std::string& filepath);
 		bool saveToBVHFile(const std::string& filepath);
 		void changeOrderToZYX();
+
+		bool loadTextFile(const std::string& filepath);
+		bool saveTextFile(const std::string& filepath);
+
 	private:
 		void trimString( std::string& string);
 		void read(std::istream& in);
