@@ -39,25 +39,33 @@
 #ifdef TRANSFORM_TO_ZYX
 int _tmain(int argc, _TCHAR* argv[])
 {
-	for (int i = 1; i<argc; ++i)
+	if(argc == 1)
 	{
-		std::wstring para = (argv[i]);
-		std::string s( para.begin(), para.end() );
-		std::cout<<s<<std::endl;
-		std::string fileext = Etoile::File::getFileExtension(s);
-		if(fileext=="")
+		std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search("./", "bvh");
+		for(unsigned int i = 0; i < fileinfos.size(); ++i)
 		{
-			std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
-			for(unsigned int i = 0; i < fileinfos.size(); ++i)
+			changeOrderToZYX(fileinfos[i]._path);
+		}
+	}else{
+		for (int i = 1; i<argc; ++i)
+		{
+			std::wstring para = (argv[i]);
+			std::string s( para.begin(), para.end() );
+			std::cout<<s<<std::endl;
+			std::string fileext = Etoile::File::getFileExtension(s);
+			if(fileext=="")
 			{
-				changeOrderToZYX(fileinfos[i]._path);
+				std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
+				for(unsigned int i = 0; i < fileinfos.size(); ++i)
+				{
+					changeOrderToZYX(fileinfos[i]._path);
+				}
+			}else
+			{
+				changeOrderToZYX(s);
 			}
-		}else
-		{
-			changeOrderToZYX(s);
 		}
 	}
-
 
 	return 0;
 }
