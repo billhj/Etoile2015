@@ -71,7 +71,7 @@ namespace Etoile
 		std::vector<Vec3f> axis;
 		for(int i = 0; i < m_dof; ++i)
 		{
-			int indx = m_dims[i].m_index;
+			int indx = i;
 			if(m_dims[i].m_name== "Zrotation")
 			{
 				Vec3f v(0,0,1);
@@ -91,9 +91,9 @@ namespace Etoile
 		}
 		if(indices.size() > 0)
 		{
-			m_dims[0].m_name = "Zrotation";
-			m_dims[1].m_name = "Yrotation";
-			m_dims[2].m_name = "Xrotation";
+			m_dims[indices[0]].m_name = "Zrotation";
+			m_dims[indices[1]].m_name = "Yrotation";
+			m_dims[indices[2]].m_name = "Xrotation";
 
 		
 			for(int j = 0; j < p_owner->m_frames.size(); ++j){
@@ -112,7 +112,7 @@ namespace Etoile
 
 	void BVH::changeOrderToZYX()
 	{
-		for(unsigned int i = 1; i < m_joints.size(); ++i)
+		for(unsigned int i = 0; i < m_joints.size(); ++i)
 		{
 			Joint* current = m_joints[i];
 			current->changeOrdertoZYX();
