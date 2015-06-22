@@ -289,6 +289,11 @@ namespace Etoile
 							current->m_dims[i].m_axis[0] = 1;
 							current->m_dims[i].m_axis[1] = 0;
 							current->m_dims[i].m_axis[2] = 0;
+						}else
+						{
+							current->m_dims[i].m_axis[0] = 0;
+							current->m_dims[i].m_axis[1] = 0;
+							current->m_dims[i].m_axis[2] = 0;
 						}
 					}
 
@@ -595,6 +600,17 @@ namespace Etoile
 				stream >> j->m_offset[0];
 				stream >> j->m_offset[1];
 				stream >> j->m_offset[2];
+				for(int i = 0; i < dof; ++i)
+				{
+					std::getline(in,line);
+					std::stringstream stream(line);
+					stream >> j->m_dims[i].m_axis[0];
+					stream >> j->m_dims[i].m_axis[1];
+					stream >> j->m_dims[i].m_axis[2];
+					stream >> j->m_dims[i].m_limits[0];
+					stream >> j->m_dims[i].m_limits[1];
+					++lineNb;
+				}
 				
 			}catch(exception& e)
 			{
@@ -617,10 +633,17 @@ namespace Etoile
 		for(unsigned int i = 0; i < m_joints.size(); ++i)
 		{
 			Joint* joint = m_joints[i];
-			out<<joint->m_name<<" "<<joint->m_index_parent<<" "<<joint->m_dof<<" "<<joint->m_offset[0]<<" "<<joint->m_offset[1]<<" "<<joint->m_offset[2]<<std::endl;
+			if(joint->m_dof > 3)
+				out<<joint->m_name<<" "<<joint->m_index_parent<<" "<<3<<" "<<joint->m_offset[0]/100.0<<" "<<joint->m_offset[1]/100.0<<" "<<joint->m_offset[2]/100.0<<std::endl;
+			else
+				out<<joint->m_name<<" "<<joint->m_index_parent<<" "<<joint->m_dof<<" "<<joint->m_offset[0]/100.0<<" "<<joint->m_offset[1]/100.0<<" "<<joint->m_offset[2]/100.0<<std::endl;
 			for(int j = 0; j < joint->m_dof; ++j)
 			{
-				out<<joint->m_dims[j].m_axis[0]<<" "<<joint->m_dims[j].m_axis[1]<<" "<<joint->m_dims[j].m_axis[2]<<" "<<joint->m_dims[j].m_limits[0]<<" "<<joint->m_dims[j].m_limits[1]<<std::endl;
+				if(joint->m_dims[j].m_axis[0] == 0 && joint->m_dims[j].m_axis[1] == 0 && joint->m_dims[j].m_axis[2] == 0)
+				{
+				
+				}else
+					out<<joint->m_dims[j].m_axis[0]<<" "<<joint->m_dims[j].m_axis[1]<<" "<<joint->m_dims[j].m_axis[2]<<" "<<joint->m_dims[j].m_limits[0]<<" "<<joint->m_dims[j].m_limits[1]<<std::endl;
 			}
 		}
 

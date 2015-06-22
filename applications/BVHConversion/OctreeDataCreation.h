@@ -7,7 +7,7 @@
 #include "animation/SkeletonConverter.h"
 using namespace Etoile;
 
-std::vector<std::string> getNames()
+/*std::vector<std::string> getNames()
 {
 	std::vector<std::string> name;
 	name.push_back("hip");
@@ -16,26 +16,26 @@ std::vector<std::string> getNames()
 	name.push_back("rFoot");
 	name.push_back("lFoot");
 	return name;
-}
+}*/
 
 void createBVHDataFile(BVH& bvh, const std::string& filepath)
 {
 	std::ofstream out;
 	out.open(filepath);
 
-	std::vector<std::string> names =  getNames();
-	for(int i = 0; i < names.size(); ++i)
+	for(unsigned int i = 0; i < bvh.m_joints.size(); ++i)
 	{
-		out<<names[i]<<"_x "<<names[i]<<"_y "<<names[i]<<"_z ";
+		BVH::Joint* joint = bvh.m_joints[i];
+		std::string name = joint->m_name;
+		out<<name<<"_x, "<<name<<"_y, "<<name<<"_z, ";
 	}
-
 	for(unsigned int i = 0; i < bvh.m_joints.size(); ++i)
 	{
 		BVH::Joint* joint = bvh.m_joints[i];
 		for(unsigned int j = 0; j < joint->m_dims.size(); ++j)
 		{
 			BVH::Dim& dim = joint->m_dims[j];
-			out<<joint->m_name<<"_"<<dim.m_name<<" ";
+			out<<joint->m_name<<"_"<<dim.m_name<<", ";
 		}
 	}
 	out<<" \n";
@@ -49,14 +49,15 @@ void createBVHDataFile(BVH& bvh, const std::string& filepath)
 	{
 		Frame& f = bvh.m_frames[i];
 		SkeletonConverter::updateBVHFrameToSkeleton(&bvh, sk, i);
-		for(int j = 0; j < names.size(); ++j)
+		for(int j = 0; j < bvh.m_joints.size(); ++j)
 		{
-			Vec3f& pos = sk->m_globalPositions[sk->getJoint(names[j])->m_index];
-			out<<pos.x() * scale<<" "<<pos.y() * scale<<" "<<pos.z() * scale<<" ";
+			std::string name = bvh.m_joints[j]->m_name;
+			Vec3f& pos = sk->m_globalPositions[sk->getJoint(name)->m_index];
+			out<<pos.x() * scale<<", "<<pos.y() * scale<<", "<<pos.z() * scale<<", ";
 		}
 		for(unsigned int j = 0; j < f.m_values.size(); ++j)
 		{
-			out<< f.m_values[j]<<" ";
+			out<< f.m_values[j]<<", ";
 		}
 		out<<" \n";
 	}
@@ -69,19 +70,19 @@ void createRelativeBodyBVHDataFile(BVH& bvh, const std::string& filepath)
 	std::ofstream out;
 	out.open(filepath);
 
-	std::vector<std::string> names =  getNames();
-	for(int i = 0; i < names.size(); ++i)
+	for(unsigned int i = 0; i < bvh.m_joints.size(); ++i)
 	{
-		out<<names[i]<<"_x "<<names[i]<<"_y "<<names[i]<<"_z ";
+		BVH::Joint* joint = bvh.m_joints[i];
+		std::string name = joint->m_name;
+		out<<name<<"_x, "<<name<<"_y, "<<name<<"_z, ";
 	}
-
 	for(unsigned int i = 0; i < bvh.m_joints.size(); ++i)
 	{
 		BVH::Joint* joint = bvh.m_joints[i];
 		for(unsigned int j = 0; j < joint->m_dims.size(); ++j)
 		{
 			BVH::Dim& dim = joint->m_dims[j];
-			out<<joint->m_name<<"_"<<dim.m_name<<" ";
+			out<<joint->m_name<<"_"<<dim.m_name<<", ";
 		}
 	}
 	out<<" \n";
@@ -95,14 +96,15 @@ void createRelativeBodyBVHDataFile(BVH& bvh, const std::string& filepath)
 	{
 		Frame& f = bvh.m_frames[i];
 		SkeletonConverter::updateBVHFrameToRelativeBodySkeleton(&bvh, sk, i);
-		for(int j = 0; j < names.size(); ++j)
+		for(int j = 0; j < bvh.m_joints.size(); ++j)
 		{
-			Vec3f& pos = sk->m_globalPositions[sk->getJoint(names[j])->m_index];
-			out<<pos.x() * scale<<" "<<pos.y() * scale<<" "<<pos.z() * scale<<" ";
+			std::string name = bvh.m_joints[j]->m_name;
+			Vec3f& pos = sk->m_globalPositions[sk->getJoint(name)->m_index];
+			out<<pos.x() * scale<<", "<<pos.y() * scale<<", "<<pos.z() * scale<<", ";
 		}
 		for(unsigned int j = 0; j < f.m_values.size(); ++j)
 		{
-			out<< f.m_values[j]<<" ";
+			out<< f.m_values[j]<<", ";
 		}
 		out<<" \n";
 	}

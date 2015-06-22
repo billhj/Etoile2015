@@ -31,11 +31,20 @@
 	bvh.loadFromBVHFile(s);
 	std::string path = Etoile::File::getFilePath(s);
 	std::string filename = Etoile::File::getFileNameWithoutExtension(s);
-	createBVHDataFile(bvh, filename+".data");
-	createRelativeBodyBVHDataFile(bvh, filename+".data2");
+	createBVHDataFile(bvh, filename+".csv");
+	createRelativeBodyBVHDataFile(bvh, filename+"2.csv");
   }
 
-#define TRANSFORM_TO_ZYX
+  void createBVHSkeletonTxt(const std::string& s)
+  {
+	Etoile::BVH bvh;
+	bvh.loadFromBVHFile(s);
+	std::string path = Etoile::File::getFilePath(s);
+	std::string filename = Etoile::File::getFileNameWithoutExtension(s);
+	bvh.saveTextFile(filename+".txt");
+  }
+
+#define CREATE_SK
 #ifdef TRANSFORM_TO_ZYX
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -74,25 +83,70 @@ int _tmain(int argc, _TCHAR* argv[])
 #ifdef CREATE_TXT_DATA
 int _tmain(int argc, _TCHAR* argv[])
 {
-	for (int i = 1; i<argc; ++i)
+	if(argc == 1)
 	{
-		std::wstring para = (argv[i]);
-		std::string s( para.begin(), para.end() );
-		std::cout<<s<<std::endl;
-		std::string fileext = Etoile::File::getFileExtension(s);
-		if(fileext=="")
+		std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search("./", "bvh");
+		for(unsigned int i = 0; i < fileinfos.size(); ++i)
 		{
-			std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
-			for(unsigned int i = 0; i < fileinfos.size(); ++i)
+			createBVHSkeletonTxt(fileinfos[i]._path);
+		}
+	}else
+	{
+		for (int i = 1; i<argc; ++i)
+		{
+			std::wstring para = (argv[i]);
+			std::string s( para.begin(), para.end() );
+			std::cout<<s<<std::endl;
+			std::string fileext = Etoile::File::getFileExtension(s);
+			if(fileext=="")
 			{
-				createBVHData(fileinfos[i]._path);
+				std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
+				for(unsigned int i = 0; i < fileinfos.size(); ++i)
+				{
+					createBVHSkeletonTxt(fileinfos[i]._path);
+				}
+			}else
+			{
+				createBVHSkeletonTxt(s);
 			}
-		}else
-		{
-			dealBVH(s);
 		}
 	}
 
+	return 0;
+}
+#endif
+
+#ifdef CREATE_SK
+int _tmain(int argc, _TCHAR* argv[])
+{
+	if(argc == 1)
+	{
+		std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search("./", "bvh");
+		for(unsigned int i = 0; i < fileinfos.size(); ++i)
+		{
+			createBVHSkeletonTxt(fileinfos[i]._path);
+		}
+	}else
+	{
+		for (int i = 1; i<argc; ++i)
+		{
+			std::wstring para = (argv[i]);
+			std::string s( para.begin(), para.end() );
+			std::cout<<s<<std::endl;
+			std::string fileext = Etoile::File::getFileExtension(s);
+			if(fileext=="")
+			{
+				std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
+				for(unsigned int i = 0; i < fileinfos.size(); ++i)
+				{
+					createBVHData(fileinfos[i]._path);
+				}
+			}else
+			{
+				createBVHSkeletonTxt(s);
+			}
+		}
+	}
 
 	return 0;
 }

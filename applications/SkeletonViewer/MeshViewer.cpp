@@ -55,6 +55,7 @@ void MeshViewer::init()
 	glEnable(GL_MULTISAMPLE);
 	glDisable(GL_COLOR_MATERIAL);
 
+	this->m_FPSIsDisplayed = false;
 	this->camera()->setPosition(Vec3f(1,3,4));
 	this->camera()->setTarget(Vec3f(0,0,0));
 

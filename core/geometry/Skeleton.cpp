@@ -124,6 +124,17 @@ namespace Etoile
 				stream >> m_localTranslations[j->m_index][0];
 				stream >> m_localTranslations[j->m_index][1];
 				stream >> m_localTranslations[j->m_index][2];
+				for(int i = 0; i < dof; ++i)
+				{
+					std::getline(in,line);
+					std::stringstream stream(line);
+					stream >> j->m_axis[i][0];
+					stream >> j->m_axis[i][1];
+					stream >> j->m_axis[i][2];
+					stream >> j->m_anglelimites[i][0];
+					stream >> j->m_anglelimites[i][1];
+					++lineNb;
+				}
 			
 			}catch(exception& e)
 			{
