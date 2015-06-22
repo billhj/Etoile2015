@@ -98,14 +98,14 @@ namespace Etoile
 		
 			for(int j = 0; j < p_owner->m_frames.size(); ++j){
 				Frame& f = p_owner->m_frames[j];
-				float value0 = f.m_values[indices[0]] * 3.14159265 / 180.0;
-				float value1 = f.m_values[indices[1]] * 3.14159265 / 180.0;
-				float value2 = f.m_values[indices[2]] * 3.14159265 / 180.0;
+				float value0 = f.m_values[m_dims[indices[0]].m_index] * 3.14159265 / 180.0;
+				float value1 = f.m_values[m_dims[indices[1]].m_index] * 3.14159265 / 180.0;
+				float value2 = f.m_values[m_dims[indices[2]].m_index] * 3.14159265 / 180.0;
 				Quaternionf q = Quaternionf(axis[0], value0) * Quaternionf(axis[1], value1) * Quaternionf(axis[2], value2);
 				Vec3f v = q.getEulerAngleXYZBYAngle();
-				f.m_values[indices[0]] = v.z();
-				f.m_values[indices[1]] = v.y();
-				f.m_values[indices[2]] = v.x();
+				f.m_values[m_dims[indices[0]].m_index] = v.z();
+				f.m_values[m_dims[indices[1]].m_index] = v.y();
+				f.m_values[m_dims[indices[2]].m_index] = v.x();
 			}	
 		}
 	}

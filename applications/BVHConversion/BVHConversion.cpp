@@ -44,7 +44,7 @@
 	bvh.saveTextFile(filename+".txt");
   }
 
-#define CREATE_SK
+#define TRANSFORM_TO_ZYX
 #ifdef TRANSFORM_TO_ZYX
 int _tmain(int argc, _TCHAR* argv[])
 {
