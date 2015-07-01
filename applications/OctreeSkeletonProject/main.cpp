@@ -3,7 +3,7 @@
 int main(int argc, char *argv[])
 {
 	OctreeSkeleton sk;
-	
+	sk.solveOnePoint(Vec3(-0.324851,-0.0580455,	-0.12274));
 	/*{
 		Octree* sub = sk.p_righthandTree->getSubTreeWithPointAndDepth(Vec3(-0.2, 0.4, 0.4), 30);
 		sk.saveCSVFileByFrameIdx("1.csv",sub->dataIndx);

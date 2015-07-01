@@ -63,6 +63,15 @@ namespace Etoile
 		}
 	}
 
+	void IKChain::reset()
+	{
+		for(int i = 0; i < m_localRotations.size();++i)
+		{
+			m_localRotations[i].setIdentity();
+			m_globalOrientations[i].setIdentity();
+			m_values[i] = 0;
+		}
+	}
 
 	bool IKChain::loadFromFile(const std::string& fileName)
 	{

@@ -4,6 +4,7 @@
 #include "Octree.h"
 #include "BVH.h"
 #include "IKChain.h"
+#include "JacobianDLSSVDSolver.h"
 
 struct FrameData
 {
@@ -16,16 +17,18 @@ class OctreeSkeleton
 public:
 	OctreeSkeleton(void);
 	~OctreeSkeleton(void);
+
+	void solveTrajectory(const std::vector<Vec3>& points);
+	void solveOnePoint(const Vec3& point);
+
+
+
 	void loadFromCSVFile(const std::string& filename);
 	void computePoints();
 	void saveCSVFileByFrameIdx(const std::string& filename, std::vector<int> indx);
-
 	void loadDataIntoOctree();
-
 	void computeMinMaxAverage();
-
 	void computeMinMaxAverageByDepth(int level);
-
 	void computeCellAtributes(Octree* tree);
 
 	std::vector<std::string> m_headers;
@@ -38,6 +41,7 @@ public:
 
 	BVH m_bvh;
 	Etoile::IKChain m_ikchain;
+	Etoile::JacobianDLSSVDSolver * solver;
 
 };
 

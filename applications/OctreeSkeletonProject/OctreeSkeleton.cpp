@@ -10,6 +10,8 @@ OctreeSkeleton::OctreeSkeleton(void)
 	std::cout<<"start"<<std::endl;
 	m_bvh.loadFromBVHFile("Ag1CS_Brian.bvh");
 	m_ikchain.loadFromFile("ikchain.sk");
+	solver = new Etoile::JacobianDLSSVDSolver(&m_ikchain);
+
 	m_dataIsLoaded = false;
 	p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
 
@@ -26,6 +28,38 @@ OctreeSkeleton::OctreeSkeleton(void)
 OctreeSkeleton::~OctreeSkeleton(void)
 {
 }
+
+
+
+
+
+void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points)
+{
+	//Octree* tree = p_tree->getSubTreeWithPointAndDepth();
+
+}
+
+void OctreeSkeleton::solveOnePoint(const Vec3& point)
+{
+	Octree* tree = p_tree->getSubTreeWithPointAndDepth(point, 2);
+	for(int i = 0; i < m_ikchain.m_anglelimites.size();++i)
+	{
+		m_ikchain.m_anglelimites[i] = Etoile::Vector2_(tree->m_cell_min[i], tree->m_cell_max[i]);
+	}
+	solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
+	m_ikchain.output("ikchain1.csv");
+	m_ikchain.reset();
+
+	Octree* tree2 = p_tree->getSubTreeWithPointAndDepth(point, 5);
+	for(int i = 0; i < m_ikchain.m_anglelimites.size();++i)
+	{
+		m_ikchain.m_anglelimites[i] = Etoile::Vector2_(tree2->m_cell_min[i], tree2->m_cell_max[i]);
+	}
+	solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
+	m_ikchain.output("ikchain2.csv");
+
+}
+
 
 
 void OctreeSkeleton::computePoints()

@@ -96,11 +96,11 @@ public:
 		return oct;
 	}
 
-	Octree* getSubTreeWithPointAndDepth(const Vec3& point, int depth)
+	Octree* getSubTreeWithPointAndDepth(const Vec3& point, int depth = 10000)
 	{
 		Octree* tree = this;
 		int level = 0;
-		while(tree != 0 && level < depth)
+		while(tree != NULL && level < depth)
 		{
 			Octree* temp = tree->children[tree->getOctantContainingPoint(point)];
 			std::cout<<"points: " <<temp->dataIndx.size() <<std::endl;
