@@ -7,6 +7,7 @@
 
 OctreeSkeleton::OctreeSkeleton(void)
 {
+	std::cout<<"start"<<std::endl;
 	m_bvh.loadFromBVHFile("Ag1CS_Brian.bvh");
 	m_ikchain.loadFromFile("ikchain.sk");
 	m_dataIsLoaded = false;
@@ -16,7 +17,8 @@ OctreeSkeleton::OctreeSkeleton(void)
 	computePoints();
 
 	loadDataIntoOctree();
-	computeMinMaxAverageByDepth(3);
+	computeMinMaxAverage();
+	computeMinMaxAverageByDepth(5);
 	std::cout<<"end"<<std::endl;
 }
 
@@ -261,7 +263,7 @@ void OctreeSkeleton::computeMinMaxAverageByDepth(int depth)
 		computeCellAtributes(cell);
 		if(cell->dataIndx.size() > 0)
 		{
-			debugValue(cell);
+			//debugValue(cell);
 			{
 					out <<std::endl<<cell->m_index  <<" "<<cell->dataIndx.size() <<std::endl;
 					out<<"r_elbow_Z_18"<<cell->m_cell_min[18] <<" " << cell->m_cell_max[18] <<" "<< cell->m_cell_average[18] <<" " <<std::endl;
