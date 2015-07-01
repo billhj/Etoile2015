@@ -49,7 +49,7 @@ namespace Etoile
 			std::vector<Dim> m_dims;
 		};
 
-		IKChain(const std::string& name) : m_name(name)
+		IKChain(const std::string& name = "") : m_name(name)
 		{
 		
 		}

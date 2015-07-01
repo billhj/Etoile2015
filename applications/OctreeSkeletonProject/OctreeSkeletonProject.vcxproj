@@ -50,6 +50,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../extern</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -74,10 +75,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BVH.cpp" />
+    <ClCompile Include="IKChain.cpp" />
+    <ClCompile Include="JacobianDLSSVDSolver.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OctreeSkeleton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BVH.h" />
+    <ClInclude Include="IKChain.h" />
+    <ClInclude Include="IKSolver.h" />
+    <ClInclude Include="JacobianDLSSVDSolver.h" />
     <ClInclude Include="Octree.h" />
     <ClInclude Include="OctreePoint.h" />
     <ClInclude Include="OctreeSkeleton.h" />

@@ -3,9 +3,7 @@
 int main(int argc, char *argv[])
 {
 	OctreeSkeleton sk;
-	sk.loadFromCSVFile("pts_anger_brian.csv");
-	sk.loadDataIntoOctree();
-	sk.computeMinMaxAverageByDepth(3);
+	
 	/*{
 		Octree* sub = sk.p_righthandTree->getSubTreeWithPointAndDepth(Vec3(-0.2, 0.4, 0.4), 30);
 		sk.saveCSVFileByFrameIdx("1.csv",sub->dataIndx);

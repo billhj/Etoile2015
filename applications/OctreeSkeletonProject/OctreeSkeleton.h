@@ -2,10 +2,13 @@
 #include <string>
 #include <vector>
 #include "Octree.h"
+#include "BVH.h"
+#include "IKChain.h"
 
 struct FrameData
 {
 	std::vector<double> m_values;
+	double points[3];
 };
 
 class OctreeSkeleton
@@ -14,6 +17,7 @@ public:
 	OctreeSkeleton(void);
 	~OctreeSkeleton(void);
 	void loadFromCSVFile(const std::string& filename);
+	void computePoints();
 	void saveCSVFileByFrameIdx(const std::string& filename, std::vector<int> indx);
 
 	void loadDataIntoOctree();
@@ -27,10 +31,13 @@ public:
 	std::vector<std::string> m_headers;
 	std::vector<FrameData> m_framesData;
 
-	int m_leftHand_index;
 	int m_rightHand_index;
 
-	Octree * p_righthandTree;
+	Octree * p_tree;  //i change tree for both hand since two hands are simetric.
 	bool m_dataIsLoaded;
+
+	BVH m_bvh;
+	Etoile::IKChain m_ikchain;
+
 };
 
