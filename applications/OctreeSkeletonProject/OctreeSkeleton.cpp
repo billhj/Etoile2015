@@ -47,16 +47,17 @@ void OctreeSkeleton::solveOnePoint(const Vec3& point)
 		m_ikchain.m_anglelimites[i] = Etoile::Vector2_(tree->m_cell_min[i], tree->m_cell_max[i]);
 	}
 	solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
-	m_ikchain.output("ikchain1.csv");
-	m_ikchain.reset();
+	m_ikchain.output("ikchain11.csv");
+	//m_ikchain.reset();
 
-	Octree* tree2 = p_tree->getSubTreeWithPointAndDepth(point, 5);
+	Vec3 point2(point.x - 0.01, point.y+0.02, point.z+0.01);
+	Octree* tree2 = p_tree->getSubTreeWithPointAndDepth(point2, 2);
 	for(int i = 0; i < m_ikchain.m_anglelimites.size();++i)
 	{
 		m_ikchain.m_anglelimites[i] = Etoile::Vector2_(tree2->m_cell_min[i], tree2->m_cell_max[i]);
 	}
-	solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
-	m_ikchain.output("ikchain2.csv");
+	solver->solve(Etoile::Vector3_(point2.x, point2.y, point2.z));
+	m_ikchain.output("ikchain22.csv");
 
 }
 
