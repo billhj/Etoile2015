@@ -533,9 +533,9 @@
 
 		//write MOTION
 		out<<"MOTION\n";
-		out<<"Frames:\t"<<m_frameNb<<"\n";
+		out<<"Frames:\t"<<m_frames.size()<<"\n";
 		out<<"Frame Time:\t"<<m_frametime<<"\n";
-		for(int i = 0 ; i < m_frameNb; ++i)
+		for(int i = 0 ; i < m_frames.size(); ++i)
 		{
 			Frame& frame = m_frames[i];
 			for(int j = 0; j < m_dims; ++j)

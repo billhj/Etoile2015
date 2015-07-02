@@ -75,6 +75,7 @@
 			}
 
 			resetDimValue();
+			return f;
 		}
 
 		void resetDimValue()

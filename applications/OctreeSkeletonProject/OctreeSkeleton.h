@@ -18,8 +18,8 @@ public:
 	OctreeSkeleton(void);
 	~OctreeSkeleton(void);
 
-	void solveTrajectory(const std::vector<Vec3>& points);
-	void solveOnePoint(const Vec3& point);
+	void solveTrajectory(const std::vector<Vec3>& points, int depth = 2);
+	void solveOnePoint(const Vec3& point, int depth = 2);
 
 
 
