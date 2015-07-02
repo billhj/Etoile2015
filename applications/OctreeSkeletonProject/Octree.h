@@ -103,7 +103,7 @@ public:
 		while(tree != NULL && level < depth)
 		{
 			Octree* temp = tree->children[tree->getOctantContainingPoint(point)];
-			std::cout<<"points: " <<temp->dataIndx.size() <<std::endl;
+			//std::cout<<"points: " <<temp->dataIndx.size() <<std::endl;
 			if(temp->dataIndx.size() == 0)
 			{
 				break;
@@ -111,7 +111,7 @@ public:
 			tree = temp;
 			++level;
 		}
-		std::cout<<"level: " << level <<std::endl;
+		//std::cout<<"level: " << level <<std::endl;
 		return tree;
 	}
 

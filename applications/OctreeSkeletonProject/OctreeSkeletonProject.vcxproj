@@ -81,6 +81,7 @@
     <ClCompile Include="JacobianDLSSVDSolver.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OctreeSkeleton.cpp" />
+    <ClCompile Include="TimeWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BVH.h" />
@@ -90,6 +91,7 @@
     <ClInclude Include="Octree.h" />
     <ClInclude Include="OctreePoint.h" />
     <ClInclude Include="OctreeSkeleton.h" />
+    <ClInclude Include="TimeWin32.h" />
     <ClInclude Include="Vec3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

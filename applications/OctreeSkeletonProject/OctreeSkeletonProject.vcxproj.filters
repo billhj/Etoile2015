@@ -30,6 +30,9 @@
     <ClCompile Include="JacobianDLSSVDSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TimeWin32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OctreeSkeleton.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JacobianDLSSVDSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeWin32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,9 +14,9 @@ namespace Etoile
 	double epsilon = 1.2;
 	bool JacobianDLSSVDSolver::solve(Vector3_ target, bool enableConstraints)
 	{
-#if( defined( _DEBUG ) || defined( DEBUG ) )
-		clock_t time = clock();
-#endif
+//#if( defined( _DEBUG ) || defined( DEBUG ) )
+//		clock_t time = clock();
+//#endif
 		int tries = 0;
 		int columnDim = p_chain->m_localRotations.size();
 		MatrixX_ jacobian(3, columnDim);
@@ -24,12 +24,12 @@ namespace Etoile
 		Vector3_& endpos = p_chain->m_globalPositions.back();
 		Vector3_ distance = (target-endpos);
 
-		double beta = 0.5f;
+		//double beta = 0.5f;
 
 		while (++tries < m_maxTries &&
 			distance.norm() > m_targetThreshold)
 		{
-			Vector3_ dT = distance * beta;
+			Vector3_ dT = distance;// * beta;
 			for(unsigned int i = 0; i <  p_chain->m_joints.size(); ++i)
 			{
 				IKChain::Joint* joint = p_chain->m_joints[i];
@@ -92,12 +92,12 @@ namespace Etoile
 			endpos = p_chain->m_globalPositions.back();
 			distance = (target - endpos);
 		}
-#if( defined( _DEBUG ) || defined( DEBUG ) )
-		time = clock() - time;
-		int ms = double(time) / CLOCKS_PER_SEC * 1000;
-		std::cout<<"timee elapsed: "<<ms<<std::endl;
+//#if( defined( _DEBUG ) || defined( DEBUG ) )
+//		time = clock() - time;
+//		int ms = double(time) / CLOCKS_PER_SEC * 1000;
+//		std::cout<<"timee elapsed: "<<ms<<std::endl;
 		std::cout<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
-#endif
+//#endif
 		if (tries == m_maxTries)
 		{
 			return false;

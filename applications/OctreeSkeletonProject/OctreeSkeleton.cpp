@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cmath>
 #include <queue>
+#include "TimeWin32.h"
 
 OctreeSkeleton::OctreeSkeleton(void)
 {
@@ -41,12 +42,27 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points)
 
 void OctreeSkeleton::solveOnePoint(const Vec3& point)
 {
+	TimeWin32 start;
+	double time1 = start.getCurrentTime();
 	Octree* tree = p_tree->getSubTreeWithPointAndDepth(point, 2);
 	for(int i = 0; i < m_ikchain.m_anglelimites.size();++i)
 	{
 		m_ikchain.m_anglelimites[i] = Etoile::Vector2_(tree->m_cell_min[i], tree->m_cell_max[i]);
 	}
+	TimeWin32 start2;
+	double time2 = start2.getCurrentTime();
+	float tdiff = start2.DiffTime(time2);
+	std::cout<<"timediff1 "<<tdiff<<std::endl;
+
+	TimeWin32 start3;
+	double time3 = start3.getCurrentTime();
 	solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
+
+	TimeWin32 start4;
+	double time4 = start4.getCurrentTime();
+	float tdiff2 = start4.DiffTime(time3);
+	std::cout<<"timediff2 "<<tdiff2<<std::endl;
+
 	m_ikchain.output("ikchain11.csv");
 	//m_ikchain.reset();
 
@@ -249,8 +265,8 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 			FrameData& data = m_framesData[j];
 			for(int h = 0; h < vSize; ++h)
 			{
-				cell->m_cell_min[h] = std::min(cell->m_cell_min[h], data.m_values[h]);
-				cell->m_cell_max[h] = std::max(cell->m_cell_max[h], data.m_values[h]);
+				cell->m_cell_min[h] = min(cell->m_cell_min[h], data.m_values[h]);
+				cell->m_cell_max[h] = max(cell->m_cell_max[h], data.m_values[h]);
 				cell->m_cell_average[h] += data.m_values[h];
 			}
 		}
