@@ -3,9 +3,14 @@
 int main(int argc, char *argv[])
 {
 	OctreeSkeleton sk;
-	//sk.solveOnePoint(Vec3(-0.324851,-0.0580455,	-0.12274));
+	/*for(int i = 0 ; i < 200; ++i)
+	{
+		double* p = sk.m_framesData[i].points;
+		sk.solveOnePoint(Vec3(p[0],p[1],p[2]));
+	}*/
+	
 	std::vector<Vec3> points;
-	for(int i = 0 ; i < 200; ++i)
+	for(int i = 620 ; i < 650; ++i)
 	{
 		double* p = sk.m_framesData[i].points;
 		points.push_back(Vec3(p[0],p[1],p[2]));

@@ -9,7 +9,7 @@
 OctreeSkeleton::OctreeSkeleton(void)
 {
 	std::cout<<"start"<<std::endl;
-	m_bvh.loadFromBVHFile("Ag1CS_Brian.bvh");
+	m_bvh.loadFromBVHFile("Ag1CS_Brian_zyx.bvh");
 	m_ikchain.loadFromFile("ikchain.sk");
 	solver = new Etoile::JacobianDLSSVDSolver(&m_ikchain);
 
@@ -38,6 +38,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 {
 	TimeWin32 start;
 	double time1 = start.getCurrentTime();
+	depth = 1;
 	std::vector<Frame> fs;
 	for(int i = 0; i < points.size();++i)
 	{
@@ -47,6 +48,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 		{
 			m_ikchain.m_anglelimites[j] = Etoile::Vector2_(tree->m_cell_min[j], tree->m_cell_max[j]);
 		}
+		std::cout<<"point "<<point[0] <<" " <<point[1]<<" " <<point[2]<<std::endl;
 		solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
 		for(int j = 0; j < m_ikchain.m_joints.size();++j)
 		{
@@ -54,7 +56,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
 			for(int h = 0; h < 3; ++h)
 			{
-				jointbvh->m_dims[0].m_value = m_ikchain.m_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
+				jointbvh->m_dims[h].m_value = m_ikchain.m_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
 			}
 		}
 		Frame frame = m_bvh.createFrame();
@@ -82,25 +84,25 @@ void OctreeSkeleton::solveOnePoint(const Vec3& point, int depth)
 	float tdiff = start2.DiffTime(time1);
 	std::cout<<"timediff1 "<<tdiff<<std::endl;
 
-	TimeWin32 start3;
-	double time3 = start3.getCurrentTime();
-	solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
+	//TimeWin32 start3;
+	//double time3 = start3.getCurrentTime();
+	//solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
 
-	TimeWin32 start4;
-	double time4 = start4.getCurrentTime();
-	float tdiff2 = start4.DiffTime(time3);
-	std::cout<<"timediff2 "<<tdiff2<<std::endl;
+	//TimeWin32 start4;
+	//double time4 = start4.getCurrentTime();
+	//float tdiff2 = start4.DiffTime(time3);
+	//std::cout<<"timediff2 "<<tdiff2<<std::endl;
 
-	//m_ikchain.output("ikchain11.csv");
-	//m_ikchain.reset();
+	////m_ikchain.output("ikchain11.csv");
+	////m_ikchain.reset();
 
-	Vec3 point2(point.x - 0.01, point.y+0.02, point.z+0.01);
-	Octree* tree2 = p_tree->getSubTreeWithPointAndDepth(point2, depth);
-	for(int i = 0; i < m_ikchain.m_anglelimites.size();++i)
-	{
-		m_ikchain.m_anglelimites[i] = Etoile::Vector2_(tree2->m_cell_min[i], tree2->m_cell_max[i]);
-	}
-	solver->solve(Etoile::Vector3_(point2.x, point2.y, point2.z));
+	//Vec3 point2(point.x - 0.01, point.y+0.02, point.z+0.01);
+	//Octree* tree2 = p_tree->getSubTreeWithPointAndDepth(point2, depth);
+	//for(int i = 0; i < m_ikchain.m_anglelimites.size();++i)
+	//{
+	//	m_ikchain.m_anglelimites[i] = Etoile::Vector2_(tree2->m_cell_min[i], tree2->m_cell_max[i]);
+	//}
+	//solver->solve(Etoile::Vector3_(point2.x, point2.y, point2.z));
 	//m_ikchain.output("ikchain22.csv");
 
 }
