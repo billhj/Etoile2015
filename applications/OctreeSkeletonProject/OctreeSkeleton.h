@@ -19,6 +19,7 @@ public:
 	~OctreeSkeleton(void);
 
 	void solveTrajectory(const std::vector<Vec3>& points, int depth = 2);
+	void solveOriginalTrajectory(int start, int end);
 	void solveOnePoint(const Vec3& point, int depth = 2);
 
 

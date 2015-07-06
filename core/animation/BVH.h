@@ -57,7 +57,6 @@ namespace Etoile
 		float m_frametime; 
 		int m_frameNb;
 		int m_dims;
-		bool m_isMeter;
 	public:
 		BVH():m_dims(0){}
 		BVH(BVH& bvh)
@@ -67,7 +66,6 @@ namespace Etoile
 			m_frametime = bvh.m_frametime;
 			m_dims = bvh.m_dims;
 			m_joints = bvh.m_joints;
-			m_isMeter = bvh.m_isMeter;
 		}
 
 		bool loadFromBVHFile(const std::string& filepath);

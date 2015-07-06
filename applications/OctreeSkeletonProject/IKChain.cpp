@@ -69,6 +69,7 @@ namespace Etoile
 		{
 			m_localRotations[i].setIdentity();
 			m_globalOrientations[i].setIdentity();
+			m_anglelimites[i] = Vector2_(-3.14,3.14);
 			m_values[i] = 0;
 		}
 	}

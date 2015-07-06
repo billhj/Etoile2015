@@ -21,14 +21,9 @@ namespace Etoile
 			{
 				BVH::Joint* joint = bvh->m_joints[i];
 				Joint* j = new Joint(skeleton, joint->m_index_parent, joint->m_dof, joint->m_name);
-				if(!bvh->m_isMeter)
-				{
-					skeleton->m_localTranslations[i] = (Vec3f(joint->m_offset[0] / 100.0,joint->m_offset[1] / 100.0,joint->m_offset[2] / 100.0));
-				}
-				else
-				{
-					skeleton->m_localTranslations[i] = (Vec3f(joint->m_offset[0],joint->m_offset[1],joint->m_offset[2]));
-				}
+
+				skeleton->m_localTranslations[i] = (Vec3f(joint->m_offset[0] / 100.0,joint->m_offset[1] / 100.0,joint->m_offset[2] / 100.0));
+				
 			}
 			skeleton->update();
 		}
@@ -57,15 +52,15 @@ namespace Etoile
 					float v = frame.m_values[dim.m_index];
 					if(dim.m_name == "Xposition")
 					{
-						skeleton->m_localTranslations[i][0] = bvh->m_isMeter ? v : v / 100.0;
+						skeleton->m_localTranslations[i][0] = v / 100.0;
 					}
 					else if(dim.m_name == "Yposition")
 					{
-						skeleton->m_localTranslations[i][1] = bvh->m_isMeter ? v : v / 100.0;
+						skeleton->m_localTranslations[i][1] = v / 100.0;
 					}
 					else if(dim.m_name == "Zposition")
 					{
-						skeleton->m_localTranslations[i][2] = bvh->m_isMeter ? v : v / 100.0;
+						skeleton->m_localTranslations[i][2] = v / 100.0;
 					}
 					else if(dim.m_name == "Zrotation")
 					{
@@ -120,15 +115,15 @@ namespace Etoile
 					float v = frame.m_values[dim.m_index];
 					if(dim.m_name == "Xposition")
 					{
-						skeleton->m_localTranslations[i][0] = bvh->m_isMeter ? v : v / 100.0;
+						skeleton->m_localTranslations[i][0] = v / 100.0;
 					}
 					else if(dim.m_name == "Yposition")
 					{
-						skeleton->m_localTranslations[i][1] = bvh->m_isMeter ? v : v / 100.0;
+						skeleton->m_localTranslations[i][1] = v / 100.0;
 					}
 					else if(dim.m_name == "Zposition")
 					{
-						skeleton->m_localTranslations[i][2] = bvh->m_isMeter ? v : v / 100.0;
+						skeleton->m_localTranslations[i][2] = v / 100.0;
 					}
 					else if(dim.m_name == "Zrotation")
 					{

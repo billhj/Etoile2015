@@ -43,8 +43,7 @@ void createBVHDataFile(BVH& bvh, const std::string& filepath)
 	Skeleton* sk = new Skeleton("s");
 	SkeletonConverter::convertFromBVHToSkeleton(&bvh, sk);
 
-	float scale = 1;
-	if(!bvh.m_isMeter) scale = 100;
+	float scale = 100;
 	for(unsigned int i = 0; i < bvh.m_frames.size(); ++i)
 	{
 		Frame& f = bvh.m_frames[i];
@@ -90,8 +89,7 @@ void createRelativeBodyBVHDataFile(BVH& bvh, const std::string& filepath)
 	Skeleton* sk = new Skeleton("s");
 	SkeletonConverter::convertFromBVHToSkeleton(&bvh, sk);
 
-	float scale = 1;
-	if(!bvh.m_isMeter) scale = 100;
+	float scale = 100;
 	for(unsigned int i = 0; i < bvh.m_frames.size(); ++i)
 	{
 		Frame& f = bvh.m_frames[i];
