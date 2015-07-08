@@ -45,15 +45,15 @@ namespace Etoile
 					float v = frame.m_values[dim.m_index];
 					if(dim.m_name == "Xposition")
 					{
-						p_sk->m_localTranslations[i][0] = p_bvh->m_isMeter ? v : v / 100.0;
+						p_sk->m_localTranslations[i][0] = v / 100.0;
 					}
 					else if(dim.m_name == "Yposition")
 					{
-						p_sk->m_localTranslations[i][1] = p_bvh->m_isMeter ? v : v / 100.0;
+						p_sk->m_localTranslations[i][1] = v / 100.0;
 					}
 					else if(dim.m_name == "Zposition")
 					{
-						p_sk->m_localTranslations[i][2] = p_bvh->m_isMeter ? v : v / 100.0;
+						p_sk->m_localTranslations[i][2] = v / 100.0;
 					}
 					else if(dim.m_name == "Zrotation")
 					{
@@ -106,15 +106,15 @@ namespace Etoile
 					}
 					else if(dim.m_name == "Xposition")
 					{
-						p_sk->m_localTranslations[i][0] = p_bvh->m_isMeter ? v : v / 100.0;
+						p_sk->m_localTranslations[i][0] = v / 100.0;
 					}
 					else if(dim.m_name == "Yposition")
 					{
-						p_sk->m_localTranslations[i][1] = p_bvh->m_isMeter ? v : v / 100.0;
+						p_sk->m_localTranslations[i][1] = v / 100.0;
 					}
 					else if(dim.m_name == "Zposition")
 					{
-						p_sk->m_localTranslations[i][2] = p_bvh->m_isMeter ? v : v / 100.0;
+						p_sk->m_localTranslations[i][2] = v / 100.0;
 					}
 				
 				}

@@ -6,17 +6,50 @@
 #include <queue>
 #include "TimeWin32.h"
 
+void trimString( std::string& _string) {
+		// Trim Both leading and trailing spaces
+
+		size_t start = _string.find_first_not_of(" \t\r\n");
+		size_t end   = _string.find_last_not_of(" \t\r\n");
+
+		if(( std::string::npos == start ) || ( std::string::npos == end))
+			_string = "";
+		else
+			_string = _string.substr( start, end-start+1 );
+	}
+
 OctreeSkeleton::OctreeSkeleton(void)
 {
 	std::cout<<"start"<<std::endl;
 	m_bvh.loadFromBVHFile("Ag1CS_Brian_zyx.bvh");
 	m_ikchain.loadFromFile("ikchain.sk");
+	loadFromCSVFile("angle_right_anger_brian.csv");
+
+
 	solver = new Etoile::JacobianDLSSVDSolver(&m_ikchain);
 
 	m_dataIsLoaded = false;
 	p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
 
-	loadFromCSVFile("angle_right_anger_brian.csv");
+	
+	computePoints();
+
+	loadDataIntoOctree();
+	computeMinMaxAverage();
+	//computeMinMaxAverageByDepth(5);
+	std::cout<<"end"<<std::endl;
+}
+
+OctreeSkeleton::OctreeSkeleton(const std::string& name) : _name(name)
+{
+	std::cout<<"start"<<std::endl;
+	m_bvh.loadFromBVHFile(name +".bvh");
+	m_ikchain.loadFromFile(name+".sk");
+	loadFromCSVFile(name+".csv");
+
+	solver = new Etoile::JacobianDLSSVDSolver(&m_ikchain);
+	m_dataIsLoaded = false;
+	p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
 	computePoints();
 
 	loadDataIntoOctree();
@@ -54,7 +87,7 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 	}
 	m_bvh.m_frames = fs;
 	std::stringstream s;
-	s<<"original_"<<"BVH.bvh";
+	s<<_name+"_original_"<<"BVH.bvh";
 	m_bvh.saveToBVHFile(s.str());
 	m_bvh.m_frames = temp;
 
@@ -104,7 +137,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 	
 	m_bvh.m_frames = fs;
 	std::stringstream s;
-	s<<"depth_"<<depth<<"_"<<time2<<"BVH.bvh";
+	s<<_name+"_depth_"<<depth<<"_"<<time2<<"BVH.bvh";
 	m_bvh.saveToBVHFile(s.str());
 	m_bvh.m_frames = temp;
 }
@@ -206,7 +239,9 @@ void OctreeSkeleton::loadFromCSVFile(const std::string& filename)
 				std::string valueString;
 				while (std::getline(stream, valueString, ','))
 				{
-					m_headers.push_back(valueString);
+					trimString(valueString);
+					if(!valueString.empty())
+						m_headers.push_back(valueString);
 				}
 			}
 			else
@@ -221,8 +256,13 @@ void OctreeSkeleton::loadFromCSVFile(const std::string& filename)
 				std::string valueString;
 				while (std::getline(stream, valueString, ','))
 				{
-					double value = std::stod(valueString);
-					m_framesData[indx].m_values.push_back(value);
+					trimString(valueString);
+					if(!valueString.empty())
+					{
+						double value = std::stod(valueString);
+						m_framesData[indx].m_values.push_back(value);
+					}
+					
 				}
 			}
 		}
@@ -263,9 +303,9 @@ void OctreeSkeleton::saveCSVFileByFrameIdx(const std::string& filename, std::vec
 
 void OctreeSkeleton::loadDataIntoOctree()
 {
-	if(!m_dataIsLoaded || m_framesData.size() < 1)
+	if(m_dataIsLoaded || m_framesData.size() < 1)
 	{
-		std::cout<<"data is not loaded"<<std::endl;
+		std::cout<<"data is not loaded this time"<<std::endl;
 		return;
 	}
 

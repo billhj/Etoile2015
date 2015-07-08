@@ -18,6 +18,46 @@ using namespace Etoile;
 	return name;
 }*/
 
+void createBVHRotationDataFile(BVH& bvh, const std::string& filepath)
+{
+	std::ofstream out;
+	out.open(filepath);
+
+	for(unsigned int i = 0; i < bvh.m_joints.size(); ++i)
+	{
+		BVH::Joint* joint = bvh.m_joints[i];
+		for(unsigned int j = 0; j < joint->m_dims.size(); ++j)
+		{
+			BVH::Dim& dim = joint->m_dims[j];
+			out<<joint->m_name<<"_"<<dim.m_name<<", ";
+		}
+	}
+	out<<" \n";
+
+	Skeleton* sk = new Skeleton("s");
+	SkeletonConverter::convertFromBVHToSkeleton(&bvh, sk);
+
+	float scale = 100;
+	for(unsigned int i = 0; i < bvh.m_frames.size(); ++i)
+	{
+		Frame& f = bvh.m_frames[i];
+		SkeletonConverter::updateBVHFrameToSkeleton(&bvh, sk, i);
+		/*for(int j = 0; j < bvh.m_joints.size(); ++j)
+		{
+			std::string name = bvh.m_joints[j]->m_name;
+			Vec3f& pos = sk->m_globalPositions[sk->getJoint(name)->m_index];
+			out<<pos.x() * scale<<", "<<pos.y() * scale<<", "<<pos.z() * scale<<", ";
+		}*/
+		for(unsigned int j = 0; j < f.m_values.size(); ++j)
+		{
+			out<< f.m_values[j] * 3.14159265 / 180.0<<", ";
+		}
+		out<<" \n";
+	}
+
+	out.close();
+}
+
 void createBVHDataFile(BVH& bvh, const std::string& filepath)
 {
 	std::ofstream out;

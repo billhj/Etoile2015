@@ -31,8 +31,8 @@
 	bvh.loadFromBVHFile(s);
 	std::string path = Etoile::File::getFilePath(s);
 	std::string filename = Etoile::File::getFileNameWithoutExtension(s);
-	createBVHDataFile(bvh, filename+".csv");
-	createRelativeBodyBVHDataFile(bvh, filename+"2.csv");
+	createBVHRotationDataFile(bvh, filename+".csv");
+	//createRelativeBodyBVHDataFile(bvh, filename+"2.csv");
   }
 
   void createBVHSkeletonTxt(const std::string& s)
@@ -41,10 +41,10 @@
 	bvh.loadFromBVHFile(s);
 	std::string path = Etoile::File::getFilePath(s);
 	std::string filename = Etoile::File::getFileNameWithoutExtension(s);
-	bvh.saveTextFile(filename+".txt");
+	bvh.saveTextFile(filename+".sk");
   }
 
-#define TRANSFORM_TO_ZYX
+#define CREATE_TXT_DATA
 #ifdef TRANSFORM_TO_ZYX
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -88,7 +88,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search("./", "bvh");
 		for(unsigned int i = 0; i < fileinfos.size(); ++i)
 		{
-			createBVHSkeletonTxt(fileinfos[i]._path);
+			createBVHData(fileinfos[i]._path);
 		}
 	}else
 	{
@@ -103,11 +103,11 @@ int _tmain(int argc, _TCHAR* argv[])
 				std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
 				for(unsigned int i = 0; i < fileinfos.size(); ++i)
 				{
-					createBVHSkeletonTxt(fileinfos[i]._path);
+					createBVHData(fileinfos[i]._path);
 				}
 			}else
 			{
-				createBVHSkeletonTxt(s);
+				createBVHData(s);
 			}
 		}
 	}
@@ -139,7 +139,7 @@ int _tmain(int argc, _TCHAR* argv[])
 				std::vector<Etoile::FileInfo> fileinfos = Etoile::FileSearch::search(s, "bvh");
 				for(unsigned int i = 0; i < fileinfos.size(); ++i)
 				{
-					createBVHData(fileinfos[i]._path);
+					createBVHSkeletonTxt(fileinfos[i]._path);
 				}
 			}else
 			{

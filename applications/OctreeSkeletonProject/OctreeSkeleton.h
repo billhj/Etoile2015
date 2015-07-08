@@ -16,6 +16,7 @@ class OctreeSkeleton
 {
 public:
 	OctreeSkeleton(void);
+	OctreeSkeleton(const std::string& name);
 	~OctreeSkeleton(void);
 
 	void solveTrajectory(const std::vector<Vec3>& points, int depth = 2);
@@ -43,6 +44,7 @@ public:
 	BVH m_bvh;
 	Etoile::IKChain m_ikchain;
 	Etoile::JacobianDLSSVDSolver * solver;
+	std::string _name;
 
 };
 

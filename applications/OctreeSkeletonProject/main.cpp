@@ -2,7 +2,8 @@
 
 int main(int argc, char *argv[])
 {
-	OctreeSkeleton sk;
+	std::cout<< argv[1] <<std::endl;
+	OctreeSkeleton sk(argv[1]);
 	/*for(int i = 0 ; i < 200; ++i)
 	{
 		double* p = sk.m_framesData[i].points;
