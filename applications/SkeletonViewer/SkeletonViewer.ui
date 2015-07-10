@@ -101,6 +101,7 @@
     <addaction name="actionSceneTree"/>
     <addaction name="actionNodes"/>
     <addaction name="actionTimeLine"/>
+    <addaction name="actionOctreeSkeleton"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -314,6 +315,9 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="octreeSkeletonWidget">
+   <property name="windowTitle">
+    <string>OctreeSkeleton</string>
+   </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
@@ -579,6 +583,17 @@
    </property>
    <property name="text">
     <string>TimeLine</string>
+   </property>
+  </action>
+  <action name="actionOctreeSkeleton">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>OctreeSkeleton</string>
    </property>
   </action>
   <zorder>parametersDockWidget</zorder>
@@ -981,6 +996,22 @@
     <hint type="destinationlabel">
      <x>350</x>
      <y>322</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionOctreeSkeleton</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>octreeSkeletonWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>661</x>
+     <y>445</y>
     </hint>
    </hints>
   </connection>
