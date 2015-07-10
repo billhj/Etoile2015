@@ -1,6 +1,7 @@
 #include "QTEntityParametersWidget.h"
 #include "geometry/ModelTransform.h"
 #include "geometry/SceneManager.h"
+#include "geometry/ObjectRenderer.h"
 
 namespace Etoile
 {
@@ -119,5 +120,14 @@ namespace Etoile
 		transform->setRotation(Quaternionf(ui.qx->value(), ui.qy->value(), ui.qz->value(), ui.qw->value()));
 		transform->updateAll();
 		updateTransformView();
+	}
+
+	void QTEntityParametersWidget::setEntityVisible(bool visible)
+	{
+		ObjectRenderer* renderer = p_entity->getObjectRenderer();
+		if(renderer != NULL)
+		{
+			renderer->setVisible(visible);
+		}
 	}
 }

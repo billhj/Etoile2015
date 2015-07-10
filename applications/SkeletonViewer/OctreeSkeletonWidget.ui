@@ -1,23 +1,53 @@
-<UI version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>OctreeSkeletonWidget</class>
- <widget class="QWidget" name="OctreeSkeletonWidget" >
-  <property name="objectName" >
-   <string notr="true">OctreeSkeletonWidget</string>
-  </property>
-  <property name="geometry" >
+ <widget class="QWidget" name="OctreeSkeletonWidget">
+  <property name="geometry">
    <rect>
-	<x>0</x>
-	<y>0</y>
-	<width>400</width>
-	<height>300</height>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>OctreeSkeletonWidget</string>
-  </property>  
+  </property>
+  <widget class="QPushButton" name="openfilesButton">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>20</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>openfiles</string>
+   </property>
+  </widget>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
-</UI>
+ <connections>
+  <connection>
+   <sender>openfilesButton</sender>
+   <signal>clicked()</signal>
+   <receiver>OctreeSkeletonWidget</receiver>
+   <slot>openOctreeSkeletonFiles()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>31</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>openOctreeSkeletonFiles()</slot>
+ </slots>
+</ui>

@@ -18,7 +18,7 @@ protected:
 		void pipetteColorPicked();
 		void openFile();
 		void openFile(QString file);
-
+		void sceneTreeUpdate();
 		void changeFrameNb(int);
 private:
 	Ui::SkeletonViewerClass ui;

@@ -317,7 +317,7 @@
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="OctreeSkeletonWidget" name="dockWidgetContents_9"/>
+   <widget class="OctreeSkeletonWidget" name="octreeSkeletonView"/>
   </widget>
   <action name="action_Open">
    <property name="icon">

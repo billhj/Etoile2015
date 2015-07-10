@@ -14,6 +14,7 @@ SkeletonViewer::SkeletonViewer(QWidget *parent, Qt::WFlags flags)
 	ImageManager::getInstance()->setImageLoader(new GeneralImageLoader());
 	TextureManager::getInstance()->setTextureCreator(new GLTextureCreator());
 	connect(ui.fileView, SIGNAL(fileToOpen(QString)), this, SLOT(openFile(QString)));
+	connect(ui.octreeSkeletonView, SIGNAL(filesOpened()), this, SLOT(sceneTreeUpdate()));
 }
 
 SkeletonViewer::~SkeletonViewer()
@@ -90,7 +91,10 @@ void SkeletonViewer::openFile(QString file)
 	Scene* scene = SceneManager::getInstance()->getCurrentScene();
 	ui.sceneTreeView->setScene(scene);ui.sceneTreeView->updateModel();
 }
-
+void SkeletonViewer::sceneTreeUpdate()
+{
+	ui.sceneTreeView->updateModel();
+}
 void SkeletonViewer::closeEvent(QCloseEvent *event)
 {
 	save();

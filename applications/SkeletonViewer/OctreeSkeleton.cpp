@@ -18,29 +18,40 @@ void trimString( std::string& _string) {
 			_string = _string.substr( start, end-start+1 );
 	}
 
-OctreeSkeleton::OctreeSkeleton(void)
+#include "geometry/RenderManager.h"
+#include "geometry/SceneManager.h"
+#include "geometry/Scene.h"
+
+OctreeSkeleton::OctreeSkeleton(void):ObjectRenderer("octreeskeleton"),p_tree(NULL)
 {
-	std::cout<<"start"<<std::endl;
+	/*std::cout<<"start"<<std::endl;
 	m_bvh.loadFromBVHFile("Ag1CS_Brian_zyx.bvh");
 	m_ikchain.loadFromFile("ikchain.sk");
 	loadFromCSVFile("angle_right_anger_brian.csv");
 
 
-	solver = new Etoile::JacobianDLSSVDSolver(&m_ikchain);
+	solver = new Etoile::JacobianDLSSVDSolver(&m_ikchain);*/
 
 	m_dataIsLoaded = false;
-	p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
+
+	Etoile::Scene* scene = Etoile::SceneManager::getInstance()->getCurrentScene();
+
+	Etoile::Entity* entity = new Etoile::Entity("octreeskeleton", scene);
+	entity->setComponent(Etoile::ComponentType::RENDER_COMPONENT, this);
+	Etoile::RenderManager::getInstance()->add(this);
+
+	//p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
 
 	
-	computePoints();
+	//computePoints();
 
-	loadDataIntoOctree();
-	computeMinMaxAverage();
-	//computeMinMaxAverageByDepth(5);
-	std::cout<<"end"<<std::endl;
+	//loadDataIntoOctree();
+	//computeMinMaxAverage();
+	////computeMinMaxAverageByDepth(5);
+	//std::cout<<"end"<<std::endl;
 }
 
-OctreeSkeleton::OctreeSkeleton(const std::string& name) : _name(name)
+OctreeSkeleton::OctreeSkeleton(const std::string& name) : _name(name),ObjectRenderer("octreeskeleton")
 {
 	std::cout<<"start"<<std::endl;
 	m_bvh.loadFromBVHFile(name +".bvh");
@@ -49,7 +60,7 @@ OctreeSkeleton::OctreeSkeleton(const std::string& name) : _name(name)
 
 	solver = new Etoile::JacobianDLSSVDSolver(&m_ikchain);
 	m_dataIsLoaded = false;
-	p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
+	//p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
 	computePoints();
 
 	loadDataIntoOctree();
@@ -58,6 +69,25 @@ OctreeSkeleton::OctreeSkeleton(const std::string& name) : _name(name)
 	std::cout<<"end"<<std::endl;
 }
 
+void OctreeSkeleton::reload(const std::string& name)
+{
+	std::cout<<"start"<<std::endl;
+	m_bvh = BVH();
+	m_bvh.loadFromBVHFile(name +".bvh");
+	m_ikchain = Etoile::IKChain();
+	m_ikchain.loadFromFile(name+".sk");
+	loadFromCSVFile(name+".csv");
+
+	solver = new Etoile::JacobianDLSSVDSolver(&m_ikchain);
+	m_dataIsLoaded = false;
+	//p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
+	computePoints();
+
+	loadDataIntoOctree();
+	computeMinMaxAverage();
+	//computeMinMaxAverageByDepth(5);
+	std::cout<<"end"<<std::endl;
+}
 
 OctreeSkeleton::~OctreeSkeleton(void)
 {
@@ -180,6 +210,8 @@ void OctreeSkeleton::solveOnePoint(const Vec3& point, int depth)
 
 void OctreeSkeleton::computePoints()
 {
+	xMin = 10000, yMin = 10000, zMin = 10000;
+	xMax = -10000, yMax = -10000, zMax = -10000;
 	std::cout << " start compute points!"<<std::endl;
 	for(unsigned int j = 0; j < m_framesData.size(); ++j)
 	{
@@ -196,6 +228,12 @@ void OctreeSkeleton::computePoints()
 		m_framesData[j].points[0] = m_ikchain.m_globalPositions[end][0];
 		m_framesData[j].points[1] = m_ikchain.m_globalPositions[end][1];
 		m_framesData[j].points[2] = m_ikchain.m_globalPositions[end][2];
+		if(m_framesData[j].points[0] > xMax) xMax = m_framesData[j].points[0];
+		if(m_framesData[j].points[0] < xMin) xMin = m_framesData[j].points[0];
+		if(m_framesData[j].points[1] > yMax) yMax = m_framesData[j].points[1];
+		if(m_framesData[j].points[1] < yMin) yMin = m_framesData[j].points[1];
+		if(m_framesData[j].points[2] > zMax) zMax = m_framesData[j].points[2];
+		if(m_framesData[j].points[2] < zMin) zMin = m_framesData[j].points[2];
 
 		//std::cout<< m_framesData[j].points[0] << " " << m_framesData[j].points[1] <<" "  << m_framesData[j].points[2]   <<std::endl;
 
@@ -206,10 +244,13 @@ void OctreeSkeleton::computePoints()
 		}
 	}
 	std::cout << "  end compute points!"<<std::endl;
+	p_tree = new Octree(Vec3((xMax + xMin) * 0.5, (yMax + yMin) * 0.5, (zMax + zMin) * 0.5), Vec3((xMax - xMin) * 0.5 + 0.1, (yMax - yMin) * 0.5 + 0.1, (zMax - zMin) * 0.5 + 0.1), true);
 }
 
 void OctreeSkeleton::loadFromCSVFile(const std::string& filename)
 {
+	m_headers.clear();
+	m_framesData.clear();
 	std::fstream in(filename.c_str(), std::ios_base::in );
 
 	if (!in.is_open() || !in.good())
@@ -451,4 +492,52 @@ void OctreeSkeleton::computeMinMaxAverageByDepth(int depth)
 	}
 	out.close();
 	std::cout<<std::endl<<"compute Cell attributes ended"<<std::endl;
+}
+
+void OctreeSkeleton::draw()
+{
+	if(p_tree == NULL || !_visible) return;
+	glDisable(GL_LIGHTING);
+	int depth = 5;
+	std::vector<Octree*>& octrees = p_tree->p_alltree;
+	std::queue<Octree*> cells;
+	cells.push(p_tree);
+	while(!cells.empty())
+	{
+		Octree* cell = cells.front();
+		if(cell->dataIndx.size() > 0)
+		{
+			//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(0.8, 0.7, 1)[0]);
+			glColor3f(0.8, 0.7, 1);
+			cell->drawAABB();
+		}
+		
+		if(cell->children[0] != NULL)
+		{
+			for(unsigned int i = 0; i < 8; ++i)
+			{
+				Octree* cell0 = cell->children[i];
+				if(! (cell0->m_level > depth))
+				{
+					cells.push(cell0);
+				}
+			}
+		}
+		cells.pop();
+	}
+
+	glPointSize(2);
+	glBegin(GL_POINTS);
+	for(unsigned int i = 0; i < m_framesData.size(); ++i)
+	{
+		FrameData& frame = m_framesData[i];
+		//right
+		{
+			//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(1, 0.0,0)[0]);
+			glColor3f(1, 0.0,0);
+			glVertex3f(frame.points[0],frame.points[1],frame.points[2]);
+		}
+	}
+	glEnd();
+	glEnable(GL_LIGHTING);
 }

@@ -12,7 +12,10 @@ class OctreeSkeletonWidget : public QWidget
 public:
 	OctreeSkeletonWidget(QWidget *parent = 0);
 	~OctreeSkeletonWidget();
-
+	public slots:
+	void openOctreeSkeletonFiles();
+signals:
+		void filesOpened();
 private:
 	Ui::OctreeSkeletonWidget ui;
 	OctreeSkeleton *octreeskeleton;

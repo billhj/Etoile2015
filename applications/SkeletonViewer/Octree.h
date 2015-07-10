@@ -1,6 +1,6 @@
 #ifndef Octree_H
 #define Octree_H
-
+#include "renderer/OpenGL/glhead.h"
 #include <cstddef>
 #include <vector>
 #include "OctreePoint.h"
@@ -208,6 +208,46 @@ public:
 				children[i]->getPointsInsideBox(bmin,bmax,results);
 			} 
 		}
+	}
+
+	void drawAABB()
+	{
+		float xMin = origin.x - halfDimension.x;
+		float xMax = origin.x + halfDimension.x;
+		float yMin = origin.y - halfDimension.y;
+		float yMax = origin.y + halfDimension.y;
+		float zMin = origin.z - halfDimension.z;
+		float zMax = origin.z + halfDimension.z;
+
+			glLineWidth(0.01f); 
+
+			glBegin(GL_LINE_STRIP);
+			glVertex3f(xMin,yMin,zMin);
+			glVertex3f(xMin,yMin,zMax);
+			glVertex3f(xMax,yMin,zMax);
+			glVertex3f(xMax,yMin,zMin);
+			glVertex3f(xMin,yMin,zMin);
+			glEnd();
+			glBegin(GL_LINE_STRIP);
+			glVertex3f(xMin,yMax,zMin);
+			glVertex3f(xMin,yMax,zMax);
+			glVertex3f(xMax,yMax,zMax);
+			glVertex3f(xMax,yMax,zMin);
+			glVertex3f(xMin,yMax,zMin);
+			glEnd();
+			glBegin(GL_LINES);
+			glVertex3f(xMin,yMin,zMin);
+			glVertex3f(xMin,yMax,zMin);
+
+			glVertex3f(xMin,yMin,zMax);
+			glVertex3f(xMin,yMax,zMax);
+
+			glVertex3f(xMax,yMin,zMax);
+			glVertex3f(xMax,yMax,zMax);
+
+			glVertex3f(xMax,yMin,zMin);
+			glVertex3f(xMax,yMax,zMin);
+			glEnd();
 	}
 
 };

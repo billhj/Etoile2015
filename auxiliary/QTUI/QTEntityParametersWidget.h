@@ -27,6 +27,7 @@ namespace Etoile
 			void scaleSpinBoxModified(double);
 			void translationSpinBoxModified(double);
 			void quaternionSpinBoxModified(double);
+			void setEntityVisible(bool visible);
 	private:
 		Ui::QTEntityParametersWidget ui;
 		Entity* p_entity;

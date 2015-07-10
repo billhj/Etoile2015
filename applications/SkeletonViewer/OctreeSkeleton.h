@@ -5,6 +5,7 @@
 #include "animation/BVH.h"
 #include "animation/IK/IKChain.h"
 #include "animation/IK/JacobianDLSSVDSolver.h"
+#include "geometry/ObjectRenderer.h"
 
 struct FrameData
 {
@@ -12,13 +13,13 @@ struct FrameData
 	double points[3];
 };
 
-class OctreeSkeleton
+class OctreeSkeleton : public Etoile::ObjectRenderer
 {
 public:
 	OctreeSkeleton(void);
 	OctreeSkeleton(const std::string& name);
 	~OctreeSkeleton(void);
-
+	void reload(const std::string& name);
 	void solveTrajectory(const std::vector<Vec3>& points, int depth = 2);
 	void solveOriginalTrajectory(int start, int end);
 	void solveOnePoint(const Vec3& point, int depth = 2);
@@ -45,6 +46,14 @@ public:
 	Etoile::IKChain m_ikchain;
 	Etoile::JacobianDLSSVDSolver * solver;
 	std::string _name;
+	double xMin, yMin, zMin;
+	double xMax, yMax, zMax;
 
+
+
+
+	
+	virtual void draw();
+	virtual void drawTexcoord(){}
 };
 
