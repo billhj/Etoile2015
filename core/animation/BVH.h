@@ -10,9 +10,8 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <map>
 
-namespace Etoile
-{
 	struct Frame
 	{
 		std::vector<float> m_values;
@@ -26,11 +25,13 @@ namespace Etoile
 			{
 				m_limits[0] = -3.14;
 				m_limits[1] = 3.14;
+				m_value = 0;
 			}
 			std::string m_name;
 			int m_index;
 			float m_axis[3];
 			float m_limits[2];
+			float m_value;
 		};
 
 		struct Joint
@@ -52,11 +53,52 @@ namespace Etoile
 			void changeOrdertoZYX();
 		};
 
+		Joint* getJoint(const std::string& name)
+		{
+			return m_joints[m_jointsId[name]];
+		}
+
+
+
+		Frame createFrame()
+		{
+			Frame f;
+			f.m_values.resize(m_dims);
+			for(unsigned int i = 0; i < m_joints.size(); ++i)
+			{
+				Joint* joint = m_joints[i];
+				for(int j = 0; j < joint->m_dof; ++j)
+				{
+					Dim& dim = joint->m_dims[j];
+					f.m_values[dim.m_index] = dim.m_value;
+				}
+			}
+
+			resetDimValue();
+			return f;
+		}
+
+		void resetDimValue()
+		{
+			for(unsigned int i = 0; i < m_joints.size(); ++i)
+			{
+				Joint* joint = m_joints[i];
+				for(int j = 0; j < joint->m_dof; ++j)
+				{
+					Dim& dim = joint->m_dims[j];
+					dim.m_value = 0;
+				}
+			}
+		}
+
 		std::vector<Joint*> m_joints;
+		std::map<std::string, int> m_jointsId;
+
 		std::vector<Frame> m_frames;
 		float m_frametime; 
 		int m_frameNb;
 		int m_dims;
+		bool m_isMeter;
 	public:
 		BVH():m_dims(0){}
 		BVH(BVH& bvh)
@@ -66,6 +108,7 @@ namespace Etoile
 			m_frametime = bvh.m_frametime;
 			m_dims = bvh.m_dims;
 			m_joints = bvh.m_joints;
+			m_isMeter = bvh.m_isMeter;
 		}
 
 		bool loadFromBVHFile(const std::string& filepath);
@@ -88,4 +131,3 @@ namespace Etoile
 		std::stack<int> m_index;
 	};
 
-}

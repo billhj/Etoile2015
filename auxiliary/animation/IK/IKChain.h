@@ -10,6 +10,7 @@
 #include <vector>
 #include <iostream>
 #include <Eigen/Dense>
+#include <fstream>
 //#include <Eigen/StdVector>
 
 namespace Etoile
@@ -49,11 +50,12 @@ namespace Etoile
 			std::vector<Dim> m_dims;
 		};
 
-		IKChain(const std::string& name = "") : m_name(name)
+		IKChain(const std::string& name="") : m_name(name)
 		{
 		
 		}
 
+		void reset();
 		void updateJoint(int idx)
 		{
 			Joint* current = m_joints[idx];
@@ -79,6 +81,28 @@ namespace Etoile
 			{
 				updateJoint(i);
 			}
+		}
+
+		void output(const std::string& name)
+		{
+			std::ofstream out;
+			out.open(name);
+			for(unsigned int j = 0; j < m_values.size(); ++j)
+			{
+				out<<m_values[j]<<", ";
+			}
+			out<<std::endl;
+			for(unsigned int j = 0; j < m_anglelimites.size(); ++j)
+			{
+				out<<m_anglelimites[j][0]<<", ";
+			}
+			out<<std::endl;
+			for(unsigned int j = 0; j < m_anglelimites.size(); ++j)
+			{
+				out<<m_anglelimites[j][1]<<", ";
+			}
+			out<<std::endl;
+			out.close();
 		}
 
 		std::vector<Joint*> m_joints;

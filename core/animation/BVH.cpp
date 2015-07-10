@@ -11,10 +11,8 @@
 #include <fstream>
 #include <sstream>
 #include <assert.h>
-#include "math/MathHead.h"
+#include <exception>
 
-namespace Etoile
-{
 	void BVH::trimString( std::string& _string) 
 	{
 		// Trim Both leading and trailing spaces
@@ -65,6 +63,7 @@ namespace Etoile
 		}
 	}
 
+	/*
 	void BVH::Joint::changeOrdertoZYX()
 	{
 		std::vector<int> indices;
@@ -117,7 +116,7 @@ namespace Etoile
 			Joint* current = m_joints[i];
 			current->changeOrdertoZYX();
 		}
-	}
+	}*/
 
 	bool BVH::loadFromBVHFile(const std::string& filepath)
 	{
@@ -190,6 +189,11 @@ namespace Etoile
 				}
 			}
 		}
+
+		for(unsigned int i = 0; i < m_joints.size(); ++i)
+		{
+			m_jointsId[m_joints[i]->m_name] = i;
+		}
 	}
 
 
@@ -244,6 +248,10 @@ namespace Etoile
 					stream >> x;
 					stream >> y;
 					stream >> z;
+					if(x > 5 || y > 5 || z > 5)
+					{
+						m_isMeter = false;
+					}
 				}
 			}
 		}
@@ -525,9 +533,9 @@ namespace Etoile
 
 		//write MOTION
 		out<<"MOTION\n";
-		out<<"Frames:\t"<<m_frameNb<<"\n";
+		out<<"Frames:\t"<<m_frames.size()<<"\n";
 		out<<"Frame Time:\t"<<m_frametime<<"\n";
-		for(int i = 0 ; i < m_frameNb; ++i)
+		for(int i = 0 ; i < m_frames.size(); ++i)
 		{
 			Frame& frame = m_frames[i];
 			for(int j = 0; j < m_dims; ++j)
@@ -608,7 +616,7 @@ namespace Etoile
 					++lineNb;
 				}
 				
-			}catch(exception& e)
+			}catch(int& e)
 			{
 				std::cout<<"SkeletonTextFileLoader: exception "<< lineNb<<" name "<<std::endl;
 				continue;
@@ -650,14 +658,3 @@ namespace Etoile
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-}

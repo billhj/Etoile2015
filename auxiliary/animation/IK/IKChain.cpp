@@ -63,6 +63,16 @@ namespace Etoile
 		}
 	}
 
+	void IKChain::reset()
+	{
+		for(int i = 0; i < m_localRotations.size();++i)
+		{
+			m_localRotations[i].setIdentity();
+			m_globalOrientations[i].setIdentity();
+			m_anglelimites[i] = Vector2_(-3.14,3.14);
+			m_values[i] = 0;
+		}
+	}
 
 	bool IKChain::loadFromFile(const std::string& fileName)
 	{
@@ -123,7 +133,7 @@ namespace Etoile
 				stream >> z;
 				Joint* j = new Joint(this, idxP, dof, name);
 				m_localTranslations[j->m_dims[0].m_idx] = Vector3_(x,y,z);
-				std::cout<< "Joint: "<<name <<" dof: "<<dof<< " parent: "<<idxP<<" localTrans: "<< m_localTranslations[j->m_dims[0].m_idx].transpose() <<std::endl;
+				//std::cout<< "Joint: "<<name <<" dof: "<<dof<< " parent: "<<idxP<<" localTrans: "<< m_localTranslations[j->m_dims[0].m_idx].transpose() <<std::endl;
 				for(int i = 0; i < dof; ++i)
 				{
 					std::getline(in,line);
@@ -137,7 +147,7 @@ namespace Etoile
 					stream >> y;
 					stream >> z;
 					m_axis[j->m_dims[i].m_idx] = Vector3_(x,y,z);
-					std::cout<<i<< " axis: "<<m_axis[j->m_dims[i].m_idx].transpose()<<std::endl;
+					//std::cout<<i<< " axis: "<<m_axis[j->m_dims[i].m_idx].transpose()<<std::endl;
 
 					double minV,maxV;
 					stream >> minV;
@@ -145,7 +155,7 @@ namespace Etoile
 					if(!stream.fail())
 					{
 						m_anglelimites[j->m_dims[i].m_idx] = Vector2_(minV,maxV);
-						std::cout<<" limits: "<<m_anglelimites[j->m_dims[i].m_idx].transpose()<<std::endl;
+						//std::cout<<" limits: "<<m_anglelimites[j->m_dims[i].m_idx].transpose()<<std::endl;
 					}
 				}
 

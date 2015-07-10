@@ -313,6 +313,12 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="octreeSkeletonWidget">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="OctreeSkeletonWidget" name="dockWidgetContents_9"/>
+  </widget>
   <action name="action_Open">
    <property name="icon">
     <iconset resource="../../auxiliary/QTUI/QTUI.qrc">
@@ -578,6 +584,7 @@
   <zorder>parametersDockWidget</zorder>
   <zorder>sceneTreeDockWidget</zorder>
   <zorder>timelineDockWidget</zorder>
+  <zorder>octreeSkeletonWidget</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -645,6 +652,12 @@
    <slots>
     <signal>activeFrameChanged(int)</signal>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>OctreeSkeletonWidget</class>
+   <extends>QWidget</extends>
+   <header>OctreeSkeletonWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
