@@ -50,7 +50,8 @@ public:
 	double xMax, yMax, zMax;
 
 
-
+	int drawType;
+	int depth;
 
 	
 	virtual void draw();

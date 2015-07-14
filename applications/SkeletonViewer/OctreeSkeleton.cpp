@@ -7,16 +7,16 @@
 #include "TimeWin32.h"
 
 void trimString( std::string& _string) {
-		// Trim Both leading and trailing spaces
+	// Trim Both leading and trailing spaces
 
-		size_t start = _string.find_first_not_of(" \t\r\n");
-		size_t end   = _string.find_last_not_of(" \t\r\n");
+	size_t start = _string.find_first_not_of(" \t\r\n");
+	size_t end   = _string.find_last_not_of(" \t\r\n");
 
-		if(( std::string::npos == start ) || ( std::string::npos == end))
-			_string = "";
-		else
-			_string = _string.substr( start, end-start+1 );
-	}
+	if(( std::string::npos == start ) || ( std::string::npos == end))
+		_string = "";
+	else
+		_string = _string.substr( start, end-start+1 );
+}
 
 #include "geometry/RenderManager.h"
 #include "geometry/SceneManager.h"
@@ -40,9 +40,11 @@ OctreeSkeleton::OctreeSkeleton(void):ObjectRenderer("octreeskeleton"),p_tree(NUL
 	entity->setComponent(Etoile::ComponentType::RENDER_COMPONENT, this);
 	Etoile::RenderManager::getInstance()->add(this);
 
+	drawType = 0;
+	depth = 5;
 	//p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
 
-	
+
 	//computePoints();
 
 	//loadDataIntoOctree();
@@ -144,8 +146,8 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 			m_ikchain.m_anglelimites[j] = Etoile::Vector2_(tree->m_cell_min[j], tree->m_cell_max[j]);
 			//std::cout<<tree->m_cell_min[j]<<" "<<tree->m_cell_max[j]<<std::endl;
 		}
-		
-	//	std::cout<<i<<" point "<<point[0] <<" " <<point[1]<<" " <<point[2]<<"   elements: "<<tree->dataIndx.size()<<std::endl;
+
+		//	std::cout<<i<<" point "<<point[0] <<" " <<point[1]<<" " <<point[2]<<"   elements: "<<tree->dataIndx.size()<<std::endl;
 		solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
 		for(int j = 0; j < m_ikchain.m_joints.size();++j)
 		{
@@ -164,7 +166,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 	double time2 = start2.getCurrentTime();
 	float tdiff = start2.DiffTime(time1);
 	std::cout<<"solveTrajectory timediff1 "<<tdiff<<std::endl;
-	
+
 	m_bvh.m_frames = fs;
 	std::stringstream s;
 	s<<_name+"_depth_"<<depth<<"_"<<time2<<"BVH.bvh";
@@ -223,7 +225,7 @@ void OctreeSkeleton::computePoints()
 		int end = m_ikchain.m_globalPositions.size() - 1;
 
 		//std::cout<< m_ikchain.m_globalPositions.back().transpose()<<std::endl;
-		
+
 
 		m_framesData[j].points[0] = m_ikchain.m_globalPositions[end][0];
 		m_framesData[j].points[1] = m_ikchain.m_globalPositions[end][1];
@@ -303,7 +305,7 @@ void OctreeSkeleton::loadFromCSVFile(const std::string& filename)
 						double value = std::stod(valueString);
 						m_framesData[indx].m_values.push_back(value);
 					}
-					
+
 				}
 			}
 		}
@@ -470,13 +472,13 @@ void OctreeSkeleton::computeMinMaxAverageByDepth(int depth)
 		{
 			//debugValue(cell);
 			{
-					out <<std::endl<<cell->m_index  <<" "<<cell->dataIndx.size() <<std::endl;
-					out<<"r_elbow_Z_18"<<cell->m_cell_min[18] <<" " << cell->m_cell_max[18] <<" "<< cell->m_cell_average[18] <<" " <<std::endl;
-					out<<"r_elbow_Y_19"<<cell->m_cell_min[19] <<" " << cell->m_cell_max[19] <<" "<< cell->m_cell_average[19] <<" " <<std::endl;
-					out<<"r_elbow_X_20"<<cell->m_cell_min[20] <<" " << cell->m_cell_max[20] <<" "<< cell->m_cell_average[20] <<" " <<std::endl;
+				out <<std::endl<<cell->m_index  <<" "<<cell->dataIndx.size() <<std::endl;
+				out<<"r_elbow_Z_18"<<cell->m_cell_min[18] <<" " << cell->m_cell_max[18] <<" "<< cell->m_cell_average[18] <<" " <<std::endl;
+				out<<"r_elbow_Y_19"<<cell->m_cell_min[19] <<" " << cell->m_cell_max[19] <<" "<< cell->m_cell_average[19] <<" " <<std::endl;
+				out<<"r_elbow_X_20"<<cell->m_cell_min[20] <<" " << cell->m_cell_max[20] <<" "<< cell->m_cell_average[20] <<" " <<std::endl;
 			}
 		}
-		
+
 		if(cell->children[0] != NULL)
 		{
 			for(unsigned int i = 0; i < 8; ++i)
@@ -494,50 +496,129 @@ void OctreeSkeleton::computeMinMaxAverageByDepth(int depth)
 	std::cout<<std::endl<<"compute Cell attributes ended"<<std::endl;
 }
 
+
+float scaleInOne(float scale)
+{
+	return (scale + 3.14159265) / 3.14159265 * 0.5;
+}
+
 void OctreeSkeleton::draw()
 {
 	if(p_tree == NULL || !_visible) return;
 	glDisable(GL_LIGHTING);
-	int depth = 5;
-	std::vector<Octree*>& octrees = p_tree->p_alltree;
-	std::queue<Octree*> cells;
-	cells.push(p_tree);
-	while(!cells.empty())
+
+
+	if(drawType == 0)
 	{
-		Octree* cell = cells.front();
-		if(cell->dataIndx.size() > 0)
+		std::vector<Octree*>& octrees = p_tree->p_alltree;
+		std::queue<Octree*> cells;
+		cells.push(p_tree);
+		while(!cells.empty())
 		{
-			//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(0.8, 0.7, 1)[0]);
-			glColor3f(0.8, 0.7, 1);
-			cell->drawAABB();
-		}
-		
-		if(cell->children[0] != NULL)
-		{
-			for(unsigned int i = 0; i < 8; ++i)
+			Octree* cell = cells.front();
+			if(cell->dataIndx.size() > 0)
 			{
-				Octree* cell0 = cell->children[i];
-				if(! (cell0->m_level > depth))
+				//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(0.8, 0.7, 1)[0]);
+				glColor3f(0.8, 0.7, 1);
+				cell->drawAABB();
+			}
+
+			if(cell->children[0] != NULL)
+			{
+				for(unsigned int i = 0; i < 8; ++i)
 				{
-					cells.push(cell0);
+					Octree* cell0 = cell->children[i];
+					if(! (cell0->m_level > depth))
+					{
+						cells.push(cell0);
+					}
 				}
 			}
+			cells.pop();
 		}
-		cells.pop();
+
+		glPointSize(2);
+		glBegin(GL_POINTS);
+		for(unsigned int i = 0; i < m_framesData.size(); ++i)
+		{
+			FrameData& frame = m_framesData[i];
+			//right
+			{
+				//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(1, 0.0,0)[0]);
+				glColor3f(1, 0.0,0);
+				glVertex3f(frame.points[0],frame.points[1],frame.points[2]);
+			}
+		}
+		glEnd();
+		glEnable(GL_LIGHTING);
+	}
+	else if(drawType == 1)
+	{
+		std::vector<Octree*>& octrees = p_tree->p_alltree;
+		std::queue<Octree*> cells;
+		cells.push(p_tree);
+		while(!cells.empty())
+		{
+			Octree* cell = cells.front();
+			if(cell->dataIndx.size() > 0)
+			{
+				//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(0.8, 0.7, 1)[0]);
+				glColor3f(0.8, 0.7, 1);
+				cell->drawAABB();
+				if(cell->m_level == depth)
+				{
+					glColor4f(scaleInOne(cell->m_cell_min[15]), scaleInOne(cell->m_cell_min[16]), scaleInOne(cell->m_cell_min[17]), 0.5);
+					cell->drawAABBBox();
+				}
+			}
+
+			if(cell->children[0] != NULL)
+			{
+				for(unsigned int i = 0; i < 8; ++i)
+				{
+					Octree* cell0 = cell->children[i];
+					if(! (cell0->m_level > depth))
+					{
+						cells.push(cell0);
+					}
+				}
+			}
+			cells.pop();
+		}
+	}
+	else if(drawType == 2)
+	{
+		std::vector<Octree*>& octrees = p_tree->p_alltree;
+		std::queue<Octree*> cells;
+		cells.push(p_tree);
+		while(!cells.empty())
+		{
+			Octree* cell = cells.front();
+			if(cell->dataIndx.size() > 0)
+			{
+				//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(0.8, 0.7, 1)[0]);
+				glColor3f(0.8, 0.7, 1);
+				cell->drawAABB();
+				if(cell->m_level == depth)
+				{
+					glColor4f(scaleInOne(cell->m_cell_max[15]), scaleInOne(cell->m_cell_max[16]), scaleInOne(cell->m_cell_max[17]), 0.5);
+					cell->drawAABBBox();
+				}
+			}
+
+			if(cell->children[0] != NULL)
+			{
+				for(unsigned int i = 0; i < 8; ++i)
+				{
+					Octree* cell0 = cell->children[i];
+					if(! (cell0->m_level > depth))
+					{
+						cells.push(cell0);
+					}
+				}
+			}
+			cells.pop();
+		}
 	}
 
-	glPointSize(2);
-	glBegin(GL_POINTS);
-	for(unsigned int i = 0; i < m_framesData.size(); ++i)
-	{
-		FrameData& frame = m_framesData[i];
-		//right
-		{
-			//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(1, 0.0,0)[0]);
-			glColor3f(1, 0.0,0);
-			glVertex3f(frame.points[0],frame.points[1],frame.points[2]);
-		}
-	}
-	glEnd();
-	glEnable(GL_LIGHTING);
 }

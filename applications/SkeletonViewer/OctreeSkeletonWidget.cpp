@@ -25,3 +25,13 @@ void OctreeSkeletonWidget::openOctreeSkeletonFiles()
 	octreeskeleton->reload(fpath+fname);
 	emit filesOpened();
 }
+
+void OctreeSkeletonWidget::setDrawType(int type)
+{
+	octreeskeleton->drawType = type;
+}
+
+void OctreeSkeletonWidget::setDepth(int depth)
+{
+	octreeskeleton->depth = depth;
+}

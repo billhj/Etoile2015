@@ -250,6 +250,62 @@ public:
 			glEnd();
 	}
 
+	void drawAABBBox()
+	{
+		drawBox(&origin[0], &halfDimension[0]);
+	}
+
+
+	void drawBox (const float center[3], const float halfsides[3])
+	{
+		glPushMatrix();
+		glTranslatef(center[0],center[1],center[2]);
+		drawBox(halfsides);
+		glPopMatrix();
+	}
+
+	void drawBox (const float halfsides[3])
+	{
+	  float lx = halfsides[0];
+	  float ly = halfsides[1];
+	  float lz = halfsides[2];
+
+	  // sides
+	  glBegin (GL_TRIANGLE_STRIP);
+	  glNormal3f (-1,0,0);
+	  glVertex3f (-lx,-ly,-lz);
+	  glVertex3f (-lx,-ly,lz);
+	  glVertex3f (-lx,ly,-lz);
+	  glVertex3f (-lx,ly,lz);
+	  glNormal3f (0,1,0);
+	  glVertex3f (lx,ly,-lz);
+	  glVertex3f (lx,ly,lz);
+	  glNormal3f (1,0,0);
+	  glVertex3f (lx,-ly,-lz);
+	  glVertex3f (lx,-ly,lz);
+	  glNormal3f (0,-1,0);
+	  glVertex3f (-lx,-ly,-lz);
+	  glVertex3f (-lx,-ly,lz);
+	  glEnd();
+
+	  // top face
+	  glBegin (GL_TRIANGLE_FAN);
+	  glNormal3f (0,0,1);
+	  glVertex3f (-lx,-ly,lz);
+	  glVertex3f (lx,-ly,lz);
+	  glVertex3f (lx,ly,lz);
+	  glVertex3f (-lx,ly,lz);
+	  glEnd();
+
+	  // bottom face
+	  glBegin (GL_TRIANGLE_FAN);
+	  glNormal3f (0,0,-1);
+	  glVertex3f (-lx,-ly,-lz);
+	  glVertex3f (-lx,ly,-lz);
+	  glVertex3f (lx,ly,-lz);
+	  glVertex3f (lx,-ly,-lz);
+	  glEnd();
+	}
 };
 
 #endif

@@ -14,6 +14,8 @@ public:
 	~OctreeSkeletonWidget();
 	public slots:
 	void openOctreeSkeletonFiles();
+	void setDrawType(int);
+	void setDepth(int);
 signals:
 		void filesOpened();
 private:
