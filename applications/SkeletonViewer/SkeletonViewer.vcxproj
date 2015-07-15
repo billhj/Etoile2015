@@ -136,6 +136,7 @@
     <ClCompile Include="..\..\auxiliary\animation\IK\JacobianTransposeSolver.cpp" />
     <ClCompile Include="..\..\auxiliary\image\QTImageLoader.cpp" />
     <ClCompile Include="..\..\core\animation\BVH.cpp" />
+    <ClCompile Include="FLog.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_MeshViewer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -186,6 +187,7 @@
     <ClInclude Include="..\..\auxiliary\image\GeneralImageLoader.h" />
     <ClInclude Include="..\..\auxiliary\image\QTImageLoader.h" />
     <ClInclude Include="..\..\core\animation\BVH.h" />
+    <ClInclude Include="FLog.h" />
     <ClInclude Include="GeneratedFiles\ui_OctreeSkeletonWidget.h" />
     <ClInclude Include="GeneratedFiles\ui_SkeletonViewer.h" />
     <ClInclude Include="Octree.h" />

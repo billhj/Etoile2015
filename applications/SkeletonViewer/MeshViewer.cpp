@@ -46,7 +46,7 @@ void MeshViewer::init()
 	glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT,GL_FILL);
 
-	glClearColor(0.2, 0.2, 0.2, 0.99);
+	glClearColor(0.5, 0.5, 0.5, 0.99);
 	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_POLYGON_SMOOTH);
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);

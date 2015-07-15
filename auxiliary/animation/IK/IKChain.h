@@ -116,6 +116,8 @@ namespace Etoile
 		std::vector<Vector2_, Eigen::aligned_allocator<Vector2_> > m_anglelimites;
 		std::vector<double> m_values;
 
+		std::vector<double> m_average_values;
+
 
 		bool loadFromFile(const std::string& fileName);
 		void read(std::istream& in);

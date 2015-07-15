@@ -16,6 +16,7 @@ public:
 	void openOctreeSkeletonFiles();
 	void setDrawType(int);
 	void setDepth(int);
+	void generateBVH();
 signals:
 		void filesOpened();
 private:

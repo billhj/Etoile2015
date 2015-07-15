@@ -95,6 +95,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_OctreeSkeletonWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="FLog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MeshViewer.h">
@@ -158,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_OctreeSkeletonWidget.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FLog.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -23,5 +23,7 @@ namespace Etoile
 		virtual bool solve(Vector3_, Vector3_, bool) override{return true;}
 		void setDampingMax(double dampling){ m_dampling_max = dampling; }
 		double getDampingMax(){return m_dampling_max;}
+
+		double constraintSolved(double v, double minV, double maxV, double averageV);
 	};
 }

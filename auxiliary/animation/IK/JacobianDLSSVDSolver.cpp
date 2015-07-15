@@ -117,6 +117,12 @@ namespace Etoile
 #endif
 		int tries = 0;
 		int columnDim = p_chain->m_localRotations.size();
+
+		for(int i = 0; i < columnDim; ++i)
+		{
+			p_chain->m_localRotations[i] = AngleAxis_(p_chain->m_values[i], p_chain->m_axis[i]);	
+		}
+
 		MatrixX_ jacobian(3, columnDim);
 		p_chain->update();
 		Vector3_& endpos = p_chain->m_globalPositions.back();
@@ -182,9 +188,17 @@ namespace Etoile
 			for(int i = 0; i < columnDim; ++i)
 			{
 				p_chain->m_values[i] = castPiRange(p_chain->m_values[i] + dR[i]);
-				p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);
+				p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);//, p_chain->m_average_values[i]);
+				/*if(!enableConstraints)
+				{
+					std::cout<< p_chain->m_values[i]<<" ";
+				}*/
 				p_chain->m_localRotations[i] = AngleAxis_(p_chain->m_values[i], p_chain->m_axis[i]);	
 			}
+			/*if(!enableConstraints)
+			{
+				std::cout<< std::endl;
+			}*/
 
 			p_chain->update();
 			endpos = p_chain->m_globalPositions.back();
@@ -204,4 +218,17 @@ namespace Etoile
 	}
 
 #endif
+
+	double JacobianDLSSVDSolver::constraintSolved(double v, double minV, double maxV, double averageV)
+	{	
+		double value;
+		if (value > maxV || value < minV) {
+			value += (averageV - value) * 0.5;
+		}
+	
+		return value;
+	}
+
 }
+
+

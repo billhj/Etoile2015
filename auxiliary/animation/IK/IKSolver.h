@@ -87,16 +87,16 @@ namespace Etoile
 		double clamp(double value, double minV, double maxV)
 		{
 			if (value > maxV) {
-				value -= 3.14159265 * 2;
-				if (value < minV){
+				/*value -= 3.14159265 * 2;
+				if (value < minV){*/
 					value = maxV;
-				}
+				//}
 			}
 			if (value < minV) {
-				value += 3.14159265 * 2;
-				if (value > maxV) {
+				/*value += 3.14159265 * 2;
+				if (value > maxV) {*/
 					value = minV;
-				}
+				//}
 			}
 			return value;
 		}

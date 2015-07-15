@@ -35,3 +35,14 @@ void OctreeSkeletonWidget::setDepth(int depth)
 {
 	octreeskeleton->depth = depth;
 }
+
+void OctreeSkeletonWidget::generateBVH()
+{
+	if(ui.prefiltercheckBox->isChecked())
+	{
+		octreeskeleton->solveOriginalPrefilterTrajectory(ui.startF->value(), ui.endF->value());
+	}else
+	{
+		octreeskeleton->solveOriginalTrajectory(ui.startF->value(), ui.endF->value());
+	}
+}

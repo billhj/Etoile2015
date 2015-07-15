@@ -75,6 +75,61 @@
     <number>5</number>
    </property>
   </widget>
+  <widget class="QSpinBox" name="startF">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>150</y>
+     <width>71</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>9999999</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="endF">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>150</y>
+     <width>71</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>99999999</number>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="generateBVHButton">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>150</y>
+     <width>81</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>genereateBVH</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="prefiltercheckBox">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>150</y>
+     <width>70</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>prefilter</string>
+   </property>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
@@ -127,10 +182,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>generateBVHButton</sender>
+   <signal>clicked()</signal>
+   <receiver>OctreeSkeletonWidget</receiver>
+   <slot>generateBVH()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>180</x>
+     <y>161</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openOctreeSkeletonFiles()</slot>
   <slot>setDrawType(int)</slot>
   <slot>setDepth(int)</slot>
+  <slot>generateBVH()</slot>
  </slots>
 </ui>
