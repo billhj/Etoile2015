@@ -268,15 +268,22 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 			{
 				double min = tree->m_cell_min[j];
 				double max = tree->m_cell_max[j];
-				if(i > 0)
+				for(int m = 0; m < 5; ++m)
 				{
-					min = min(min, octreefs[i - 1]->m_cell_min[j]);
-					max = max(max, octreefs[i - 1]->m_cell_max[j]);
+					if(i - m >= 0)
+					{
+						min = max(min, octreefs[i - m]->m_cell_min[j]);
+						max = min(max, octreefs[i - m]->m_cell_max[j]);
+					}
+					if ( i + m < points.size() - 1)
+					{
+						min = max(min, octreefs[i + m]->m_cell_min[j]);
+						max = min(max, octreefs[i + m]->m_cell_max[j]);
+					}
 				}
-				if ( i < points.size() - 1)
+				if(min >= max)
 				{
-					min = min(min, octreefs[i + 1]->m_cell_min[j]);
-					max = max(max, octreefs[i + 1]->m_cell_max[j]);
+					std::cout<<"j: " << j <<" min: "<< min <<" max: "<< max<<std::endl;
 				}
 				m_ikchain.m_anglelimites[j] = Etoile::Vector2_(min, max);
 				m_ikchain.m_average_values[j] = tree->m_cell_average[j];
