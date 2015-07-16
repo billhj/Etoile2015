@@ -61,6 +61,7 @@ namespace Etoile
 			sk->m_globalPositions.push_back(Vector3_::Zero());
 			sk->m_values.push_back(0);
 			sk->m_average_values.push_back(0);
+			sk->m_drLimits.push_back(0.03);
 		}
 	}
 
@@ -73,6 +74,7 @@ namespace Etoile
 			m_anglelimites[i] = Vector2_(-3.14,3.14);
 			m_values[i] = 0;
 			m_average_values[i] = 0;
+			m_drLimits[i] = 0.03;
 		}
 	}
 

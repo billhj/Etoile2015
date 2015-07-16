@@ -124,7 +124,7 @@ namespace Etoile
 		}
 
 		std::vector<double> initValue = p_chain->m_values;
-		double dtThreasure = 0.1;
+		//double dtThreasure = 0.03;
 
 		MatrixX_ jacobian(3, columnDim);
 		p_chain->update();
@@ -192,7 +192,7 @@ namespace Etoile
 			{
 				p_chain->m_values[i] = castPiRange(p_chain->m_values[i] + dR[i]);
 				p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);//, p_chain->m_average_values[i]);
-				p_chain->m_values[i] = clampDr(p_chain->m_values[i], initValue[i], dtThreasure);
+				p_chain->m_values[i] = clampDr(p_chain->m_values[i], initValue[i], p_chain->m_drLimits[i]);
 				/*if(!enableConstraints)
 				{
 					std::cout<< p_chain->m_values[i]<<" ";

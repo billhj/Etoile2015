@@ -196,6 +196,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 			{
 				m_ikchain.m_anglelimites[j] = Etoile::Vector2_(tree->m_cell_min[j], tree->m_cell_max[j]);
 				m_ikchain.m_average_values[j] = tree->m_cell_average[j];
+				m_ikchain.m_drLimits[j] = tree->m_cell_drLimits[j];
 			}
 		}
 
@@ -229,9 +230,6 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 
 void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, int depth)
 {
-	/*std::ofstream out;
-	out.open("LOG.log");
-*/
 	std::vector<Frame> temp = m_bvh.m_frames;
 	TimeWin32 start;
 	double time1 = start.getCurrentTime();
@@ -251,19 +249,11 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 
 	for(int i = 0; i < points.size();++i)
 	{
-		/*if(i == 203)
-		{
-			std::cout<<"i: " << i<<std::endl;
-		}*/
 		Vec3 point = points[i];
 		if(depth != 0)
 		{
 			Octree* tree = octreefs[i];
-		/*	if(i > 202 && i < 210)
-			{
-				std::cout<<"level: " << tree->m_level<<std::endl;
-				out<<i <<", " << tree->m_index<<", "<<tree->m_level<<", "<<std::endl;
-			}*/
+
 			for(int j = 0; j < m_ikchain.m_anglelimites.size(); ++j)
 			{
 				double min = tree->m_cell_min[j];
@@ -287,17 +277,8 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 				}
 				m_ikchain.m_anglelimites[j] = Etoile::Vector2_(min, max);
 				m_ikchain.m_average_values[j] = tree->m_cell_average[j];
-			/*	if(i > 202 && i < 210)
-				{
-					out << m_ikchain.m_anglelimites[j][0]<<", " << m_ikchain.m_anglelimites[j][1]<<", ";
-				}*/
-				
-				//std::cout<<tree->m_cell_min[j]<<" "<<tree->m_cell_max[j]<<std::endl;
 			}
-			/*if(i > 202 && i < 210)
-			{
-				out<<std::endl;
-			}*/
+	
 		}
 
 		//	std::cout<<i<<" point "<<point[0] <<" " <<point[1]<<" " <<point[2]<<"   elements: "<<tree->dataIndx.size()<<std::endl;
@@ -568,10 +549,12 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 		cell->m_cell_average.resize(vSize);
 		cell->m_cell_min.resize(vSize);
 		cell->m_cell_max.resize(vSize);
+		cell->m_cell_drLimits.resize(vSize);
 		for(int j = 0; j < vSize; ++j)
 		{
 			cell->m_cell_min[j] = 100;
 			cell->m_cell_max[j] = -100;
+			cell->m_cell_drLimits[j] = 0.01;
 		}
 
 		for(unsigned int j = 0; j < cell->dataIndx.size(); ++j)
@@ -582,6 +565,14 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 				cell->m_cell_min[h] = min(cell->m_cell_min[h], data.m_values[h]);
 				cell->m_cell_max[h] = max(cell->m_cell_max[h], data.m_values[h]);
 				cell->m_cell_average[h] += data.m_values[h];
+				if( j > 0)
+				{
+					if((cell->dataIndx[j] - cell->dataIndx[j - 1] == 1))
+					{
+						double dr = abs(data.m_values[h] - m_framesData[cell->dataIndx[j - 1]].m_values[h]);
+						cell->m_cell_drLimits[h] = max (cell->m_cell_drLimits[h], dr);
+					}
+				}
 			}
 		}
 

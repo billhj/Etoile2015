@@ -42,6 +42,7 @@ public:
 	std::vector<double> m_cell_min;
 	std::vector<double> m_cell_max;
 	std::vector<double> m_cell_average;
+	std::vector<double> m_cell_drLimits;
 	Octree* p_root;
 	int m_index;
 
