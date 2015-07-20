@@ -95,7 +95,7 @@ OctreeSkeleton::~OctreeSkeleton(void)
 {
 }
 
-
+int _start = 0;
 void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 {
 	if(start < 0 || end >= m_bvh.m_frames.size())
@@ -105,11 +105,12 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 	std::vector<Frame> temp = m_bvh.m_frames;
 	std::vector<Frame> fs;
 	std::vector<Vec3> points;
+	_start = start;
 	for(int i = start ; i < end; ++i)
 	{
 		double* p = m_framesData[i].points;
 		points.push_back(Vec3(p[0],p[1],p[2]));
-		for(int j = 0; j < m_ikchain.m_joints.size();++j)
+		for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 		{
 			Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
 			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
@@ -151,7 +152,7 @@ void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end)
 	{
 		double* p = m_framesData[i].points;
 		points.push_back(Vec3(p[0],p[1],p[2]));
-		for(int j = 0; j < m_ikchain.m_joints.size();++j)
+		for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 		{
 			Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
 			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
@@ -181,6 +182,8 @@ void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end)
 
 void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 {
+	FrameData& iniv = m_framesData[_start];
+
 	std::vector<Frame> temp = m_bvh.m_frames;
 	TimeWin32 start;
 	double time1 = start.getCurrentTime();
@@ -202,8 +205,18 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 
 		//m_ikchain.m_values = m_ikchain.m_average_values;
 
-		solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
-		for(int j = 0; j < m_ikchain.m_joints.size();++j)
+		if(i == 0)
+		{
+			for(int j = 0; j < m_ikchain.m_anglelimites.size();++j)
+			{
+				m_ikchain.m_values[j] = iniv.m_values[j];
+			}
+			solver->solve(Etoile::Vector3_(point.x, point.y, point.z), false);
+		}
+		else
+			solver->solve(Etoile::Vector3_(point.x, point.y, point.z), true);
+
+		for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 		{
 			Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
 			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
@@ -282,8 +295,10 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 		}
 
 		//	std::cout<<i<<" point "<<point[0] <<" " <<point[1]<<" " <<point[2]<<"   elements: "<<tree->dataIndx.size()<<std::endl;
-		
-		solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
+		if(i == 0)
+			solver->solve(Etoile::Vector3_(point.x, point.y, point.z), false);
+		else
+			solver->solve(Etoile::Vector3_(point.x, point.y, point.z), true);
 
 		for(int j = 0; j < m_ikchain.m_joints.size();++j)
 		{
