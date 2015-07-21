@@ -126,7 +126,7 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 	std::stringstream s;
 	TimeWin32 start2;
 	double time2 = start2.getCurrentTime();
-	s<<_name<<"_original_"<<time2<<"BVH.bvh";
+	s<<_name<<"_original_"<<"BVH.bvh";
 	m_bvh.saveToBVHFile(s.str());
 	m_bvh.m_frames = temp;
 
@@ -136,6 +136,9 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 	solveTrajectory(points, 3);
 	solveTrajectory(points, 4);
 	solveTrajectory(points, 5);
+	solveTrajectory(points, 6);
+	solveTrajectory(points, 7);
+	solveTrajectory(points, 8);
 }
 
 void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end)
@@ -168,7 +171,7 @@ void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end)
 	std::stringstream s;
 	TimeWin32 start2;
 	double time2 = start2.getCurrentTime();
-	s<<_name<<"_original_"<<time2<<"BVH.bvh";
+	s<<_name<<"_original_"<<"BVH.bvh";
 	m_bvh.saveToBVHFile(s.str());
 	m_bvh.m_frames = temp;
 
@@ -178,10 +181,15 @@ void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end)
 	solvePrefilterTrajectory(points, 3);
 	solvePrefilterTrajectory(points, 4);
 	solvePrefilterTrajectory(points, 5);
+	solvePrefilterTrajectory(points, 6);
+	solvePrefilterTrajectory(points, 7);
+	solvePrefilterTrajectory(points, 8);
 }
 
 void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 {
+	int solvable = 0;
+	FLOG<<points.size()<< "points, depth" <<depth<<std::endl;
 	FrameData& iniv = m_framesData[_start];
 
 	std::vector<Frame> temp = m_bvh.m_frames;
@@ -192,6 +200,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 	for(int i = 0; i < points.size();++i)
 	{
 		Vec3 point = points[i];
+		FLOG<<i<<"   "<<std::endl;
 		if(depth != 0)
 		{
 			Octree* tree = p_tree->getSubTreeWithPointAndDepth(point, depth);
@@ -199,22 +208,47 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 			{
 				m_ikchain.m_anglelimites[j] = Etoile::Vector2_(tree->m_cell_min[j], tree->m_cell_max[j]);
 				m_ikchain.m_average_values[j] = tree->m_cell_average[j];
-				m_ikchain.m_drLimits[j] = tree->m_cell_drLimits[j];
+				double dx = 0,dy = 0,dz = 0;
+				if(i != 0)
+				{
+					dx = point[0] - points[i - 1][0];
+					dy = point[1] - points[i - 1][1];
+					dz = point[2] - points[i - 1][2];
+				}
+				double value = tree->getDrLimitByJacobi(j, dx,dy,dz);
+				FLOG<<value;
+				if(value < 0)
+				{		
+					std::cout<<value <<" to ";
+					value = tree->m_cell_drLimits[j];
+					FLOG<<" "<<value<<std::endl;
+					std::cout<<value <<std::endl;
+				}else
+				{
+					FLOG<<std::endl;
+				}
+				m_ikchain.m_drLimits[j] = value;//tree->m_cell_drLimits[j];
 			}
 		}
 
 		//m_ikchain.m_values = m_ikchain.m_average_values;
-
+		FLOG<<"start solving "<<std::endl;
+		bool sol = true;
 		if(i == 0)
 		{
 			for(int j = 0; j < m_ikchain.m_anglelimites.size();++j)
 			{
 				m_ikchain.m_values[j] = iniv.m_values[j];
 			}
-			solver->solve(Etoile::Vector3_(point.x, point.y, point.z), false);
+			sol = solver->solve(Etoile::Vector3_(point.x, point.y, point.z), false);
 		}
 		else
-			solver->solve(Etoile::Vector3_(point.x, point.y, point.z), true);
+			sol = solver->solve(Etoile::Vector3_(point.x, point.y, point.z), true);
+		if(sol == true)
+		{
+			solvable += 1; 
+		}
+		FLOG<<"end solving"<<std::endl;
 
 		for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 		{
@@ -229,6 +263,8 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 		fs.push_back(frame);
 	}
 
+	FLOG<<"SOLVABLE " <<solvable <<" / " <<points.size()<<std::endl;
+	std::cout<<"SOLVABLE " <<solvable <<" / " <<points.size()<<std::endl;
 	TimeWin32 start2;
 	double time2 = start2.getCurrentTime();
 	float tdiff = start2.DiffTime(time1);
@@ -236,7 +272,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 
 	m_bvh.m_frames = fs;
 	std::stringstream s;
-	s<<_name+"_depth_"<<depth<<"_"<<time2<<"BVH.bvh";
+	s<<_name+"_depth_"<<depth<<"_"<<"BVH.bvh";
 	m_bvh.saveToBVHFile(s.str());
 	m_bvh.m_frames = temp;
 }
@@ -290,6 +326,7 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 				}
 				m_ikchain.m_anglelimites[j] = Etoile::Vector2_(min, max);
 				m_ikchain.m_average_values[j] = tree->m_cell_average[j];
+				m_ikchain.m_drLimits[j] = tree->m_cell_drLimits[j];
 			}
 	
 		}
@@ -321,7 +358,7 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 
 	m_bvh.m_frames = fs;
 	std::stringstream s;
-	s<<"pre"<<_name+"_depth_"<<depth<<"_"<<time2<<"BVH.bvh";
+	s<<"pre"<<_name+"_depth_"<<depth<<"_"<<"BVH.bvh";
 	m_bvh.saveToBVHFile(s.str());
 	m_bvh.m_frames = temp;
 
@@ -565,6 +602,9 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 		cell->m_cell_min.resize(vSize);
 		cell->m_cell_max.resize(vSize);
 		cell->m_cell_drLimits.resize(vSize);
+		cell->m_drData.resize(vSize);
+		cell->m_drrhs.resize(vSize);
+		cell->m_drParameter.resize(vSize);
 		for(int j = 0; j < vSize; ++j)
 		{
 			cell->m_cell_min[j] = 100;
@@ -584,8 +624,13 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 				{
 					if((cell->dataIndx[j] - cell->dataIndx[j - 1] == 1))
 					{
-						double dr = abs(data.m_values[h] - m_framesData[cell->dataIndx[j - 1]].m_values[h]);
-						cell->m_cell_drLimits[h] = max (cell->m_cell_drLimits[h], dr);
+						double dr = data.m_values[h] - m_framesData[cell->dataIndx[j - 1]].m_values[h];
+						double dx = data.points[0] - m_framesData[cell->dataIndx[j - 1]].points[0];
+						double dy = data.points[1] - m_framesData[cell->dataIndx[j - 1]].points[1];
+						double dz = data.points[2] - m_framesData[cell->dataIndx[j - 1]].points[2];
+						cell->m_cell_drLimits[h] = max (abs(cell->m_cell_drLimits[h]), dr);
+						cell->m_drData[h].push_back(Etoile::Vector4_(dx,dy,dz,1));
+						cell->m_drrhs[h].push_back(dr);
 					}
 				}
 			}
@@ -594,6 +639,23 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 		for(int j = 0; j < vSize; ++j)
 		{
 			cell->m_cell_average[j] /= cell->dataIndx.size();
+			if(cell->m_drData[j].size() > 1)
+			{
+				Etoile::MatrixX_ x(cell->m_drData[j].size(), 4) ;
+				for (int h = 0; h < cell->m_drData[j].size(); h++)
+					for (int w = 0; w < 4; w++)
+				{
+					x(h, w) = cell->m_drData[j][h][w];
+				}
+				Etoile::VectorX_ rhs(cell->m_drrhs[j].size());
+				for(int h = 0; h < cell->m_drrhs[j].size(); ++h)
+				{
+					rhs[h] = cell->m_drrhs[j][h];
+				}
+				Eigen::JacobiSVD<Etoile::MatrixX_> svd(x, Eigen::ComputeThinU | Eigen::ComputeThinV);
+				cell->m_drParameter[j] = svd.solve(rhs);
+			}
+			//std::cout<<cell->m_drParameter[j].transpose()<<std::endl;
 		}
 		//debugValue(cell, out);
 	}

@@ -5,7 +5,7 @@
 #include <vector>
 #include "OctreePoint.h"
 #include <iostream>
-
+#include "animation\IK\IKChain.h"
 /**!
 *
 */
@@ -43,6 +43,10 @@ public:
 	std::vector<double> m_cell_max;
 	std::vector<double> m_cell_average;
 	std::vector<double> m_cell_drLimits;
+	std::vector<std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> >> m_drData;
+	std::vector<std::vector<double>> m_drrhs;
+	std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> > m_drParameter;
+
 	Octree* p_root;
 	int m_index;
 
@@ -86,6 +90,13 @@ public:
 	Octree* getRoot()
 	{
 		return p_root;
+	}
+
+	double getDrLimitByJacobi(int index, double dx, double dy, double dz)
+	{
+		if(m_drData[index].size() > 1)
+			return m_drParameter[index].dot(Etoile::Vector4_(dx,dy,dz,1));
+		return m_cell_drLimits[index];
 	}
 
 	// Determine which octant of the tree would contain 'point'

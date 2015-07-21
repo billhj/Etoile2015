@@ -20,6 +20,7 @@ namespace Etoile
 	typedef Eigen::Matrix3d Matrix3_;
 	typedef Eigen::VectorXd VectorX_;
 	typedef Eigen::Vector3d Vector3_;
+	typedef Eigen::Vector4d Vector4_;
 	typedef Eigen::Vector2d Vector2_;
 	typedef Eigen::AngleAxisd AngleAxis_;
 

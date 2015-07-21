@@ -8,6 +8,7 @@
 
 #include "JacobianDLSSVDSolver.h"
 #include <ctime>
+#include "flog.h"
 
 namespace Etoile
 {
@@ -212,8 +213,8 @@ namespace Etoile
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		time = clock() - time;
 		int ms = double(time) / CLOCKS_PER_SEC * 1000;
-		std::cout<<"timee elapsed: "<<ms<<std::endl;
-		std::cout<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
+		FLOG<<"timee elapsed: "<<ms<<std::endl;
+		FLOG<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
 #endif
 		if (tries == m_maxTries)
 		{
