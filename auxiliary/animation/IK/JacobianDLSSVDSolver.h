@@ -16,7 +16,7 @@ namespace Etoile
 	{
 		double m_dampling_max;
 	public:
-		JacobianDLSSVDSolver(IKChain* chain, int maxTries = 300, double targetThreshold = 0.005, double stepweight= 0.5, double dampling = 0.9):IKSolver(chain, maxTries, targetThreshold, stepweight),
+		JacobianDLSSVDSolver(IKChain* chain, int maxTries = 600, double targetThreshold = 0.005, double stepweight= 0.5, double dampling = 0.9):IKSolver(chain, maxTries, targetThreshold, stepweight),
 		m_dampling_max(dampling){}
 		virtual std::string getIKSolverName(){ return "JacobianDLSSVDSolver";}
 		virtual bool solve(Vector3_, bool cons = true) override;
@@ -25,6 +25,6 @@ namespace Etoile
 		double getDampingMax(){return m_dampling_max;}
 
 		double constraintSolved(double v, double minV, double maxV, double averageV);
-		double clampDr(double v, double original, double limit);
+		double clampDr(double dr, double limitP, double limitN);
 	};
 }

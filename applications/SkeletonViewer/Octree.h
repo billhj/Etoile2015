@@ -42,10 +42,15 @@ public:
 	std::vector<double> m_cell_min;
 	std::vector<double> m_cell_max;
 	std::vector<double> m_cell_average;
-	std::vector<double> m_cell_drLimits;
-	std::vector<std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> >> m_drData;
-	std::vector<std::vector<double>> m_drrhs;
-	std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> > m_drParameter;
+	std::vector<double> m_cell_drLimits_positive;
+	std::vector<double> m_cell_drLimits_negative;
+
+	std::vector<std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> >> m_drData_positive;
+	std::vector<std::vector<double>> m_drrhs_positive;
+	std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> > m_drParameter_positive;
+	std::vector<std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> >> m_drData_negative;
+	std::vector<std::vector<double>> m_drrhs_negative;
+	std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> > m_drParameter_negative;
 
 	Octree* p_root;
 	int m_index;
@@ -92,11 +97,20 @@ public:
 		return p_root;
 	}
 
-	double getDrLimitByJacobi(int index, double dx, double dy, double dz)
+	double getDrLimitPositiveByJacobi(int index, double dx, double dy, double dz)
 	{
-		if(m_drData[index].size() > 1)
-			return m_drParameter[index].dot(Etoile::Vector4_(dx,dy,dz,1));
-		return m_cell_drLimits[index];
+		if(m_drData_positive[index].size() > 1)
+			return m_drParameter_positive[index].dot(Etoile::Vector4_(dx,dy,dz,1));
+		return m_cell_drLimits_positive[index];
+
+	}
+
+	double getDrLimitNegativeByJacobi(int index, double dx, double dy, double dz)
+	{
+
+		if(m_drData_negative[index].size() > 1)
+			return m_drParameter_negative[index].dot(Etoile::Vector4_(dx,dy,dz,1));
+		return m_cell_drLimits_negative[index];
 	}
 
 	// Determine which octant of the tree would contain 'point'

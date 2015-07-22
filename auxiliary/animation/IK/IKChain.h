@@ -116,7 +116,8 @@ namespace Etoile
 		std::vector<Vector3_, Eigen::aligned_allocator<Vector3_> > m_axis;
 		std::vector<Vector2_, Eigen::aligned_allocator<Vector2_> > m_anglelimites;
 		std::vector<double> m_values;
-		std::vector<double> m_drLimits;
+		std::vector<double> m_drLimits_positive;
+		std::vector<double> m_drLimits_negative;
 
 		std::vector<double> m_average_values;
 
