@@ -17,7 +17,7 @@ class OctreeSkeleton : public Etoile::ObjectRenderer
 {
 public:
 	OctreeSkeleton(void);
-	OctreeSkeleton(const std::string& name);
+	//OctreeSkeleton(const std::string& name);
 	~OctreeSkeleton(void);
 	void reload(const std::string& name);
 	void solveTrajectory(const std::vector<Vec3>& points, int depth = 2);
@@ -42,7 +42,7 @@ public:
 
 	int m_rightHand_index;
 
-	Octree * p_tree;  //i change tree for both hand since two hands are simetric.
+	OctreeOwner m_treeowner;  //i change tree for both hand since two hands are simetric.
 	bool m_dataIsLoaded;
 
 	BVH m_bvh;

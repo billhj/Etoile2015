@@ -6,14 +6,49 @@
 #include "OctreePoint.h"
 #include <iostream>
 #include "animation\IK\IKChain.h"
+
+#ifdef USING_BOOST
+#include <boost/serialization/serialization.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/map.hpp>
+#endif
+
 /**!
 *
 */
+class Octree;
+
+struct OctreeOwner
+{
+public:
+	Octree* p_octreeRoot;
+	std::vector<Octree*> m_alltree;
+	
+	//temp data
+	std::vector<std::vector<int>> m_dataIndex;
+
+#ifdef USING_BOOST
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version)
+		{
+			ar & p_octreeRoot;
+			ar & m_alltree;
+			ar & m_dataIndex;
+		}
+#endif
+};
+
+
 class Octree 
 {
 	
 public:
-	int m_level;
+
 	// Physical position/size. This implicitly defines the bounding 
 	// box of this node
 	Vec3 origin;         //! The physical center of this node
@@ -33,47 +68,70 @@ public:
 	z:      - + - + - + - +
 	*/
 
-	std::vector<int> dataIndx;
-	/*
-	* attributes in Root to all cells
-	**/
-	std::vector<Octree*> p_alltree;
-	
 	std::vector<double> m_cell_min;
 	std::vector<double> m_cell_max;
 	std::vector<double> m_cell_average;
 	std::vector<double> m_cell_drLimits_positive;
 	std::vector<double> m_cell_drLimits_negative;
 
-	std::vector<std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> >> m_drData_positive;
+	/*std::vector<std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> >> m_drData_positive;
 	std::vector<std::vector<double>> m_drrhs_positive;
 	std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> > m_drParameter_positive;
 	std::vector<std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> >> m_drData_negative;
 	std::vector<std::vector<double>> m_drrhs_negative;
-	std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> > m_drParameter_negative;
+	std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> > m_drParameter_negative;*/
 
-	Octree* p_root;
+	OctreeOwner* p_owner;
+	int m_parent;
 	int m_index;
+	int m_level;
 
-	Octree(const Vec3& origin, const Vec3& halfDimension) 
-		: origin(origin), halfDimension(halfDimension), data(NULL) {
+
+#ifdef USING_BOOST
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version)
+		{
+			ar & origin;
+			ar & halfDimension;
+			ar & children;
+			ar & data;
+
+			ar & m_cell_min;
+			ar & m_cell_max;
+			ar & m_cell_average;
+			ar & m_cell_drLimits_positive;
+			ar & m_cell_drLimits_negative;
+
+			ar & p_owner;
+			ar & m_parent;
+			ar & m_index;
+			ar & m_level;
+		}
+#endif
+
+
+	Octree(const Vec3& origin, const Vec3& halfDimension, OctreeOwner* owner, int parent) 
+		: origin(origin), halfDimension(halfDimension),p_owner(owner), m_parent(parent) 
+	{
 			// Initially, there are no children
 			for(int i=0; i<8; ++i) 
-				children[i] = NULL;
-	}
-
-	Octree(const Vec3& origin, const Vec3& halfDimension, bool root) 
-		: origin(origin), halfDimension(halfDimension), data(NULL) {
-			// Initially, there are no children
-			for(int i=0; i<8; ++i) 
-				children[i] = NULL;
-			if(root)
 			{
-				p_root = this;
-				m_index = 0;
-				m_level = 0;
-				p_alltree.push_back(this);
+				children[i] = NULL;
 			}
+			if(parent >= 0)
+			{
+				m_level = p_owner->m_alltree[m_parent]->m_level + 1;
+				m_index = p_owner->m_alltree.size();	
+			}else
+			{
+				m_level = 0;
+				m_index = 0;
+			}
+			p_owner->m_alltree.push_back(this);
+			p_owner->m_dataIndex.push_back(std::vector<int>());
+			data = NULL;
 	}
 
 	Octree(const Octree& copy)
@@ -87,17 +145,7 @@ public:
 			delete children[i];
 	}
 
-	void setRoot(Octree* root)
-	{
-		p_root = root;
-	}
-
-	Octree* getRoot()
-	{
-		return p_root;
-	}
-
-	double getDrLimitPositiveByJacobi(int index, double dx, double dy, double dz)
+	/*double getDrLimitPositiveByJacobi(int index, double dx, double dy, double dz)
 	{
 		if(m_drData_positive[index].size() > 1)
 			return m_drParameter_positive[index].dot(Etoile::Vector4_(dx,dy,dz,1));
@@ -111,7 +159,7 @@ public:
 		if(m_drData_negative[index].size() > 1)
 			return m_drParameter_negative[index].dot(Etoile::Vector4_(dx,dy,dz,1));
 		return m_cell_drLimits_negative[index];
-	}
+	}*/
 
 	// Determine which octant of the tree would contain 'point'
 	int getOctantContainingPoint(const Vec3& point) const {
@@ -131,7 +179,7 @@ public:
 			Octree* temp = tree->children[tree->getOctantContainingPoint(point)];
 			//std::cout<<"points: " <<temp->dataIndx.size() <<std::endl;
 			if(temp == NULL) break;
-			if(temp->dataIndx.size() <100)
+			if(p_owner->m_dataIndex[temp->m_index].size() <100)
 			{
 				break;
 			}
@@ -159,7 +207,7 @@ public:
 	void insert(OctreePoint* point) {
 		// If this node doesn't have a data point yet assigned 
 		// and it is a leaf, then we're done!
-		dataIndx.push_back(point->m_frameIdx);
+		p_owner->m_dataIndex[m_index].push_back(point->m_frameIdx);
 		if(isLeafNode()) {
 			if(data==NULL) {
 				data = point;
@@ -182,11 +230,7 @@ public:
 					newOrigin.x += halfDimension.x * (i&4 ? .5f : -.5f);
 					newOrigin.y += halfDimension.y * (i&2 ? .5f : -.5f);
 					newOrigin.z += halfDimension.z * (i&1 ? .5f : -.5f);
-					children[i] = new Octree(newOrigin, halfDimension*.5f);
-					children[i]->m_level = this->m_level + 1;
-					children[i]->setRoot(p_root);
-					children[i]->m_index = p_root->p_alltree.size();
-					p_root->p_alltree.push_back(children[i]);
+					children[i] = new Octree(newOrigin, halfDimension*.5f, p_owner, this->m_index);
 				}
 
 				// Re-insert the old point, and insert this new point
@@ -332,6 +376,9 @@ public:
 	  glVertex3f (lx,-ly,-lz);
 	  glEnd();
 	}
+
 };
+
+
 
 #endif

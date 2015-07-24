@@ -191,10 +191,12 @@ namespace Etoile
 
 			for(int i = 0; i < columnDim; ++i)
 			{
+				p_chain->m_values[i] = p_chain->m_values[i] + dR[i];
 				if(enableConstraints)
-					dR[i] = clampDr(dR[i], p_chain->m_drLimits_positive[i], p_chain->m_drLimits_negative[i]);
-				p_chain->m_values[i] = castPiRange(p_chain->m_values[i] + dR[i]);
+					p_chain->m_values[i] = clampDr(p_chain->m_values[i], initValue[i], p_chain->m_drLimits_positive[i], p_chain->m_drLimits_negative[i]);
+				p_chain->m_values[i] = castPiRange(p_chain->m_values[i]);
 				p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);//, p_chain->m_average_values[i]);
+				
 				
 				/*if(!enableConstraints)
 				{
@@ -236,18 +238,18 @@ namespace Etoile
 		return value;
 	}
 
-	double JacobianDLSSVDSolver::clampDr(double dr, double limitP, double limitN)
+	double JacobianDLSSVDSolver::clampDr(double value, double original, double limitP, double limitN)
 	{
-		double value = dr;
+		double dr = value - original;
 		if(dr > limitP)
 		{
-			return limitP;
+			dr = limitP;
 		}else if(dr < limitN)
 		{
-			return limitN;
+			dr = limitN;
 		}
 
-		return dr;
+		return original + dr;
 	}
 
 }
