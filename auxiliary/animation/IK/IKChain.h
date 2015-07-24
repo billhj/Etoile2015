@@ -127,10 +127,11 @@ namespace Etoile
 	public:
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
+
+	struct IKTree : public IKChain
+	{
+	std::vector<int> m_end_effector_index;
+	};
 }
 
 
-struct IKTree : public IKChain
-{
-std::vector<int> m_end_effector_index;
-};

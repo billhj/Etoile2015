@@ -22,6 +22,14 @@ namespace Etoile
 //#endif
 		int tries = 0;
 		int columnDim = p_chain->m_localRotations.size();
+
+		for(int i = 0; i < columnDim; ++i)
+		{
+			p_chain->m_localRotations[i] = AngleAxis_(p_chain->m_values[i], p_chain->m_axis[i]);	
+		}
+
+		std::vector<double> initValue = p_chain->m_values;
+
 		MatrixX_ jacobian(3, columnDim);
 		p_chain->update();
 		Vector3_& endpos = p_chain->m_globalPositions.back();
@@ -50,9 +58,9 @@ namespace Etoile
 						axis = p_chain->m_globalOrientations[lastDim] * axis;
 					}
 					Vector3_ axisXYZgradient = axis.cross(boneVector);
-					jacobian(0, dim.m_idx) = 0 == axisXYZgradient(0)? 0.000001: axisXYZgradient(0);// * m_stepweight;
-					jacobian(1, dim.m_idx) = 0 == axisXYZgradient(1)? 0.000001: axisXYZgradient(1);// * m_stepweight;
-					jacobian(2, dim.m_idx) = 0 == axisXYZgradient(2)? 0.000001: axisXYZgradient(2);// * m_stepweight;
+					jacobian(0, dim.m_idx) = /*0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0);// * m_stepweight;
+					jacobian(1, dim.m_idx) = /*0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1);// * m_stepweight;
+					jacobian(2, dim.m_idx) = /*0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2);// * m_stepweight;
 				}
 			}
 
@@ -158,9 +166,9 @@ namespace Etoile
 						axis = p_chain->m_globalOrientations[lastDim] * axis;
 					}
 					Vector3_ axisXYZgradient = axis.cross(boneVector);
-					jacobian(0, dim.m_idx) = 0 == axisXYZgradient(0)? 0.000001: axisXYZgradient(0);// * m_stepweight;
-					jacobian(1, dim.m_idx) = 0 == axisXYZgradient(1)? 0.000001: axisXYZgradient(1);// * m_stepweight;
-					jacobian(2, dim.m_idx) = 0 == axisXYZgradient(2)? 0.000001: axisXYZgradient(2);// * m_stepweight;
+					jacobian(0, dim.m_idx) = /*0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0);// * m_stepweight;
+					jacobian(1, dim.m_idx) = /*0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1);// * m_stepweight;
+					jacobian(2, dim.m_idx) = /*0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2);// * m_stepweight;
 				}
 			}
 
