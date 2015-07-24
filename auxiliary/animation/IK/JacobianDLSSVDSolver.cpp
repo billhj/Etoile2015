@@ -99,7 +99,7 @@ namespace Etoile
 				p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);//, p_chain->m_average_values[i]);
 				if(enableConstraints)
 					p_chain->m_values[i] = clampDr(p_chain->m_values[i], initValue[i], p_chain->m_drLimits_positive[i], p_chain->m_drLimits_negative[i]);
-				
+				p_chain->m_localRotations[i] = AngleAxis_(p_chain->m_values[i], p_chain->m_axis[i]);
 			}
 
 			p_chain->update();
