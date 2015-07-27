@@ -90,8 +90,8 @@ namespace Etoile
 				chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
 				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i]);
 				chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);//, chain->m_average_values[i]);
-				if(enableConstraints)
-					chain->m_dim_values[i] = clampDr(chain->m_dim_values[i], initValue[i], chain->m_drLimits_positive[i], chain->m_drLimits_negative[i]);
+				//if(enableConstraints)
+					//chain->m_dim_values[i] = clampDr(chain->m_dim_values[i], initValue[i], chain->m_drLimits_positive[i], chain->m_drLimits_negative[i]);
 				//chain->m_dim_localRotations[i] = AngleAxis_(chain->m_dim_values[i], chain->m_dim_axis[i]);
 			}
 

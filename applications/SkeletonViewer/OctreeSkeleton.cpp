@@ -9,7 +9,7 @@
 
 //#define USINGLINEAREQUATION
 //#define USINGAV
-//#define USINGMAX
+#define USINGMAX
 
 void trimString( std::string& _string) {
 	// Trim Both leading and trailing spaces
@@ -95,6 +95,7 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 	std::vector<Vec3> points;
 	_start = start;
 	m_ikchain.reset();
+	std::vector<double> initV;
 	for(int i = start ; i < end; ++i)
 	{
 	
@@ -109,6 +110,10 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 			}
 		}
 		m_ikchain.updateAllDims();
+		if(i == start)
+		{
+			initV = m_ikchain.m_dim_values;
+		}
 		Etoile::Vector3_ p = m_ikchain.m_dim_globalPositions.back();
 		points.push_back(Vec3(p[0],p[1],p[2]));
 		Frame frame = m_bvh.createFrame();
@@ -122,11 +127,23 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 	m_bvh.saveToBVHFile(s.str());
 	m_bvh.m_frames = temp;
 
+	m_ikchain.reset();
+	m_ikchain.m_dim_values = initV;
 	solveTrajectory(points, 0);
+	m_ikchain.reset();
+	m_ikchain.m_dim_values = initV;
 	solveTrajectory(points, 1);
+	m_ikchain.reset();
+	m_ikchain.m_dim_values = initV;
 	solveTrajectory(points, 2);
+	m_ikchain.reset();
+	m_ikchain.m_dim_values = initV;
 	solveTrajectory(points, 3);
+	m_ikchain.reset();
+	m_ikchain.m_dim_values = initV;
 	solveTrajectory(points, 4);
+	m_ikchain.reset();
+	m_ikchain.m_dim_values = initV;
 	solveTrajectory(points, 5);
 	/*solveTrajectory(points, 6);
 	solveTrajectory(points, 7);
@@ -187,7 +204,6 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 	std::vector<Frame> temp = m_bvh.m_frames;
 	TimeWin32 start;
 	double time1 = start.getCurrentTime();
-	m_ikchain.reset();
 	std::vector<Frame> fs;
 	for(int i = 0; i < points.size();++i)
 	{
@@ -607,8 +623,8 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 		{
 			cell->m_cell_min[j] = 100;
 			cell->m_cell_max[j] = -100;
-			cell->m_cell_drLimits_positive[j] = 0.08;
-			cell->m_cell_drLimits_negative[j] = -0.08;
+			cell->m_cell_drLimits_positive[j] = 0.03;
+			cell->m_cell_drLimits_negative[j] = -0.03;
 		}
 		int positive = 0;
 		int negative = 0;
