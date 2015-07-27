@@ -16,11 +16,11 @@ namespace Etoile
 	{
 		double m_dampling_max;
 	public:
-		JacobianDLSSVDSolver(IKChain* chain, int maxTries = 300, double targetThreshold = 0.005, double stepweight= 0.5, double dampling = 0.9):IKSolver(chain, maxTries, targetThreshold, stepweight),
+		JacobianDLSSVDSolver(int maxTries = 300, double targetThreshold = 0.005, double stepweight= 0.5, double dampling = 0.9):IKSolver(maxTries, targetThreshold, stepweight),
 		m_dampling_max(dampling){}
 		virtual std::string getIKSolverName(){ return "JacobianDLSSVDSolver";}
-		virtual bool solve(Vector3_, bool cons = true) override;
-		virtual bool solve(Vector3_, Vector3_, bool) override{return true;}
+		virtual bool solve(IKChain*,Vector3_, bool cons = true) override;
+		virtual bool solve(IKChain*,Vector3_, Vector3_, bool) override{return true;}
 		void setDampingMax(double dampling){ m_dampling_max = dampling; }
 		double getDampingMax(){return m_dampling_max;}
 

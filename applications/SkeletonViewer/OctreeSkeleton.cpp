@@ -68,7 +68,7 @@ void OctreeSkeleton::reload(const std::string& name)
 	m_ikchain.loadFromFile(name+".sk");
 	loadFromCSVFile(name+".csv");
 
-	solver = new Etoile::JacobianDLSSVDSolver(&m_ikchain);
+	solver = new Etoile::JacobianDLSSVDSolver();
 	m_dataIsLoaded = false;
 	//p_tree = new Octree(Vec3(-0.15, 0.2, 0.15), Vec3(0.25, 0.4, 0.45), true);
 	computePoints();
@@ -192,9 +192,9 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 		if(depth != 0)
 		{
 			Octree* tree = m_treeowner.p_octreeRoot->getSubTreeWithPointAndDepth(point, depth);
-			for(int j = 0; j < m_ikchain.m_anglelimites.size();++j)
+			for(int j = 0; j < m_ikchain.m_dims.size();++j)
 			{
-				m_ikchain.m_anglelimites[j] = Etoile::Vector2_(tree->m_cell_min[j], tree->m_cell_max[j]);
+				m_ikchain.m_dim_anglelimites[j] = Etoile::Vector2_(tree->m_cell_min[j], tree->m_cell_max[j]);
 				m_ikchain.m_average_values[j] = tree->m_cell_average[j];
 #ifdef USINGLINEAREQUATION
 				double dx = 0,dy = 0,dz = 0;
@@ -230,14 +230,14 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 		bool sol = true;
 		if(i == 0)
 		{
-			for(int j = 0; j < m_ikchain.m_anglelimites.size();++j)
+			for(int j = 0; j < m_ikchain.m_dims.size();++j)
 			{
-				m_ikchain.m_values[j] = iniv.m_values[j];
+				m_ikchain.m_dim_values[j] = iniv.m_values[j];
 			}
-			sol = solver->solve(Etoile::Vector3_(point.x, point.y, point.z), false);
+			sol = solver->solve(&m_ikchain, Etoile::Vector3_(point.x, point.y, point.z), false);
 		}
 		else
-			sol = solver->solve(Etoile::Vector3_(point.x, point.y, point.z), true);
+			sol = solver->solve(&m_ikchain,Etoile::Vector3_(point.x, point.y, point.z), true);
 		if(sol == true)
 		{
 			solvable += 1; 
@@ -250,7 +250,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
 			for(int h = 0; h < 3; ++h)
 			{
-				jointbvh->m_dims[h].m_value = m_ikchain.m_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
+				jointbvh->m_dims[h].m_value = m_ikchain.m_dim_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
 			}
 		}
 		Frame frame = m_bvh.createFrame();
@@ -297,7 +297,7 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 		{
 			Octree* tree = octreefs[i];
 
-			for(int j = 0; j < m_ikchain.m_anglelimites.size(); ++j)
+			for(int j = 0; j < m_ikchain.m_dims.size(); ++j)
 			{
 				double min = tree->m_cell_min[j];
 				double max = tree->m_cell_max[j];
@@ -318,7 +318,7 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 				{
 					std::cout<<"j: " << j <<" min: "<< min <<" max: "<< max<<std::endl;
 				}
-				m_ikchain.m_anglelimites[j] = Etoile::Vector2_(min, max);
+				m_ikchain.m_dim_anglelimites[j] = Etoile::Vector2_(min, max);
 				m_ikchain.m_average_values[j] = tree->m_cell_average[j];
 				//m_ikchain.m_drLimits[j] = tree->m_cell_drLimits[j];
 				m_ikchain.m_drLimits_positive[j] = tree->m_cell_drLimits_positive[j];
@@ -329,9 +329,9 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 
 		//	std::cout<<i<<" point "<<point[0] <<" " <<point[1]<<" " <<point[2]<<"   elements: "<<tree->dataIndx.size()<<std::endl;
 		if(i == 0)
-			solver->solve(Etoile::Vector3_(point.x, point.y, point.z), false);
+			solver->solve(&m_ikchain, Etoile::Vector3_(point.x, point.y, point.z), false);
 		else
-			solver->solve(Etoile::Vector3_(point.x, point.y, point.z), true);
+			solver->solve(&m_ikchain,Etoile::Vector3_(point.x, point.y, point.z), true);
 
 		for(int j = 0; j < m_ikchain.m_joints.size();++j)
 		{
@@ -339,7 +339,7 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
 			for(int h = 0; h < 3; ++h)
 			{
-				jointbvh->m_dims[h].m_value = m_ikchain.m_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
+				jointbvh->m_dims[h].m_value = m_ikchain.m_dim_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
 			}
 		}
 		Frame frame = m_bvh.createFrame();
@@ -367,9 +367,9 @@ void OctreeSkeleton::solveOnePoint(const Vec3& point, int depth)
 	double time1 = start.getCurrentTime();
 	depth = 10;
 	Octree* tree = m_treeowner.p_octreeRoot->getSubTreeWithPointAndDepth(point, depth);
-	for(int i = 0; i < m_ikchain.m_anglelimites.size();++i)
+	for(int i = 0; i < m_ikchain.m_dims.size();++i)
 	{
-		m_ikchain.m_anglelimites[i] = Etoile::Vector2_(tree->m_cell_min[i], tree->m_cell_max[i]);
+		m_ikchain.m_dim_anglelimites[i] = Etoile::Vector2_(tree->m_cell_min[i], tree->m_cell_max[i]);
 		//m_ikchain.m_localRotations[i] = Etoile::AngleAxis_(tree->m_cell_min[i], m_ikchain.m_axis[i]);
 	}
 
@@ -386,7 +386,7 @@ void OctreeSkeleton::solveOnePoint(const Vec3& point, int depth)
 
 	TimeWin32 start3;
 	double time3 = start3.getCurrentTime();
-	solver->solve(Etoile::Vector3_(point.x, point.y, point.z));
+	solver->solve(&m_ikchain, Etoile::Vector3_(point.x, point.y, point.z));
 
 	TimeWin32 start4;
 	double time4 = start4.getCurrentTime();
@@ -404,19 +404,20 @@ void OctreeSkeleton::computePoints()
 	std::cout << " start compute points!"<<std::endl;
 	for(unsigned int j = 0; j < m_framesData.size(); ++j)
 	{
-		for(int i = 0 ; i < m_ikchain.m_localRotations.size(); ++i)
+		for(int i = 0 ; i < m_ikchain.m_dims.size(); ++i)
 		{
-			m_ikchain.m_localRotations[i] = Etoile::AngleAxis_(m_framesData[j].m_values[i], m_ikchain.m_axis[i]);
+			m_ikchain.m_dim_values[i] = m_framesData[j].m_values[i];
 		}
+		m_ikchain.updateAllDims();
 		m_ikchain.update();
-		int end = m_ikchain.m_globalPositions.size() - 1;
+		int end = m_ikchain.m_dim_globalPositions.size() - 1;
 
 		//std::cout<< m_ikchain.m_globalPositions.back().transpose()<<std::endl;
 
 
-		m_framesData[j].points[0] = m_ikchain.m_globalPositions[end][0];
-		m_framesData[j].points[1] = m_ikchain.m_globalPositions[end][1];
-		m_framesData[j].points[2] = m_ikchain.m_globalPositions[end][2];
+		m_framesData[j].points[0] = m_ikchain.m_dim_globalPositions[end][0];
+		m_framesData[j].points[1] = m_ikchain.m_dim_globalPositions[end][1];
+		m_framesData[j].points[2] = m_ikchain.m_dim_globalPositions[end][2];
 		if(m_framesData[j].points[0] > xMax) xMax = m_framesData[j].points[0];
 		if(m_framesData[j].points[0] < xMin) xMin = m_framesData[j].points[0];
 		if(m_framesData[j].points[1] > yMax) yMax = m_framesData[j].points[1];

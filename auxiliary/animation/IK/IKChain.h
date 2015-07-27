@@ -58,8 +58,14 @@ namespace Etoile
 
 		void reset();
 
+		void updateDimLocalRotation(int idx)
+		{
+			m_dim_localRotations[idx] = AngleAxis_(m_dim_values[idx], m_dim_axis[idx]);	
+		}
+
 		void updateDim(int idx)
 		{
+			updateDimLocalRotation(idx);
 			Dim* dim = m_dims[idx];
 			if(dim->m_lastIdx >= 0)
 			{
@@ -77,7 +83,7 @@ namespace Etoile
 		{
 			for(unsigned int i = 0; i < m_dims.size(); ++i)
 			{
-				updateJoint(i);
+				updateDim(i);
 			}
 		}
 

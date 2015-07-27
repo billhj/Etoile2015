@@ -15,24 +15,17 @@ namespace Etoile
 	double epsilon = 1.2;
 #define HARDCONSTRAINTS
 #ifdef HARDCONSTRAINTS
-	bool JacobianDLSSVDSolver::solve(Vector3_ target, bool enableConstraints)
+	bool JacobianDLSSVDSolver::solve(IKChain* chain, Vector3_ target, bool enableConstraints)
 	{
-//#if( defined( _DEBUG ) || defined( DEBUG ) )
-//		clock_t time = clock();
-//#endif
+		//#if( defined( _DEBUG ) || defined( DEBUG ) )
+		//		clock_t time = clock();
+		//#endif
+		chain->updateAllDims();
 		int tries = 0;
-		int columnDim = p_chain->m_localRotations.size();
-
-		for(int i = 0; i < columnDim; ++i)
-		{
-			p_chain->m_localRotations[i] = AngleAxis_(p_chain->m_values[i], p_chain->m_axis[i]);	
-		}
-
-		std::vector<double> initValue = p_chain->m_values;
-
+		std::vector<double> initValue = chain->m_dim_values;
+		int columnDim = chain->m_dims.size();
 		MatrixX_ jacobian(3, columnDim);
-		p_chain->update();
-		Vector3_& endpos = p_chain->m_globalPositions.back();
+		Vector3_& endpos = chain->m_dim_globalPositions.back();
 		Vector3_ distance = (target-endpos);
 
 		//double beta = 0.5f;
@@ -41,77 +34,76 @@ namespace Etoile
 			distance.norm() > m_targetThreshold)
 		{
 			Vector3_ dT = distance;// * beta;
-			for(unsigned int i = 0; i <  p_chain->m_joints.size(); ++i)
-			{
-				IKChain::Joint* joint = p_chain->m_joints[i];
-				std::vector<IKChain::Dim>& dims = joint->m_dims;
-				for(unsigned int j = 0; j < dims.size(); ++j)
-				{
-					IKChain::Dim& dim = dims[j];
-					Vector3_& jointPos = p_chain->m_globalPositions[dim.m_idx];
-					Vector3_ boneVector = endpos - jointPos;
 
-					Vector3_ axis = p_chain->m_axis[dim.m_idx];
-					int lastDim = dim.m_lastIdx;
-					if(lastDim >= 0)
-					{
-						axis = p_chain->m_globalOrientations[lastDim] * axis;
-					}
-					Vector3_ axisXYZgradient = axis.cross(boneVector);
-					jacobian(0, dim.m_idx) = /*0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0);// * m_stepweight;
-					jacobian(1, dim.m_idx) = /*0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1);// * m_stepweight;
-					jacobian(2, dim.m_idx) = /*0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2);// * m_stepweight;
+			for(unsigned int j = 0; j < chain->m_dims.size(); ++j)
+			{
+				IKChain::Dim* dim = chain->m_dims[j];
+				Vector3_& jointPos = chain->m_dim_globalPositions[dim->m_idx];
+				Vector3_ boneVector = endpos - jointPos;
+
+				Vector3_ axis = chain->m_dim_axis[dim->m_idx];
+				int lastDim = dim->m_lastIdx;
+				if(lastDim >= 0)
+				{
+					axis = chain->m_dim_globalOrientations[lastDim] * axis;
 				}
+				Vector3_ axisXYZgradient = axis.cross(boneVector);
+				jacobian(0, dim->m_idx) = /*0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0);// * m_stepweight;
+				jacobian(1, dim->m_idx) = /*0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1);// * m_stepweight;
+				jacobian(2, dim->m_idx) = /*0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2);// * m_stepweight;
 			}
+
 
 			Eigen::JacobiSVD<MatrixX_> svd(jacobian,  Eigen::ComputeFullU| Eigen::ComputeFullV);
 			VectorX_ s =  svd.singularValues();
 			MatrixX_ u =  svd.matrixU();
 			MatrixX_ v =  svd.matrixV();
-	
+
 			double lamda2 = 0;
 			double minvalue = 1000;
 			for (int i = 0; i < s.size(); ++i) {
-                double value = s(i);
-                if (value < minvalue) {
-                    minvalue = value;
-                }
-            }
-            if (minvalue >= epsilon) {
-                lamda2 = 0;
-            } else {
-                lamda2 = (1 - (minvalue / epsilon)) * m_dampling_max;
-            }
+				double value = s(i);
+				if (value < minvalue) {
+					minvalue = value;
+				}
+			}
+			if (minvalue >= epsilon) {
+				lamda2 = 0;
+			} else {
+				lamda2 = (1 - (minvalue / epsilon)) * m_dampling_max;
+			}
 
 			MatrixX_ e(u.cols(),v.rows()); e.setZero();
 			for (int i = 0; i < s.size(); ++i) {
-                double value = s(i);
-                e(i, i) = value / (value * value + lamda2);
-            }
+				double value = s(i);
+				e(i, i) = value / (value * value + lamda2);
+			}
 
 			MatrixX_ dls = v * e.transpose() * u.transpose();
 			VectorX_ dR = dls * dT;
 
 			for(int i = 0; i < columnDim; ++i)
 			{
-				p_chain->m_values[i] = p_chain->m_values[i] + dR[i];
-				p_chain->m_values[i] = castPiRange(p_chain->m_values[i]);
-				p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);//, p_chain->m_average_values[i]);
+				chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
+				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i]);
+				chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);//, chain->m_average_values[i]);
 				if(enableConstraints)
-					p_chain->m_values[i] = clampDr(p_chain->m_values[i], initValue[i], p_chain->m_drLimits_positive[i], p_chain->m_drLimits_negative[i]);
-				p_chain->m_localRotations[i] = AngleAxis_(p_chain->m_values[i], p_chain->m_axis[i]);
+					chain->m_dim_values[i] = clampDr(chain->m_dim_values[i], initValue[i], chain->m_drLimits_positive[i], chain->m_drLimits_negative[i]);
+				chain->m_dim_localRotations[i] = AngleAxis_(chain->m_dim_values[i], chain->m_dim_axis[i]);
 			}
 
-			p_chain->update();
-			endpos = p_chain->m_globalPositions.back();
+			chain->updateAllDims();
+			endpos = chain->m_dim_globalPositions.back();
 			distance = (target - endpos);
 		}
-//#if( defined( _DEBUG ) || defined( DEBUG ) )
-//		time = clock() - time;
-//		int ms = double(time) / CLOCKS_PER_SEC * 1000;
-//		std::cout<<"timee elapsed: "<<ms<<std::endl;
+		//#if( defined( _DEBUG ) || defined( DEBUG ) )
+		//		time = clock() - time;
+		//		int ms = double(time) / CLOCKS_PER_SEC * 1000;
+		//		std::cout<<"timee elapsed: "<<ms<<std::endl;
 		std::cout<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
-//#endif
+		//#endif
+
+		chain->update();
 		if (tries == m_maxTries)
 		{
 			return false;
@@ -122,25 +114,25 @@ namespace Etoile
 
 #else
 
-	bool JacobianDLSSVDSolver::solve(Vector3_ target, bool enableConstraints)
+	bool JacobianDLSSVDSolver::solve(IKChain* chain, Vector3_ target, bool enableConstraints)
 	{
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		clock_t time = clock();
 #endif
 		int tries = 0;
-		int columnDim = p_chain->m_localRotations.size();
+		int columnDim = chain->m_dims.size();
 
 		for(int i = 0; i < columnDim; ++i)
 		{
-			p_chain->m_localRotations[i] = AngleAxis_(p_chain->m_values[i], p_chain->m_axis[i]);	
+			chain->m_dim_localRotations[i] = AngleAxis_(chain->m_dim_values[i], chain->m_dim_axis[i]);	
 		}
 
-		std::vector<double> initValue = p_chain->m_values;
+		std::vector<double> initValue = chain->m_dim_values;
 		//double dtThreasure = 0.03;
 
 		MatrixX_ jacobian(3, columnDim);
-		p_chain->update();
-		Vector3_& endpos = p_chain->m_globalPositions.back();
+		chain->update();
+		Vector3_& endpos = chain->m_dim_globalPositions.back();
 		Vector3_ distance = (target-endpos);
 
 		//double beta = 0.5f;
@@ -149,79 +141,76 @@ namespace Etoile
 			distance.norm() > m_targetThreshold)
 		{
 			Vector3_ dT = distance;// * beta;
-			for(unsigned int i = 0; i <  p_chain->m_joints.size(); ++i)
-			{
-				IKChain::Joint* joint = p_chain->m_joints[i];
-				std::vector<IKChain::Dim>& dims = joint->m_dims;
-				for(unsigned int j = 0; j < dims.size(); ++j)
-				{
-					IKChain::Dim& dim = dims[j];
-					Vector3_& jointPos = p_chain->m_globalPositions[dim.m_idx];
-					Vector3_ boneVector = endpos - jointPos;
 
-					Vector3_ axis = p_chain->m_axis[dim.m_idx];
-					int lastDim = dim.m_lastIdx;
-					if(lastDim >= 0)
-					{
-						axis = p_chain->m_globalOrientations[lastDim] * axis;
-					}
-					Vector3_ axisXYZgradient = axis.cross(boneVector);
-					jacobian(0, dim.m_idx) = /*0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0);// * m_stepweight;
-					jacobian(1, dim.m_idx) = /*0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1);// * m_stepweight;
-					jacobian(2, dim.m_idx) = /*0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2);// * m_stepweight;
+			for(unsigned int j = 0; j < chain->m_dims.size(); ++j)
+			{
+				IKChain::Dim* dim = chain->m_dims[j];
+				Vector3_& jointPos = chain->m_dim_globalPositions[dim->m_idx];
+				Vector3_ boneVector = endpos - jointPos;
+
+				Vector3_ axis = chain->m_dim_axis[dim->m_idx];
+				int lastDim = dim->m_lastIdx;
+				if(lastDim >= 0)
+				{
+					axis = chain->m_dim_globalOrientations[lastDim] * axis;
 				}
+				Vector3_ axisXYZgradient = axis.cross(boneVector);
+				jacobian(0, dim->m_idx) = /*0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0);// * m_stepweight;
+				jacobian(1, dim->m_idx) = /*0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1);// * m_stepweight;
+				jacobian(2, dim->m_idx) = /*0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2);// * m_stepweight;
 			}
+
 
 			Eigen::JacobiSVD<MatrixX_> svd(jacobian,  Eigen::ComputeFullU| Eigen::ComputeFullV);
 			VectorX_ s =  svd.singularValues();
 			MatrixX_ u =  svd.matrixU();
 			MatrixX_ v =  svd.matrixV();
-	
+
 			double lamda2 = 0;
 			double minvalue = 1000;
 			for (int i = 0; i < s.size(); ++i) {
-                double value = s(i);
-                if (value < minvalue) {
-                    minvalue = value;
-                }
-            }
-            if (minvalue >= epsilon) {
-                lamda2 = 0;
-            } else {
-                lamda2 = (1 - (minvalue / epsilon)) * m_dampling_max;
-            }
+				double value = s(i);
+				if (value < minvalue) {
+					minvalue = value;
+				}
+			}
+			if (minvalue >= epsilon) {
+				lamda2 = 0;
+			} else {
+				lamda2 = (1 - (minvalue / epsilon)) * m_dampling_max;
+			}
 
 			MatrixX_ e(u.cols(),v.rows()); e.setZero();
 			for (int i = 0; i < s.size(); ++i) {
-                double value = s(i);
-                e(i, i) = value / (value * value + lamda2);
-            }
+				double value = s(i);
+				e(i, i) = value / (value * value + lamda2);
+			}
 
 			MatrixX_ dls = v * e.transpose() * u.transpose();
 			VectorX_ dR = dls * dT;
 
 			for(int i = 0; i < columnDim; ++i)
 			{
-				p_chain->m_values[i] = p_chain->m_values[i] + dR[i];
-				p_chain->m_values[i] = castPiRange(p_chain->m_values[i]);
-				p_chain->m_values[i] = clamp(p_chain->m_values[i], p_chain->m_anglelimites[i][0], p_chain->m_anglelimites[i][1]);//, p_chain->m_average_values[i]);
+				chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
+				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i]);
+				chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);//, chain->m_average_values[i]);
 				if(enableConstraints)
-					p_chain->m_values[i] = clampDr(p_chain->m_values[i], initValue[i], p_chain->m_drLimits_positive[i], p_chain->m_drLimits_negative[i]);
-				
-				
+					chain->m_dim_values[i] = clampDr(chain->m_dim_values[i], initValue[i], chain->m_drLimits_positive[i], chain->m_drLimits_negative[i]);
+
+
 				/*if(!enableConstraints)
 				{
-					std::cout<< p_chain->m_values[i]<<" ";
+				std::cout<< chain->m_dim_values[i]<<" ";
 				}*/
-				p_chain->m_localRotations[i] = AngleAxis_(p_chain->m_values[i], p_chain->m_axis[i]);	
+				chain->m_dim_localRotations[i] = AngleAxis_(chain->m_dim_values[i], chain->m_dim_axis[i]);	
 			}
 			/*if(!enableConstraints)
 			{
-				std::cout<< std::endl;
+			std::cout<< std::endl;
 			}*/
 
-			p_chain->update();
-			endpos = p_chain->m_globalPositions.back();
+			chain->update();
+			endpos = chain->m_dim_globalPositions.back();
 			distance = (target - endpos);
 		}
 #if( defined( _DEBUG ) || defined( DEBUG ) )
@@ -245,7 +234,7 @@ namespace Etoile
 		if (value > maxV || value < minV) {
 			value += (averageV - value) * 0.5;
 		}
-	
+
 		return value;
 	}
 

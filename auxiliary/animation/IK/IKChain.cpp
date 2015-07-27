@@ -37,7 +37,7 @@ namespace Etoile
 		for(int i = 0; i < m_dof; ++i)
 		{
 			
-			m_dims[i].m_idx = sk->m_localRotations.size();
+			m_dims[i].m_idx = sk->m_dims.size();
 			if(i == 0)
 			{
 				if( parent >= 0)
@@ -53,31 +53,37 @@ namespace Etoile
 				m_dims[i].m_lastIdx = m_dims[i - 1].m_idx;
 			}
 
-			sk->m_axis.push_back(Vector3_::Zero());
-			sk->m_anglelimites.push_back(Vector2_(-3.14,3.14));
-			sk->m_localRotations.push_back(Matrix3_::Identity());
-			sk->m_globalOrientations.push_back(Matrix3_::Identity());
-			sk->m_localTranslations.push_back(Vector3_::Zero());
-			sk->m_globalPositions.push_back(Vector3_::Zero());
-			sk->m_values.push_back(0);
+			sk->m_dims.push_back(&m_dims[i]);
+			sk->m_dim_axis.push_back(Vector3_::Zero());
+			sk->m_dim_anglelimites.push_back(Vector2_(-3.14,3.14));
+			sk->m_dim_localRotations.push_back(Matrix3_::Identity());
+			sk->m_dim_globalOrientations.push_back(Matrix3_::Identity());
+			sk->m_dim_localTranslations.push_back(Vector3_::Zero());
+			sk->m_dim_globalPositions.push_back(Vector3_::Zero());
+			sk->m_dim_values.push_back(0);
 			sk->m_average_values.push_back(0);
 			sk->m_drLimits_positive.push_back(0.03);
 			sk->m_drLimits_negative.push_back(-0.03);
 		}
+		sk->m_joint_localRotations.push_back(Matrix3_::Identity());
+		sk->m_joint_globalOrientations.push_back(Matrix3_::Identity());
+		sk->m_joint_localTranslations.push_back(Vector3_::Zero());
+		sk->m_joint_globalPositions.push_back(Vector3_::Zero());
 	}
 
 	void IKChain::reset()
 	{
-		for(int i = 0; i < m_localRotations.size();++i)
+		for(int i = 0; i < m_dims.size();++i)
 		{
-			m_localRotations[i].setIdentity();
-			m_globalOrientations[i].setIdentity();
-			m_anglelimites[i] = Vector2_(-3.14,3.14);
-			m_values[i] = 0;
+			m_dim_localRotations[i].setIdentity();
+			m_dim_globalOrientations[i].setIdentity();
+			m_dim_anglelimites[i] = Vector2_(-3.14,3.14);
+			m_dim_values[i] = 0;
 			m_average_values[i] = 0;
 			m_drLimits_positive[i] = 0.03;
 			m_drLimits_negative[i] = -0.03;
 		}
+		update();
 	}
 
 	bool IKChain::loadFromFile(const std::string& fileName)
@@ -138,7 +144,8 @@ namespace Etoile
 				stream >> y;
 				stream >> z;
 				Joint* j = new Joint(this, idxP, dof, name);
-				m_localTranslations[j->m_dims[0].m_idx] = Vector3_(x,y,z);
+				m_dim_localTranslations[j->m_dims[0].m_idx] = Vector3_(x,y,z);
+				m_joint_localTranslations[j->m_index] = Vector3_(x,y,z);
 				//std::cout<< "Joint: "<<name <<" dof: "<<dof<< " parent: "<<idxP<<" localTrans: "<< m_localTranslations[j->m_dims[0].m_idx].transpose() <<std::endl;
 				for(int i = 0; i < dof; ++i)
 				{
@@ -152,7 +159,7 @@ namespace Etoile
 					stream >> x;
 					stream >> y;
 					stream >> z;
-					m_axis[j->m_dims[i].m_idx] = Vector3_(x,y,z);
+					m_dim_axis[j->m_dims[i].m_idx] = Vector3_(x,y,z);
 					//std::cout<<i<< " axis: "<<m_axis[j->m_dims[i].m_idx].transpose()<<std::endl;
 
 					double minV,maxV;
@@ -160,7 +167,7 @@ namespace Etoile
 					stream >> maxV;
 					if(!stream.fail())
 					{
-						m_anglelimites[j->m_dims[i].m_idx] = Vector2_(minV,maxV);
+						m_dim_anglelimites[j->m_dims[i].m_idx] = Vector2_(minV,maxV);
 						//std::cout<<" limits: "<<m_anglelimites[j->m_dims[i].m_idx].transpose()<<std::endl;
 					}
 				}
