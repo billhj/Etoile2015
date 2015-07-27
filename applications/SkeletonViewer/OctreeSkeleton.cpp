@@ -94,10 +94,10 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 	std::vector<Frame> fs;
 	std::vector<Vec3> points;
 	_start = start;
+	m_ikchain.reset();
 	for(int i = start ; i < end; ++i)
 	{
-		double* p = m_framesData[i].points;
-		points.push_back(Vec3(p[0],p[1],p[2]));
+	
 		for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 		{
 			Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
@@ -105,8 +105,12 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 			for(int h = 0; h < 3; ++h)
 			{
 				jointbvh->m_dims[h].m_value = m_bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index];
+				m_ikchain.m_dim_values[jo->m_dims[h].m_idx] = m_bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index] * 3.14159265 / 180.0;
 			}
 		}
+		m_ikchain.updateAllDims();
+		Etoile::Vector3_ p = m_ikchain.m_dim_globalPositions.back();
+		points.push_back(Vec3(p[0],p[1],p[2]));
 		Frame frame = m_bvh.createFrame();
 		fs.push_back(frame);
 	}
@@ -178,7 +182,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 {
 	int solvable = 0;
 	FLOG<<points.size()<< "points, depth" <<depth<<std::endl;
-	FrameData& iniv = m_framesData[_start];
+	//FrameData& iniv = m_framesData[_start];
 
 	std::vector<Frame> temp = m_bvh.m_frames;
 	TimeWin32 start;
@@ -230,10 +234,10 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 		bool sol = true;
 		if(i == 0)
 		{
-			for(int j = 0; j < m_ikchain.m_dims.size();++j)
+			/*for(int j = 0; j < m_ikchain.m_dims.size();++j)
 			{
 				m_ikchain.m_dim_values[j] = iniv.m_values[j];
-			}
+			}*/
 			sol = solver->solve(&m_ikchain, Etoile::Vector3_(point.x, point.y, point.z), false);
 		}
 		else
@@ -585,7 +589,7 @@ void OctreeSkeleton::loadDataIntoOctree()
 
 void OctreeSkeleton::computeCellAtributes(Octree* cell)
 {
-	if(m_treeowner.m_dataIndex[cell->m_index].size() > 0)
+	if(cell->m_dataIndex.size() > 0)
 	{
 		int vSize = m_framesData[0].m_values.size();
 		cell->m_cell_average.resize(vSize);
@@ -603,14 +607,14 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 		{
 			cell->m_cell_min[j] = 100;
 			cell->m_cell_max[j] = -100;
-			cell->m_cell_drLimits_positive[j] = 0.03;
-			cell->m_cell_drLimits_negative[j] = -0.03;
+			cell->m_cell_drLimits_positive[j] = 0.08;
+			cell->m_cell_drLimits_negative[j] = -0.08;
 		}
 		int positive = 0;
 		int negative = 0;
-		for(unsigned int j = 0; j < m_treeowner.m_dataIndex[cell->m_index].size(); ++j)
+		for(unsigned int j = 0; j < cell->m_dataIndex.size(); ++j)
 		{
-			FrameData& data = m_framesData[m_treeowner.m_dataIndex[cell->m_index][j]];
+			FrameData& data = m_framesData[cell->m_dataIndex[j]];
 			for(int h = 0; h < vSize; ++h)
 			{
 				cell->m_cell_min[h] = min(cell->m_cell_min[h], data.m_values[h]);
@@ -618,12 +622,12 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 				cell->m_cell_average[h] += data.m_values[h];
 				if( j > 0)
 				{
-					if((m_treeowner.m_dataIndex[cell->m_index][j] - m_treeowner.m_dataIndex[cell->m_index][j - 1] == 1))
+					if((cell->m_dataIndex[j] - cell->m_dataIndex[j - 1] == 1))
 					{
-						double dr = data.m_values[h] - m_framesData[m_treeowner.m_dataIndex[cell->m_index][j - 1]].m_values[h];
-						double dx = data.points[0] - m_framesData[m_treeowner.m_dataIndex[cell->m_index][j - 1]].points[0];
-						double dy = data.points[1] - m_framesData[m_treeowner.m_dataIndex[cell->m_index][j - 1]].points[1];
-						double dz = data.points[2] - m_framesData[m_treeowner.m_dataIndex[cell->m_index][j - 1]].points[2];
+						double dr = data.m_values[h] - m_framesData[cell->m_dataIndex[j - 1]].m_values[h];
+						double dx = data.points[0] - m_framesData[cell->m_dataIndex[j - 1]].points[0];
+						double dy = data.points[1] - m_framesData[cell->m_dataIndex[j - 1]].points[1];
+						double dz = data.points[2] - m_framesData[cell->m_dataIndex[j - 1]].points[2];
 
 #ifdef USINGMAX
 						cell->m_cell_drLimits_positive[h] = max (cell->m_cell_drLimits_positive[h], dr);
@@ -660,7 +664,7 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 
 		for(int j = 0; j < vSize; ++j)
 		{
-			cell->m_cell_average[j] /= m_treeowner.m_dataIndex[cell->m_index].size();
+			cell->m_cell_average[j] /= cell->m_dataIndex.size();
 #ifdef USINGAV
 			cell->m_cell_drLimits_positive[j] /= positive;
 			cell->m_cell_drLimits_negative[j] /= negative;
@@ -794,7 +798,7 @@ float scaleInOne(float scale)
 
 void OctreeSkeleton::draw()
 {
-	if(m_treeowner.m_dataIndex.size() == 0 || !_visible) return;
+	if(m_treeowner.m_alltree.size() == 0 || !_visible) return;
 	glDisable(GL_LIGHTING);
 
 
@@ -806,7 +810,7 @@ void OctreeSkeleton::draw()
 		while(!cells.empty())
 		{
 			Octree* cell = cells.front();
-			if(m_treeowner.m_dataIndex[cell->m_index].size() > 0)
+			if(cell->m_dataIndex.size() > 0)
 			{
 				//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(0.8, 0.7, 1)[0]);
 				glColor3f(0.8, 0.7, 1);
@@ -849,7 +853,7 @@ void OctreeSkeleton::draw()
 		while(!cells.empty())
 		{
 			Octree* cell = cells.front();
-			if(m_treeowner.m_dataIndex[cell->m_index].size() > 0)
+			if(cell->m_dataIndex.size() > 0)
 			{
 				//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(0.8, 0.7, 1)[0]);
 				glColor3f(0.8, 0.7, 1);
@@ -882,7 +886,7 @@ void OctreeSkeleton::draw()
 		while(!cells.empty())
 		{
 			Octree* cell = cells.front();
-			if(m_treeowner.m_dataIndex[cell->m_index].size() > 0)
+			if(cell->m_dataIndex.size() > 0)
 			{
 				//glMaterialfv(GL_FRONT, GL_DIFFUSE, &Vec3(0.8, 0.7, 1)[0]);
 				glColor3f(0.8, 0.7, 1);

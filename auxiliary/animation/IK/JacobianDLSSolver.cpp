@@ -24,12 +24,12 @@ namespace Etoile
 		Vector3_& endpos = chain->m_dim_globalPositions.back();
 		Vector3_ distance = (target-endpos);
 
-		double beta = 0.5f;
+		//double beta = 0.5f;
 
 		while (++tries < m_maxTries &&
 			distance.norm() > m_targetThreshold)
 		{
-			Vector3_ dT = distance * beta;
+			Vector3_ dT = distance;// * beta;
 
 			for(unsigned int j = 0; j < chain->m_dims.size(); ++j)
 			{
@@ -59,7 +59,7 @@ namespace Etoile
 			{
 				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
 				chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);
-				chain->m_dim_localRotations[i] = AngleAxis_(chain->m_dim_values[i], chain->m_dim_axis[i]);	
+				//chain->m_dim_localRotations[i] = AngleAxis_(chain->m_dim_values[i], chain->m_dim_axis[i]);	
 			}
 			chain->updateAllDims();
 			endpos = chain->m_dim_globalPositions.back();

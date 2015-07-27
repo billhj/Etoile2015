@@ -8,9 +8,9 @@ int main(int argc, char *argv[])
 {
 	/*Etoile::IKChain chain("");
 	chain.loadFromFile("C:/Users/Jing/Documents/ikchain.ik");
-	JacobianDLSSolver solver(&chain);
-	solver.solve(Vector3_(1,1,1), true);*/
-
+	JacobianPseudoInverseSolver solver;
+	solver.solve(&chain, Vector3_(1,1,1), true);
+*/
 	QApplication a(argc, argv);
 	QFile stylesheet("./styles/stylesheet.txt");
 	stylesheet.open(QFile::ReadOnly);

@@ -24,11 +24,15 @@ class Octree;
 struct OctreeOwner
 {
 public:
+	OctreeOwner()
+	{
+		max_level = 8;
+	}
+
 	Octree* p_octreeRoot;
 	std::vector<Octree*> m_alltree;
-	
+	int max_level;
 	//temp data
-	std::vector<std::vector<int>> m_dataIndex;
 
 #ifdef USING_BOOST
 		friend class boost::serialization::access;
@@ -57,7 +61,7 @@ public:
 	// The tree has up to eight children and can additionally store
 	// a point, though in many applications only, the leaves will store data.
 	Octree *children[8]; //! Pointers to child octants
-	OctreePoint *data;   //! Data point to be stored at a node
+	std::vector<OctreePoint*> data;   //! Data point to be stored at a node
 	
 	/*
 	Children follow a predictable pattern to make accesses simple.
@@ -85,6 +89,8 @@ public:
 	int m_parent;
 	int m_index;
 	int m_level;
+
+	std::vector<int> m_dataIndex;
 
 
 #ifdef USING_BOOST
@@ -130,8 +136,8 @@ public:
 				m_index = 0;
 			}
 			p_owner->m_alltree.push_back(this);
-			p_owner->m_dataIndex.push_back(std::vector<int>());
-			data = NULL;
+			//p_owner->m_dataIndex.push_back(std::vector<int>());
+			//data = NULL;
 	}
 
 	Octree(const Octree& copy)
@@ -179,7 +185,7 @@ public:
 			Octree* temp = tree->children[tree->getOctantContainingPoint(point)];
 			//std::cout<<"points: " <<temp->dataIndx.size() <<std::endl;
 			if(temp == NULL) break;
-			if(p_owner->m_dataIndex[temp->m_index].size() <100)
+			if(temp->m_dataIndex.size() <100)
 			{
 				break;
 			}
@@ -207,10 +213,10 @@ public:
 	void insert(OctreePoint* point) {
 		// If this node doesn't have a data point yet assigned 
 		// and it is a leaf, then we're done!
-		p_owner->m_dataIndex[m_index].push_back(point->m_frameIdx);
+		m_dataIndex.push_back(point->m_frameIdx);
 		if(isLeafNode()) {
-			if(data==NULL) {
-				data = point;
+			if(data.size() == 0 || m_level >= p_owner->max_level) {
+				data.push_back(point);
 				return;
 			} else {
 				// We're at a leaf, but there's already something here
@@ -219,8 +225,8 @@ public:
 				// this new data point
 
 				// Save this data point that was here for a later re-insert
-				OctreePoint *oldPoint = data;
-				data = NULL;
+				OctreePoint *oldPoint = data[0];
+				data.pop_back();
 
 				// Split the current node and create new empty trees for each
 				// child octant.
@@ -230,6 +236,10 @@ public:
 					newOrigin.x += halfDimension.x * (i&4 ? .5f : -.5f);
 					newOrigin.y += halfDimension.y * (i&2 ? .5f : -.5f);
 					newOrigin.z += halfDimension.z * (i&1 ? .5f : -.5f);
+					if(halfDimension.x == 0)
+					{
+						std::cout<<std::endl;
+					}
 					children[i] = new Octree(newOrigin, halfDimension*.5f, p_owner, this->m_index);
 				}
 
@@ -247,38 +257,38 @@ public:
 		}
 	}
 
-	// This is a really simple routine for querying the tree for points
-	// within a bounding box defined by min/max points (bmin, bmax)
-	// All results are pushed into 'results'
-	void getPointsInsideBox(const Vec3& bmin, const Vec3& bmax, std::vector<OctreePoint*>& results) {
-		// If we're at a leaf node, just see if the current data point is inside
-		// the query bounding box
-		if(isLeafNode()) {
-			if(data!=NULL) {
-				const Vec3& p = data->getPosition();
-				if(p.x>bmax.x || p.y>bmax.y || p.z>bmax.z) return;
-				if(p.x<bmin.x || p.y<bmin.y || p.z<bmin.z) return;
-				results.push_back(data);
-			}
-		} else {
-			// We're at an interior node of the tree. We will check to see if
-			// the query bounding box lies outside the octants of this node.
-			for(int i=0; i<8; ++i) {
-				// Compute the min/max corners of this child octant
-				Vec3 cmax = children[i]->origin + children[i]->halfDimension;
-				Vec3 cmin = children[i]->origin - children[i]->halfDimension;
+	//// This is a really simple routine for querying the tree for points
+	//// within a bounding box defined by min/max points (bmin, bmax)
+	//// All results are pushed into 'results'
+	//void getPointsInsideBox(const Vec3& bmin, const Vec3& bmax, std::vector<OctreePoint*>& results) {
+	//	// If we're at a leaf node, just see if the current data point is inside
+	//	// the query bounding box
+	//	if(isLeafNode()) {
+	//		if(data!=NULL) {
+	//			const Vec3& p = data->getPosition();
+	//			if(p.x>bmax.x || p.y>bmax.y || p.z>bmax.z) return;
+	//			if(p.x<bmin.x || p.y<bmin.y || p.z<bmin.z) return;
+	//			results.push_back(data);
+	//		}
+	//	} else {
+	//		// We're at an interior node of the tree. We will check to see if
+	//		// the query bounding box lies outside the octants of this node.
+	//		for(int i=0; i<8; ++i) {
+	//			// Compute the min/max corners of this child octant
+	//			Vec3 cmax = children[i]->origin + children[i]->halfDimension;
+	//			Vec3 cmin = children[i]->origin - children[i]->halfDimension;
 
-				// If the query rectangle is outside the child's bounding box, 
-				// then continue
-				if(cmax.x<bmin.x || cmax.y<bmin.y || cmax.z<bmin.z) continue;
-				if(cmin.x>bmax.x || cmin.y>bmax.y || cmin.z>bmax.z) continue;
+	//			// If the query rectangle is outside the child's bounding box, 
+	//			// then continue
+	//			if(cmax.x<bmin.x || cmax.y<bmin.y || cmax.z<bmin.z) continue;
+	//			if(cmin.x>bmax.x || cmin.y>bmax.y || cmin.z>bmax.z) continue;
 
-				// At this point, we've determined that this child is intersecting 
-				// the query bounding box
-				children[i]->getPointsInsideBox(bmin,bmax,results);
-			} 
-		}
-	}
+	//			// At this point, we've determined that this child is intersecting 
+	//			// the query bounding box
+	//			children[i]->getPointsInsideBox(bmin,bmax,results);
+	//		} 
+	//	}
+	//}
 
 	void drawAABB()
 	{

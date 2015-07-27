@@ -22,12 +22,12 @@ namespace Etoile
 		//#endif
 		chain->updateAllDims();
 		int tries = 0;
-		std::vector<double> initValue = chain->m_dim_values;
 		int columnDim = chain->m_dims.size();
 		MatrixX_ jacobian(3, columnDim);
 		Vector3_& endpos = chain->m_dim_globalPositions.back();
 		Vector3_ distance = (target-endpos);
 
+		std::vector<double> initValue = chain->m_dim_values;
 		//double beta = 0.5f;
 
 		while (++tries < m_maxTries &&
@@ -48,9 +48,12 @@ namespace Etoile
 					axis = chain->m_dim_globalOrientations[lastDim] * axis;
 				}
 				Vector3_ axisXYZgradient = axis.cross(boneVector);
-				jacobian(0, dim->m_idx) = /*0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0);// * m_stepweight;
-				jacobian(1, dim->m_idx) = /*0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1);// * m_stepweight;
-				jacobian(2, dim->m_idx) = /*0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2);// * m_stepweight;
+				//jacobian(0, dim->m_idx) = /*0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0);// * m_stepweight;
+				//jacobian(1, dim->m_idx) = /*0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1);// * m_stepweight;
+				//jacobian(2, dim->m_idx) = /*0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2);// * m_stepweight;
+				jacobian(0, dim->m_idx) = 0 == axisXYZgradient(0)? 0.000001: axisXYZgradient(0);// * m_stepweight;
+				jacobian(1, dim->m_idx) = 0 == axisXYZgradient(1)? 0.000001: axisXYZgradient(1);// * m_stepweight;
+				jacobian(2, dim->m_idx) = 0 == axisXYZgradient(2)? 0.000001: axisXYZgradient(2);// * m_stepweight;
 			}
 
 
@@ -89,7 +92,7 @@ namespace Etoile
 				chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);//, chain->m_average_values[i]);
 				if(enableConstraints)
 					chain->m_dim_values[i] = clampDr(chain->m_dim_values[i], initValue[i], chain->m_drLimits_positive[i], chain->m_drLimits_negative[i]);
-				chain->m_dim_localRotations[i] = AngleAxis_(chain->m_dim_values[i], chain->m_dim_axis[i]);
+				//chain->m_dim_localRotations[i] = AngleAxis_(chain->m_dim_values[i], chain->m_dim_axis[i]);
 			}
 
 			chain->updateAllDims();
@@ -209,7 +212,7 @@ namespace Etoile
 			std::cout<< std::endl;
 			}*/
 
-			chain->update();
+			chain->updateAllDims();
 			endpos = chain->m_dim_globalPositions.back();
 			distance = (target - endpos);
 		}
@@ -219,6 +222,7 @@ namespace Etoile
 		FLOG<<"timee elapsed: "<<ms<<std::endl;
 		FLOG<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
 #endif
+		chain->update();
 		if (tries == m_maxTries)
 		{
 			return false;
