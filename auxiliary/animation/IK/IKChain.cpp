@@ -62,17 +62,20 @@ namespace Etoile
 			sk->m_dim_globalPositions.push_back(Vector3_::Zero());
 			sk->m_dim_values.push_back(0);
 			sk->m_average_values.push_back(0);
-			sk->m_drLimits_positive.push_back(0.03);
-			sk->m_drLimits_negative.push_back(-0.03);
+			sk->m_dedr_max.push_back(Vector3_(100,100,100));
+			sk->m_dedr_min.push_back(Vector3_(-100,-100,-100));
+			
 		}
 		sk->m_joint_localRotations.push_back(Matrix3_::Identity());
 		sk->m_joint_globalOrientations.push_back(Matrix3_::Identity());
 		sk->m_joint_localTranslations.push_back(Vector3_::Zero());
 		sk->m_joint_globalPositions.push_back(Vector3_::Zero());
+		
 	}
 
 	void IKChain::reset()
 	{
+		m_posture_variation = VectorX_(m_dims.size());
 		for(int i = 0; i < m_dims.size();++i)
 		{
 			m_dim_localRotations[i].setIdentity();
@@ -80,8 +83,9 @@ namespace Etoile
 			m_dim_anglelimites[i] = Vector2_(-3.14,3.14);
 			m_dim_values[i] = 0;
 			m_average_values[i] = 0;
-			m_drLimits_positive[i] = 0.03;
-			m_drLimits_negative[i] = -0.03;
+			m_dedr_max[i] = Vector3_(100,100,100);
+			m_dedr_min[i] = Vector3_(-100,-100,-100);
+			m_posture_variation(i) = 0;//0.0001;
 		}
 		update();
 	}

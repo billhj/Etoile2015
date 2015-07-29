@@ -75,8 +75,8 @@ public:
 	std::vector<double> m_cell_min;
 	std::vector<double> m_cell_max;
 	std::vector<double> m_cell_average;
-	std::vector<double> m_cell_drLimits_positive;
-	std::vector<double> m_cell_drLimits_negative;
+	std::vector<Vec3> m_cell_dedr_max;
+	std::vector<Vec3> m_cell_dedr_min;
 
 	/*std::vector<std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> >> m_drData_positive;
 	std::vector<std::vector<double>> m_drrhs_positive;
@@ -107,8 +107,8 @@ public:
 			ar & m_cell_min;
 			ar & m_cell_max;
 			ar & m_cell_average;
-			ar & m_cell_drLimits_positive;
-			ar & m_cell_drLimits_negative;
+			ar & m_cell_dedr_max;
+			ar & m_cell_dedr_min;
 
 			ar & p_owner;
 			ar & m_parent;
@@ -155,7 +155,7 @@ public:
 	{
 		if(m_drData_positive[index].size() > 1)
 			return m_drParameter_positive[index].dot(Etoile::Vector4_(dx,dy,dz,1));
-		return m_cell_drLimits_positive[index];
+		return m_cell_dedr_max[index];
 
 	}
 
@@ -164,7 +164,7 @@ public:
 
 		if(m_drData_negative[index].size() > 1)
 			return m_drParameter_negative[index].dot(Etoile::Vector4_(dx,dy,dz,1));
-		return m_cell_drLimits_negative[index];
+		return m_cell_dedr_min[index];
 	}*/
 
 	// Determine which octant of the tree would contain 'point'
@@ -336,7 +336,7 @@ public:
 	}
 
 
-	void drawBox (const float center[3], const float halfsides[3])
+	void drawBox (const double center[3], const double halfsides[3])
 	{
 		glPushMatrix();
 		glTranslatef(center[0],center[1],center[2]);
@@ -344,7 +344,7 @@ public:
 		glPopMatrix();
 	}
 
-	void drawBox (const float halfsides[3])
+	void drawBox (const double halfsides[3])
 	{
 	  float lx = halfsides[0];
 	  float ly = halfsides[1];

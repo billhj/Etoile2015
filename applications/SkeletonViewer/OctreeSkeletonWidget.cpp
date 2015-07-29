@@ -33,7 +33,7 @@ void OctreeSkeletonWidget::setDrawType(int type)
 
 void OctreeSkeletonWidget::setDepth(int depth)
 {
-	octreeskeleton->depth = depth;
+	octreeskeleton->m_depth = depth;
 }
 
 void OctreeSkeletonWidget::generateBVH()

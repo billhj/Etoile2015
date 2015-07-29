@@ -12,6 +12,7 @@
 
 namespace Etoile
 {
+
 	double epsilon = 1.2;
 #define HARDCONSTRAINTS
 #ifdef HARDCONSTRAINTS
@@ -27,7 +28,15 @@ namespace Etoile
 		Vector3_& endpos = chain->m_dim_globalPositions.back();
 		Vector3_ distance = (target-endpos);
 
+		MatrixX_ p_i = MatrixX_::Identity(columnDim,columnDim);
+
 		std::vector<double> initValue = chain->m_dim_values;
+
+		std::vector<bool> lock;
+		for(unsigned int i = 0; i < initValue.size(); ++i)
+		{
+			lock.push_back(false);
+		}
 		//double beta = 0.5f;
 
 		while (++tries < m_maxTries &&
@@ -51,9 +60,17 @@ namespace Etoile
 				//jacobian(0, dim->m_idx) = /*0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0);// * m_stepweight;
 				//jacobian(1, dim->m_idx) = /*0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1);// * m_stepweight;
 				//jacobian(2, dim->m_idx) = /*0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2);// * m_stepweight;
-				jacobian(0, dim->m_idx) = 0 == axisXYZgradient(0)? 0.000001: axisXYZgradient(0);// * m_stepweight;
-				jacobian(1, dim->m_idx) = 0 == axisXYZgradient(1)? 0.000001: axisXYZgradient(1);// * m_stepweight;
-				jacobian(2, dim->m_idx) = 0 == axisXYZgradient(2)? 0.000001: axisXYZgradient(2);// * m_stepweight;
+				if(!lock[j])
+				{
+					jacobian(0, j) = /*clamp(0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0)/*, chain->m_dedr_min[j][0], chain->m_dedr_max[j][0])*/;// * m_stepweight;
+					jacobian(1, j) =/* clamp(0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1)/*, chain->m_dedr_min[j][1], chain->m_dedr_max[j][1])*/;// * m_stepweight;
+					jacobian(2, j) =/* clamp(0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2)/*, chain->m_dedr_min[j][2], chain->m_dedr_max[j][2])*/;// * m_stepweight;
+				}else
+				{
+					jacobian(0, j) = 0;// * m_stepweight;
+					jacobian(1, j) = 0;// * m_stepweight;
+					jacobian(2, j) = 0;// * m_stepweight;
+				}
 			}
 
 
@@ -83,18 +100,31 @@ namespace Etoile
 			}
 
 			MatrixX_ dls = v * e.transpose() * u.transpose();
-			VectorX_ dR = dls * dT;
+
+			//MatrixX_ jacobianTranspose = jacobian.transpose();
+			//MatrixX_ a =  jacobian * jacobianTranspose;
+			//MatrixX_ aInv = a.inverse();
+			//MatrixX_ pseudoInverse = jacobianTranspose * aInv;
+			//MatrixX_ p = p_i - pseudoInverse * jacobian;
+
+			VectorX_ dR = dls * dT;// + p * chain->m_posture_variation;
+
 
 			for(int i = 0; i < columnDim; ++i)
 			{
-				chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
+				//double v = (chain->m_average_values[i] - chain->m_dim_values[i]) * 0.1;
+				double temp = chain->m_dim_values[i] + dR[i];
+				double value = clamp(temp, chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);
+				if((value - chain->m_dim_values[i] - dR[i]) > 0.0000001)
+				{
+					lock[i] = true;
+					//chain->m_posture_variation(i) = 0;
+				}
+				chain->m_dim_values[i] = value;
 				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i]);
-				chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);//, chain->m_average_values[i]);
-				//if(enableConstraints)
-					//chain->m_dim_values[i] = clampDr(chain->m_dim_values[i], initValue[i], chain->m_drLimits_positive[i], chain->m_drLimits_negative[i]);
-				//chain->m_dim_localRotations[i] = AngleAxis_(chain->m_dim_values[i], chain->m_dim_axis[i]);
+				
 			}
-
+			
 			chain->updateAllDims();
 			endpos = chain->m_dim_globalPositions.back();
 			distance = (target - endpos);
@@ -198,7 +228,7 @@ namespace Etoile
 				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i]);
 				chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);//, chain->m_average_values[i]);
 				if(enableConstraints)
-					chain->m_dim_values[i] = clampDr(chain->m_dim_values[i], initValue[i], chain->m_drLimits_positive[i], chain->m_drLimits_negative[i]);
+					chain->m_dim_values[i] = clampDr(chain->m_dim_values[i], initValue[i], chain->m_dedr_max[i], chain->m_dedr_min[i]);
 
 
 				/*if(!enableConstraints)

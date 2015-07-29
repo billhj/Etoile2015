@@ -5,6 +5,7 @@
 #include "animation/BVH.h"
 #include "animation/IK/IKChain.h"
 #include "animation/IK/JacobianDLSSVDSolver.h"
+#include "animation/IK/JacobianDLSSolver.h"
 #include "geometry/ObjectRenderer.h"
 
 struct FrameData
@@ -47,14 +48,14 @@ public:
 
 	BVH m_bvh;
 	Etoile::IKChain m_ikchain;
-	Etoile::JacobianDLSSVDSolver * solver;
+	Etoile::JacobianDLSSolver * solver;
 	std::string _name;
 	double xMin, yMin, zMin;
 	double xMax, yMax, zMax;
 
 
 	int drawType;
-	int depth;
+	int m_depth;
 
 	
 	virtual void draw();

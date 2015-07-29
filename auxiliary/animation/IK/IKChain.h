@@ -148,11 +148,11 @@ namespace Etoile
 		std::vector<Vector2_, Eigen::aligned_allocator<Vector2_> > m_dim_anglelimites;
 		std::string m_name;
 		
-		std::vector<double> m_drLimits_positive;
-		std::vector<double> m_drLimits_negative;
+		std::vector<Vector3_, Eigen::aligned_allocator<Vector3_>> m_dedr_max;
+		std::vector<Vector3_, Eigen::aligned_allocator<Vector3_>> m_dedr_min;
 
 		std::vector<double> m_average_values;
-
+		VectorX_ m_posture_variation;
 
 		bool loadFromFile(const std::string& fileName);
 		void read(std::istream& in);
