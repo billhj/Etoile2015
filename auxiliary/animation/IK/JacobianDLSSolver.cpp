@@ -15,7 +15,7 @@ namespace Etoile
 	bool JacobianDLSSolver::solve(IKChain* chain, Vector3_ target, bool enableConstraints)
 	{
 
-		double beta = 0.000;
+		double beta = 0.0000005;
 
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		clock_t time = clock();
@@ -48,6 +48,7 @@ namespace Etoile
 			{
 				v(i) = chain->m_average_values[i] - chain->m_dim_values[i];
 			}
+			//v.normalize();
 
 			for(unsigned int j = 0; j < chain->m_dims.size(); ++j)
 			{
@@ -85,7 +86,7 @@ namespace Etoile
 				for(int i = 0; i < a_.rows(); ++i)
 				{
 					damp(i,i) = m_dampling / (i * 100+1); 
-					betax(i,i) = beta;
+					betax(i,i) = damp(i,i) /100.0;// beta;
 				}
 				MatrixX_ temp = damp + betax;
 				MatrixX_ a = a_ + temp * MatrixX_::Identity(a_.rows(), a_.cols());
