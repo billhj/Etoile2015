@@ -28,12 +28,14 @@ namespace Etoile
 		int m_maxTries;
 		double m_targetThreshold;
 		double m_stepweight;
+		double m_limitBoundry;
 	public:
 		virtual std::string getIKSolverName() = 0;
 		inline IKSolver(int maxTries = 50, double targetThreshold = 0.005, double stepweight= 0.5)
 			:m_maxTries(maxTries),
 			m_targetThreshold(targetThreshold), m_stepweight(stepweight)
 		{ 
+			m_limitBoundry = 0.00;
 		}
 
 		virtual bool solve(IKChain*, Vector3_, bool) = 0;
@@ -85,16 +87,16 @@ namespace Etoile
 
 		double clamp(double value, double minV, double maxV)
 		{
-			if (value > maxV) {
+			if (value > maxV + m_limitBoundry) {
 				/*value -= 3.14159265 * 2;
 				if (value < minV){*/
-					value = maxV;
+					value = maxV + m_limitBoundry;
 				//}
 			}
-			if (value < minV) {
+			if (value < minV - m_limitBoundry) {
 				/*value += 3.14159265 * 2;
 				if (value > maxV) {*/
-					value = minV;
+					value = minV - m_limitBoundry;
 				//}
 			}
 			return value;

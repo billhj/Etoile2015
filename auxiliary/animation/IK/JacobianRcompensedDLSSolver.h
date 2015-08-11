@@ -1,7 +1,7 @@
 /**
 * Copyright(C) 2009-2012                
 * @author Jing HUANG
-* @file JacobianDLSSolver.h
+* @file JacobianRcompensedDLSSolver.h
 * @brief 
 * @date 1/2/2011
 */
@@ -12,12 +12,12 @@
 namespace Etoile
 {
 
-	class JacobianDLSSolver : public IKSolver
+	class JacobianRcompensedDLSSolver : public IKSolver
 	{
 		double m_dampling;
 		std::vector<double> m_lamda;
 	public:
-		JacobianDLSSolver(int maxTries = 513, double targetThreshold = 0.005, double stepweight= 0.5, double dampling = 0.9):IKSolver(maxTries, targetThreshold, stepweight),
+		JacobianRcompensedDLSSolver(int maxTries = 513, double targetThreshold = 0.005, double stepweight= 0.5, double dampling = 0.9):IKSolver(maxTries, targetThreshold, stepweight),
 		m_dampling(dampling){}
 		virtual std::string getIKSolverName(){ return "JacobianDLS";}
 		virtual bool solve(IKChain*,Vector3_, bool b = true) override;

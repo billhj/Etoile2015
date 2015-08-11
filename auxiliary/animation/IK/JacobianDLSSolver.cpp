@@ -8,7 +8,7 @@
 
 #include "JacobianDLSSolver.h"
 #include <ctime>
-
+#include "FLog.h" 
 namespace Etoile
 {
 
@@ -29,24 +29,36 @@ namespace Etoile
 
 		std::vector<double> initValue = chain->m_dim_values;
 		std::vector<bool> lock;
+		//std::vector<double> lock_value;
 		for(unsigned int i = 0; i < initValue.size(); ++i)
 		{
 			lock.push_back(false);
+			//lock_value.push_back(0);
 		}
 
-		VectorX_ v(chain->m_average_values.size());
-		
+		VectorX_ v0(chain->m_average_values.size());
+		VectorX_ recompense(chain->m_average_values.size());
+		/*VectorX_ v1(chain->m_average_values.size());
+		VectorX_ v2(chain->m_average_values.size());*/
 
+		VectorX_ dr(chain->m_average_values.size());
 		//double beta = 0.5f;
-
-		while (++tries < m_maxTries &&
-			distance.norm() > m_targetThreshold)
+		if(enableConstraints == false)
 		{
+			chain->m_dim_last_values = chain->m_dim_values;
+		}
+
+		while (tries < m_maxTries &&
+			distance.norm() > m_targetThreshold || tries == 0 )
+		{
+			++tries;
 			Vector3_ dT = distance;// * beta;
 
 			for(unsigned int i = 0; i < chain->m_average_values.size();++i)
 			{
-				v(i) = chain->m_average_values[i] - chain->m_dim_values[i];
+				v0(i) = chain->m_average_values[i] - chain->m_dim_values[i];
+				//v1(i) = initValue[i] - chain->m_dim_last_values[i] - (chain->m_dim_values[i] - initValue[i]);//chain->m_dim_values[i] - initValue[i];
+				//v2(i) = -chain->m_dim_values[i];
 			}
 			//v.normalize();
 
@@ -65,9 +77,9 @@ namespace Etoile
 				Vector3_ axisXYZgradient = axis.cross(boneVector);
 				if(!lock[j])
 				{
-					jacobian(0, j) = /*clamp(0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0)/*, chain->m_dedr_min[j][0], chain->m_dedr_max[j][0])*/;// * m_stepweight;
-					jacobian(1, j) =/* clamp(0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1)/*, chain->m_dedr_min[j][1], chain->m_dedr_max[j][1])*/;// * m_stepweight;
-					jacobian(2, j) =/* clamp(0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2)/*, chain->m_dedr_min[j][2], chain->m_dedr_max[j][2])*/;// * m_stepweight;
+				jacobian(0, j) = axisXYZgradient(0);
+				jacobian(1, j) = axisXYZgradient(1);
+				jacobian(2, j) = axisXYZgradient(2);
 				}else
 				{
 					jacobian(0, j) = 0;// * m_stepweight;
@@ -79,18 +91,18 @@ namespace Etoile
 			MatrixX_ jacobianTranspose = jacobian.transpose();
 #define USINGMYDLS
 #ifdef USINGMYDLS
-			
-			MatrixX_ a_ =  jacobianTranspose * jacobian;
-			MatrixX_ damp=MatrixX_::Identity(a_.rows(), a_.cols());
-			MatrixX_ betax = MatrixX_::Identity(a_.rows(), a_.cols());
-				for(int i = 0; i < a_.rows(); ++i)
-				{
-					damp(i,i) = m_dampling / (i * 100+1); 
-					betax(i,i) = damp(i,i) /100.0;// beta;
-				}
-				MatrixX_ temp = damp + betax;
-				MatrixX_ a = a_ + temp * MatrixX_::Identity(a_.rows(), a_.cols());
-			MatrixX_ b = jacobianTranspose * dT + beta * v;
+
+			MatrixX_ jtj =  jacobianTranspose * jacobian;
+			MatrixX_ lamdaI =MatrixX_::Identity(jtj.rows(), jtj.cols());
+			MatrixX_ betax = MatrixX_::Zero(jtj.rows(), jtj.cols());
+			for(int i = 0; i < jtj.rows(); ++i)
+			{
+				lamdaI(i,i) = m_lamda[i];   //m_dampling / ( pow(10.0, i/3) * +1); 
+			}
+
+			MatrixX_ temp = lamdaI + betax;// + gamax;
+			MatrixX_ a = jtj + temp;
+			MatrixX_ b = jacobianTranspose * dT + betax * v0;// + thetax * v2;
 			VectorX_ dR = a.inverse() * b;
 #else
 			MatrixX_ a =  jacobian * jacobianTranspose;
@@ -103,10 +115,10 @@ namespace Etoile
 			{
 				double temp = chain->m_dim_values[i] + dR[i];
 				double value = clamp(temp, chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);
-				if((value - chain->m_dim_values[i] - dR[i]) > 0.0000001)
+				if((value - temp) > 0.0000001)
 				{
 					lock[i] = true;
-					//chain->m_posture_variation(i) = 0;
+					recompense(i) = value - temp;
 				}
 				chain->m_dim_values[i] = value;
 				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i]);
@@ -122,7 +134,14 @@ namespace Etoile
 		std::cout<<"timee elapsed: "<<ms<<std::endl;
 		std::cout<<"iterations: "<<tries<< "distance: "<<distance.norm()<<std::endl;
 #endif
+		FLOG<<"iterations: "<<tries<< " distance: "<<distance.norm()<<std::endl;
+		for(int i = 0; i < m_lamda.size(); ++i)
+		{
+			FLOG<< m_lamda[i]<<" ";
+		}
+		FLOG<<std::endl;
 		chain->update();
+		chain->m_dim_last_values = initValue;
 		if (tries == m_maxTries)
 		{
 			return false;
