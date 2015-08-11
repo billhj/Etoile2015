@@ -77,6 +77,8 @@ public:
 	std::vector<double> m_cell_average;
 	std::vector<Vec3> m_cell_dedr_max;
 	std::vector<Vec3> m_cell_dedr_min;
+	std::vector<double> m_lamda;
+	int m_size_lamda;
 
 	/*std::vector<std::vector<Etoile::Vector4_, Eigen::aligned_allocator<Etoile::Vector4_> >> m_drData_positive;
 	std::vector<std::vector<double>> m_drrhs_positive;
@@ -185,7 +187,7 @@ public:
 			Octree* temp = tree->children[tree->getOctantContainingPoint(point)];
 			//std::cout<<"points: " <<temp->dataIndx.size() <<std::endl;
 			if(temp == NULL) break;
-			if(temp->m_dataIndex.size() <100)
+			if(temp->m_dataIndex.size() < 20)
 			{
 				break;
 			}

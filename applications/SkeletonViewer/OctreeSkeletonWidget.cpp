@@ -38,11 +38,12 @@ void OctreeSkeletonWidget::setDepth(int depth)
 
 void OctreeSkeletonWidget::generateBVH()
 {
+	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("File (*.obj; *.sk; *.bvh)"));
 	if(ui.prefiltercheckBox->isChecked())
 	{
-		octreeskeleton->solveOriginalPrefilterTrajectory(ui.startF->value(), ui.endF->value());
+		octreeskeleton->solveOriginalPrefilterTrajectory(ui.startF->value(), ui.endF->value(), name.toStdString());
 	}else
 	{
-		octreeskeleton->solveOriginalTrajectory(ui.startF->value(), ui.endF->value());
+		octreeskeleton->solveOriginalTrajectory(ui.startF->value(), ui.endF->value(), name.toStdString());
 	}
 }

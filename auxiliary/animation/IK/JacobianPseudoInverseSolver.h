@@ -15,8 +15,8 @@ namespace Etoile
 	public:
 		JacobianPseudoInverseSolver(int maxTries = 150, double targetThreshold = 0.005, double stepweight= 0.5): IKSolver(maxTries, targetThreshold, stepweight){}
 		virtual std::string getIKSolverName(){ return "JacobianPseudoInverse";}
-		virtual bool solve(IKChain*,Vector3_, bool) override;
-		virtual bool solve(IKChain*,Vector3_, Vector3_, bool) override{return true;}
+		virtual void solveOneStep(IKChain*,Vector3_, bool) override;
+		//virtual bool solve(IKChain*,Vector3_, Vector3_, bool) override{return true;}
 		//Eigen::MatrixX_ computeRotations(Eigen::MatrixX_ jacobian, Vector3_ dT);
 	};
 }

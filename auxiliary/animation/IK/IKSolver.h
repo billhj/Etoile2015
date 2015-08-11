@@ -9,6 +9,7 @@
 #pragma once
 #include <vector>
 #include "IKChain.h"
+#include <ctime>
 
 namespace Etoile
 {
@@ -28,19 +29,49 @@ namespace Etoile
 		int m_maxTries;
 		double m_targetThreshold;
 		double m_stepweight;
-		double m_limitBoundry;
 	public:
 		virtual std::string getIKSolverName() = 0;
 		inline IKSolver(int maxTries = 50, double targetThreshold = 0.005, double stepweight= 0.5)
 			:m_maxTries(maxTries),
 			m_targetThreshold(targetThreshold), m_stepweight(stepweight)
 		{ 
-			m_limitBoundry = 0.00;
 		}
 
-		virtual bool solve(IKChain*, Vector3_, bool) = 0;
+		virtual bool solve(IKChain* chain, Vector3_ target, bool enableConstraints = true)
+		{
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+		clock_t time = clock();
+#endif
+			chain->updateAllDims();
+			Vector3_& endpos = chain->m_dim_globalPositions.back();
+			Vector3_ distance = (target-endpos);
+			int tries = 0;
+			while (tries < m_maxTries &&
+				(distance.norm() > m_targetThreshold) || tries == 0)
+			{
+				++tries;
+				solveOneStep(chain, target, enableConstraints);
+				endpos = chain->m_dim_globalPositions.back();
+				distance = (target - endpos);
+			}
 
-		virtual bool solve(IKChain*, Vector3_, Vector3_, bool) = 0;
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+		time = clock() - time;
+		int ms = double(time) / CLOCKS_PER_SEC * 1000;
+		std::cout<<"timee elapsed: "<<ms<<std::endl;
+		std::cout<<"iterations: "<<tries<< " distance: "<<distance.norm()<<std::endl;
+#endif
+			chain->update();
+			if (distance.norm() > m_targetThreshold)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		//virtual bool solve(IKChain*, Vector3_, Vector3_, bool) = 0;
+		virtual void solveOneStep(IKChain*, Vector3_, bool) = 0;
+
 
 		inline double getSingleStepValue() const
 		{
@@ -87,16 +118,16 @@ namespace Etoile
 
 		double clamp(double value, double minV, double maxV)
 		{
-			if (value > maxV + m_limitBoundry) {
+			if (value > maxV) {
 				/*value -= 3.14159265 * 2;
 				if (value < minV){*/
-					value = maxV + m_limitBoundry;
+					value = maxV;
 				//}
 			}
-			if (value < minV - m_limitBoundry) {
+			if (value < minV) {
 				/*value += 3.14159265 * 2;
 				if (value > maxV) {*/
-					value = minV - m_limitBoundry;
+					value = minV;
 				//}
 			}
 			return value;

@@ -98,6 +98,9 @@
     <ClCompile Include="FLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianRcompensedDLSSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MeshViewer.h">
@@ -163,6 +166,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="FLog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianRcompensedDLSSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

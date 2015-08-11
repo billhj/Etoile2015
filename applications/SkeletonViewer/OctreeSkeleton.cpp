@@ -66,13 +66,20 @@ OctreeSkeleton::~OctreeSkeleton(void)
 }
 
 int _start = 0;
-void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
+void OctreeSkeleton::solveOriginalTrajectory(int start, int end, const std::string& bvhfile)
 {
-	if(start < 0 || end >= m_bvh.m_frames.size())
+	BVH bvh;
+	
+	if(!bvh.loadFromBVHFile(bvhfile))
 	{
-		std::cout<<"start end error : "<<start <<" " <<end <<" max :" << m_bvh.m_frames.size()<<std::endl;
+		bvh = m_bvh;
 	}
-	std::vector<Frame> temp = m_bvh.m_frames;
+
+	if(start < 0 || end >= bvh.m_frames.size())
+	{
+		std::cout<<"start end error : "<<start <<" " <<end <<" max :" << bvh.m_frames.size()<<std::endl;
+	}
+	std::vector<Frame> temp = bvh.m_frames;
 	std::vector<Frame> fs;
 	std::vector<Vec3> points;
 	_start = start;
@@ -80,15 +87,15 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 	std::vector<double> initV;
 	for(int i = start ; i < end; ++i)
 	{
-	
+
 		for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 		{
 			Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
-			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
+			BVH::Joint* jointbvh =  bvh.getJoint(jo->m_name);
 			for(int h = 0; h < 3; ++h)
 			{
-				jointbvh->m_dims[h].m_value = m_bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index];
-				m_ikchain.m_dim_values[jo->m_dims[h].m_idx] = m_bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index] * 3.14159265 / 180.0;
+				jointbvh->m_dims[h].m_value = bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index];
+				m_ikchain.m_dim_values[jo->m_dims[h].m_idx] = bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index] * 3.14159265 / 180.0;
 			}
 		}
 		m_ikchain.updateAllDims();
@@ -98,50 +105,57 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end)
 		}
 		Etoile::Vector3_ p = m_ikchain.m_dim_globalPositions.back();
 		points.push_back(Vec3(p[0],p[1],p[2]));
-		Frame frame = m_bvh.createFrame();
+		Frame frame = bvh.createFrame();
 		fs.push_back(frame);
 	}
-	m_bvh.m_frames = fs;
+	bvh.m_frames = fs;
 	std::stringstream s;
 	TimeWin32 start2;
 	double time2 = start2.getCurrentTime();
 	s<<_name<<"_original_"<<"BVH.bvh";
-	m_bvh.saveToBVHFile(s.str());
-	m_bvh.m_frames = temp;
+	bvh.saveToBVHFile(s.str());
+	bvh.m_frames = temp;
 
+	/*m_ikchain.reset();
+	m_ikchain.m_dim_values = initV;
+	solveTrajectory(points, 0, bvh);
 	m_ikchain.reset();
 	m_ikchain.m_dim_values = initV;
-	solveTrajectory(points, 0);
+	solveTrajectory(points, 1, bvh);
 	m_ikchain.reset();
 	m_ikchain.m_dim_values = initV;
-	solveTrajectory(points, 1);
+	solveTrajectory(points, 2, bvh);
 	m_ikchain.reset();
 	m_ikchain.m_dim_values = initV;
-	solveTrajectory(points, 2);
+	solveTrajectory(points, 3, bvh);
 	m_ikchain.reset();
 	m_ikchain.m_dim_values = initV;
-	solveTrajectory(points, 3);
+	solveTrajectory(points, 4, bvh);*/
 	m_ikchain.reset();
 	m_ikchain.m_dim_values = initV;
-	solveTrajectory(points, 4);
-	m_ikchain.reset();
-	m_ikchain.m_dim_values = initV;
-	solveTrajectory(points, 5);
-	m_ikchain.reset();
+	solveTrajectory(points, 5, bvh);
+	/*m_ikchain.reset();
 	m_ikchain.m_dim_values = initV;
 	solveTrajectory(points, 6);
-	/*solveTrajectory(points, 6);
+	solveTrajectory(points, 6);
 	solveTrajectory(points, 7);
 	solveTrajectory(points, 8);*/
 }
 
-void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end)
+void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end, const std::string& bvhfile)
 {
-	if(start < 0 || end >= m_bvh.m_frames.size())
+	BVH bvh;
+	
+	if(!bvh.loadFromBVHFile(bvhfile))
 	{
-		std::cout<<"start end error : "<<start <<" " <<end <<" max :" << m_bvh.m_frames.size()<<std::endl;
+		bvh = m_bvh;
 	}
-	std::vector<Frame> temp = m_bvh.m_frames;
+
+	if(start < 0 || end >= bvh.m_frames.size())
+	{
+		std::cout<<"start end error : "<<start <<" " <<end <<" max :" << bvh.m_frames.size()<<std::endl;
+	}
+	std::vector<Frame> temp = bvh.m_frames;
 	std::vector<Frame> fs;
 	std::vector<Vec3> points;
 	_start = start;
@@ -149,15 +163,15 @@ void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end)
 	std::vector<double> initV;
 	for(int i = start ; i < end; ++i)
 	{
-	
+
 		for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 		{
 			Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
-			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
+			BVH::Joint* jointbvh =  bvh.getJoint(jo->m_name);
 			for(int h = 0; h < 3; ++h)
 			{
-				jointbvh->m_dims[h].m_value = m_bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index];
-				m_ikchain.m_dim_values[jo->m_dims[h].m_idx] = m_bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index] * 3.14159265 / 180.0;
+				jointbvh->m_dims[h].m_value = bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index];
+				m_ikchain.m_dim_values[jo->m_dims[h].m_idx] = bvh.m_frames[i].m_values[jointbvh->m_dims[h].m_index] * 3.14159265 / 180.0;
 			}
 		}
 		m_ikchain.updateAllDims();
@@ -167,35 +181,35 @@ void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end)
 		}
 		Etoile::Vector3_ p = m_ikchain.m_dim_globalPositions.back();
 		points.push_back(Vec3(p[0],p[1],p[2]));
-		Frame frame = m_bvh.createFrame();
+		Frame frame = bvh.createFrame();
 		fs.push_back(frame);
 	}
-	m_bvh.m_frames = fs;
+	bvh.m_frames = fs;
 	std::stringstream s;
 	TimeWin32 start2;
 	double time2 = start2.getCurrentTime();
 	s<<_name<<"_original_"<<"BVH.bvh";
-	m_bvh.saveToBVHFile(s.str());
-	m_bvh.m_frames = temp;
+	bvh.saveToBVHFile(s.str());
+	bvh.m_frames = temp;
 
-	solvePrefilterTrajectory(points, 0);
-	solvePrefilterTrajectory(points, 1);
-	solvePrefilterTrajectory(points, 2);
-	solvePrefilterTrajectory(points, 3);
-	solvePrefilterTrajectory(points, 4);
-	solvePrefilterTrajectory(points, 5);
+	solvePrefilterTrajectory(points, 0, bvh);
+	solvePrefilterTrajectory(points, 1, bvh);
+	solvePrefilterTrajectory(points, 2, bvh);
+	solvePrefilterTrajectory(points, 3, bvh);
+	solvePrefilterTrajectory(points, 4, bvh);
+	solvePrefilterTrajectory(points, 5, bvh);
 	/*solvePrefilterTrajectory(points, 6);
 	solvePrefilterTrajectory(points, 7);
 	solvePrefilterTrajectory(points, 8);*/
 }
 
-void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
+void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth, BVH& bvh)
 {
 	int solvable = 0;
 	FLOG<<points.size()<< "points, depth" <<depth<<std::endl;
 	//FrameData& iniv = m_framesData[_start];
 
-	std::vector<Frame> temp = m_bvh.m_frames;
+	std::vector<Frame> temp = bvh.m_frames;
 	TimeWin32 start;
 	double time1 = start.getCurrentTime();
 	std::vector<Frame> fs;
@@ -203,12 +217,13 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 	{
 		Vec3 point = points[i];
 		FLOG<<i<<"   "<<std::endl;
+		Octree* tree = m_treeowner.p_octreeRoot->getSubTreeWithPointAndDepth(point, depth);
 		if(depth != 0)
 		{
-			Octree* tree = m_treeowner.p_octreeRoot->getSubTreeWithPointAndDepth(point, depth);
 			for(int j = 0; j < m_ikchain.m_dims.size();++j)
 			{
-				m_ikchain.m_dim_anglelimites[j] = Etoile::Vector2_(tree->m_cell_min[j], tree->m_cell_max[j]);
+				//m_ikchain.m_dim_anglelimites[j] = Etoile::Vector2_(tree->m_cell_min[j], tree->m_cell_max[j]);
+				m_ikchain.m_dim_anglelimites[j] = Etoile::Vector2_(tree->p_owner->m_alltree[tree->m_parent]->m_cell_min[j], tree->p_owner->m_alltree[tree->m_parent]->m_cell_max[j]);
 				m_ikchain.m_average_values[j] = /*(tree->m_cell_min[j] + tree->m_cell_max[j])*0.5;*/tree->m_cell_average[j];
 #ifdef USINGLINEAREQUATION
 				double dx = 0,dy = 0,dz = 0;
@@ -247,11 +262,13 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 		//FLOG<<"start solving "<<std::endl;
 		bool sol = true;
 		//m_ikchain.m_dim_values = m_ikchain.m_average_values;
+		solver->setLamda(tree->m_lamda);
+		//std::cout<<tree->m_level<<" nb: "<< tree->m_size_lamda <<std::endl;
 		if(i == 0)
 		{
 			/*for(int j = 0; j < m_ikchain.m_dims.size();++j)
 			{
-				m_ikchain.m_dim_values[j] = iniv.m_values[j];
+			m_ikchain.m_dim_values[j] = iniv.m_values[j];
 			}*/
 			sol = solver->solve(&m_ikchain, Etoile::Vector3_(point.x, point.y, point.z), false);
 		}
@@ -266,13 +283,13 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 		for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 		{
 			Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
-			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
+			BVH::Joint* jointbvh =  bvh.getJoint(jo->m_name);
 			for(int h = 0; h < 3; ++h)
 			{
 				jointbvh->m_dims[h].m_value = m_ikchain.m_dim_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
 			}
 		}
-		Frame frame = m_bvh.createFrame();
+		Frame frame = bvh.createFrame();
 		fs.push_back(frame);
 	}
 
@@ -283,20 +300,20 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth)
 	float tdiff = start2.DiffTime(time1);
 	std::cout<<"solveTrajectory timediff1 "<<tdiff<<std::endl;
 
-	m_bvh.m_frames = fs;
+	bvh.m_frames = fs;
 	std::stringstream s;
 	s<<_name+"_depth_"<<depth<<"_"<<"BVH.bvh";
-	m_bvh.saveToBVHFile(s.str());
-	m_bvh.m_frames = temp;
+	bvh.saveToBVHFile(s.str());
+	bvh.m_frames = temp;
 }
 
-void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, int depth)
+void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, int depth, BVH& bvh)
 {
 	int solvable = 0;
 	FLOG<<points.size()<< "points, depth" <<depth<<std::endl;
 	//FrameData& iniv = m_framesData[_start];
 
-	std::vector<Frame> temp = m_bvh.m_frames;
+	std::vector<Frame> temp = bvh.m_frames;
 	TimeWin32 start;
 	double time1 = start.getCurrentTime();
 	std::vector<Frame> fs;
@@ -313,25 +330,28 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 	{
 		Vec3 point = points[i];
 		FLOG<<i<<"   "<<std::endl;
+		Octree* tree = trees[i];
 		if(depth != 0)
 		{
-			Octree* tree = trees[i];
 			for(int j = 0; j < m_ikchain.m_dims.size();++j)
 			{
-				m_ikchain.m_dim_anglelimites[j] = Etoile::Vector2_(tree->m_cell_min[j], tree->m_cell_max[j]);
+				m_ikchain.m_dim_anglelimites[j] = Etoile::Vector2_(tree->p_owner->p_octreeRoot->m_cell_min[j], tree->p_owner->p_octreeRoot->m_cell_max[j]);
 				int nb = 1;
 				m_ikchain.m_average_values[j] = tree->m_cell_average[j];
 				if(i > 0)
 				{
 					m_ikchain.m_average_values[j] += trees[i - 1]->m_cell_average[j];
+					m_ikchain.m_dim_anglelimites[j] += Etoile::Vector2_(trees[i - 1]->m_cell_min[j], trees[i - 1]->m_cell_max[j]);
 					++nb;
 				}
 				if(i < points.size() - 1)
 				{
 					m_ikchain.m_average_values[j] += trees[i + 1]->m_cell_average[j];
+					m_ikchain.m_dim_anglelimites[j] += Etoile::Vector2_(trees[i + 1]->m_cell_min[j], trees[i + 1]->m_cell_max[j]);
 					++nb;
 				}
 				m_ikchain.m_average_values[j] /= nb;
+				m_ikchain.m_dim_anglelimites[j] /= nb;
 
 				m_ikchain.m_dedr_max[j][0] = tree->m_cell_dedr_max[j][0];
 				m_ikchain.m_dedr_max[j][1] = tree->m_cell_dedr_max[j][1];
@@ -346,11 +366,12 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 		//FLOG<<"start solving "<<std::endl;
 		bool sol = true;
 		//m_ikchain.m_dim_values = m_ikchain.m_average_values;
+		solver->setLamda(tree->m_lamda);
 		if(i == 0)
 		{
 			/*for(int j = 0; j < m_ikchain.m_dims.size();++j)
 			{
-				m_ikchain.m_dim_values[j] = iniv.m_values[j];
+			m_ikchain.m_dim_values[j] = iniv.m_values[j];
 			}*/
 			sol = solver->solve(&m_ikchain, Etoile::Vector3_(point.x, point.y, point.z), false);
 		}
@@ -365,13 +386,13 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 		for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 		{
 			Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
-			BVH::Joint* jointbvh =  m_bvh.getJoint(jo->m_name);
+			BVH::Joint* jointbvh =  bvh.getJoint(jo->m_name);
 			for(int h = 0; h < 3; ++h)
 			{
 				jointbvh->m_dims[h].m_value = m_ikchain.m_dim_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
 			}
 		}
-		Frame frame = m_bvh.createFrame();
+		Frame frame = bvh.createFrame();
 		fs.push_back(frame);
 	}
 
@@ -382,11 +403,11 @@ void OctreeSkeleton::solvePrefilterTrajectory(const std::vector<Vec3>& points, i
 	float tdiff = start2.DiffTime(time1);
 	std::cout<<"solveTrajectory timediff1 "<<tdiff<<std::endl;
 
-	m_bvh.m_frames = fs;
+	bvh.m_frames = fs;
 	std::stringstream s;
 	s<<_name+"_depth_"<<depth<<"_"<<"BVH.bvh";
-	m_bvh.saveToBVHFile(s.str());
-	m_bvh.m_frames = temp;
+	bvh.saveToBVHFile(s.str());
+	bvh.m_frames = temp;
 }
 
 void OctreeSkeleton::solveOnePoint(const Vec3& point, int depth)
@@ -621,6 +642,7 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 		cell->m_cell_max.resize(vSize);
 		cell->m_cell_dedr_max.resize(vSize);
 		cell->m_cell_dedr_min.resize(vSize);
+		cell->m_lamda.resize(vSize);
 		/*cell->m_drData_positive.resize(vSize);
 		cell->m_drrhs_positive.resize(vSize);
 		cell->m_drParameter_positive.resize(vSize);
@@ -636,6 +658,41 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 		}
 		int positive = 0;
 		int negative = 0;
+		int nb_lamda = 0;
+		for(unsigned int j = 0; j < cell->m_dataIndex.size(); ++j)
+		{
+			int idex = cell->m_dataIndex[j];
+			if(idex - 1 > 0)
+			{
+				std::vector<double> lamda(vSize);
+				computeLamda(m_ikchain, m_framesData[idex - 1], m_framesData[idex], lamda);
+				for(int i = 0; i < vSize; ++i)
+				{
+					cell->m_lamda[i] = lamda[i];
+				}
+				++nb_lamda;
+			}
+			
+		}
+		double minLamda = 1;
+		cell->m_size_lamda = nb_lamda;
+		for(int i = 0; i < vSize; ++i)
+		{
+			cell->m_lamda[i] /= nb_lamda;
+		}
+		for(int i = 0; i < vSize; ++i)
+		{
+			if(cell->m_lamda[i] < minLamda && abs(cell->m_lamda[i] - 0) > 0.00000000001 )
+			{
+				minLamda = cell->m_lamda[i];
+			}
+		}
+		for(int i = 0; i < vSize; ++i)
+		{
+			if(cell->m_lamda[i] < minLamda ) cell->m_lamda[i] = minLamda;
+		}
+
+
 		for(unsigned int j = 0; j < cell->m_dataIndex.size(); ++j)
 		{
 			FrameData& data = m_framesData[cell->m_dataIndex[j]];
@@ -648,6 +705,7 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 				{
 					if((cell->m_dataIndex[j] - cell->m_dataIndex[j - 1] == 1))
 					{
+
 						double dr = data.m_values[h] - m_framesData[cell->m_dataIndex[j - 1]].m_values[h];
 						double dx = data.points[0] - m_framesData[cell->m_dataIndex[j - 1]].points[0];
 						double dy = data.points[1] - m_framesData[cell->m_dataIndex[j - 1]].points[1];
@@ -732,13 +790,13 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 					Eigen::JacobiSVD<Etoile::MatrixX_> svd(x, Eigen::ComputeThinU | Eigen::ComputeThinV);
 					cell->m_drParameter_negative[j] = svd.solve(rhs);
 			}
-	
+
 #endif
 			//std::cout<<cell->m_drParameter[j].transpose()<<std::endl;
 		}
 		//debugValue(cell, out);
 		////evaluation negative
-	
+
 		//	for(unsigned int j = 0; j < cell->dataIndx.size(); ++j)
 		//	{
 		//		FrameData& data = m_framesData[cell->dataIndx[j]];
@@ -763,7 +821,7 @@ void OctreeSkeleton::computeCellAtributes(Octree* cell)
 		//			}
 		//		}
 		//	}
-		
+
 	}
 
 }
@@ -782,6 +840,46 @@ void OctreeSkeleton::computeMinMaxAverage()
 	}
 	out.close();
 	std::cout<<std::endl<<"compute Cell attributes ended"<<std::endl;
+}
+
+void OctreeSkeleton::computeLamda(Etoile::IKChain& chain, FrameData& current, FrameData& next, std::vector<double>& out_lamda)
+{
+	using namespace Etoile;
+	chain.m_dim_values = current.m_values;
+	chain.updateAllDims();
+	MatrixX_ jacobian(3, chain.m_dims.size());
+	Vector3_& endpos = chain.m_dim_globalPositions.back();
+	Vector3_ target(next.points);
+	Vector3_ distance = (target-endpos);
+
+	VectorX_ dTheta(chain.m_dims.size());
+
+	for(unsigned int j = 0; j < chain.m_dims.size(); ++j)
+	{
+		dTheta(j) = next.m_values[j] - current.m_values[j];
+
+		IKChain::Dim* dim = chain.m_dims[j];
+		Vector3_& jointPos = chain.m_dim_globalPositions[dim->m_idx];
+		Vector3_ boneVector = endpos - jointPos;
+
+		Vector3_ axis = chain.m_dim_axis[dim->m_idx];
+		int lastDim = dim->m_lastIdx;
+		if(lastDim >= 0)
+		{
+			axis = chain.m_dim_globalOrientations[lastDim] * axis;
+		}
+		Vector3_ axisXYZgradient = axis.cross(boneVector);
+		jacobian(0, j) = /*clamp(0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0)/*, chain->m_dedr_min[j][0], chain->m_dedr_max[j][0])*/;// * m_stepweight;
+		jacobian(1, j) =/* clamp(0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1)/*, chain->m_dedr_min[j][1], chain->m_dedr_max[j][1])*/;// * m_stepweight;
+		jacobian(2, j) =/* clamp(0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2)/*, chain->m_dedr_min[j][2], chain->m_dedr_max[j][2])*/;// * m_stepweight;
+	}
+	MatrixX_ jacobianTranspose = jacobian.transpose();
+	VectorX_ rightside = jacobianTranspose * (distance - jacobian * dTheta);//jacobianTranspose * distance - jacobianTranspose * jacobian * dTheta;
+	for(unsigned int j = 0; j < chain.m_dims.size(); ++j)
+	{
+		out_lamda[j] = abs(rightside(j) / dTheta(j));
+		//if(out_lamda[j] < 0) out_lamda[j] = 0;
+	}
 }
 
 
@@ -938,6 +1036,21 @@ void OctreeSkeleton::draw()
 				}
 			}
 			cells.pop();
+		}
+	}else if(drawType == 3)
+	{
+		for(int i = 1 ; i < m_ikchain.m_joints.size();++i)
+		{
+			int id = i;
+			int parent = m_ikchain.m_joints[i]->m_index_parent;
+			Etoile::Vector3_& pos1 = m_ikchain.m_joint_globalPositions[id];
+			Etoile::Vector3_& pos2 = m_ikchain.m_joint_globalPositions[parent];
+
+			glLineWidth(1.0f); 
+			glBegin(GL_LINES);
+			glVertex3f(pos1(0),pos1(1),pos1(2));
+			glVertex3f(pos2(0),pos2(1),pos2(2));
+			glEnd();
 		}
 	}
 

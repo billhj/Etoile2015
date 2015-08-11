@@ -55,7 +55,7 @@ namespace Etoile
 
 			sk->m_dims.push_back(&m_dims[i]);
 			sk->m_dim_axis.push_back(Vector3_::Zero());
-			sk->m_dim_anglelimites.push_back(Vector2_(-3.14,3.14));
+			sk->m_dim_anglelimites.push_back(Vector2_(-3.14159265,3.14159265));
 			sk->m_dim_localRotations.push_back(Matrix3_::Identity());
 			sk->m_dim_globalOrientations.push_back(Matrix3_::Identity());
 			sk->m_dim_localTranslations.push_back(Vector3_::Zero());
@@ -80,7 +80,7 @@ namespace Etoile
 		{
 			m_dim_localRotations[i].setIdentity();
 			m_dim_globalOrientations[i].setIdentity();
-			m_dim_anglelimites[i] = Vector2_(-3.14,3.14);
+			m_dim_anglelimites[i] = Vector2_(-3.14159265,3.14159265);
 			m_dim_values[i] = 0;
 			m_average_values[i] = 0;
 			m_dedr_max[i] = Vector3_(100,100,100);
@@ -183,7 +183,22 @@ namespace Etoile
 			}
 			++lineNb;
 		}
+		this->updateAllDims();
 		this->update();
 	}
 
+	void IKChain::draw(int type)
+	{
+		if(type == 0)
+		{
+			for(int i = 0; i < m_joints.size(); ++i)
+			{
+			
+			}
+		}
+		else if(type == 1)
+		{
+		
+		}
+	}
 }

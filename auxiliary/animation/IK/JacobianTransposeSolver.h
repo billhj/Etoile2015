@@ -16,7 +16,7 @@ namespace Etoile
 	public:
 		JacobianTransposeSolver(int maxTries = 150, double targetThreshold = 0.005, double stepweight= 0.5):IKSolver(maxTries, targetThreshold, stepweight){}
 		virtual std::string getIKSolverName(){ return "JacobianTranspose";}
-		virtual bool solve(IKChain*,Vector3_, bool) override;
-		virtual bool solve(IKChain*,Vector3_, Vector3_, bool) override{}
+		virtual void solveOneStep(IKChain*,Vector3_, bool) override;
+
 	};
 }

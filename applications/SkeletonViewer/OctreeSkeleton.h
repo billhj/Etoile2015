@@ -6,6 +6,7 @@
 #include "animation/IK/IKChain.h"
 #include "animation/IK/JacobianDLSSVDSolver.h"
 #include "animation/IK/JacobianDLSSolver.h"
+#include "animation/IK/JacobianRcompensedDLSSolver.h"
 #include "geometry/ObjectRenderer.h"
 
 struct FrameData
@@ -21,10 +22,10 @@ public:
 	//OctreeSkeleton(const std::string& name);
 	~OctreeSkeleton(void);
 	void reload(const std::string& name);
-	void solveTrajectory(const std::vector<Vec3>& points, int depth = 2);
-	void solvePrefilterTrajectory(const std::vector<Vec3>& points, int depth = 2);
-	void solveOriginalTrajectory(int start, int end);
-	void solveOriginalPrefilterTrajectory(int start, int end);
+	void solveTrajectory(const std::vector<Vec3>& points, int depth, BVH&);
+	void solvePrefilterTrajectory(const std::vector<Vec3>& points, int depth, BVH&);
+	void solveOriginalTrajectory(int start, int end, const std::string& bvhfile = "");
+	void solveOriginalPrefilterTrajectory(int start, int end, const std::string& bvhfile = "");
 
 	void solveOnePoint(const Vec3& point, int depth = 2);
 
@@ -37,6 +38,9 @@ public:
 	void computeMinMaxAverage();
 	void computeMinMaxAverageByDepth(int level);
 	void computeCellAtributes(Octree* tree);
+
+
+	void computeLamda(Etoile::IKChain& chain, FrameData& current, FrameData& target, std::vector<double>& out_lamda);
 
 	std::vector<std::string> m_headers;
 	std::vector<FrameData> m_framesData;

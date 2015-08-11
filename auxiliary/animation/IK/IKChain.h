@@ -132,6 +132,18 @@ namespace Etoile
 			out.close();
 		}
 
+		void setMinMaxLimits(int idx, double min, double max)
+		{
+			m_dim_anglelimites[idx](0) = min;
+			m_dim_anglelimites[idx](1) = max;
+			m_average_values[idx] = (min + max) * 0.5;
+		}
+
+		void updateAverageByMinMax(int idx)
+		{
+			m_average_values[idx] = (m_dim_anglelimites[idx](0) + m_dim_anglelimites[idx](1)) * 0.5;
+		}
+
 		std::vector<Joint*> m_joints;
 		std::vector<Matrix3_, Eigen::aligned_allocator<Matrix3_> > m_joint_localRotations;
 		std::vector<Matrix3_, Eigen::aligned_allocator<Matrix3_> > m_joint_globalOrientations;
@@ -157,6 +169,9 @@ namespace Etoile
 
 		bool loadFromFile(const std::string& fileName);
 		void read(std::istream& in);
+
+		void draw(int type);
+
 	public:
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
