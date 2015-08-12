@@ -64,6 +64,7 @@ namespace Etoile
 			sk->m_average_values.push_back(0);
 			sk->m_dedr_max.push_back(Vector3_(100,100,100));
 			sk->m_dedr_min.push_back(Vector3_(-100,-100,-100));
+			sk->m_posture_variation.push_back(1);
 			
 		}
 		sk->m_joint_localRotations.push_back(Matrix3_::Identity());
@@ -75,7 +76,6 @@ namespace Etoile
 
 	void IKChain::reset()
 	{
-		m_posture_variation = VectorX_(m_dims.size());
 		for(int i = 0; i < m_dims.size();++i)
 		{
 			m_dim_localRotations[i].setIdentity();
@@ -85,7 +85,7 @@ namespace Etoile
 			m_average_values[i] = 0;
 			m_dedr_max[i] = Vector3_(100,100,100);
 			m_dedr_min[i] = Vector3_(-100,-100,-100);
-			m_posture_variation(i) = 0;//0.0001;
+			m_posture_variation[i] = 1;//0.0001;
 		}
 		update();
 	}

@@ -27,6 +27,9 @@ public slots:
 	void setYMax(double v);
 	void setXMin(double v);
 	void setXMax(double v);
+	void setLamdaZ(double v);
+	void setLamdaY(double v);
+	void setLamdaX(double v);
 private:
 	Ui::IKApplicationClass ui;
 	IKWidget* _pIKWidget;

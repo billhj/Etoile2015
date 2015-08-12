@@ -198,6 +198,30 @@ public:
 		return tree;
 	}
 
+	std::vector<Octree*> getSubTreesWithPointAndDepth(const Vec3& point, int depth = 10000)
+	{
+		std::vector<Octree*> trees;
+		Octree* tree = this;
+		trees.push_back(tree);
+		int level = 0;
+		while(tree != NULL && level < depth)
+		{
+			Octree* temp = tree->children[tree->getOctantContainingPoint(point)];
+			//std::cout<<"points: " <<temp->dataIndx.size() <<std::endl;
+			if(temp == NULL) break;
+			if(temp->m_dataIndex.size() < 20)
+			{
+				break;
+			}
+			tree = temp;
+			++level;
+			trees.push_back(tree);
+		}
+		//std::cout<<"level: " << level <<std::endl;
+		return trees;
+	}
+
+
 	bool isLeafNode() const {
 		// This is correct, but overkill. See below.
 		/*

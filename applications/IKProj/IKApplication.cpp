@@ -111,6 +111,10 @@ void IKApplication::changeComboboxItem(int index)
 	ui.yMax->setValue(_pIKWidget->chain.m_dim_anglelimites[yIndex](1)  * 180 / 3.14159265);
 	ui.xMin->setValue(_pIKWidget->chain.m_dim_anglelimites[xIndex](0)  * 180 / 3.14159265);
 	ui.xMax->setValue(_pIKWidget->chain.m_dim_anglelimites[xIndex](1)  * 180 / 3.14159265);
+
+	ui.lamdaZ->setValue(_pIKWidget->chain.m_posture_variation[zIndex]);
+	ui.lamdaY->setValue(_pIKWidget->chain.m_posture_variation[yIndex]);
+	ui.lamdaX->setValue(_pIKWidget->chain.m_posture_variation[xIndex]);
 }
 
 void IKApplication::setZMin(double v)
@@ -153,4 +157,23 @@ void IKApplication::setXMax(double v)
 	int idx = _pIKWidget->chain.m_joints[ui.comboBox->currentIndex()]->m_dims[2].m_idx;
 	_pIKWidget->chain.m_dim_anglelimites[idx](1) = v * 3.14159265 / 180.0;
 	_pIKWidget->chain.updateAverageByMinMax(idx);
+}
+
+void IKApplication::setLamdaZ(double v)
+{
+	int idx = _pIKWidget->chain.m_joints[ui.comboBox->currentIndex()]->m_dims[0].m_idx;
+	_pIKWidget->chain.m_posture_variation[idx] = v;
+}
+
+	
+void IKApplication::setLamdaY(double v)
+{
+	int idx = _pIKWidget->chain.m_joints[ui.comboBox->currentIndex()]->m_dims[1].m_idx;
+	_pIKWidget->chain.m_posture_variation[idx] = v;
+}
+
+void IKApplication::setLamdaX(double v)
+{
+	int idx = _pIKWidget->chain.m_joints[ui.comboBox->currentIndex()]->m_dims[2].m_idx;
+	_pIKWidget->chain.m_posture_variation[idx] = v;
 }

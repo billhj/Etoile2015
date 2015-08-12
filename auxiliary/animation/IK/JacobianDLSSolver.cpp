@@ -47,12 +47,12 @@ namespace Etoile
 #ifdef USINGMYDLS
 
 			MatrixX_ jtj =  jacobianTranspose * jacobian;
-			MatrixX_ lamdaI =MatrixX_::Identity(jtj.rows(), jtj.cols());
+			MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
 			MatrixX_ betax = MatrixX_::Zero(jtj.rows(), jtj.cols());
 			for(int i = 0; i < jtj.rows(); ++i)
 			{
-				if(m_lamda.size() < jtj.rows()) lamdaI(i,i) = 1;
-				else lamdaI(i,i) = m_lamda[i];   //m_dampling / ( pow(10.0, i/3) * +1); 
+				lamdaI(i,i) = chain->m_posture_variation[i];   //m_dampling / ( pow(10.0, i/3) * +1); 
+				//assert(lamdaI(i,i) > 0.0000000000000000000001 && lamdaI(i,i) < 99999999999999);
 			}
 
 			MatrixX_ a = jtj + lamdaI;
@@ -70,6 +70,7 @@ namespace Etoile
 				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
 				chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);
 			}
+			//std::cout<<chain->m_dim_values[0]<<std::endl;
 			chain->updateAllDims();
 	}
 

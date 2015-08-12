@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>400</height>
+    <width>677</width>
+    <height>407</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>677</width>
      <height>21</height>
     </rect>
    </property>
@@ -268,6 +268,72 @@
       </rect>
      </property>
     </widget>
+    <widget class="QDoubleSpinBox" name="lamdaZ">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>160</y>
+       <width>62</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="decimals">
+      <number>4</number>
+     </property>
+     <property name="maximum">
+      <double>999999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.000100000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="lamdaY">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>190</y>
+       <width>62</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="decimals">
+      <number>4</number>
+     </property>
+     <property name="maximum">
+      <double>999999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.000100000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="lamdaX">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>220</y>
+       <width>62</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="decimals">
+      <number>4</number>
+     </property>
+     <property name="maximum">
+      <double>999999.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.000100000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
@@ -388,6 +454,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>lamdaZ</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>IKApplicationClass</receiver>
+   <slot>setLamdaZ(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>627</x>
+     <y>225</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>338</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lamdaY</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>IKApplicationClass</receiver>
+   <slot>setLamdaY(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>627</x>
+     <y>255</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>338</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lamdaX</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>IKApplicationClass</receiver>
+   <slot>setLamdaX(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>627</x>
+     <y>285</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>338</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>changeComboboxItem(int)</slot>
@@ -397,5 +511,8 @@
   <slot>setZMax(double)</slot>
   <slot>setYMax(double)</slot>
   <slot>setXMax(double)</slot>
+  <slot>setLamdaZ(double)</slot>
+  <slot>setLamdaY(double)</slot>
+  <slot>setLamdaX(double)</slot>
  </slots>
 </ui>

@@ -15,7 +15,6 @@ namespace Etoile
 	class JacobianRcompensedDLSSolver : public IKSolver
 	{
 		double m_dampling;
-		std::vector<double> m_lamda;
 		VectorX_ v0;
 		VectorX_ recompenseValue;
 		bool recompense;
@@ -27,8 +26,6 @@ namespace Etoile
 		//virtual bool solve(IKChain*,Vector3_, Vector3_, bool) override;
 		void setDamping(double dampling){ m_dampling = dampling; }
 		double getDamping(){return m_dampling;}
-		void setLamda(const std::vector<double>& lamda){m_lamda = lamda;}
-
 		void solveOneStep(IKChain*,Vector3_, bool b = true);
 	};
 }

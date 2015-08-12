@@ -45,7 +45,7 @@ namespace Etoile
 
 		for(int i = 0; i < jtj.rows(); ++i)
 		{
-			if(m_lamda.size() >= jtj.rows()) lamdaI(i,i) = m_lamda[i];   
+			lamdaI(i,i) = chain->m_posture_variation[i];   
 		}
 		MatrixX_ a = jtj + lamdaI;
 		MatrixX_ b = jacobianTranspose * distance; 

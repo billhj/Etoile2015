@@ -165,7 +165,7 @@ namespace Etoile
 		std::vector<Vector3_, Eigen::aligned_allocator<Vector3_>> m_dedr_min;
 
 		std::vector<double> m_average_values;
-		VectorX_ m_posture_variation;
+		std::vector<double> m_posture_variation;
 
 		bool loadFromFile(const std::string& fileName);
 		void read(std::istream& in);
