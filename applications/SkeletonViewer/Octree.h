@@ -5,7 +5,7 @@
 #include <vector>
 #include "OctreePoint.h"
 #include <iostream>
-#include "animation\IK\IKChain.h"
+#include "animation\IK\IKchain.h"
 
 #ifdef USING_BOOST
 #include <boost/serialization/serialization.hpp>

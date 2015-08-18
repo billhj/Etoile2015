@@ -43,7 +43,21 @@ public:
 	IKWidget(QMainWindow* parent = 0): _pParent(parent), _scaleFactor(0.2), _selectedJointIndex(-1)
 	{
 		framesNb = 0;
-		chain.loadFromFile("simple.sk");
+		chain = new Etoile::IKTree();
+		
+		Etoile::IKTree* tree = dynamic_cast<Etoile::IKTree*>(chain);
+		if(tree)
+		{
+			tree->loadFromFile("simpleTree.sk");
+			for(int i = 0; i < tree->m_joint_end_effector_index.size(); ++i)
+			{
+				targets.push_back(tree->m_joint_globalPositions[tree->m_joint_end_effector_index[i]]);
+			}
+		}else
+		{
+			chain->loadFromFile("simple.sk");
+		}
+		targetId = 0;
 	}
 
 	~IKWidget(){}
@@ -54,9 +68,9 @@ public:
 	{
 		if(currentJoint < 0) return;
 
-		Etoile::Matrix3_ matrix = chain.m_joint_globalOrientations[currentJoint];
+		Etoile::Matrix3_ matrix = chain->m_joint_globalOrientations[currentJoint];
 		
-		Etoile::Vector3_ pos = chain.m_joint_globalPositions[currentJoint];
+		Etoile::Vector3_ pos = chain->m_joint_globalPositions[currentJoint];
 		float mat[4][4];
 			for(int w = 0; w < 3; ++w)
 				for(int h = 0; h < 3; ++h)
@@ -80,7 +94,7 @@ public:
 		glLineWidth(0.3);
 		glColor3f(1,0.4,0.7);
 		qglviewer::Vec screenPos = camera()->projectedCoordinatesOf(qglviewer::Vec(pos.x(), pos.y(), pos.z()));
-		drawText((int)screenPos[0]+20, (int)screenPos[1]-10, QString(" %4: [ %1, %2, %3 ] ").arg(pos.x(), 0, 'f',2).arg(pos.y(), 0, 'f',2).arg(pos.z(), 0, 'f',2).arg(QString(chain.m_joints[currentJoint]->m_name.c_str())) );
+		drawText((int)screenPos[0]+20, (int)screenPos[1]-10, QString(" %4: [ %1, %2, %3 ] ").arg(pos.x(), 0, 'f',2).arg(pos.y(), 0, 'f',2).arg(pos.z(), 0, 'f',2).arg(QString(chain->m_joints[currentJoint]->m_name.c_str())) );
 
 	}
 
@@ -276,25 +290,39 @@ protected:
 			int i = 0;
 			std::string name;
 			Etoile::Vector3_ posM;
-			const std::vector<Etoile::IKChain::Joint*>& joints = chain.m_joints;
+			const std::vector<Etoile::IKChain::Joint*>& joints = chain->m_joints;
 			
 			for(int i = 0; i < joints.size(); ++i)
 			{
-				Etoile::Vector3_ pos = chain.m_joint_globalPositions[i];
+				Etoile::Vector3_ pos = chain->m_joint_globalPositions[i];
 				qglviewer::Vec screenPos = cam->projectedCoordinatesOf(qglviewer::Vec(pos[0],pos[1],pos[2]));
 				double dis = Etoile::Vec2d(   Etoile::Vec2d(screenPos[0] , screenPos[1]) - Etoile::Vec2d(x , y)   ).length();
 				if( dis < minScreenDistance )
 				{
 					minScreenDistance = dis;
 					_selectedJointIndex = i;
-					name = chain.m_joints[i]->m_name;
+					name = chain->m_joints[i]->m_name;
 					posM = pos;
 				}
 			}
 			std::cout<<"selected Joint: " << name<<std::endl;
-			if(_selectedJointIndex == joints.size() - 1){
-				_manipulator.reset();
-				_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
+			Etoile::IKTree* tree = dynamic_cast<Etoile::IKTree*>(chain);
+			if(tree)
+			{
+				for(int i = 0; i < tree->m_joint_end_effector_index.size(); ++i)
+				{
+					if(_selectedJointIndex == tree->m_joint_end_effector_index[i])
+					{
+						_manipulator.reset();
+						_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
+						targetId = i;
+					}
+				}
+			}else{
+				if(_selectedJointIndex == joints.size() - 1){
+					_manipulator.reset();
+					_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
+				}
 			}
 
 		}
@@ -433,10 +461,10 @@ private:
 	void drawIK()
 	{
 		glMatrixMode(GL_MODELVIEW);
-		for(int i = 0; i < chain.m_joints.size(); ++i)
+		for(int i = 0; i < chain->m_joints.size(); ++i)
 		{
-			Etoile::Matrix3_ matrix = chain.m_joint_globalOrientations[i];
-			Etoile::Vector3_ pos = chain.m_joint_globalPositions[i];
+			Etoile::Matrix3_ matrix = chain->m_joint_globalOrientations[i];
+			Etoile::Vector3_ pos = chain->m_joint_globalPositions[i];
 			float mat[4][4];
 			for(int w = 0; w < 3; ++w)
 				for(int h = 0; h < 3; ++h)
@@ -465,11 +493,11 @@ private:
 
 			glColor3f(0.1,0.4,0.4);
 			Etoile::drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.02, 10, 10);
-			int parent = chain.m_joints[i]->m_index_parent;
+			int parent = chain->m_joints[i]->m_index_parent;
 			if(parent >= 0)
 			{
 				glColor3f(0.1,0.4,0.7);
-				Etoile::drawCylinder_convenient(pos.x(), pos.y(), pos.z(), chain.m_joint_globalPositions[parent].x(), chain.m_joint_globalPositions[parent].y(), chain.m_joint_globalPositions[parent].z() , 0.01, 10);
+				Etoile::drawCylinder_convenient(pos.x(), pos.y(), pos.z(), chain->m_joint_globalPositions[parent].x(), chain->m_joint_globalPositions[parent].y(), chain->m_joint_globalPositions[parent].z() , 0.01, 10);
 			}
 		}
 	}
@@ -485,7 +513,13 @@ signals:
 			myTimer.start();
 			if(_pSolver != NULL)
 			{
-				_pSolver->solve(&chain, Etoile::Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z), true);
+				Etoile::IKTree* tree = dynamic_cast<Etoile::IKTree*>(chain);
+				if(tree)
+				{
+					targets[targetId] = Etoile::Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z);
+					_pSolver->solve(tree, targets, true);
+				}else
+					_pSolver->solve(chain, Etoile::Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z), true);
 				//int nMilliseconds = myTimer.elapsed();
 				//std::cout<<_pSolver->getIKSolverName() << " nMilliseconds : " << nMilliseconds<<std::endl;
 			}
@@ -505,8 +539,10 @@ public:
 
 	Etoile::SimpleManipulator _manipulator;
 	Etoile::IKSolver* _pSolver;
-	Etoile::IKChain chain;
+	Etoile::IKChain* chain;
 	int number_bones;
 	Etoile::Vec3f _original;
+	std::vector<Etoile::Vector3_> targets;
+	int targetId;
 	//std::vector<IKSolver*> _solvers;
 };

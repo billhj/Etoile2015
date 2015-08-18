@@ -167,8 +167,8 @@ namespace Etoile
 		std::vector<double> m_average_values;
 		std::vector<double> m_posture_variation;
 
-		bool loadFromFile(const std::string& fileName);
-		void read(std::istream& in);
+		virtual bool loadFromFile(const std::string& fileName);
+		virtual void read(std::istream& in);
 
 		void draw(int type);
 
@@ -178,7 +178,13 @@ namespace Etoile
 
 	struct IKTree : public IKChain
 	{
-	std::vector<int> m_end_effector_index;
+	std::vector<int> m_joint_end_effector_index;
+	std::vector<int> m_dim_end_effector_index;
+	std::vector<int> m_joint_identifier;
+	std::vector<int> m_dim_identifier;
+
+	virtual bool loadFromFile(const std::string& fileName) override;
+	virtual void read(std::istream& in) override;
 	};
 }
 

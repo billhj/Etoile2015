@@ -1319,9 +1319,9 @@ void OctreeSkeleton::computeLamda(Etoile::IKChain& chain1, FrameData& current, F
 			axis = chain.m_dim_globalOrientations[lastDim] * axis;
 		}
 		Vector3_ axisXYZgradient = axis.cross(boneVector);
-		jacobian(0, j) = /*clamp(0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0)/*, chain->m_dedr_min[j][0], chain->m_dedr_max[j][0])*/;// * m_stepweight;
-		jacobian(1, j) =/* clamp(0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1)/*, chain->m_dedr_min[j][1], chain->m_dedr_max[j][1])*/;// * m_stepweight;
-		jacobian(2, j) =/* clamp(0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2)/*, chain->m_dedr_min[j][2], chain->m_dedr_max[j][2])*/;// * m_stepweight;
+		jacobian(0, j) = /*clamp(0 == axisXYZgradient(0)? 0.000001:*/ axisXYZgradient(0)/*, chain.m_dedr_min[j][0], chain.m_dedr_max[j][0])*/;// * m_stepweight;
+		jacobian(1, j) =/* clamp(0 == axisXYZgradient(1)? 0.000001:*/ axisXYZgradient(1)/*, chain.m_dedr_min[j][1], chain.m_dedr_max[j][1])*/;// * m_stepweight;
+		jacobian(2, j) =/* clamp(0 == axisXYZgradient(2)? 0.000001:*/ axisXYZgradient(2)/*, chain.m_dedr_min[j][2], chain.m_dedr_max[j][2])*/;// * m_stepweight;
 	}
 	MatrixX_ jacobianTranspose = jacobian.transpose();
 	VectorX_ rightside = jacobianTranspose * (distance - jacobian * dTheta);//jacobianTranspose * distance - jacobianTranspose * jacobian * dTheta;

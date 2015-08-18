@@ -20,6 +20,7 @@ namespace Etoile
 		m_dampling(dampling){}
 		virtual std::string getIKSolverName(){ return "JacobianDLS";}
 		virtual void solveOneStep(IKChain*,Vector3_, bool b = true) override;
+		virtual void solveOneStep(IKTree*, std::vector<Vector3_>, bool b = true) override;
 		//virtual bool solve(IKChain*,Vector3_, Vector3_, bool) override;
 		void setDamping(double dampling){ m_dampling = dampling; }
 		double getDamping(){return m_dampling;}

@@ -3,7 +3,7 @@
 #include <vector>
 #include "Octree.h"
 #include "animation/BVH.h"
-#include "animation/IK/IKChain.h"
+#include "animation/IK/IKchain.h"
 #include "animation/IK/JacobianDLSSVDSolver.h"
 #include "animation/IK/JacobianDLSSolver.h"
 #include "animation/IK/JacobianRcompensedDLSSolver.h"

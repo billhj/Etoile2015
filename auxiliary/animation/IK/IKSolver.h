@@ -8,7 +8,7 @@
 
 #pragma once
 #include <vector>
-#include "IKChain.h"
+#include "IKchain.h"
 #include <ctime>
 
 namespace Etoile
@@ -72,6 +72,49 @@ namespace Etoile
 		//virtual bool solve(IKChain*, Vector3_, Vector3_, bool) = 0;
 		virtual void solveOneStep(IKChain*, Vector3_, bool) = 0;
 
+
+
+		virtual bool solve(IKTree* chain, std::vector<Vector3_> targets, bool enableConstraints = true)
+		{
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+		clock_t time = clock();
+#endif
+			chain->updateAllDims();
+			double distance = 0;
+			for(int i = 0; i < chain->m_dim_end_effector_index.size(); ++i)
+			{
+				distance += (targets[i] - chain->m_dim_globalPositions[chain->m_dim_end_effector_index[i]]).norm();
+			}
+
+			int tries = 0;
+			while (tries < m_maxTries &&
+				(distance > m_targetThreshold) || tries == 0)
+			{
+				++tries;
+				solveOneStep(chain, targets, enableConstraints);
+				distance = 0;
+				for(int i = 0; i < chain->m_dim_end_effector_index.size(); ++i)
+				{
+					distance += (targets[i] - chain->m_dim_globalPositions[chain->m_dim_end_effector_index[i]]).norm();
+				}
+			}
+
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+		time = clock() - time;
+		int ms = double(time) / CLOCKS_PER_SEC * 1000;
+		std::cout<<"timee elapsed: "<<ms<<std::endl;
+		std::cout<<"iterations: "<<tries<< " distance: "<<distance<<std::endl;
+#endif
+			chain->update();
+			/*if (distance.norm() > m_targetThreshold)
+			{
+				return false;
+			}*/
+			return true;
+		}
+
+
+		virtual void solveOneStep(IKTree*, std::vector<Vector3_>, bool){}
 
 		inline double getSingleStepValue() const
 		{
