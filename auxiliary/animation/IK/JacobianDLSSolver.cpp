@@ -46,12 +46,11 @@ namespace Etoile
 #ifdef USINGMYDLS
 
 		MatrixX_ jtj =  jacobianTranspose * jacobian;
-		MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
-		MatrixX_ betax = MatrixX_::Zero(jtj.rows(), jtj.cols());
+		MatrixX_ lamdaI = MatrixX_::Zero(jtj.rows(), jtj.cols());
 		for(int i = 0; i < jtj.rows(); ++i)
 		{
 			lamdaI(i,i) = chain->m_posture_variation[i];   //m_dampling / ( pow(10.0, i/3) * +1); 
-			//assert(lamdaI(i,i) > 0.0000000000000000000001 && lamdaI(i,i) < 99999999999999);
+			assert(lamdaI(i,i) > 0.0000000000000000000001 && lamdaI(i,i) < 99999999999999);
 		}
 
 		MatrixX_ a = jtj + lamdaI;
@@ -88,14 +87,10 @@ namespace Etoile
 		{
 
 			MatrixX_ jacobian = MatrixX_::Zero(rowDim, columnDim);
-			VectorX_ distance(rowDim);
 			int endeffectorIdx = chain->m_dim_end_effector_index[ei];
 
 			Vector3_& endpos = chain->m_dim_globalPositions[endeffectorIdx];
-			Vector3_ dis = (targets[ei]-endpos);
-			distance(0) = dis(0);
-			distance(1) = dis(1);
-			distance(2) = dis(2);
+			Vector3_ distance = (targets[ei]-endpos);
 
 			for(unsigned int j = 0; j < chain->m_dims.size(); ++j)
 			{
@@ -128,8 +123,7 @@ namespace Etoile
 
 			MatrixX_ jacobianTranspose = jacobian.transpose();
 			MatrixX_ jtj =  jacobianTranspose * jacobian;
-			MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
-			MatrixX_ betax = MatrixX_::Zero(jtj.rows(), jtj.cols());
+			MatrixX_ lamdaI = MatrixX_::Zero(jtj.rows(), jtj.cols());
 			for(int i = 0; i < jtj.rows(); ++i)
 			{
 				lamdaI(i,i) = chain->m_posture_variation[i];   

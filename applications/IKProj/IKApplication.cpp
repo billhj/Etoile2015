@@ -23,8 +23,8 @@ void IKApplication::addMenu()
 {
 	QMenuBar* bar = this->menuBar();
 	QMenu* ik = bar->addMenu("IK");
-	QAction* MS = ik->addAction("JacobianRcompensedDLSSolver");
-	QAction* CCD = ik->addAction("JacobianDLSSVDSolver");
+	QAction* MS = ik->addAction("^-^");
+	QAction* CCD = ik->addAction(":)");
 	QAction* PI = ik->addAction("JacobianPseudoInverse");
 	QAction* TRS = ik->addAction("JacobianTranspose");
 	QAction* DLS = ik->addAction("JacobianDLS");
@@ -41,11 +41,11 @@ void IKApplication::addMenu()
 void IKApplication::applyIKAction(QAction* action)
 {
 	QString t = action->text();
-	if(t.toStdString() == "JacobianRcompensedDLSSolver")
+	if(t.toStdString() == "^-^")
 	{
 		_pIKWidget->setIKSolver(new Etoile::JacobianRcompensedDLSSolver(_pIKWidget->getIKSolver()->getMaxNumberOfTries()));
 	}
-	else if(t.toStdString() == "JacobianDLSSVDSolver")
+	else if(t.toStdString() == ":)")
 	{
 		_pIKWidget->setIKSolver(new Etoile::JacobianDLSSVDSolver(_pIKWidget->getIKSolver()->getMaxNumberOfTries()));
 	}
@@ -67,7 +67,7 @@ void IKApplication::applyIKAction(QAction* action)
 void IKApplication::openAbout()
 {
 	QMessageBox msgBox;
-	msgBox.setText(" IKViewer \n Copyright(C) 2009-2012 \n author: Jing HUANG \n jing.huang@telecom-paristech.fr    ");
+	msgBox.setText(" IKViewer \n Copyright(C) 2009-2012 \n author: ");
 	//msgBox.setInformativeText("Do you want to save your changes?");
 	//msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 	//msgBox.setDefaultButton(QMessageBox::Save);
@@ -77,7 +77,7 @@ void IKApplication::openAbout()
 void IKApplication::openUsage()
 {
 	QMessageBox msgBox;
-	msgBox.setText(" IKViewer \n Copyright(C) 2009-2012 \n author: Jing HUANG \n jing.huang@telecom-paristech.fr \n 1: Shift + Right_Mouse: select the joint \n 2: use the manipulator to apply IK");
+	msgBox.setText(" IKViewer \n Copyright(C) 2009-2012 \n author: \n 1: Shift + Right_Mouse: select the joint or two end effectors (wrist) \n 2: use the manipulator to apply IK");
 	int ret = msgBox.exec();
 }
 

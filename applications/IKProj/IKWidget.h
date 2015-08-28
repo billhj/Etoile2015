@@ -27,6 +27,7 @@
 #include "animation/IK/JacobianTransposeSolver.h"
 #include <QTime>
 #include "renderer/OpenGL/glfunctions.h"
+#include <QElapsedTimer>
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
@@ -37,7 +38,7 @@ class IKWidget : public QGLViewer
 {
 	Q_OBJECT
 
-		static const int WIDGETWIDTH = 800, WIDGETHEIGHT = 600;
+		//static const int WIDGETWIDTH = 800, WIDGETHEIGHT = 600;
 public:
 	int framesNb;
 	IKWidget(QMainWindow* parent = 0): _pParent(parent), _scaleFactor(0.2), _selectedJointIndex(-1)
@@ -53,6 +54,10 @@ public:
 			{
 				targets.push_back(tree->m_joint_globalPositions[tree->m_joint_end_effector_index[i]]);
 			}
+			_manipulatorRight.reset();
+			_manipulatorRight.setOrigine(qglviewer::Vec(targets[0].x(), targets[0].y(), targets[0].z()));
+			_manipulatorLeft.reset();
+			_manipulatorLeft.setOrigine(qglviewer::Vec(targets[1].x(), targets[1].y(), targets[1].z()));
 		}else
 		{
 			chain->loadFromFile("simple.sk");
@@ -234,8 +239,8 @@ protected:
 		{
 			QMenu menu( this );
 			std::map<QAction*, int> menuMap;
-			menuMap[menu.addAction("JacobianRcompensedDLSSolver")] = 1;
-			menuMap[menu.addAction("JacobianDLSSVDSolver")] = 2;
+			menuMap[menu.addAction("^-^")] = 1;
+			menuMap[menu.addAction(":)")] = 2;
 			menuMap[menu.addAction("PseudoInverse")] = 3;
 			menuMap[menu.addAction("Transpose")] = 4;
 			menuMap[menu.addAction("DLS")] = 5;
@@ -313,16 +318,24 @@ protected:
 				{
 					if(_selectedJointIndex == tree->m_joint_end_effector_index[i])
 					{
-						_manipulator.reset();
-						_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
-						targetId = i;
+						if(i == 0)
+						{
+							//_manipulatorRight.reset();
+							_manipulatorRight.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
+							targetId = i;
+						}else
+						{
+							//_manipulatorLeft.reset();
+							_manipulatorLeft.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
+							targetId = i;
+						}
 					}
 				}
 			}else{
-				if(_selectedJointIndex == joints.size() - 1){
+				/*if(_selectedJointIndex == joints.size() - 1){
 					_manipulator.reset();
 					_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
-				}
+				}*/
 			}
 
 		}
@@ -374,7 +387,10 @@ private:
 		drawText((int)30, (int)25, QString(" shift + right_mouse : choose one joint !"), serifFont);
 
 		glPushMatrix();
-		_manipulator.draw();
+		_manipulatorRight.draw();
+		glPopMatrix();
+		glPushMatrix();
+		_manipulatorLeft.draw();
 		glPopMatrix();
 
 		if(_pSolver != NULL)
@@ -382,6 +398,8 @@ private:
 			drawText((int)600, (int)25, QString(_pSolver->getIKSolverName().c_str()), serifFont);
 			drawText((int)600, (int)40, QString("Max Iterations: %1").arg(_pSolver->getMaxNumberOfTries()), serifFont);
 			drawText((int)600, (int)55, QString("Distance Threshold: %1").arg(_pSolver->getTargetThreshold()), serifFont);
+
+			drawText((int)600, (int)70, QString("solve Time: %1").arg(speed).arg(" msc"), serifFont);
 		}
 	}
 
@@ -441,11 +459,12 @@ private:
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse1);
 		glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular1);
 
-		connect(&_manipulator, SIGNAL(moved()), this, SLOT(applyJoint()));
+		connect(&_manipulatorRight, SIGNAL(moved()), this, SLOT(applyJoint()));
+		connect(&_manipulatorLeft, SIGNAL(moved()), this, SLOT(applyJoint2()));
 		_pSolver = new Etoile::JacobianDLSSolver();
 	}
 
-	virtual QSize sizeHint () const
+	/*virtual QSize sizeHint () const
 	{
 		return QSize(WIDGETWIDTH,WIDGETHEIGHT);
 	}
@@ -456,7 +475,7 @@ private:
 	virtual QSize maxmumSizeHint () const
 	{
 		return QSize(WIDGETWIDTH,WIDGETHEIGHT);
-	}
+	}*/
 
 	void drawIK()
 	{
@@ -509,21 +528,45 @@ signals:
 	public slots:
 		void applyJoint()
 		{
-			QTime myTimer;
-			myTimer.start();
+			QElapsedTimer timer;
+			timer.start();
 			if(_pSolver != NULL)
 			{
 				Etoile::IKTree* tree = dynamic_cast<Etoile::IKTree*>(chain);
 				if(tree)
 				{
-					targets[targetId] = Etoile::Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z);
+					targets[0] = Etoile::Vector3_(_manipulatorRight.getPosition().x, _manipulatorRight.getPosition().y, _manipulatorRight.getPosition().z);
+					tree->resetValues();
 					_pSolver->solve(tree, targets, true);
 				}else
-					_pSolver->solve(chain, Etoile::Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z), true);
+					_pSolver->solve(chain, Etoile::Vector3_(_manipulatorRight.getPosition().x, _manipulatorRight.getPosition().y, _manipulatorRight.getPosition().z), true);
 				//int nMilliseconds = myTimer.elapsed();
 				//std::cout<<_pSolver->getIKSolverName() << " nMilliseconds : " << nMilliseconds<<std::endl;
 			}
+			int nano = timer.nsecsElapsed();
+			speed = nano * 0.000001;
 				
+		}
+
+		void applyJoint2()
+		{
+			QElapsedTimer timer;
+			timer.start();
+			if(_pSolver != NULL)
+			{
+				Etoile::IKTree* tree = dynamic_cast<Etoile::IKTree*>(chain);
+				if(tree)
+				{
+					targets[1] = Etoile::Vector3_(_manipulatorLeft.getPosition().x, _manipulatorLeft.getPosition().y, _manipulatorLeft.getPosition().z);
+					tree->resetValues();
+					_pSolver->solve(tree, targets, true);
+				}else
+					_pSolver->solve(chain, Etoile::Vector3_(_manipulatorLeft.getPosition().x, _manipulatorLeft.getPosition().y, _manipulatorLeft.getPosition().z), true);
+				//int nMilliseconds = myTimer.elapsed();
+				//std::cout<<_pSolver->getIKSolverName() << " nMilliseconds : " << nMilliseconds<<std::endl;
+			}
+			int nano = timer.nsecsElapsed();
+			speed = nano * 0.000001;
 		}
 public:
 
@@ -537,12 +580,13 @@ public:
 
 	Etoile::glDrawFunctions _glDrawFunctions;
 
-	Etoile::SimpleManipulator _manipulator;
+	Etoile::SimpleManipulator _manipulatorRight, _manipulatorLeft;
 	Etoile::IKSolver* _pSolver;
 	Etoile::IKChain* chain;
 	int number_bones;
 	Etoile::Vec3f _original;
 	std::vector<Etoile::Vector3_> targets;
 	int targetId;
+	double speed;
 	//std::vector<IKSolver*> _solvers;
 };

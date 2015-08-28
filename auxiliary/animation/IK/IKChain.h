@@ -57,6 +57,7 @@ namespace Etoile
 		}
 
 		void reset();
+		void resetValues();
 
 		void updateDimLocalRotation(int idx)
 		{

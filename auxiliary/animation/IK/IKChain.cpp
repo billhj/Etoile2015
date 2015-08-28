@@ -90,6 +90,16 @@ namespace Etoile
 		update();
 	}
 
+	void IKChain::resetValues()
+	{
+		for(int i = 0; i < m_dims.size();++i)
+		{
+			m_dim_values[i] = 0;
+		}
+		updateAllDims();
+		update();
+	}
+
 	bool IKChain::loadFromFile(const std::string& fileName)
 	{
 		std::fstream in(fileName.c_str(), std::ios_base::in );

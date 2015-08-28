@@ -10,7 +10,7 @@
 //#define COMPUTETRAJECTORY
 
 #define USINGQTIMER
-#define USING_TBB
+//#define USING_TBB
 #ifdef USING_TBB
 #include "tbb/tbb.h"
 //using namespace tbb;
@@ -221,6 +221,7 @@ OctreeSkeleton::~OctreeSkeleton(void)
 }
 
 int _start = 0;
+std::vector<double> initV;
 void OctreeSkeleton::solveOriginalTrajectory(int start, int end, const std::string& bvhfile)
 {
 	BVH bvh;
@@ -239,7 +240,7 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end, const std::stri
 	std::vector<Vec3> points;
 	_start = start;
 	m_ikchain.reset();
-	std::vector<double> initV(m_ikchain.m_dim_values.size());
+	initV.resize(m_ikchain.m_dim_values.size());
 	for(int i = start ; i < (end < temp.size() ? end : temp.size() - 1); ++i)
 	{
 
@@ -363,7 +364,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 	int solvable = 0;
 	int solvable2 = 0;
 	FLOG<<points.size()<< "points, depth" <<depth<<std::endl;
-	FrameData& iniv = m_framesData[_start];
+	//FrameData& iniv = m_framesData[_start];
 
 	std::vector<Frame> temp = bvh.m_frames;
 	std::vector<Frame> fs(points.size());
@@ -399,11 +400,11 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 		std::vector<Octree*> trees = m_treeowner.p_octreeRoot->getSubTreesWithPointAndDepth(point, depth);
 		if(depth != 0)
 		{
-			int n = 1;//trees.size();
-			//n -= 2;
+			int n = trees.size();
+			n -= 2;
 			for(int j = 0; j < ikchains[i].m_dims.size();++j)
 			{
-				ikchains[i].m_dim_anglelimites[j] = Etoile::Vector2_(trees[1]->m_cell_min[j], trees[1]->m_cell_max[j]);
+				ikchains[i].m_dim_anglelimites[j] = Etoile::Vector2_(trees[n]->m_cell_min[j], trees[n]->m_cell_max[j]);
 				ikchains[i].m_average_values[j] = /*(tree->m_cell_min[j] + tree->m_cell_max[j])*0.5;*/trees.back()->m_cell_average[j];
 				ikchains[i].m_posture_variation[j] = trees.back()->m_lamda[j];
 
@@ -415,7 +416,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 		ikchains[i].m_dim_values = ikchains[i].m_average_values;
 		if(i == 0)
 		{
-			ikchains[i].m_dim_values = iniv.m_values;
+			ikchains[i].m_dim_values = initV;
 
 			sol = solver->solve(&ikchains[i], Etoile::Vector3_(point.x, point.y, point.z), true);
 		}
@@ -436,11 +437,13 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 		{
 			Vec3 point = points[i];
 			std::vector<Octree*> trees = m_treeowner.p_octreeRoot->getSubTreesWithPointAndDepth(point, depth);
+			int n = trees.size();
+			n -= 2;
 			if(depth != 0)
 			{
 				for(int j = 0; j < m_ikchain.m_dims.size();++j)
 				{
-					m_ikchain.m_dim_anglelimites[j] = Etoile::Vector2_(trees[1]->m_cell_min[j], trees[1]->m_cell_max[j]);
+					m_ikchain.m_dim_anglelimites[j] = Etoile::Vector2_(trees[n]->m_cell_min[j], trees[n]->m_cell_max[j]);
 					m_ikchain.m_average_values[j] = /*(tree->m_cell_min[j] + tree->m_cell_max[j])*0.5;*/trees.back()->m_cell_average[j];
 					m_ikchain.m_posture_variation[j] = trees.back()->m_lamda[j];
 				}
@@ -451,7 +454,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 			m_ikchain.m_dim_values = m_ikchain.m_average_values;
 			if(i == 0)
 			{
-				m_ikchain.m_dim_values = iniv.m_values;
+				m_ikchain.m_dim_values = initV;
 
 				sol = solver->solve(&m_ikchain, Etoile::Vector3_(point.x, point.y, point.z), true);
 			}
@@ -468,7 +471,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 			}
 
 			f_values[i] = (m_ikchain.m_dim_values);
-			/*for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
+			for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 			{
 				Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
 				BVH::Joint* jointbvh =  bvh.getJoint(jo->m_name);
@@ -478,7 +481,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 				}
 			}
 			Frame frame = bvh.createFrame();
-			fs[i] = (frame);*/
+			fs[i] = (frame);
 		}
 	}
 #ifdef COMPUTETRAJECTORY
@@ -492,6 +495,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 	time = clock() - time;
 #endif
 
+#ifdef USING_TBB
 	for(int i = 0; i < points.size();++i)
 	{
 		for(int j = 0; j < ikchains[i].m_joints.size() - 1;++j)
@@ -506,7 +510,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 		Frame frame = bvh.createFrame();
 		fs[i] = (frame); 
 	}
-
+#endif
 
 
 
@@ -579,7 +583,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 
 	if(i == 0)
 	{
-		ikchains[i].m_dim_values = iniv.m_values;
+		ikchains[i].m_dim_values = initV;
 
 		sol = solver->solve(&ikchains[i], Etoile::Vector3_(point.x, point.y, point.z), true);
 	}
@@ -614,7 +618,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 
 			if(i == 0)
 			{
-				m_ikchain.m_dim_values = iniv.m_values;
+				m_ikchain.m_dim_values = initV;
 
 				sol = solver->solve(&m_ikchain, Etoile::Vector3_(point.x, point.y, point.z), true);
 			}
@@ -629,7 +633,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 			}
 			f_values[i] = (m_ikchain.m_dim_values);
 
-			/*for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
+			for(int j = 0; j < m_ikchain.m_joints.size() - 1;++j)
 			{
 				Etoile::IKChain::Joint* jo =  m_ikchain.m_joints[j];
 				BVH::Joint* jointbvh =  bvh.getJoint(jo->m_name);
@@ -639,7 +643,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 				}
 			}
 			Frame frame = bvh.createFrame();
-			fs2[i] = (frame);*/
+			fs2[i] = (frame);
 		}
 	}
 #ifdef COMPUTETRAJECTORY
@@ -654,6 +658,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 	time2 = clock() - time2;
 #endif
 
+#ifdef USING_TBB
 	for(int i = 0; i < points.size();++i)
 	{
 		for(int j = 0; j < ikchains[i].m_joints.size() - 1;++j)
@@ -669,6 +674,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 		fs2[i] = (frame);
 
 	}
+#endif
 
 	std::vector<Frame> fsf2(points.size());
 #ifdef USINGQTIMER
