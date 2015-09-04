@@ -70,7 +70,35 @@
 				for(int j = 0; j < joint->m_dof; ++j)
 				{
 					Dim& dim = joint->m_dims[j];
-					f.m_values[dim.m_index] = dim.m_value;
+					if(dim.m_value != 0)
+						f.m_values[dim.m_index] = dim.m_value;
+				}
+			}
+
+			resetDimValue();
+			return f;
+		}
+
+		Frame createFrame(int index)
+		{
+			Frame f = m_frames[index];
+			//f.m_values.resize(m_dims);
+			for(unsigned int i = 0; i < m_joints.size(); ++i)
+			{
+				Joint* joint = m_joints[i];
+				for(int j = 0; j < joint->m_dof; ++j)
+				{
+					Dim& dim = joint->m_dims[j];
+					if(dim.m_value != 0)
+						f.m_values[dim.m_index] = dim.m_value;
+				}
+				if(joint->m_name == "Hips"||joint->m_name == "RightHip"||joint->m_name == "RightKnee"||joint->m_name == "RightAnkle"||joint->m_name == "RightToe"||joint->m_name == "LeftHip"||joint->m_name == "LeftKnee"||joint->m_name == "LeftAnkle"||joint->m_name == "LeftToe")
+				{
+					for(int j = 0; j < joint->m_dof; ++j)
+					{
+						Dim& dim = joint->m_dims[j];
+						f.m_values[dim.m_index] = 0;
+					}
 				}
 			}
 

@@ -10,7 +10,7 @@
 //#define COMPUTETRAJECTORY
 
 #define USINGQTIMER
-//#define USING_TBB
+#define USING_TBB
 #ifdef USING_TBB
 #include "tbb/tbb.h"
 //using namespace tbb;
@@ -261,7 +261,7 @@ void OctreeSkeleton::solveOriginalTrajectory(int start, int end, const std::stri
 		}
 		Etoile::Vector3_ p = m_ikchain.m_dim_globalPositions.back();
 		points.push_back(Vec3(p[0],p[1],p[2]));
-		Frame frame = bvh.createFrame();
+		Frame frame = bvh.createFrame(i);
 		fs.push_back(frame);
 	}
 	bvh.m_frames = fs;
@@ -507,7 +507,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 				jointbvh->m_dims[h].m_value = ikchains[i].m_dim_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
 			}
 		}
-		Frame frame = bvh.createFrame();
+		Frame frame = bvh.createFrame(i);
 		fs[i] = (frame); 
 	}
 #endif
@@ -548,7 +548,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 					jointbvh->m_dims[h].m_value = m_ikchain.m_dim_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
 				}
 			}
-			Frame frame = bvh.createFrame();
+			Frame frame = bvh.createFrame(i);
 			fsf[i] = (frame);
 		}
 	}
@@ -670,7 +670,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 				jointbvh->m_dims[h].m_value = ikchains[i].m_dim_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
 			}
 		}
-		Frame frame = bvh.createFrame();
+		Frame frame = bvh.createFrame(i);
 		fs2[i] = (frame);
 
 	}
@@ -684,7 +684,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 	clock_t timef2 = clock();
 #endif
 
-	filterring2(f_values, f_values_filtered, 2);
+	filterring2(f_values, f_values_filtered, 3);
 #ifdef USINGQTIMER
 	int nanof2 = timerf2.nsecsElapsed();
 	double timef2 = nanof2 * 0.000001;
@@ -709,7 +709,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 					jointbvh->m_dims[h].m_value = m_ikchain.m_dim_values[ jo->m_dims[h].m_idx ] * 180.0/3.14159265;
 				}
 			}
-			Frame frame = bvh.createFrame();
+			Frame frame = bvh.createFrame(i);
 			fsf2[i] = (frame);
 		}
 	}
