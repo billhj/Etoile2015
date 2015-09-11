@@ -359,6 +359,7 @@ void OctreeSkeleton::solveOriginalPrefilterTrajectory(int start, int end, const 
 	solvePrefilterTrajectory(points, 8);*/
 }
 
+int level = 4;
 void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth, BVH& bvh)
 {
 	int solvable = 0;
@@ -398,15 +399,24 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 
 		Vec3 point = points[i];
 		std::vector<Octree*> trees = m_treeowner.p_octreeRoot->getSubTreesWithPointAndDepth(point, depth);
+		
 		if(depth != 0)
 		{
 			int n = trees.size();
-			n -= 2;
+			//n -= 2;
+			n = level;
+			while(n >= trees.size())
+			{
+				--n;
+			}
+			//if(n > 3) std::cout<<n<<std::endl;
 			for(int j = 0; j < ikchains[i].m_dims.size();++j)
 			{
 				ikchains[i].m_dim_anglelimites[j] = Etoile::Vector2_(trees[n]->m_cell_min[j], trees[n]->m_cell_max[j]);
-				ikchains[i].m_average_values[j] = /*(tree->m_cell_min[j] + tree->m_cell_max[j])*0.5;*/trees.back()->m_cell_average[j];
-				ikchains[i].m_posture_variation[j] = trees.back()->m_lamda[j];
+				//ikchains[i].m_average_values[j] = /*(tree->m_cell_min[j] + tree->m_cell_max[j])*0.5;*/trees.back()->m_cell_average[j];
+				//ikchains[i].m_posture_variation[j] = trees.back()->m_lamda[j];
+				ikchains[i].m_average_values[j] = trees[n]->m_cell_average[j];
+				ikchains[i].m_posture_variation[j] = trees[n]->m_lamda[j];
 
 			}
 		}
@@ -452,6 +462,7 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 			bool sol = true;
 
 			m_ikchain.m_dim_values = m_ikchain.m_average_values;
+			//m_ikchain.m_dim_values = initV;
 			if(i == 0)
 			{
 				m_ikchain.m_dim_values = initV;
@@ -570,11 +581,20 @@ void OctreeSkeleton::solveTrajectory(const std::vector<Vec3>& points, int depth,
 	std::vector<Octree*> trees = m_treeowner.p_octreeRoot->getSubTreesWithPointAndDepth(point, depth);
 	if(depth != 0)
 	{
+		int n = trees.size();
+		//n -= 2;
+		n = level;
+		while(n >= trees.size())
+			{
+				--n;
+			}
 		for(int j = 0; j < ikchains[i].m_dims.size();++j)
 		{
-			ikchains[i].m_dim_anglelimites[j] = Etoile::Vector2_(trees[1]->m_cell_min[j], trees[1]->m_cell_max[j]);
-			ikchains[i].m_average_values[j] = /*(tree->m_cell_min[j] + tree->m_cell_max[j])*0.5;*/trees.back()->m_cell_average[j];
-			ikchains[i].m_posture_variation[j] = trees.back()->m_lamda[j];
+			ikchains[i].m_dim_anglelimites[j] = Etoile::Vector2_(trees[n]->m_cell_min[j], trees[n]->m_cell_max[j]);
+			//ikchains[i].m_average_values[j] = /*(tree->m_cell_min[j] + tree->m_cell_max[j])*0.5;*/trees.back()->m_cell_average[j];
+			//ikchains[i].m_posture_variation[j] = trees.back()->m_lamda[j];
+			ikchains[i].m_average_values[j] = trees[n]->m_cell_average[j];
+			ikchains[i].m_posture_variation[j] = trees[n]->m_lamda[j];
 		}
 	}
 

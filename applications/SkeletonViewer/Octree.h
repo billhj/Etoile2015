@@ -209,7 +209,7 @@ public:
 			Octree* temp = tree->children[tree->getOctantContainingPoint(point)];
 			//std::cout<<"points: " <<temp->dataIndx.size() <<std::endl;
 			if(temp == NULL) break;
-			if(temp->m_dataIndex.size() < 20)
+			if(temp->m_dataIndex.size() < 2)
 			{
 				break;
 			}

@@ -70,7 +70,7 @@
 				for(int j = 0; j < joint->m_dof; ++j)
 				{
 					Dim& dim = joint->m_dims[j];
-					if(dim.m_value != 0)
+					//if(dim.m_value != 0)
 						f.m_values[dim.m_index] = dim.m_value;
 				}
 			}
@@ -89,7 +89,7 @@
 				for(int j = 0; j < joint->m_dof; ++j)
 				{
 					Dim& dim = joint->m_dims[j];
-					if(dim.m_value != 0)
+					//if(dim.m_value != 0)
 						f.m_values[dim.m_index] = dim.m_value;
 				}
 				if(joint->m_name == "Hips"||joint->m_name == "RightHip"||joint->m_name == "RightKnee"||joint->m_name == "RightAnkle"||joint->m_name == "RightToe"||joint->m_name == "LeftHip"||joint->m_name == "LeftKnee"||joint->m_name == "LeftAnkle"||joint->m_name == "LeftToe")
