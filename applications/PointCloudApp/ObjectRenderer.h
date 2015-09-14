@@ -22,6 +22,6 @@ namespace Etoile
 		}
 		virtual void draw() = 0;
 		void setVisible(bool visible){_visible = visible;}
-		
+		bool isVisible(){return _visible;}
 	};
 }

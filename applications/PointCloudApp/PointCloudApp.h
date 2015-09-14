@@ -12,10 +12,11 @@ class PointCloudApp : public QMainWindow
 public:
 	PointCloudApp(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~PointCloudApp();
-
+	public slots:
+		void openFile();
 private:
 	Ui::PointCloudAppClass ui;
-		MeshViewer* _pWidget;
+	MeshViewer* _pWidget;
 };
 
 #endif // POINTCLOUDAPP_H

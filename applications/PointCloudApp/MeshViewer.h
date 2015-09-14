@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDir>
+#include "RenderManager.h"
 
 
 using namespace Etoile;
@@ -58,16 +59,20 @@ public:
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_MULTISAMPLE);
-
+		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_LIGHTING);
+glEnable(GL_LIGHT0);
 		QString str = QDir::currentPath();
-	
+		this->setSceneRadius(100);
+		this->camera()->setPosition(qglviewer::Vec(0,0,50));
 	}
 
 
 	void draw()
 	{
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
+		RenderManager::getInstance()->renderOneFrame();
 	}
 
 };

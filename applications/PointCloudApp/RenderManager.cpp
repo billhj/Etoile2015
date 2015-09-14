@@ -28,7 +28,8 @@ namespace Etoile
 		for(unsigned int i = 0; i < m_datas.size(); ++i)
 		{
 			ObjectRenderer* obj = m_datas[i];
-			obj->draw();
+			if(obj->isVisible())
+				obj->draw();
 		}
 	}
 
