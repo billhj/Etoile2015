@@ -8,17 +8,16 @@
 
 #pragma once
 #include <string>
-#include "Component.h"
 
 namespace Etoile
 {
-	class ObjectRenderer : public Component
+	class ObjectRenderer
 	{
 	protected:
 		std::string _name;
 		bool _visible;
 	public:
-		ObjectRenderer(const std::string& name): _name(name), Component(RENDER_COMPONENT), _visible(true)
+		ObjectRenderer(const std::string& name): _name(name), _visible(true)
 		{
 		}
 		virtual void draw() = 0;
