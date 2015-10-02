@@ -53,6 +53,15 @@
     <ClCompile Include="Octree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OctreeAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IKChain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JacobianDLSSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="OctreeAnimationDemo.h">
@@ -70,6 +79,18 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="Octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OctreeAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IKChain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IKSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JacobianDLSSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

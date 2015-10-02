@@ -4,6 +4,8 @@
 #include <vector>
 #include <Eigen/Dense>
 
+#ifndef X_
+#define X_
 typedef Eigen::MatrixXd MatrixX_;
 typedef Eigen::Matrix3d Matrix3_;
 typedef Eigen::VectorXd VectorX_;
@@ -11,6 +13,7 @@ typedef Eigen::Vector3d Vector3_;
 typedef Eigen::Vector4d Vector4_;
 typedef Eigen::Vector2d Vector2_;
 typedef Eigen::AngleAxisd AngleAxis_;
+#endif
 
 #define USING_BOOST
 #ifdef USING_BOOST
@@ -43,17 +46,27 @@ namespace boost
 
 class OctreeCell;
 
+struct PointData
+{
+	std::vector<Vector3_> m_lambda_values;
+	std::vector<Vector3_> m_values;
+	std::vector<std::string> m_headers;
+};
+
 class OctreePoint
 {
 public:
-    OctreePoint(Vector3_ position = Vector3_(0,0,0), int current = -1, int previous = -1) : m_position(position),
-        m_current(current), m_previous(previous)
+    OctreePoint(Vector3_ position = Vector3_(0,0,0), int current = -1, int previous = -1, std::string sq = "") : m_position(position),
+        m_current(current)/*, m_previous(previous)*/, m_sequence(sq)
     {
 
     }
     Vector3_ m_position;
+	int m_idx;
     int m_current;
-    int m_previous;
+    //int m_previous;
+	std::string m_sequence;
+	PointData m_data;
 
 #ifdef USING_BOOST
     friend class boost::serialization::access;
@@ -62,8 +75,10 @@ public:
     void serialize(Archive & ar, const unsigned int version)
     {
         ar & m_position;
+		ar & m_idx;
         ar & m_current;
-        ar & m_previous;
+        //ar & m_previous;
+		ar & m_sequence;
     }
 #endif
 };
@@ -71,11 +86,14 @@ public:
 class Octree
 {
 public:
-    Octree();\
+    Octree();
 
     OctreeCell * p_rootcell;
     std::vector<OctreeCell*> m_tree_cell;
+	std::vector<OctreePoint> m_tree_points;
     int m_max_level;
+
+	void insertPoint(OctreePoint& point);
 
 #ifdef USING_BOOST
 
@@ -100,6 +118,7 @@ public:
     {
         ar & p_rootcell;
         ar & m_tree_cell;
+		ar & m_tree_points;
         ar & m_max_level;
     }
 #endif

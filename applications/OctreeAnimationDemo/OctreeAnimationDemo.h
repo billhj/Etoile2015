@@ -12,6 +12,11 @@ public:
 	OctreeAnimationDemo(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~OctreeAnimationDemo();
 
+	public slots:
+		void loadFile();
+		void saveFile();
+		void appendFile();
+
 private:
 	Ui::OctreeAnimationDemoClass ui;
 };
