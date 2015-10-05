@@ -51,6 +51,18 @@ struct PointData
 	std::vector<Vector3_> m_lambda_values;
 	std::vector<Vector3_> m_values;
 	std::vector<std::string> m_headers;
+
+	#ifdef USING_BOOST
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & m_lambda_values;
+		ar & m_values;
+        ar & m_headers;
+    }
+#endif
 };
 
 class OctreePoint
@@ -79,6 +91,7 @@ public:
         ar & m_current;
         //ar & m_previous;
 		ar & m_sequence;
+		ar & m_data;
     }
 #endif
 };
@@ -165,7 +178,7 @@ public:
         ar & m_origin;
         ar & m_halfDimension;
         ar & m_children;
-        ar & p_currentPoint;
+       /* ar & p_currentPoint;*/
         ar & p_octree;
 
         ar & m_parent;

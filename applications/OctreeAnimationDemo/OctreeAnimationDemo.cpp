@@ -19,13 +19,15 @@ void OctreeAnimationDemo::loadFile()
 	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("File (*.oc)"));
 	//QFile file(name);
 	if(name.isEmpty()) return;
+	p_anim->loadOctree(name.toStdString());
 }
 
 void OctreeAnimationDemo::saveFile()
 {
-	QString name = QFileDialog::getOpenFileName(this, tr("save File"),"",tr("File (*.oc)"));
+	QString name = QFileDialog::getSaveFileName(this, tr("save File"),"",tr("File (*.oc)"));
 	//QFile file(name);
 	if(name.isEmpty()) return;
+	p_anim->saveOctree(name.toStdString());
 }
 
 void OctreeAnimationDemo::appendFile()
