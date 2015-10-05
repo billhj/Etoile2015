@@ -13,8 +13,7 @@
 #include <fstream>
 //#include <Eigen/StdVector>
 
-namespace Etoile
-{
+
 #ifndef X_
 #define X_
 	typedef Eigen::MatrixXd MatrixX_;
@@ -25,6 +24,10 @@ namespace Etoile
 	typedef Eigen::Vector2d Vector2_;
 	typedef Eigen::AngleAxisd AngleAxis_;
 #endif
+
+namespace Etoile
+{
+
 
 //	
 //EIGEN_DEFINE_STL_VECTOR_SPECIALIZATION(MatrixX_)

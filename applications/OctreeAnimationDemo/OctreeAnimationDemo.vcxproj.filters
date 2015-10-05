@@ -62,6 +62,9 @@
     <ClCompile Include="JacobianDLSSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BVH.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="OctreeAnimationDemo.h">
@@ -91,6 +94,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JacobianDLSSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BVH.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
