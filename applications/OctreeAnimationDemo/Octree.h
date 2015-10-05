@@ -23,6 +23,8 @@ typedef Eigen::AngleAxisd AngleAxis_;
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/map.hpp>
 #include <iostream>
 #include <fstream>
@@ -110,16 +112,30 @@ public:
 
 #ifdef USING_BOOST
 
-    void save(const std::string& filename){
+    void saveTXT(const std::string& filename){
         std::ofstream ofs(filename);
         boost::archive::text_oarchive oa(ofs);
         oa << *this;
         ofs.close();
     }
 
-    void load(const std::string& filename){
+	void loadTXT(const std::string& filename){
         std::ifstream ifs(filename);
         boost::archive::text_iarchive ia(ifs);
+        ia >> *this;
+        ifs.close();
+    }
+
+	void saveXML(const std::string& filename){
+        std::ofstream ofs(filename);
+        boost::archive::xml_oarchive  oa(ofs);
+        oa << *this;
+        ofs.close();
+    }
+
+	void loadXML(const std::string& filename){
+        std::ifstream ifs(filename);
+        boost::archive::xml_iarchive  ia(ifs);
         ia >> *this;
         ifs.close();
     }
