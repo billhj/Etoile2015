@@ -87,7 +87,7 @@ class Octree
 {
 public:
     Octree();
-
+	Octree(const Vector3_& origin, const Vector3_& halfDim);
     OctreeCell * p_rootcell;
     std::vector<OctreeCell*> m_tree_cell;
 	std::vector<OctreePoint> m_tree_points;
@@ -137,8 +137,7 @@ public:
     int m_parent;
     std::vector<int> m_pointsIndexes;
     OctreePoint * p_currentPoint;
-
-    OctreeCell(){}
+	OctreeCell(){}
     OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* octree, int parent);
     ~OctreeCell() {
         // Recursively destroy octants

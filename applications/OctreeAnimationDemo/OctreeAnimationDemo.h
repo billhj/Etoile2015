@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include "ui_OctreeAnimationDemo.h"
+#include "OctreeAnimation.h"
 
 class OctreeAnimationDemo : public QMainWindow
 {
@@ -19,6 +20,7 @@ public:
 
 private:
 	Ui::OctreeAnimationDemoClass ui;
+	OctreeAnimation* p_anim;
 };
 
 #endif // OCTREEANIMATIONDEMO_H

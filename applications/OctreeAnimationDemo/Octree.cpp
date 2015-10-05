@@ -3,6 +3,15 @@
 Octree::Octree()
 {
 	m_max_level = 8;
+	p_rootcell = new OctreeCell(Vector3_(0,0,0), Vector3_(1,1,1), this, -1);
+	m_tree_cell.push_back(p_rootcell);
+}
+
+Octree::Octree(const Vector3_& origin, const Vector3_& halfDim)
+{
+	m_max_level = 8;
+	p_rootcell = new OctreeCell(origin, halfDim, this, -1);
+	m_tree_cell.push_back(p_rootcell);
 }
 
 void Octree::insertPoint(OctreePoint& point)
