@@ -126,7 +126,7 @@ public:
         ifs.close();
     }
 
-	void saveXML(const std::string& filename){
+	/*void saveXML(const std::string& filename){
         std::ofstream ofs(filename);
         boost::archive::xml_oarchive  oa(ofs);
         oa << *this;
@@ -138,7 +138,7 @@ public:
         boost::archive::xml_iarchive  ia(ifs);
         ia >> *this;
         ifs.close();
-    }
+    }*/
 
     friend class boost::serialization::access;
 
