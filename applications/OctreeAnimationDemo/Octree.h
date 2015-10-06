@@ -152,12 +152,15 @@ public:
         ar & m_max_level;
     }
 #endif
+
+	void writeIntoTXT(const std::string& filename, int depthMax = 1000);
 };
 
 
 class OctreeCell
 {
 public:
+	std::vector<int> m_id_depthorder;
     Vector3_ m_origin;
     Vector3_ m_halfDimension;
     Octree* p_octree;
@@ -168,7 +171,7 @@ public:
     std::vector<int> m_pointsIndexes;
     OctreePoint * p_currentPoint;
 	OctreeCell(){}
-    OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* octree, int parent);
+    OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* octree, int parent, int localindx = -1);
     ~OctreeCell() {
         // Recursively destroy octants
         for(int i=0; i<8; ++i)
@@ -212,6 +215,7 @@ public:
         ar & m_level;
 
         ar & m_pointsIndexes;
+		ar & m_id_depthorder;
     }
 #endif
 };

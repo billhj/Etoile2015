@@ -1,4 +1,5 @@
 #include "Octree.h"
+#include <queue>
 
 Octree::Octree()
 {
@@ -39,7 +40,47 @@ void Octree::insertPoint(OctreePoint& point)
 	}
 }
 
-OctreeCell::OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* octree, int parent) : m_origin(origin), m_halfDimension(halfDim), p_octree(octree), m_parent(parent)
+void Octree::writeIntoTXT(const std::string& filename, int depthMax)
+{
+	std::queue<OctreeCell*> cells;
+	std::vector<OctreeCell*> cellsToCompute;
+	cells.push(p_rootcell);
+	while(!cells.empty())
+	{
+		OctreeCell* cell = cells.front();
+		cellsToCompute.push_back(cell);
+		if(cell->m_children[0] != NULL)
+		{
+			for(unsigned int i = 0; i < 8; ++i)
+			{
+				OctreeCell* cell0 = cell->m_children[i];
+				if(! (cell0->m_level > depthMax))
+				{
+					cells.push(cell0);
+				}
+			}
+		}
+		cells.pop();
+	}
+
+	std::ofstream out;
+	out.open(filename);
+	for(unsigned int i = 0; i < cellsToCompute.size(); ++i)
+	{
+		OctreeCell* cell = cellsToCompute[i];
+		out<<"cell "<<std::endl;;
+		out<<"level ";
+		for(unsigned int j = 0; j < cell->m_id_depthorder.size(); ++j)
+		{
+			out<< cell->m_id_depthorder[j];
+		}
+		out<<std::endl;
+		out<<"size "<<cell->m_origin[0]<<" "<<cell->m_origin[1]<<" "<<cell->m_origin[2]<<" "<<cell->m_halfDimension[0]<<" "<<cell->m_halfDimension[1]<<" "<<cell->m_halfDimension[2]<<std::endl;
+	}
+	out.close();
+}
+
+OctreeCell::OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* octree, int parent, int localindx) : m_origin(origin), m_halfDimension(halfDim), p_octree(octree), m_parent(parent)
 {
 	for(int i=0; i<8; ++i)
 	{
@@ -49,13 +90,20 @@ OctreeCell::OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* 
 	{
 		m_level = p_octree->m_tree_cell[m_parent]->m_level + 1;
 		m_index = p_octree->m_tree_cell.size();
+
+		OctreeCell* parentcell = p_octree->m_tree_cell[m_parent];
+		m_id_depthorder = parentcell->m_id_depthorder;
+		m_id_depthorder.push_back(localindx);
 	}else
 	{
 		m_level = 0;
 		m_index = 0;
+		m_id_depthorder.push_back(0);
 	}
 	p_octree->m_tree_cell.push_back(this);
 	p_currentPoint = NULL;
+
+	
 }
 
 
@@ -139,7 +187,7 @@ void OctreeCell::insert(OctreePoint* point)
 				newOrigin[0] += m_halfDimension[0] * (i&4 ? .5f : -.5f);
 				newOrigin[1] += m_halfDimension[1] * (i&2 ? .5f : -.5f);
 				newOrigin[2] += m_halfDimension[2] * (i&1 ? .5f : -.5f);
-				m_children[i] = new OctreeCell(newOrigin, m_halfDimension*.5f, p_octree, this->m_index);
+				m_children[i] = new OctreeCell(newOrigin, m_halfDimension*.5f, p_octree, this->m_index, i);
 			}
 
 			// Re-insert the old point, and insert this new point
