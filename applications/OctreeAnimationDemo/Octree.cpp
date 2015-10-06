@@ -28,6 +28,15 @@ void Octree::reset(const Vector3_& origin, const Vector3_& halfDim)
 			p_rootcell->insert(&p);
 		}
 	}
+	updateParameters();
+}
+
+void Octree::updateParameters()
+{
+	for(unsigned int i = 0;  i < m_tree_cell.size(); ++i)
+	{
+		m_tree_cell[i]->updateParameters();
+	}
 }
 
 void Octree::insertPoint(OctreePoint& point)
@@ -69,13 +78,30 @@ void Octree::writeIntoTXT(const std::string& filename, int depthMax)
 	{
 		OctreeCell* cell = cellsToCompute[i];
 		out<<"cell "<<std::endl;;
+
 		out<<"level ";
 		for(unsigned int j = 0; j < cell->m_id_depthorder.size(); ++j)
 		{
-			out<< cell->m_id_depthorder[j];
+			out<< cell->m_id_depthorder[j]<<" ";
 		}
 		out<<std::endl;
+
 		out<<"size "<<cell->m_origin[0]<<" "<<cell->m_origin[1]<<" "<<cell->m_origin[2]<<" "<<cell->m_halfDimension[0]<<" "<<cell->m_halfDimension[1]<<" "<<cell->m_halfDimension[2]<<std::endl;
+
+		out<<"min ";
+		for(unsigned int j = 0; j < cell->m_min.size(); ++j)
+		{
+			out<< cell->m_min[j]<<" ";
+		}
+		out<<std::endl;
+
+		out<<"max ";
+		for(unsigned int j = 0; j < cell->m_max.size(); ++j)
+		{
+			out<< cell->m_max[j]<<" ";
+		}
+		out<<std::endl;
+
 	}
 	out.close();
 }
@@ -201,5 +227,38 @@ void OctreeCell::insert(OctreePoint* point)
 		// appropriate child octant
 		int octant = getOctreeCellContainingPoint(point->m_position);
 		m_children[octant]->insert(point);
+	}
+}
+
+
+void OctreeCell::updateParameters()
+{
+	if(p_octree->m_tree_points.size() <= 0) return;
+	int vsize = p_octree->m_tree_points[0].m_data.m_values.size();
+	m_min.resize(vsize);
+	m_max.resize(vsize);
+	m_lambda.resize(vsize);
+	for(int i = 0; i < vsize; ++i)
+	{
+		m_min[i] = 10000;
+		m_max[i] = -10000;
+		m_lambda[i] = 0;
+	}
+
+	for(unsigned int j = 0; j < m_pointsIndexes.size(); ++j)
+	{
+		int idx = m_pointsIndexes[j];
+		OctreePoint& point = p_octree->m_tree_points[idx];
+		
+		for(int i = 0; i < vsize; ++i)
+		{
+			m_min[i] = std::min(point.m_data.m_values[i], m_min[i]);
+			m_max[i] = std::min(point.m_data.m_values[i], m_max[i]);
+			m_lambda[i] += point.m_data.m_lambda_values[i];
+		}
+	}
+	for(int i = 0; i < vsize; ++i)
+	{
+		m_lambda[i] /= m_pointsIndexes.size();
 	}
 }

@@ -50,8 +50,8 @@ class OctreeCell;
 
 struct PointData
 {
-	std::vector<Vector3_> m_lambda_values;
-	std::vector<Vector3_> m_values;
+	std::vector<double> m_lambda_values;
+	std::vector<double> m_values;
 	std::vector<std::string> m_headers;
 
 	#ifdef USING_BOOST
@@ -110,6 +110,7 @@ public:
 
 	void reset(const Vector3_& origin, const Vector3_& halfDim);
 	void insertPoint(OctreePoint& point);
+	void updateParameters();
 
 #ifdef USING_BOOST
 
@@ -170,6 +171,11 @@ public:
     int m_parent;
     std::vector<int> m_pointsIndexes;
     OctreePoint * p_currentPoint;
+
+	std::vector<double> m_min;
+	std::vector<double> m_max;
+	std::vector<double> m_lambda;
+
 	OctreeCell(){}
     OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* octree, int parent, int localindx = -1);
     ~OctreeCell() {
@@ -196,6 +202,8 @@ public:
 
     void insert(OctreePoint* point);
 
+
+	void updateParameters();
 
 
 #ifdef USING_BOOST
