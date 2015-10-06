@@ -39,3 +39,11 @@ void OctreeAnimationDemo::appendFile()
 	p_anim->addBVH(name.toStdString());
 
 }
+
+void OctreeAnimationDemo::saveTXT()
+{
+	QString name = QFileDialog::getSaveFileName(this, tr("save File"),"",tr("File (*.txt)"));
+	//QFile file(name);
+	if(name.isEmpty()) return;
+	p_anim->saveMyOctree(name.toStdString());
+}

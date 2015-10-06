@@ -30,6 +30,7 @@
     <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
     <addaction name="actionAppend"/>
+    <addaction name="actionSaveTXT"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -57,6 +58,11 @@
     <string>append</string>
    </property>
   </action>
+  <action name="actionSaveTXT">
+   <property name="text">
+    <string>saveTXT</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -70,8 +76,8 @@
    <slot>loadFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>299</x>
-     <y>199</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>299</x>
@@ -111,10 +117,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSaveTXT</sender>
+   <signal>triggered()</signal>
+   <receiver>OctreeAnimationDemoClass</receiver>
+   <slot>saveTXT()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loadFile()</slot>
   <slot>saveFile()</slot>
   <slot>appendFile()</slot>
+  <slot>saveTXT()</slot>
  </slots>
 </ui>

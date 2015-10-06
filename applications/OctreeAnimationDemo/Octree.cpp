@@ -244,21 +244,28 @@ void OctreeCell::updateParameters()
 		m_max[i] = -10000;
 		m_lambda[i] = 0;
 	}
-
+	int sizeLambda = 0;
 	for(unsigned int j = 0; j < m_pointsIndexes.size(); ++j)
 	{
 		int idx = m_pointsIndexes[j];
 		OctreePoint& point = p_octree->m_tree_points[idx];
 		
+		if(point.m_data.m_lambda_values.size() > 0)
+		{
+			++sizeLambda;
+			for(int i = 0; i < vsize; ++i)
+			{
+				m_lambda[i] += point.m_data.m_lambda_values[i];
+			}
+		}
 		for(int i = 0; i < vsize; ++i)
 		{
 			m_min[i] = std::min(point.m_data.m_values[i], m_min[i]);
-			m_max[i] = std::min(point.m_data.m_values[i], m_max[i]);
-			m_lambda[i] += point.m_data.m_lambda_values[i];
+			m_max[i] = std::max(point.m_data.m_values[i], m_max[i]);
 		}
 	}
 	for(int i = 0; i < vsize; ++i)
 	{
-		m_lambda[i] /= m_pointsIndexes.size();
+		m_lambda[i] /= sizeLambda;
 	}
 }

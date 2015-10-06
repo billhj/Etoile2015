@@ -17,6 +17,7 @@ public:
 		void loadFile();
 		void saveFile();
 		void appendFile();
+		void saveTXT();
 
 private:
 	Ui::OctreeAnimationDemoClass ui;
