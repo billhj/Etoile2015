@@ -108,6 +108,7 @@ public:
 	std::vector<OctreePoint> m_tree_points;
     int m_max_level;
 
+	void reset(const Vector3_& origin, const Vector3_& halfDim);
 	void insertPoint(OctreePoint& point);
 
 #ifdef USING_BOOST
@@ -173,6 +174,15 @@ public:
         for(int i=0; i<8; ++i)
             delete m_children[i];
     }
+	void reset(const Vector3_& origin, const Vector3_& halfDim)
+	{
+		m_halfDimension = halfDim;
+		m_origin = origin;
+		for(int i=0; i<8; ++i)
+		{
+			m_children[i] = NULL;
+		}
+	}
     bool isInside(const Vector3_& point);
     int getOctreeCellContainingPoint(const Vector3_& point) const;
     std::vector<OctreeCell*> getSubTreeCellsWithPointAndDepth(const Vector3_& point, int depth = 10000);

@@ -14,6 +14,21 @@ Octree::Octree(const Vector3_& origin, const Vector3_& halfDim)
 	m_tree_cell.push_back(p_rootcell);
 }
 
+void Octree::reset(const Vector3_& origin, const Vector3_& halfDim)
+{
+	p_rootcell->reset(origin, halfDim);
+	m_tree_cell.clear();
+	m_tree_cell.push_back(p_rootcell);
+	for(unsigned int i = 0; i < m_tree_points.size(); ++i)
+	{
+		OctreePoint& p = m_tree_points[i];
+		if(p_rootcell->isInside(p.m_position))
+		{
+			p_rootcell->insert(&p);
+		}
+	}
+}
+
 void Octree::insertPoint(OctreePoint& point)
 {
 	if(p_rootcell->isInside(point.m_position))
