@@ -56,7 +56,7 @@ public:
 	std::string _name;
 	double xMin, yMin, zMin;
 	double xMax, yMax, zMax;
-
+	double _limit;
 
 	int drawType;
 	int m_depth;

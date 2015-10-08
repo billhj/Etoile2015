@@ -178,9 +178,20 @@ public:
 		return oct;
 	}
 
+	bool isInside(const Vec3& point)
+	{
+		if(origin.x + halfDimension.x < point.x  ||  origin.x - halfDimension.x > point.x  || 
+			origin.y + halfDimension.y < point.y  ||  origin.y - halfDimension.y > point.y  || 
+			origin.z + halfDimension.z < point.z  ||  origin.z - halfDimension.z > point.z  )
+			return false;
+		return true;
+	}
+
 	Octree* getSubTreeWithPointAndDepth(const Vec3& point, int depth = 10000)
 	{
 		Octree* tree = this;
+		if(!isInside(point)) return NULL;
+
 		int level = 0;
 		while(tree != NULL && level < depth)
 		{
@@ -201,6 +212,7 @@ public:
 	std::vector<Octree*> getSubTreesWithPointAndDepth(const Vec3& point, int depth = 10000)
 	{
 		std::vector<Octree*> trees;
+		if(!isInside(point)) return trees;
 		Octree* tree = this;
 		trees.push_back(tree);
 		int level = 0;

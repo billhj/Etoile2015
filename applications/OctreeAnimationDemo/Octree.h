@@ -105,8 +105,12 @@ class Octree
 public:
     Octree();
 	Octree(const Vector3_& origin, const Vector3_& halfDim);
-    boost::shared_ptr<OctreeCell> p_rootcell;
-    std::vector<boost::shared_ptr<OctreeCell>> m_tree_cell;
+	~Octree() {
+		m_tree_points.clear();
+		m_tree_cell.clear();
+	}
+    OctreeCell* p_rootcell;
+    std::vector<OctreeCell*> m_tree_cell;
 	std::vector<OctreePoint> m_tree_points;
     int m_max_level;
 
@@ -116,19 +120,7 @@ public:
 
 #ifdef USING_BOOST
 
-    void saveTXT(const std::string& filename){
-        std::ofstream ofs(filename);
-        boost::archive::text_oarchive oa(ofs);
-        oa << *this;
-        ofs.close();
-    }
-
-	void loadTXT(const std::string& filename){
-        std::ifstream ifs(filename);
-        boost::archive::text_iarchive ia(ifs);
-        ia >> *this;
-        ifs.close();
-    }
+	void writeIntoTXT(const std::string& filename, int depthMax = 1000);
 
 	/*void saveXML(const std::string& filename){
         std::ofstream ofs(filename);
@@ -156,7 +148,7 @@ public:
     }
 #endif
 
-	void writeIntoTXT(const std::string& filename, int depthMax = 1000);
+	
 };
 
 
@@ -166,8 +158,8 @@ public:
 	std::vector<int> m_id_depthorder;
     Vector3_ m_origin;
     Vector3_ m_halfDimension;
-    boost::shared_ptr<Octree> p_octree;
-    boost::shared_ptr<OctreeCell> m_children[8];
+    Octree* p_octree;
+    OctreeCell* m_children[8];
     int m_index;
     int m_level;
     int m_parent;
@@ -179,11 +171,11 @@ public:
 	std::vector<double> m_lambda;
 
 	OctreeCell(){}
-    OctreeCell(const Vector3_& origin, const Vector3_& halfDim, boost::shared_ptr<Octree> octree, int parent, int localindx = -1);
-    ~OctreeCell() {
-        // Recursively destroy octants
-        for(int i=0; i<8; ++i)
-			m_children[i].reset();
+    OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* octree, int parent, int localindx = -1);
+   ~OctreeCell() {
+   //     // Recursively destroy octants
+		/*for(int i=0; i<8; ++i)
+			m_children[i].reset();*/
     }
 	void reset(const Vector3_& origin, const Vector3_& halfDim)
 	{
@@ -191,7 +183,7 @@ public:
 		m_origin = origin;
 		for(int i=0; i<8; ++i)
 		{
-			m_children[i].reset();
+			m_children[i] = NULL;
 		}
 	}
     bool isInside(const Vector3_& point);
@@ -216,8 +208,9 @@ public:
     {
         ar & m_origin;
         ar & m_halfDimension;
-        ar & m_children;
-       /* ar & p_currentPoint;*/
+		
+		ar & m_children;
+
         ar & p_octree;
 
         ar & m_parent;
