@@ -4,15 +4,15 @@
 Octree::Octree()
 {
 	m_max_level = 8;
-	p_rootcell = new OctreeCell(Vector3_(0,0,0), Vector3_(1,1,1), this, -1);
-	m_tree_cell.push_back(p_rootcell);
+	p_rootcell = boost::shared_ptr<OctreeCell>(new OctreeCell(Vector3_(0,0,0), Vector3_(1,1,1), boost::shared_ptr<Octree>(this), -1));
+	m_tree_cell.push_back(boost::shared_ptr<OctreeCell>(p_rootcell));
 }
 
 Octree::Octree(const Vector3_& origin, const Vector3_& halfDim)
 {
 	m_max_level = 8;
-	p_rootcell = new OctreeCell(origin, halfDim, this, -1);
-	m_tree_cell.push_back(p_rootcell);
+	p_rootcell = boost::shared_ptr<OctreeCell>(new OctreeCell(origin, halfDim, boost::shared_ptr<Octree>(this), -1));
+	m_tree_cell.push_back(boost::shared_ptr<OctreeCell>(p_rootcell));
 }
 
 void Octree::reset(const Vector3_& origin, const Vector3_& halfDim)
@@ -53,7 +53,7 @@ void Octree::writeIntoTXT(const std::string& filename, int depthMax)
 {
 	std::queue<OctreeCell*> cells;
 	std::vector<OctreeCell*> cellsToCompute;
-	cells.push(p_rootcell);
+	cells.push(p_rootcell.get());
 	while(!cells.empty())
 	{
 		OctreeCell* cell = cells.front();
@@ -62,7 +62,7 @@ void Octree::writeIntoTXT(const std::string& filename, int depthMax)
 		{
 			for(unsigned int i = 0; i < 8; ++i)
 			{
-				OctreeCell* cell0 = cell->m_children[i];
+				OctreeCell* cell0 = cell->m_children[i].get();
 				if(! (cell0->m_level > depthMax))
 				{
 					cells.push(cell0);
@@ -106,18 +106,18 @@ void Octree::writeIntoTXT(const std::string& filename, int depthMax)
 	out.close();
 }
 
-OctreeCell::OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* octree, int parent, int localindx) : m_origin(origin), m_halfDimension(halfDim), p_octree(octree), m_parent(parent)
+OctreeCell::OctreeCell(const Vector3_& origin, const Vector3_& halfDim, boost::shared_ptr<Octree> octree, int parent, int localindx) : m_origin(origin), m_halfDimension(halfDim), p_octree(octree), m_parent(parent)
 {
 	for(int i=0; i<8; ++i)
 	{
-		m_children[i] = NULL;
+		m_children[i].reset();
 	}
 	if(parent >= 0)
 	{
-		m_level = p_octree->m_tree_cell[m_parent]->m_level + 1;
-		m_index = p_octree->m_tree_cell.size();
+		m_level = p_octree.get()->m_tree_cell[m_parent]->m_level + 1;
+		m_index = p_octree.get()->m_tree_cell.size();
 
-		OctreeCell* parentcell = p_octree->m_tree_cell[m_parent];
+		OctreeCell* parentcell = p_octree->m_tree_cell[m_parent].get();
 		m_id_depthorder = parentcell->m_id_depthorder;
 		m_id_depthorder.push_back(localindx);
 	}else
@@ -126,7 +126,7 @@ OctreeCell::OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* 
 		m_index = 0;
 		m_id_depthorder.push_back(0);
 	}
-	p_octree->m_tree_cell.push_back(this);
+	p_octree->m_tree_cell.push_back(boost::shared_ptr<OctreeCell>(this));
 	p_currentPoint = NULL;
 
 	
@@ -159,7 +159,7 @@ std::vector<OctreeCell*> OctreeCell::getSubTreeCellsWithPointAndDepth(const Vect
 	int level = 0;
 	while(tree != NULL && level < depth)
 	{
-		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)];
+		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)].get();
 		if(temp == NULL) break;
 		//        if(temp->m_dataIndex.size() < 2)
 		//        {
@@ -179,7 +179,7 @@ OctreeCell* OctreeCell::getSubTreeCellWithPointAndDepth(const Vector3_& point, i
 	int level = 0;
 	while(tree != NULL && level < depth)
 	{
-		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)];
+		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)].get();
 		if(temp == NULL) break;
 
 		tree = temp;
@@ -213,7 +213,7 @@ void OctreeCell::insert(OctreePoint* point)
 				newOrigin[0] += m_halfDimension[0] * (i&4 ? .5f : -.5f);
 				newOrigin[1] += m_halfDimension[1] * (i&2 ? .5f : -.5f);
 				newOrigin[2] += m_halfDimension[2] * (i&1 ? .5f : -.5f);
-				m_children[i] = new OctreeCell(newOrigin, m_halfDimension*.5f, p_octree, this->m_index, i);
+				m_children[i] = boost::shared_ptr<OctreeCell> (new OctreeCell(newOrigin, m_halfDimension*.5f, p_octree, this->m_index, i));
 			}
 
 			// Re-insert the old point, and insert this new point
@@ -233,7 +233,7 @@ void OctreeCell::insert(OctreePoint* point)
 
 void OctreeCell::updateParameters()
 {
-	if(p_octree->m_tree_points.size() <= 0) return;
+	if(p_octree.get()->m_tree_points.size() <= 0) return;
 	int vsize = p_octree->m_tree_points[0].m_data.m_values.size();
 	m_min.resize(vsize);
 	m_max.resize(vsize);

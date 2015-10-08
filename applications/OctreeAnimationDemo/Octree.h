@@ -2,6 +2,7 @@
 #define OCTREE_H
 
 #include <vector>
+#include <boost/smart_ptr.hpp>
 #include <Eigen/Dense>
 
 #ifndef X_
@@ -26,6 +27,7 @@ typedef Eigen::AngleAxisd AngleAxis_;
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 #include <iostream>
 #include <fstream>
 #endif
@@ -103,8 +105,8 @@ class Octree
 public:
     Octree();
 	Octree(const Vector3_& origin, const Vector3_& halfDim);
-    OctreeCell * p_rootcell;
-    std::vector<OctreeCell*> m_tree_cell;
+    boost::shared_ptr<OctreeCell> p_rootcell;
+    std::vector<boost::shared_ptr<OctreeCell>> m_tree_cell;
 	std::vector<OctreePoint> m_tree_points;
     int m_max_level;
 
@@ -164,8 +166,8 @@ public:
 	std::vector<int> m_id_depthorder;
     Vector3_ m_origin;
     Vector3_ m_halfDimension;
-    Octree* p_octree;
-    OctreeCell * m_children[8];
+    boost::shared_ptr<Octree> p_octree;
+    boost::shared_ptr<OctreeCell> m_children[8];
     int m_index;
     int m_level;
     int m_parent;
@@ -177,11 +179,11 @@ public:
 	std::vector<double> m_lambda;
 
 	OctreeCell(){}
-    OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* octree, int parent, int localindx = -1);
+    OctreeCell(const Vector3_& origin, const Vector3_& halfDim, boost::shared_ptr<Octree> octree, int parent, int localindx = -1);
     ~OctreeCell() {
         // Recursively destroy octants
         for(int i=0; i<8; ++i)
-            delete m_children[i];
+			m_children[i].reset();
     }
 	void reset(const Vector3_& origin, const Vector3_& halfDim)
 	{
@@ -189,7 +191,7 @@ public:
 		m_origin = origin;
 		for(int i=0; i<8; ++i)
 		{
-			m_children[i] = NULL;
+			m_children[i].reset();
 		}
 	}
     bool isInside(const Vector3_& point);
@@ -224,6 +226,10 @@ public:
 
         ar & m_pointsIndexes;
 		ar & m_id_depthorder;
+
+		ar & m_min;
+		ar & m_max;
+		ar & m_lambda;
     }
 #endif
 };
