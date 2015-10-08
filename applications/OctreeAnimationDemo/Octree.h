@@ -109,8 +109,8 @@ public:
 		m_tree_points.clear();
 		m_tree_cell.clear();
 	}
-    OctreeCell* p_rootcell;
-    std::vector<OctreeCell*> m_tree_cell;
+	boost::shared_ptr<OctreeCell> p_rootcell;
+    std::vector<boost::shared_ptr<OctreeCell>> m_tree_cell;
 	std::vector<OctreePoint> m_tree_points;
     int m_max_level;
 
@@ -159,7 +159,7 @@ public:
     Vector3_ m_origin;
     Vector3_ m_halfDimension;
     Octree* p_octree;
-    OctreeCell* m_children[8];
+    boost::shared_ptr<OctreeCell> m_children[8];
     int m_index;
     int m_level;
     int m_parent;
@@ -183,7 +183,7 @@ public:
 		m_origin = origin;
 		for(int i=0; i<8; ++i)
 		{
-			m_children[i] = NULL;
+			m_children[i].reset();
 		}
 	}
     bool isInside(const Vector3_& point);

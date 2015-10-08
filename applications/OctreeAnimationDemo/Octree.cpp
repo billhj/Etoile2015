@@ -4,14 +4,14 @@
 Octree::Octree()
 {
 	m_max_level = 8;
-	p_rootcell = new OctreeCell(Vector3_(0,0,0), Vector3_(1,1,1), this, -1);
+	p_rootcell = boost::shared_ptr<OctreeCell>(new OctreeCell(Vector3_(0,0,0), Vector3_(1,1,1), this, -1));
 	m_tree_cell.push_back(p_rootcell);
 }
 
 Octree::Octree(const Vector3_& origin, const Vector3_& halfDim)
 {
 	m_max_level = 8;
-	p_rootcell = new OctreeCell(origin, halfDim, this, -1);
+	p_rootcell = boost::shared_ptr<OctreeCell>(new OctreeCell(origin, halfDim, this, -1));
 	m_tree_cell.push_back(p_rootcell);
 }
 
@@ -54,7 +54,7 @@ void Octree::writeIntoTXT(const std::string& filename, int depthMax)
 	std::cout<<"start writing TXT Struct! "<<std::endl;
 	std::queue<OctreeCell*> cells;
 	std::vector<OctreeCell*> cellsToCompute;
-	cells.push(p_rootcell);
+	cells.push(p_rootcell.get());
 	while(!cells.empty())
 	{
 		OctreeCell* cell = cells.front();
@@ -63,7 +63,7 @@ void Octree::writeIntoTXT(const std::string& filename, int depthMax)
 		{
 			for(unsigned int i = 0; i < 8; ++i)
 			{
-				OctreeCell* cell0 = cell->m_children[i];
+				OctreeCell* cell0 = cell->m_children[i].get();
 				if(! (cell0->m_level > depthMax))
 				{
 					cells.push(cell0);
@@ -118,14 +118,14 @@ OctreeCell::OctreeCell(const Vector3_& origin, const Vector3_& halfDim, Octree* 
 {
 	for(int i=0; i<8; ++i)
 	{
-		m_children[i] = NULL;
+		m_children[i].reset();
 	}
 	if(parent >= 0)
 	{
 		m_level = p_octree->m_tree_cell[m_parent]->m_level + 1;
 		m_index = p_octree->m_tree_cell.size();
 
-		OctreeCell* parentcell = p_octree->m_tree_cell[m_parent];
+		OctreeCell* parentcell = p_octree->m_tree_cell[m_parent].get();
 		m_id_depthorder = parentcell->m_id_depthorder;
 		m_id_depthorder.push_back(localindx);
 	}else
@@ -165,7 +165,7 @@ std::vector<OctreeCell*> OctreeCell::getSubTreeCellsWithPointAndDepth(const Vect
 	int level = 0;
 	while(tree != NULL && level < depth)
 	{
-		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)];
+		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)].get();
 		if(temp == NULL) break;
 		//        if(temp->m_dataIndex.size() < 2)
 		//        {
@@ -185,7 +185,7 @@ OctreeCell* OctreeCell::getSubTreeCellWithPointAndDepth(const Vector3_& point, i
 	int level = 0;
 	while(tree != NULL && level < depth)
 	{
-		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)];
+		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)].get();
 		if(temp == NULL) break;
 
 		tree = temp;
@@ -219,7 +219,7 @@ void OctreeCell::insert(OctreePoint* point)
 				newOrigin[0] += m_halfDimension[0] * (i&4 ? .5f : -.5f);
 				newOrigin[1] += m_halfDimension[1] * (i&2 ? .5f : -.5f);
 				newOrigin[2] += m_halfDimension[2] * (i&1 ? .5f : -.5f);
-				m_children[i] = new OctreeCell(newOrigin, m_halfDimension*.5f, p_octree, this->m_index, i);
+				m_children[i] = boost::shared_ptr<OctreeCell>(new OctreeCell(newOrigin, m_halfDimension*.5f, p_octree, this->m_index, i));
 				p_octree->m_tree_cell.push_back(m_children[i]);
 			}
 
