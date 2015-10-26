@@ -114,6 +114,7 @@ public:
 	std::vector<OctreePoint> m_tree_points;
     int m_max_level;
 
+	void init(const Vector3_& origin, const Vector3_& halfDim);
 	void reset(const Vector3_& origin, const Vector3_& halfDim);
 	void insertPoint(OctreePoint& point);
 	void updateParameters();
@@ -168,6 +169,7 @@ public:
 
 	std::vector<double> m_min;
 	std::vector<double> m_max;
+	std::vector<double> m_avg;
 	std::vector<double> m_lambda;
 
 	OctreeCell(){}
@@ -222,6 +224,7 @@ public:
 
 		ar & m_min;
 		ar & m_max;
+		ar & m_avg;
 		ar & m_lambda;
     }
 #endif

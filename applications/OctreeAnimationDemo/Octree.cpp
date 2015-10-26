@@ -1,25 +1,34 @@
 #include "Octree.h"
 #include <queue>
 
+#define USING_TBB
+#define NOMINMAX
+#ifdef USING_TBB
+#include "tbb/tbb.h"
+//using namespace tbb;
+#endif
+
 Octree::Octree()
 {
-	m_max_level = 8;
-	p_rootcell = boost::shared_ptr<OctreeCell>(new OctreeCell(Vector3_(0,0,0), Vector3_(1,1,1), this, -1));
-	m_tree_cell.push_back(p_rootcell);
+	init(Vector3_(0,0,0), Vector3_(1,1,1));
 }
 
 Octree::Octree(const Vector3_& origin, const Vector3_& halfDim)
 {
+	init(origin, halfDim);
+}
+
+void Octree::init(const Vector3_& origin, const Vector3_& halfDim)
+{
 	m_max_level = 8;
 	p_rootcell = boost::shared_ptr<OctreeCell>(new OctreeCell(origin, halfDim, this, -1));
+	m_tree_cell.clear();
 	m_tree_cell.push_back(p_rootcell);
 }
 
 void Octree::reset(const Vector3_& origin, const Vector3_& halfDim)
 {
-	p_rootcell->reset(origin, halfDim);
-	m_tree_cell.clear();
-	m_tree_cell.push_back(p_rootcell);
+	init(origin, halfDim);
 	for(unsigned int i = 0; i < m_tree_points.size(); ++i)
 	{
 		OctreePoint& p = m_tree_points[i];
@@ -33,10 +42,15 @@ void Octree::reset(const Vector3_& origin, const Vector3_& halfDim)
 
 void Octree::updateParameters()
 {
+#ifdef USING_TBB
+	tbb::parallel_for(size_t(0), size_t(m_tree_cell.size()), [&] (size_t i) {  m_tree_cell[i]->updateParameters(); });
+#else
+
 	for(unsigned int i = 0;  i < m_tree_cell.size(); ++i)
 	{
 		m_tree_cell[i]->updateParameters();
 	}
+#endif
 }
 
 void Octree::insertPoint(OctreePoint& point)
@@ -241,14 +255,17 @@ void OctreeCell::insert(OctreePoint* point)
 void OctreeCell::updateParameters()
 {
 	if(p_octree->m_tree_points.size() <= 0) return;
+	if(m_pointsIndexes.size() <= 0) return;
 	int vsize = p_octree->m_tree_points[0].m_data.m_values.size();
 	m_min.resize(vsize);
 	m_max.resize(vsize);
+	m_avg.resize(vsize);
 	m_lambda.resize(vsize);
 	for(int i = 0; i < vsize; ++i)
 	{
 		m_min[i] = 10000;
 		m_max[i] = -10000;
+		m_avg[i] = 0;
 		m_lambda[i] = 0;
 	}
 	int sizeLambda = 0;
@@ -269,7 +286,12 @@ void OctreeCell::updateParameters()
 		{
 			m_min[i] = std::min(point.m_data.m_values[i], m_min[i]);
 			m_max[i] = std::max(point.m_data.m_values[i], m_max[i]);
+			m_avg[i] += point.m_data.m_values[i];
 		}
+	}
+	for(int i = 0; i < vsize; ++i)
+	{
+		m_avg[i] /= m_pointsIndexes.size();
 	}
 	if(sizeLambda > 0)
 	{
