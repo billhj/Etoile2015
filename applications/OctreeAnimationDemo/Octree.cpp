@@ -181,10 +181,10 @@ std::vector<OctreeCell*> OctreeCell::getSubTreeCellsWithPointAndDepth(const Vect
 	{
 		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)].get();
 		if(temp == NULL) break;
-		//        if(temp->m_dataIndex.size() < 2)
-		//        {
-		//            break;
-		//        }
+		        if(temp->m_pointsIndexes.size() < 2)
+		        {
+		            break;
+		        }
 		tree = temp;
 		++level;
 		trees.push_back(tree);
@@ -201,7 +201,10 @@ OctreeCell* OctreeCell::getSubTreeCellWithPointAndDepth(const Vector3_& point, i
 	{
 		OctreeCell* temp = tree->m_children[tree->getOctreeCellContainingPoint(point)].get();
 		if(temp == NULL) break;
-
+		 if(temp->m_pointsIndexes.size() < 2)
+		        {
+		            break;
+		        }
 		tree = temp;
 		++level;
 	}

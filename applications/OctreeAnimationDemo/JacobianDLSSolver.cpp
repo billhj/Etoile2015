@@ -50,12 +50,16 @@ namespace Etoile
 		for(int i = 0; i < jtj.rows(); ++i)
 		{
 			lamdaI(i,i) = chain->m_posture_variation[i];   //m_dampling / ( pow(10.0, i/3) * +1); 
-			assert(lamdaI(i,i) > 0.0000000000000000000001 && lamdaI(i,i) < 99999999999999);
+			//assert(lamdaI(i,i) > 0.0000000000000000000001 && lamdaI(i,i) < 99999999999999);
 		}
 
 		MatrixX_ a = jtj + lamdaI;
 		MatrixX_ b = jacobianTranspose * distance;// + thetax * v2;
 		VectorX_ dR = a.inverse() * b;
+	/*	std::cout<<"a"<<std::endl;
+		std::cout<<a<<std::endl;
+		std::cout<<"ai"<<std::endl;
+		std::cout<<a.inverse()<<std::endl;*/
 #else
 		MatrixX_ a =  jacobian * jacobianTranspose;
 
