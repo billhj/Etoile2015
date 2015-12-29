@@ -32,7 +32,14 @@
     <addaction name="actionAppend"/>
     <addaction name="actionSaveTXT"/>
    </widget>
+   <widget class="QMenu" name="menuBvh">
+    <property name="title">
+     <string>bvh</string>
+    </property>
+    <addaction name="actionRunBVH"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuBvh"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -61,6 +68,11 @@
   <action name="actionSaveTXT">
    <property name="text">
     <string>saveTXT</string>
+   </property>
+  </action>
+  <action name="actionRunBVH">
+   <property name="text">
+    <string>runBVH</string>
    </property>
   </action>
  </widget>
@@ -133,11 +145,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionRunBVH</sender>
+   <signal>triggered()</signal>
+   <receiver>OctreeAnimationDemoClass</receiver>
+   <slot>runBVH()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loadFile()</slot>
   <slot>saveFile()</slot>
   <slot>appendFile()</slot>
   <slot>saveTXT()</slot>
+  <slot>runBVH()</slot>
  </slots>
 </ui>

@@ -47,3 +47,11 @@ void OctreeAnimationDemo::saveTXT()
 	if(name.isEmpty()) return;
 	p_anim->saveMyOctree(name.toStdString());
 }
+
+void OctreeAnimationDemo::runBVH()
+{
+	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("File (*.bvh)"));
+	//QFile file(name);
+	if(name.isEmpty()) return;
+	p_anim->solveOriginalTrajectory(0,2000,name.toStdString());
+}

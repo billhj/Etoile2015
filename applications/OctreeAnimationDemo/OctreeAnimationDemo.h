@@ -18,7 +18,7 @@ public:
 		void saveFile();
 		void appendFile();
 		void saveTXT();
-
+		void runBVH();
 private:
 	Ui::OctreeAnimationDemoClass ui;
 	OctreeAnimation* p_anim;

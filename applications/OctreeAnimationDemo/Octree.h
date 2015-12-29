@@ -118,7 +118,11 @@ public:
 	void reset(const Vector3_& origin, const Vector3_& halfDim);
 	void insertPoint(OctreePoint& point);
 	void updateParameters();
-
+	void updateManuelParameters(const std::vector<double>& min, const std::vector<double>& max);
+	friend std::ostream& operator<<(std::ostream &os, const Octree &oc)
+	{
+		return os;
+	}
 #ifdef USING_BOOST
 
 	void writeIntoTXT(const std::string& filename, int depthMax = 1000);

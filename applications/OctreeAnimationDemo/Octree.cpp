@@ -53,6 +53,16 @@ void Octree::updateParameters()
 #endif
 }
 
+void Octree::updateManuelParameters(const std::vector<double>& minV, const std::vector<double>& maxV)
+{
+	OctreeCell* cell = p_rootcell.get();
+	for(unsigned int i = 0; i < cell->m_max.size(); ++i)
+	{
+		cell->m_max[i] = std::max(cell->m_max[i], maxV[i]);
+		cell->m_min[i] = std::min(cell->m_min[i], minV[i]);
+	}
+}
+
 void Octree::insertPoint(OctreePoint& point)
 {
 	if(p_rootcell->isInside(point.m_position))
@@ -116,6 +126,15 @@ void Octree::writeIntoTXT(const std::string& filename, int depthMax)
 			out<< cell->m_max[j]<<" ";
 		}
 		out<<std::endl;
+
+
+		out<<"avg ";
+		for(unsigned int j = 0; j < cell->m_max.size(); ++j)
+		{
+			out<< cell->m_avg[j]<<" ";
+		}
+		out<<std::endl;
+
 		out<<"lambda ";
 		for(unsigned int j = 0; j < cell->m_max.size(); ++j)
 		{
