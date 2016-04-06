@@ -655,3 +655,27 @@
 	}
 
 
+	void BVH::copy(BVH& bvh)
+	{
+		m_frameNb = bvh.m_frameNb;
+		this->m_frames.clear();
+		for(int n = 0 ; n <bvh.m_frames.size(); ++n)
+		{
+			Frame f;
+			f.m_values.resize(this->m_dims);
+			Frame bvf = bvh.m_frames[n];
+			for(unsigned int i = 0; i < m_joints.size(); ++i)
+			{
+				Joint* joint = m_joints[i];
+				Joint* bj = bvh.getJoint(joint->m_name);
+				for(int j = 0; j < joint->m_dof; ++j)
+				{
+					Dim& dim = joint->m_dims[j];
+					Dim& dimbv =bj->m_dims[j];
+					f.m_values[dim.m_index] = bvf.m_values[dimbv.m_index];
+				}
+			}
+			this->m_frames.push_back(f);
+		}
+		this->saveToBVHFile("bin/copy/newbvh.bvh");
+	}

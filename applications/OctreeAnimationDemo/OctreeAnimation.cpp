@@ -152,7 +152,8 @@ void OctreeAnimation::addBVH(const std::string& filename)
 	BVH* bvh = new BVH();
 	bvh->loadFromBVHFile(filename);
 	bvh->changeOrderToZYX();
-	bvh->saveToBVHFile(bvh->getFilePath()+"zyx_");
+	//bvh->saveToBVHFile(bvh->getFilePath()+"zyx_");
+	_originalBVH = bvh;
 	this->addBVH(bvh);
 }
 
@@ -322,9 +323,9 @@ void OctreeAnimation::addSequence(Sequence* sq)
 	}
 	m_octree.updateParameters();
 
-	std::vector<Vector3_> p3;
+	/*std::vector<Vector3_> p3;
 	p3.push_back(Vector3_(-0.1, 0.2, 0.4));
-	this->solve(p3);
+	this->solve(p3);*/
 }
 
 
@@ -359,6 +360,7 @@ void OctreeAnimation::solveOriginalTrajectory(int start, int end, const std::str
 		//bvh = m_bvh;
 		std::cout<<"no bvh"<<std::endl;
 	}
+	_originalBVH->copy(bvh);
 
 	if(start < 0 || end >= bvh.m_frames.size())
 	{
@@ -416,7 +418,7 @@ void OctreeAnimation::solveOriginalTrajectory(int start, int end, const std::str
 	solveTrajectory(points, 4, bvh);*/
 	m_chain.reset();
 	m_chain.m_dim_values = initV;
-	solve(points, bvh);
+	solve(points, *_originalBVH);
 	/*m_ikchain.reset();
 	m_ikchain.m_dim_values = initV;
 	solveTrajectory(points, 6);
@@ -466,7 +468,8 @@ void OctreeAnimation::solve(const std::vector<Vector3_>& points, BVH& bvh)
 			{
 				for(int j = 0; j < ikchains[i].m_dims.size();++j)
 				{
-					ikchains[i].m_dim_anglelimites[j] = Vector2_(treecells[n]->m_min[j] - epislon - 0.5, treecells[n]->m_max[j] + epislon + 0.5);
+					//ikchains[i].m_dim_anglelimites[j] = Vector2_(treecells[n]->m_min[j] - epislon - 0.5, treecells[n]->m_max[j] + epislon + 0.5);
+					ikchains[i].m_dim_anglelimites[j] = ikchains[i].m_dim_anglelimites_default[j];
 					ikchains[i].m_average_values[j] = treecells[n]->m_avg[j];
 					ikchains[i].m_posture_variation[j] = treecells[n]->m_lambda[j];
 				}
@@ -476,13 +479,15 @@ void OctreeAnimation::solve(const std::vector<Vector3_>& points, BVH& bvh)
 				for(int j = 0; j < ikchains[i].m_dims.size();++j)
 				{
 					ikchains[i].m_dim_anglelimites[j] = Vector2_(treecells[n]->m_min[j] - epislon, treecells[n]->m_max[j] + epislon);
+					//ikchains[i].m_dim_anglelimites[j] = ikchains[i].m_dim_anglelimites_default[j];
 					ikchains[i].m_average_values[j] = treecells[n]->m_avg[j];
 					ikchains[i].m_posture_variation[j] = treecells[n]->m_lambda[j];
 				}
 			}
 		}
 
-		ikchains[i].m_dim_values = ikchains[i].m_average_values;
+		//ikchains[i].m_dim_values = ikchains[i].m_average_values;
+		ikchains[i].setDimValueZero();
 		bool sol = true;
 		sol = solver->solve(&ikchains[i], point, true);
 		if(sol == true)
@@ -564,6 +569,14 @@ std::vector<Frame> fs(points.size());
 		fs[i] = (frame); 
 	}
 
+	//{
+	//bvh.m_frames = fs;
+	//std::stringstream s;
+	//s<<bvh.getFilePath()<<"BVH.bvh";
+	//bvh.saveToBVHFile(s.str());
+	//}
+
+	//return;
 
 
 	filterring(f_values, f_values_filtered, 20);
@@ -621,7 +634,8 @@ std::vector<Frame> fs(points.size());
 			{
 				for(int j = 0; j < ikchains[i].m_dims.size();++j)
 				{
-					ikchains[i].m_dim_anglelimites[j] = Vector2_(treecells[n]->m_min[j] - epislon - 0.5, treecells[n]->m_max[j] + epislon + 0.5);
+					//ikchains[i].m_dim_anglelimites[j] = Vector2_(treecells[n]->m_min[j] - epislon - 0.5, treecells[n]->m_max[j] + epislon + 0.5);
+					ikchains[i].m_dim_anglelimites[j] = ikchains[i].m_dim_anglelimites_default[j];
 					ikchains[i].m_average_values[j] = treecells[n]->m_avg[j];
 					ikchains[i].m_posture_variation[j] = treecells[n]->m_lambda[j];
 				}
@@ -631,6 +645,7 @@ std::vector<Frame> fs(points.size());
 				for(int j = 0; j < ikchains[i].m_dims.size();++j)
 				{
 					ikchains[i].m_dim_anglelimites[j] = Vector2_(treecells[n]->m_min[j] - epislon, treecells[n]->m_max[j] + epislon);
+					//ikchains[i].m_dim_anglelimites[j] = ikchains[i].m_dim_anglelimites_default[j];
 					ikchains[i].m_average_values[j] = treecells[n]->m_avg[j];
 					ikchains[i].m_posture_variation[j] = treecells[n]->m_lambda[j];
 				}

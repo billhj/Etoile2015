@@ -22,6 +22,7 @@ class OctreeAnimation
 	std::map<std::string, Sequence*> m_usedSequences;
 	Etoile::IKChain m_chain;
 	Etoile::JacobianDLSSolver* solver;
+	BVH* _originalBVH;
 public:
 	OctreeAnimation(void);
 	~OctreeAnimation(void);

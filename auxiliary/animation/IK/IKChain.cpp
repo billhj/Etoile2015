@@ -80,12 +80,13 @@ namespace Etoile
 		{
 			m_dim_localRotations[i].setIdentity();
 			m_dim_globalOrientations[i].setIdentity();
-			m_dim_anglelimites[i] = Vector2_(-3.14159265,3.14159265);
+			m_dim_anglelimites[i] = m_dim_anglelimites_default[i];//Vector2_(-3.14159265,3.14159265);
 			m_dim_values[i] = 0;
 			m_average_values[i] = 0;
 			m_dedr_max[i] = Vector3_(100,100,100);
 			m_dedr_min[i] = Vector3_(-100,-100,-100);
 			m_posture_variation[i] = 1;//0.0001;
+			//m_dim_anglelimites_default = m_dim_anglelimites;
 		}
 		update();
 	}
@@ -185,6 +186,8 @@ namespace Etoile
 						//std::cout<<" limits: "<<m_anglelimites[j->m_dims[i].m_idx].transpose()<<std::endl;
 					}
 				}
+
+				m_dim_anglelimites_default = m_dim_anglelimites;
 
 			}catch(std::exception& e)
 			{

@@ -176,6 +176,12 @@ namespace Etoile
 
 		void draw(int type);
 
+		void setDimValueZero(){
+			for(int i = 0; i < m_dim_values.size(); ++i){
+				m_dim_values[i] = 0;
+			}
+		}
+
 	public:
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};

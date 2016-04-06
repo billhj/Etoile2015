@@ -160,6 +160,7 @@ namespace Etoile
 		std::vector<double> m_dim_last_values;
 		std::vector<Vector3_, Eigen::aligned_allocator<Vector3_> > m_dim_axis;
 		std::vector<Vector2_, Eigen::aligned_allocator<Vector2_> > m_dim_anglelimites;
+		std::vector<Vector2_, Eigen::aligned_allocator<Vector2_> > m_dim_anglelimites_default;
 		std::string m_name;
 		
 		std::vector<Vector3_, Eigen::aligned_allocator<Vector3_>> m_dedr_max;

@@ -139,7 +139,9 @@ typedef Eigen::AngleAxisd AngleAxis_;
 		int m_frameNb;
 		int m_dims;
 
+		
 	public:
+		void copy(BVH& bvh);
 		BVH():m_dims(0){}
 		BVH(BVH& bvh)
 		{
