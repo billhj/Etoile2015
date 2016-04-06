@@ -360,7 +360,7 @@ void OctreeAnimation::solveOriginalTrajectory(int start, int end, const std::str
 		//bvh = m_bvh;
 		std::cout<<"no bvh"<<std::endl;
 	}
-	_originalBVH->copy(bvh);
+	//_originalBVH->copy(bvh);
 
 	if(start < 0 || end >= bvh.m_frames.size())
 	{
