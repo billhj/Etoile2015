@@ -122,17 +122,11 @@ namespace Etoile
 			}
 
 			MatrixX_ jacobianTranspose = jacobian.transpose();
-			MatrixX_ jtj =  jacobianTranspose * jacobian;
-			MatrixX_ lamdaI = MatrixX_::Zero(jtj.rows(), jtj.cols());
-			for(int i = 0; i < jtj.rows(); ++i)
-			{
-				lamdaI(i,i) = chain->m_posture_variation[i];   
-			}
+			MatrixX_ a =  jacobian * jacobianTranspose;
 
-			MatrixX_ a = jtj + lamdaI;
-			MatrixX_ b = jacobianTranspose * distance;
-			MatrixX_ aInv = a.inverse();
-			VectorX_ dR = aInv * b;
+			MatrixX_ dls = jacobianTranspose * ( a +  m_dampling * MatrixX_::Identity(a.rows(), a.cols())).inverse();
+			VectorX_ dR = dls * distance;
+
 			for(int i = 0; i < columnDim; ++i)
 			{
 				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
