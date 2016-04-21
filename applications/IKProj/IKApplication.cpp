@@ -23,7 +23,7 @@ void IKApplication::addMenu()
 {
 	QMenuBar* bar = this->menuBar();
 	QMenu* ik = bar->addMenu("IK");
-	QAction* MS = ik->addAction("^-^");
+	QAction* MS = ik->addAction("JacobianCov");
 	QAction* CCD = ik->addAction(":)");
 	QAction* PI = ik->addAction("JacobianPseudoInverse");
 	QAction* TRS = ik->addAction("JacobianTranspose");
@@ -41,9 +41,9 @@ void IKApplication::addMenu()
 void IKApplication::applyIKAction(QAction* action)
 {
 	QString t = action->text();
-	if(t.toStdString() == "^-^")
+	if(t.toStdString() == "JacobianCov")
 	{
-		_pIKWidget->setIKSolver(new Etoile::JacobianRcompensedDLSSolver(_pIKWidget->getIKSolver()->getMaxNumberOfTries()));
+		_pIKWidget->setIKSolver(new Etoile::JacobianCov(_pIKWidget->getIKSolver()->getMaxNumberOfTries()));
 	}
 	else if(t.toStdString() == ":)")
 	{

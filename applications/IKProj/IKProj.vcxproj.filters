@@ -92,6 +92,9 @@
     <ClCompile Include="..\..\auxiliary\renderer\OpenGL\glfunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\auxiliary\animation\IK\JacobianCov.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="IKProj.h">
@@ -148,6 +151,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\auxiliary\renderer\OpenGL\glhead.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\auxiliary\animation\IK\JacobianCov.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

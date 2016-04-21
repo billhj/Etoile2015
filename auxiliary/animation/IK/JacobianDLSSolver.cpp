@@ -76,6 +76,7 @@ namespace Etoile
 	/**
 	**  muli jacobian solver
 	*/
+	/*
 	void JacobianDLSSolver::solveOneStep(IKTree* chain, std::vector<Vector3_> targets, bool enableConstraints)
 	{
 		chain->updateAllDims();
@@ -141,77 +142,106 @@ namespace Etoile
 			chain->updateAllDims();
 		}
 
+	}*/
+
+
+
+	void JacobianDLSSolver::solveOneStep(IKTree* chain, std::vector<Vector3_> targets, bool enableConstraints)
+	{
+		chain->updateAllDims();
+		int tries = 0;
+		int columnDim = chain->m_dims.size();
+		int rowDim = chain->m_dim_end_effector_index.size() * 3;
+		MatrixX_ jacobian = MatrixX_::Zero(rowDim, columnDim);
+		VectorX_ distance(rowDim);
+		for(int ei = 0; ei < chain->m_dim_end_effector_index.size(); ++ei)
+		{
+			int endeffectorIdx = chain->m_dim_end_effector_index[ei];
+
+			Vector3_& endpos = chain->m_dim_globalPositions[endeffectorIdx];
+			Vector3_ dis = (targets[ei]-endpos);
+			distance(ei * 3 + 0) = dis(0);
+			distance(ei * 3 + 1) = dis(1);
+			distance(ei * 3 + 2) = dis(2);
+
+			for(unsigned int j = 0; j < chain->m_dims.size(); ++j)
+			{
+				IKChain::Dim* dim = chain->m_dims[j];
+				Vector3_& jointPos = chain->m_dim_globalPositions[dim->m_idx];
+				Vector3_ boneVector = endpos - jointPos;
+
+				Vector3_ axis = chain->m_dim_axis[dim->m_idx];
+				int lastDim = dim->m_lastIdx;
+				if(lastDim >= 0)
+				{
+					axis = chain->m_dim_globalOrientations[lastDim] * axis;
+				}
+				Vector3_ axisXYZgradient = axis.cross(boneVector);
+				int identifier = chain->m_dim_identifier[j];
+				if((identifier & (int)(pow(2.0, ei))) == (int)(pow(2.0, ei)))
+				{
+					jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
+					jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
+					jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
+					std::cout<< ei + 1 <<" ";
+				}
+				else
+				{
+					jacobian(ei * 3 + 0, j) = 0;//0.00000000000000000001;
+					jacobian(ei * 3 + 1, j) = 0;//0.0000000000000000000001;
+					jacobian(ei * 3 + 2, j) = 0;//0.0000000000000000000001;
+					std::cout<< 0 <<" ";
+				}
+				//if(identifier == 3)
+				//{
+				//	jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
+				//	jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
+				//	jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
+				//	//std::cout<< ei + 1 <<" ";
+				//}
+				//else if( (identifier == 2 && ei == 1) || (identifier == 1 && ei == 0))
+				//{
+				//	jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
+				//	jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
+				//	jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
+				//	//std::cout<< ei + 1 <<" ";
+				//}
+				//else
+				//{
+				//	jacobian(ei * 3 + 0, j) = 0;//0.00000000000000000001;
+				//	jacobian(ei * 3 + 1, j) = 0;//0.0000000000000000000001;
+				//	jacobian(ei * 3 + 2, j) = 0;//0.0000000000000000000001;
+				//	//std::cout<< 0 <<" ";
+				//}
+
+			}
+			std::cout<< std::endl;
+		}
+
+		//std::cout<< jacobian<<std::endl;
+		MatrixX_ jacobianTranspose = jacobian.transpose();
+		/*MatrixX_ jtj =  jacobianTranspose * jacobian;
+		MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
+		MatrixX_ betax = MatrixX_::Zero(jtj.rows(), jtj.cols());
+		for(int i = 0; i < jtj.rows(); ++i)
+		{
+			lamdaI(i,i) = chain->m_posture_variation[i];   
+		}
+
+		MatrixX_ a = jtj + lamdaI;
+		MatrixX_ b = jacobianTranspose * distance;
+		MatrixX_ aInv = a.inverse();
+		VectorX_ dR = aInv * b;*/
+		MatrixX_ jtj = jacobian * jacobianTranspose;
+		MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
+		VectorX_ dR = jacobianTranspose * ( jtj + lamdaI * 0.0000001).inverse() * distance * 0.1;
+
+		
+		for(int i = 0; i < columnDim; ++i)
+		{
+			chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
+			//chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);
+		}
+		chain->updateAllDims();
 	}
-
-
-
-	//void JacobianDLSSolver::solveOneStep(IKTree* chain, std::vector<Vector3_> targets, bool enableConstraints)
-	//{
-	//	chain->updateAllDims();
-	//	int tries = 0;
-	//	int columnDim = chain->m_dims.size();
-	//	int rowDim = chain->m_dim_end_effector_index.size() * 3;
-	//	MatrixX_ jacobian = MatrixX_::Zero(rowDim, columnDim);
-	//	VectorX_ distance(rowDim);
-	//	for(int ei = 0; ei < chain->m_dim_end_effector_index.size(); ++ei)
-	//	{
-	//		int endeffectorIdx = chain->m_dim_end_effector_index[ei];
-
-	//		Vector3_& endpos = chain->m_dim_globalPositions[endeffectorIdx];
-	//		Vector3_ dis = (targets[ei]-endpos);
-	//		distance(ei * 3 + 0) = dis(0);
-	//		distance(ei * 3 + 1) = dis(1);
-	//		distance(ei * 3 + 2) = dis(2);
-
-	//		for(unsigned int j = 0; j < chain->m_dims.size(); ++j)
-	//		{
-	//			IKChain::Dim* dim = chain->m_dims[j];
-	//			Vector3_& jointPos = chain->m_dim_globalPositions[dim->m_idx];
-	//			Vector3_ boneVector = endpos - jointPos;
-
-	//			Vector3_ axis = chain->m_dim_axis[dim->m_idx];
-	//			int lastDim = dim->m_lastIdx;
-	//			if(lastDim >= 0)
-	//			{
-	//				axis = chain->m_dim_globalOrientations[lastDim] * axis;
-	//			}
-	//			Vector3_ axisXYZgradient = axis.cross(boneVector);
-	//			int identifier = chain->m_dim_identifier[j];
-	//			if(identifier & (int)(pow(2.0, ei)) == (int)(pow(2.0, ei)))
-	//			{
-	//				jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
-	//				jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
-	//				jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
-	//			}
-	//			else
-	//			{
-	//				jacobian(ei * 3 + 0, j) = 0;//0.00000000000000000001;
-	//				jacobian(ei * 3 + 1, j) = 0;//0.0000000000000000000001;
-	//				jacobian(ei * 3 + 2, j) = 0;//0.0000000000000000000001;
-	//			}
-
-	//		}
-
-	//	}
-
-	//	MatrixX_ jacobianTranspose = jacobian.transpose();
-	//	MatrixX_ jtj =  jacobianTranspose * jacobian;
-	//	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
-	//	MatrixX_ betax = MatrixX_::Zero(jtj.rows(), jtj.cols());
-	//	for(int i = 0; i < jtj.rows(); ++i)
-	//	{
-	//		lamdaI(i,i) = chain->m_posture_variation[i];   
-	//	}
-
-	//	MatrixX_ a = jtj + lamdaI;
-	//	MatrixX_ b = jacobianTranspose * distance;
-	//	MatrixX_ aInv = a.inverse();
-	//	VectorX_ dR = aInv * b;
-	//	for(int i = 0; i < columnDim; ++i)
-	//	{
-	//		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
-	//		chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);
-	//	}
-	//	chain->updateAllDims();
-	//}
 }

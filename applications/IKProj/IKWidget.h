@@ -23,6 +23,7 @@
 #include "animation/IK/JacobianDLSSolver.h"
 #include "animation/IK/JacobianDLSSVDSolver.h"
 #include "animation/IK/JacobianRcompensedDLSSolver.h"
+#include "animation/IK/JacobianCov.h"
 #include "animation/IK/JacobianPseudoInverseSolver.h"
 #include "animation/IK/JacobianTransposeSolver.h"
 #include <QTime>
@@ -45,6 +46,7 @@ public:
 	{
 		framesNb = 0;
 		chain = new Etoile::IKTree();
+		speed = 0;
 		
 		Etoile::IKTree* tree = dynamic_cast<Etoile::IKTree*>(chain);
 		if(tree)
@@ -239,7 +241,7 @@ protected:
 		{
 			QMenu menu( this );
 			std::map<QAction*, int> menuMap;
-			menuMap[menu.addAction("^-^")] = 1;
+			menuMap[menu.addAction("JacobianCov")] = 1;
 			menuMap[menu.addAction(":)")] = 2;
 			menuMap[menu.addAction("PseudoInverse")] = 3;
 			menuMap[menu.addAction("Transpose")] = 4;
@@ -254,7 +256,7 @@ protected:
 				if(id == 1)
 				{
 					if(_pSolver != NULL) delete _pSolver;
-					_pSolver = new Etoile::JacobianRcompensedDLSSolver(maxnb_iterations);
+					_pSolver = new Etoile::JacobianCov(maxnb_iterations);
 				}
 				else if(id == 2)
 				{
@@ -399,7 +401,7 @@ private:
 			drawText((int)600, (int)40, QString("Max Iterations: %1").arg(_pSolver->getMaxNumberOfTries()), serifFont);
 			drawText((int)600, (int)55, QString("Distance Threshold: %1").arg(_pSolver->getTargetThreshold()), serifFont);
 
-			drawText((int)600, (int)70, QString("solve Time: %1").arg(speed).arg(" msc"), serifFont);
+			drawText((int)600, (int)70, QString("solve Time: %1 msc").arg(speed), serifFont);
 		}
 	}
 

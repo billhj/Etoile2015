@@ -82,9 +82,47 @@ namespace Etoile
 		int tries = 0;
 		int columnDim = chain->m_dims.size();
 		int rowDim = 3;
+		if(!m_defined)
+		{
+			m_mu = VectorX_::Zero(columnDim);
+			VectorX_ variance = VectorX_::Zero(columnDim);
+			for(int i = 0; i < columnDim; ++i)
+			{
+				m_mu[i] = (chain->m_dim_anglelimites[i][0] + chain->m_dim_anglelimites[i][1]) * 0.5;
+				variance[i] = abs(chain->m_dim_anglelimites[i][1] - m_mu[i]) * 0.5;
+				//m_mu[i] = 0;//
+			}
+
+			
+			m_cov = MatrixX_::Zero(columnDim, columnDim);
+			for(int i = 0; i < columnDim; ++i)
+			{
+				m_cov(i,i) =  variance[i] * variance[i];
+			}
+			
+			m_invcov = m_cov.inverse();
+			m_defined = true;
+			for(int i = 0; i < columnDim; ++i)
+			{
+				chain->m_dim_values[i] = m_mu[i];
+			}
+			chain->updateAllDims();
+			for(int ei = 0; ei < chain->m_dim_end_effector_index.size(); ++ei)
+			{
+				int endeffectorIdx = chain->m_dim_end_effector_index[ei];
+				m_mutarget.push_back (chain->m_dim_globalPositions[endeffectorIdx]);
+			}
+		}
+
+		VectorX_ rotation = VectorX_::Zero(columnDim);
 		
+
 		for(int ei = 0; ei < chain->m_dim_end_effector_index.size(); ++ei)
 		{
+			for(int i = 0; i < columnDim; ++i)
+			{
+				rotation[i] = chain->m_dim_values[i];
+			}
 
 			MatrixX_ jacobian = MatrixX_::Zero(rowDim, columnDim);
 			int endeffectorIdx = chain->m_dim_end_effector_index[ei];
@@ -122,15 +160,31 @@ namespace Etoile
 			}
 
 			MatrixX_ jacobianTranspose = jacobian.transpose();
-			MatrixX_ a =  jacobian * jacobianTranspose;
+			MatrixX_  jtj = jacobianTranspose * jacobian;
+			MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
 
-			MatrixX_ dls = jacobianTranspose * ( a +  m_dampling * MatrixX_::Identity(a.rows(), a.cols())).inverse();
-			VectorX_ dR = dls * distance;
+			Vector3_ dis_damp = m_mutarget[ei] - targets[ei];
+			float dis_damping = dis_damp.norm() * 3;
+			m_dampling = log(1 + exp(-dis_damping));
+
+			float d1 = (m_mutarget[ei] - endpos).norm();
+			float d2 = (targets[ei] - endpos).norm();
+			m_dampling = log(1 + exp(-d1 / (d1 + d2)));
+			MatrixX_ a =  (2 * jtj  + (1 - m_dampling)*lamdaI + m_dampling * m_invcov).inverse();
+
+			MatrixX_ b = (2 * jacobianTranspose * distance +  m_dampling * m_invcov * (m_mu - rotation));
+			VectorX_ dR = a * b;
+
+			/*MatrixX_ jacobianTranspose = jacobian.transpose();
+			MatrixX_ a =  jacobian * jacobianTranspose;
+			MatrixX_ aInv = a.inverse();
+			MatrixX_ pseudoInverse = jacobianTranspose * aInv;
+			VectorX_ dR = pseudoInverse * distance;*/
 
 			for(int i = 0; i < columnDim; ++i)
 			{
 				chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
-				chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);
+				//chain->m_dim_values[i] = clamp(chain->m_dim_values[i], chain->m_dim_anglelimites[i][0], chain->m_dim_anglelimites[i][1]);
 			}
 			chain->updateAllDims();
 		}
