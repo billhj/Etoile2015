@@ -10,7 +10,7 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 	_pIKWidget = new SkeletonWidget();
 	this->setCentralWidget(_pIKWidget);
 	addMenu();
-	this->setWindowTitle("IKViewer");
+	this->setWindowTitle("SkeletonViewer");
 
 	
 	bvh.loadFromBVHFile("Example1.bvh");
