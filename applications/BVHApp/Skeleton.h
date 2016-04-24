@@ -144,6 +144,8 @@ struct Skeleton
 		out.close();
 	}
 
+	void buildJacobian(const std::vector<int>& endeffectors, MatrixX_& m_jacobian);
+
 	std::vector<Joint> m_joints;
 	std::vector<Vector3_, Eigen::aligned_allocator<Vector3_> > m_joint_offsets;
 	std::vector<Matrix3_, Eigen::aligned_allocator<Matrix3_> > m_joint_localRotations;
@@ -161,6 +163,8 @@ struct Skeleton
 	std::vector<Vector3_, Eigen::aligned_allocator<Vector3_> > m_dim_axis;
 	std::string m_name;
 
+	std::vector<int> m_endeffectors;
+	MatrixX_ m_jacobian;
 
 	//virtual bool loadFromFile(const std::string& fileName);
 	//virtual void read(std::istream& in);

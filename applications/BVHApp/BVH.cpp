@@ -346,6 +346,7 @@
 
 					current = m_skeleton.addJoint(parent, 0, Vector3_(x, y, z), name);
 					current->m_level = m_index.size();
+					m_skeleton.m_endeffectors.push_back(current->m_index);
 				}
 			}
 		}
