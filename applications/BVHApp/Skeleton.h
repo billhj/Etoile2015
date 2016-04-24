@@ -90,37 +90,20 @@ struct Skeleton
 		for(unsigned int i = 0; i < current.m_dims.size(); ++i)
 		{
 			Dim& dim = m_dims[current.m_dims[i]];
-			/*if(dim.m_type == DimType::Zrotation)
-			{
-			
-			}
-			else if(dim.m_type == DimType::Yrotation)
-			{
-			
-			}
-			else if(dim.m_type == DimType::Xrotation)
-			{
-			
-			}
-			else if(dim.m_type == DimType::Zposition)
-			{
-			
-			}
-			else if(dim.m_type == DimType::Yposition)
-			{
-			
-			}
-			else if(dim.m_type == DimType::Xposition)
-			{
-			
-			}*/
-
+			updateDim(dim.m_idx);
 			temp = temp * m_dim_localRotations[dim.m_idx];	
 		}
 		m_joint_localRotations[idx] = temp;
 		int last = current.m_dof - 1;
-		m_joint_globalOrientations[idx] = m_dim_globalOrientations[current.m_dims[last]];
-		m_joint_globalPositions[idx] = m_dim_globalPositions[current.m_dims[last]];
+		if(last > 0)
+		{
+			m_joint_globalOrientations[idx] = m_dim_globalOrientations[current.m_dims[last]];
+			m_joint_globalPositions[idx] = m_dim_globalPositions[current.m_dims[last]];
+		}else
+		{
+			m_joint_globalOrientations[idx] = m_joint_globalOrientations[current.m_index_parent];
+			m_joint_globalPositions[idx] = m_joint_globalPositions[current.m_index_parent] + m_joint_offsets[idx];
+		}
 	}
 
 	void update()
