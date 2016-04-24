@@ -312,7 +312,6 @@
 		std::string line;
 		std::string keyWrd;
 		float x,y,z;
-		int dim;
 		Skeleton::Joint* current;
 
 		{
@@ -345,7 +344,7 @@
 					stream >> y;
 					stream >> z;
 
-					current = m_skeleton.addJoint(parent, dim, Vector3_(x, y, z), name);
+					current = m_skeleton.addJoint(parent, 0, Vector3_(x, y, z), name);
 					current->m_level = m_index.size();
 				}
 			}
