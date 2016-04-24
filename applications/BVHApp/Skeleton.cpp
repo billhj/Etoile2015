@@ -1,7 +1,7 @@
 #include "Skeleton.h"
 
 
-Skeleton::Joint* Skeleton::addJoint(int parent, int dof, const std::string& name)
+Skeleton::Joint* Skeleton::addJoint(int parent, int dof, Vector3_ offset, const std::string& name)
 {
 	int size = m_joints.size();
 	m_joints.push_back(Joint());
@@ -35,17 +35,18 @@ Skeleton::Joint* Skeleton::addJoint(int parent, int dof, const std::string& name
 		}
 
 		this->m_dim_axis.push_back(Vector3_::Zero());
-
 		this->m_dim_localRotations.push_back(Matrix3_::Identity());
 		this->m_dim_globalOrientations.push_back(Matrix3_::Identity());
 		this->m_dim_localTranslations.push_back(Vector3_::Zero());
 		this->m_dim_globalPositions.push_back(Vector3_::Zero());
 		this->m_dim_values.push_back(0);
+		if(i == 0)
+			this->m_dim_localTranslations.back() = offset;
 	}
 
 	this->m_joint_localRotations.push_back(Matrix3_::Identity());
 	this->m_joint_globalOrientations.push_back(Matrix3_::Identity());
-	this->m_joint_offsets.push_back(Vector3_::Zero());
+	this->m_joint_offsets.push_back(offset);
 	this->m_joint_localTranslations.push_back(Vector3_::Zero());
 	this->m_joint_globalPositions.push_back(Vector3_::Zero());
 	return &joint;

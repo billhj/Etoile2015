@@ -25,44 +25,6 @@
 			_string = _string.substr( start, end-start+1 );
 	}
 
-	/*BVH::Joint::Joint(BVH* bvh, int parent, int dof, const std::string& name)
-	{
-		m_isleaf = false;
-		p_owner = bvh;
-		m_index = bvh->m_joints.size();
-		bvh->m_joints.push_back(this);
-		m_index_parent = parent;
-		m_name = name;
-		m_dof = dof;
-		m_dims.resize(m_dof);
-		for(int i = 0; i < dof; ++i)
-		{
-			m_dims[i].m_index = bvh->m_dims;	
-			++bvh->m_dims;
-		}
-	}
-
-	BVH::Joint::Joint(BVH* bvh, int parent, const std::string& name)
-	{
-		m_isleaf = false;
-		p_owner = bvh;
-		m_index = bvh->m_joints.size();
-		bvh->m_joints.push_back(this);
-		m_index_parent = parent;
-		m_name = name;
-	}
-
-	void BVH::Joint::init(int dof)
-	{
-		m_dof = dof;
-		m_dims.resize(m_dof);
-		for(int i = 0; i < dof; ++i)
-		{
-			m_dims[i].m_index = p_owner->m_dims;	
-			++p_owner->m_dims;
-		}
-	}*/
-
 	/*
 	void BVH::Joint::changeOrdertoZYX()
 	{
@@ -261,8 +223,7 @@
 //					std::cout<<"CHANNELS" <<std::endl;
 //#endif
 					stream >> dim;
-					current = m_skeleton.addJoint(parent, dim, name);
-					m_skeleton.m_joint_offsets[current->m_index] = Vector3_(x, y, z);
+					current = m_skeleton.addJoint(parent, dim, Vector3_(x, y, z), name);
 					current->m_level = m_index.size();
 					//m_skeleton.m_dim_localTranslations[current->m_dims[0]] = Vector3_(x, y, z);
 
@@ -275,26 +236,32 @@
 						if(currentDim.m_name== "Zposition")
 						{
 							m_skeleton.m_dim_axis[current->m_dims[i]] = Vector3_(0, 0, 1);	
+							currentDim.m_type =  Skeleton::DimType::Zposition;
 						}
 						else if(currentDim.m_name== "Yposition")
 						{
 							m_skeleton.m_dim_axis[current->m_dims[i]] = Vector3_(0, 1, 0);	
+							currentDim.m_type =  Skeleton::DimType::Yposition;
 						}
 						else if(currentDim.m_name== "Xposition")
 						{
 							m_skeleton.m_dim_axis[current->m_dims[i]] = Vector3_(1, 0, 0);	
+							currentDim.m_type =  Skeleton::DimType::Xposition;
 						}
 						else if(currentDim.m_name== "Zrotation")
 						{
 							m_skeleton.m_dim_axis[current->m_dims[i]] = Vector3_(0, 0, 1);	
+							currentDim.m_type =  Skeleton::DimType::Zrotation;
 						}
 						else if(currentDim.m_name== "Yrotation")
 						{
 							m_skeleton.m_dim_axis[current->m_dims[i]] = Vector3_(0, 1, 0);	
+							currentDim.m_type =  Skeleton::DimType::Yrotation;
 						}
 						else if(currentDim.m_name== "Xrotation")
 						{
 							m_skeleton.m_dim_axis[current->m_dims[i]] = Vector3_(1, 0, 0);	
+							currentDim.m_type =  Skeleton::DimType::Xrotation;
 						}
 						else
 						{
@@ -378,8 +345,7 @@
 					stream >> y;
 					stream >> z;
 
-					current = m_skeleton.addJoint(parent, 0, name);
-					m_skeleton.m_joint_offsets[current->m_index] = Vector3_(x, y, z);
+					current = m_skeleton.addJoint(parent, dim, Vector3_(x, y, z), name);
 					current->m_level = m_index.size();
 				}
 			}
@@ -585,11 +551,14 @@
 				stream >> idxP;
 				int dof;
 				stream >> dof;
-				Skeleton::Joint* j = m_skeleton.addJoint(idxP, dof, name);
-				Vector3_& offset = m_skeleton.m_joint_offsets[j->m_index];
-				stream >> offset[0];
-				stream >> offset[1];
-				stream >> offset[2];
+
+				float x,y,z;
+				stream >> x;
+				stream >> y;
+				stream >> z;
+				Skeleton::Joint* j = m_skeleton.addJoint(idxP, dof, Vector3_(x, y, z), name);
+				//Vector3_& offset = m_skeleton.m_joint_offsets[j->m_index];
+				
 				for(int i = 0; i < dof; ++i)
 				{
 					std::getline(in,line);

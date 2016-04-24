@@ -16,12 +16,22 @@
 
 struct Skeleton
 {
+	enum DimType
+	{
+		Zposition,
+		Yposition,
+		Xposition,
+		Zrotation,
+		Yrotation,
+		Xrotation,
+	};
 
 	struct Dim
 	{
 		int m_lastIdx;
 		int m_idx;
 		std::string m_name;
+		DimType m_type;
 	};
 
 	struct Joint
@@ -38,7 +48,7 @@ struct Skeleton
 	{
 	}
 
-	Joint* addJoint(int parent, int dof, const std::string& name);
+	Joint* addJoint(int parent, int dof, Vector3_ offset, const std::string& name);
 
 	void reset();
 	void resetValues();
@@ -47,6 +57,7 @@ struct Skeleton
 	{
 		m_dim_localRotations[idx] = AngleAxis_(m_dim_values[idx], m_dim_axis[idx]);	
 	}
+
 
 	void updateDim(int idx)
 	{
@@ -59,7 +70,7 @@ struct Skeleton
 		}
 		else
 		{
-			m_dim_globalPositions[dim.m_idx] = m_dim_localTranslations[dim.m_idx];
+			m_dim_globalPositions[dim.m_idx] = m_dim_localTranslations[dim.m_idx] + Vector3_(m_dim_values[0], m_dim_values[1], m_dim_values[2]);
 			m_dim_globalOrientations[dim.m_idx] = m_dim_localRotations[dim.m_idx];
 		}
 	}
@@ -79,6 +90,31 @@ struct Skeleton
 		for(unsigned int i = 0; i < current.m_dims.size(); ++i)
 		{
 			Dim& dim = m_dims[current.m_dims[i]];
+			/*if(dim.m_type == DimType::Zrotation)
+			{
+			
+			}
+			else if(dim.m_type == DimType::Yrotation)
+			{
+			
+			}
+			else if(dim.m_type == DimType::Xrotation)
+			{
+			
+			}
+			else if(dim.m_type == DimType::Zposition)
+			{
+			
+			}
+			else if(dim.m_type == DimType::Yposition)
+			{
+			
+			}
+			else if(dim.m_type == DimType::Xposition)
+			{
+			
+			}*/
+
 			temp = temp * m_dim_localRotations[dim.m_idx];	
 		}
 		m_joint_localRotations[idx] = temp;
