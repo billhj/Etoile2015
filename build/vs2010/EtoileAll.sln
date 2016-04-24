@@ -39,6 +39,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OctreeAnimationDemo", "..\.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TP2016", "..\..\applications\TP2016\TP2016.vcxproj", "{57D2F59A-3541-44A5-8E7A-E677FA4AC18C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BVHApp", "..\..\applications\BVHApp\BVHApp.vcxproj", "{BE9D2E07-586C-4E40-AB4D-9036F47ABB2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -187,6 +189,12 @@ Global
 		{57D2F59A-3541-44A5-8E7A-E677FA4AC18C}.Release|Win32.ActiveCfg = Release|Win32
 		{57D2F59A-3541-44A5-8E7A-E677FA4AC18C}.Release|Win32.Build.0 = Release|Win32
 		{57D2F59A-3541-44A5-8E7A-E677FA4AC18C}.Release|x64.ActiveCfg = Release|Win32
+		{BE9D2E07-586C-4E40-AB4D-9036F47ABB2B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BE9D2E07-586C-4E40-AB4D-9036F47ABB2B}.Debug|Win32.Build.0 = Debug|Win32
+		{BE9D2E07-586C-4E40-AB4D-9036F47ABB2B}.Debug|x64.ActiveCfg = Debug|Win32
+		{BE9D2E07-586C-4E40-AB4D-9036F47ABB2B}.Release|Win32.ActiveCfg = Release|Win32
+		{BE9D2E07-586C-4E40-AB4D-9036F47ABB2B}.Release|Win32.Build.0 = Release|Win32
+		{BE9D2E07-586C-4E40-AB4D-9036F47ABB2B}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
