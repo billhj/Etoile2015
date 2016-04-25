@@ -70,7 +70,6 @@ void Skeleton::resetValues()
 	{
 		m_dim_values[i] = 0;
 	}
-	updateAllDims();
 	update();
 }
 

@@ -392,7 +392,7 @@ private:
 		qglviewer::Camera *cam = this->camera();
 		cam->setSceneCenter(qglviewer::Vec(0,0,0));
 		cam->setSceneRadius(5);
-		cam->setPosition(qglviewer::Vec(0,0,2));
+		cam->setPosition(qglviewer::Vec(0, 0.5,2));
 
 		this->setMouseTracking(true);
 
@@ -491,6 +491,7 @@ signals:
 			//sk->m_dim_values[6] = 1;
 			//sk->m_dim_values[11] = 1;
 			//sk->update();
+			sk->resetValues();
 			QElapsedTimer timer;
 			timer.start();
 			if(_pSolver != NULL)

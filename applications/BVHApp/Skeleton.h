@@ -75,13 +75,13 @@ struct Skeleton
 		}
 	}
 
-	void updateAllDims()
-	{
-		for(unsigned int i = 0; i < m_dims.size(); ++i)
-		{
-			updateDim(i);
-		}
-	}
+	///*void updateAllDims()
+	//{
+	//	for(unsigned int i = 0; i < m_dims.size(); ++i)
+	//	{
+	//		updateDim(i);
+	//	}
+	//}*/
 
 	void updateJoint(int idx)
 	{
@@ -126,6 +126,7 @@ struct Skeleton
 		out<<std::endl;
 		out.close();
 	}
+
 
 	void buildJacobian(const std::vector<int>& endeffectors, MatrixX_& m_jacobian);
 
