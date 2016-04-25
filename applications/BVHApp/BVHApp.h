@@ -20,6 +20,9 @@ public slots:
 	void setDistanceThreshold(double);
 	void openBVH();
 	void playBVH();
+	void accBVH();
+	void deaccBVH();
+	void stopBVH();
 	void updateCombobox();
 private:
 	Ui::BVHAppClass ui;

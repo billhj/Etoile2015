@@ -41,7 +41,13 @@ void BVHApp::addMenu()
 
 	QMenu* anim = bar->addMenu("Animation");
 	QAction* playbvh = anim->addAction("playBVH");
+	QAction* stopbvh = anim->addAction("stopBVH");
+	QAction* accbvh = anim->addAction("+");
+	QAction* deaccbvh = anim->addAction("-");
 	connect(playbvh, SIGNAL(triggered()), this, SLOT(playBVH()));
+	connect(stopbvh, SIGNAL(triggered()), this, SLOT(stopBVH()));
+	connect(accbvh, SIGNAL(triggered()), this, SLOT(accBVH()));
+	connect(deaccbvh, SIGNAL(triggered()), this, SLOT(deaccBVH()));
 
 	QMenu* help = bar->addMenu("Help");
 	QAction* usage = help->addAction("How to use");
@@ -94,7 +100,28 @@ void BVHApp::openBVH()
 
 void BVHApp::playBVH()
 {
+	_pIKWidget->animationframes.clear();
 	_pIKWidget->animationframes = bvh.m_frames;
+	_pIKWidget->bvhstep = 1;
+}
+
+void BVHApp::stopBVH()
+{
+	_pIKWidget->animationframes.clear();
+}
+
+void BVHApp::accBVH()
+{
+	_pIKWidget->bvhstep++;
+}
+
+void BVHApp::deaccBVH()
+{
+	_pIKWidget->bvhstep--;
+	if(_pIKWidget->bvhstep < 0)
+	{
+		_pIKWidget->bvhstep = 0;
+	}
 }
 
 void BVHApp::openAbout()

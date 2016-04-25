@@ -49,6 +49,7 @@ public:
 		_manipulator.reset();
 		_manipulator.setOrigine(qglviewer::Vec(0, 0, 0));
 		_pSolver = new JacobianDLSSolver();
+		bvhstep = 1;
 	}
 
 	~SkeletonWidget(){}
@@ -331,7 +332,9 @@ private:
 		if(animationframes.size() > 0 && sk != NULL)
 		{
 			sk->m_dim_values = animationframes[0].m_values;
-			animationframes.erase(animationframes.begin());
+			for(int i = 0; i < bvhstep && animationframes.size() > 0; ++i){
+				animationframes.erase(animationframes.begin());
+			}
 			sk->update();
 		}
 
@@ -542,6 +545,7 @@ public:
 	Skeleton* sk;
 	int number_bones;
 	Etoile::Vec3f _original;
+	int bvhstep;
 	double speed;
 	std::vector<Frame> animationframes;
 };
