@@ -50,8 +50,8 @@ void JacobianPseudoInverse::solveOneStep(Skeleton* chain, std::vector<Vector3_>&
 
 	MatrixX_ jacobianTranspose = jacobian.transpose();
 	MatrixX_ jtj = jacobian * jacobianTranspose;
-	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
-	VectorX_ dR = jacobianTranspose * jtj.inverse() * distance;
+	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols()) * 0.0001;
+	VectorX_ dR = jacobianTranspose * (jtj + lamdaI).inverse() * distance;
 
 
 	for(int i = chain->m_startDim4IK; i < chain->m_dims.size(); ++i)
