@@ -14,7 +14,9 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 
 	
 	bvh.loadFromBVHFile("example1.bvh");
-	bvh.saveToBVHFile("example2.bvh");
+	bvh.m_skeleton.m_endeffectors.pop_back();
+	bvh.m_skeleton.m_endeffectors.pop_back();
+	bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
 	bvh.m_skeleton.buildJacobian(bvh.m_skeleton.m_endeffectors, bvh.m_skeleton.m_jacobian);
 	bvh.m_skeleton.update();
 	_pIKWidget->sk = &bvh.m_skeleton;

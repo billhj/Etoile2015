@@ -23,6 +23,7 @@
 #include <QTime>
 #include "renderer/OpenGL/glfunctions.h"
 #include <QElapsedTimer>
+#include "JacobianDLSSolver.h"
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
@@ -43,6 +44,7 @@ public:
 		speed = 0;
 		_manipulator.reset();
 		_manipulator.setOrigine(qglviewer::Vec(0, 0, 0));
+		_pSolver = new JacobianDLSSolver();
 	}
 
 	~SkeletonWidget(){}
@@ -72,7 +74,7 @@ public:
 		glPushMatrix();
 		glTranslatef(pos(0),pos(1),pos(2));
 		glMultMatrixf(&mat[0][0]);
-		QGLViewer::drawAxis(8); // Or any scale
+		QGLViewer::drawAxis(0.1); // Or any scale
 		glPopMatrix();
 
 		glLineWidth(0.3);
@@ -101,7 +103,7 @@ public:
 		//_board.draw();
 		glColor3f(0.1,0.1,0.1);
 		glRotated(90,1,0,0);
-		drawGrid(500.0,40);		
+		drawGrid(10,40);		
 		glPopMatrix();
 	}
 
@@ -352,11 +354,11 @@ private:
 		_manipulator.draw();
 		glPopMatrix();
 
-		//if(_pSolver != NULL)
+		if(_pSolver != NULL)
 		{
-			//drawText((int)600, (int)25, QString(_pSolver->getIKSolverName().c_str()), serifFont);
-			//drawText((int)600, (int)40, QString("Max Iterations: %1").arg(_pSolver->getMaxNumberOfTries()), serifFont);
-			//drawText((int)600, (int)55, QString("Distance Threshold: %1").arg(_pSolver->getTargetThreshold()), serifFont);
+			drawText((int)600, (int)25, QString(_pSolver->getIKSolverName().c_str()), serifFont);
+			drawText((int)600, (int)40, QString("Max Iterations: %1").arg(_pSolver->getMaxNumberOfTries()), serifFont);
+			drawText((int)600, (int)55, QString("Distance Threshold: %1").arg(_pSolver->getTargetThreshold()), serifFont);
 
 			drawText((int)600, (int)70, QString("solve Time: %1 msc").arg(speed), serifFont);
 		}
@@ -389,8 +391,8 @@ private:
 
 		qglviewer::Camera *cam = this->camera();
 		cam->setSceneCenter(qglviewer::Vec(0,0,0));
-		cam->setSceneRadius(500);
-		cam->setPosition(qglviewer::Vec(0,20,180));
+		cam->setSceneRadius(5);
+		cam->setPosition(qglviewer::Vec(0,0,2));
 
 		this->setMouseTracking(true);
 
@@ -461,7 +463,7 @@ private:
 			glTranslatef(pos(0),pos(1),pos(2));
 			glPushMatrix();
 			glMultMatrixf(&mat[0][0]);
-			QGLViewer::drawAxis(6); // Or any scale
+			QGLViewer::drawAxis(0.05); // Or any scale
 			glBegin( GL_POINTS);
 			glVertex3f(0,0,0);
 			glEnd();
@@ -469,12 +471,12 @@ private:
 			glPopMatrix();
 
 			glColor3f(0.1,0.4,0.4);
-			Etoile::drawSphere_convenient(pos.x(), pos.y(), pos.z(), 3.8, 10, 10);
+			Etoile::drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.03, 10, 10);
 			int parent = sk->m_joints[i].m_index_parent;
 			if(parent >= 0)
 			{
 				glColor3f(0.1,0.4,0.7);
-				Etoile::drawCylinder_convenient(pos.x(), pos.y(), pos.z(), sk->m_joint_globalPositions[parent].x(), sk->m_joint_globalPositions[parent].y(), sk->m_joint_globalPositions[parent].z() , 2.8, 10);
+				Etoile::drawCylinder_convenient(pos.x(), pos.y(), pos.z(), sk->m_joint_globalPositions[parent].x(), sk->m_joint_globalPositions[parent].y(), sk->m_joint_globalPositions[parent].z() , 0.02, 10);
 			}
 		}
 	}
@@ -486,22 +488,30 @@ signals:
 	public slots:
 		void applyJoint()
 		{
-			/*QElapsedTimer timer;
+			//sk->m_dim_values[6] = 1;
+			//sk->m_dim_values[11] = 1;
+			//sk->update();
+			QElapsedTimer timer;
 			timer.start();
 			if(_pSolver != NULL)
 			{
-				Etoile::IKTree* tree = dynamic_cast<Etoile::IKTree*>(chain);
-				if(tree)
+				std::vector<Vector3_> targets;
+				for(unsigned int i = 0 ; i < sk->m_endeffectors.size(); ++i)
 				{
-					targets[0] = Etoile::Vector3_(_manipulatorRight.getPosition().x, _manipulatorRight.getPosition().y, _manipulatorRight.getPosition().z);
-					tree->resetValues();
-					_pSolver->solve(tree, targets, true);
-				}else
-					_pSolver->solve(chain, Etoile::Vector3_(_manipulatorRight.getPosition().x, _manipulatorRight.getPosition().y, _manipulatorRight.getPosition().z), true);
+					if(sk->m_endeffectors[i] == _selectedJointIndex)
+					{
+						targets.push_back(Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z));	
+					}
+					else
+					{
+						targets.push_back(sk->m_joint_globalPositions[sk->m_endeffectors[i]]);
+					}
+				}
+				_pSolver->solve(sk, targets);
 			}
 			int nano = timer.nsecsElapsed();
-			speed = nano * 0.000001;*/
-				
+			speed = nano * 0.000001;
+			
 		}
 
 public:
@@ -516,11 +526,9 @@ public:
 	Etoile::glDrawFunctions _glDrawFunctions;
 
 	Etoile::SimpleManipulator _manipulator;
-	//Etoile::IKSolver* _pSolver;
+	IKSolver* _pSolver;
 	Skeleton* sk;
 	int number_bones;
 	Etoile::Vec3f _original;
-	//int targetId;
 	double speed;
-	//std::vector<IKSolver*> _solvers;
 };

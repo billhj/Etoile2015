@@ -223,7 +223,7 @@
 //					std::cout<<"CHANNELS" <<std::endl;
 //#endif
 					stream >> dim;
-					current = m_skeleton.addJoint(parent, dim, Vector3_(x, y, z), name);
+					current = m_skeleton.addJoint(parent, dim, Vector3_(x * 0.01, y * 0.01, z * 0.01), name);
 					current->m_level = m_index.size();
 					//m_skeleton.m_dim_localTranslations[current->m_dims[0]] = Vector3_(x, y, z);
 
@@ -344,7 +344,7 @@
 					stream >> y;
 					stream >> z;
 
-					current = m_skeleton.addJoint(parent, 0, Vector3_(x, y, z), name);
+					current = m_skeleton.addJoint(parent, 0, Vector3_(x * 0.01, y * 0.01, z * 0.01), name);
 					current->m_level = m_index.size();
 					m_skeleton.m_endeffectors.push_back(current->m_index_parent);
 				}

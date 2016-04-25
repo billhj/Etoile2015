@@ -183,14 +183,14 @@ namespace Etoile
 					jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
 					jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
 					jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
-					std::cout<< ei + 1 <<" ";
+					//std::cout<< ei + 1 <<" ";
 				}
 				else
 				{
 					jacobian(ei * 3 + 0, j) = 0;//0.00000000000000000001;
 					jacobian(ei * 3 + 1, j) = 0;//0.0000000000000000000001;
 					jacobian(ei * 3 + 2, j) = 0;//0.0000000000000000000001;
-					std::cout<< 0 <<" ";
+					//std::cout<< 0 <<" ";
 				}
 				//if(identifier == 3)
 				//{
@@ -215,7 +215,7 @@ namespace Etoile
 				//}
 
 			}
-			std::cout<< std::endl;
+			//std::cout<< std::endl;
 		}
 
 		//std::cout<< jacobian<<std::endl;

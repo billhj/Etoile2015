@@ -102,7 +102,7 @@ struct Skeleton
 		}else
 		{
 			m_joint_globalOrientations[idx] = m_joint_globalOrientations[current.m_index_parent];
-			m_joint_globalPositions[idx] = m_joint_globalPositions[current.m_index_parent] + m_joint_offsets[idx];
+			m_joint_globalPositions[idx] = m_joint_globalPositions[current.m_index_parent] + m_joint_globalOrientations[idx] * m_joint_offsets[idx];
 		}
 	}
 
