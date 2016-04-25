@@ -51,7 +51,7 @@ public:
 		std::cout<<"timee elapsed: "<<ms<<std::endl;
 		std::cout<<"iterations: "<<tries<< " distance: "<<distance<<std::endl;
 #endif
-		chain->update();
+		//chain->update();
 		return true;
 	}
 
