@@ -54,7 +54,7 @@ public:
 
 	~SkeletonWidget(){}
 
-	
+
 
 	void drawInfo(int currentJoint)
 	{
@@ -62,29 +62,29 @@ public:
 		Matrix3_ matrix = sk->m_joint_globalOrientations[currentJoint];
 		Vector3_ pos = sk->m_joint_globalPositions[currentJoint];
 		float mat[4][4];
-			for(int w = 0; w < 3; ++w)
-				for(int h = 0; h < 3; ++h)
-				{
-					mat[w][h] = matrix(h,w);
-				}
-				mat[3][0] = 0;
-				mat[3][1] = 0;
-				mat[3][2] = 0;
-				mat[3][3] = 1;
-				mat[0][3] = 0;
-				mat[1][3] = 0;
-				mat[2][3] = 0;
+		for(int w = 0; w < 3; ++w)
+			for(int h = 0; h < 3; ++h)
+			{
+				mat[w][h] = matrix(h,w);
+			}
+			mat[3][0] = 0;
+			mat[3][1] = 0;
+			mat[3][2] = 0;
+			mat[3][3] = 1;
+			mat[0][3] = 0;
+			mat[1][3] = 0;
+			mat[2][3] = 0;
 
-		glPushMatrix();
-		glTranslatef(pos(0),pos(1),pos(2));
-		glMultMatrixf(&mat[0][0]);
-		QGLViewer::drawAxis(0.1); // Or any scale
-		glPopMatrix();
+			glPushMatrix();
+			glTranslatef(pos(0),pos(1),pos(2));
+			glMultMatrixf(&mat[0][0]);
+			QGLViewer::drawAxis(0.1); // Or any scale
+			glPopMatrix();
 
-		glLineWidth(0.3);
-		glColor3f(1,0.4,0.7);
-		qglviewer::Vec screenPos = camera()->projectedCoordinatesOf(qglviewer::Vec(pos.x(), pos.y(), pos.z()));
-		drawText((int)screenPos[0]+20, (int)screenPos[1]-10, QString(" %4: [ %1, %2, %3 ] ").arg(pos.x(), 0, 'f',2).arg(pos.y(), 0, 'f',2).arg(pos.z(), 0, 'f',2).arg(QString(sk->m_joints[currentJoint].m_name.c_str())) );
+			glLineWidth(0.3);
+			glColor3f(1,0.4,0.7);
+			qglviewer::Vec screenPos = camera()->projectedCoordinatesOf(qglviewer::Vec(pos.x(), pos.y(), pos.z()));
+			drawText((int)screenPos[0]+20, (int)screenPos[1]-10, QString(" %4: [ %1, %2, %3 ] ").arg(pos.x(), 0, 'f',2).arg(pos.y(), 0, 'f',2).arg(pos.z(), 0, 'f',2).arg(QString(sk->m_joints[currentJoint].m_name.c_str())) );
 
 	}
 
@@ -183,7 +183,7 @@ protected:
 		}
 		else if(e->key() == Qt::Key_F3)
 		{
-		
+
 			//body->addForce(Eigen::Vector3f(-10,0,0));
 
 		}else if(e->key() == Qt::Key_F4)
@@ -191,10 +191,10 @@ protected:
 			//body->addTorque(Eigen::Vector3f(0,1,0));
 		}else if(e->key() == Qt::Key_Up)
 		{
-			
+
 		}else if(e->key() == Qt::Key_Down)
 		{
-		
+
 		}
 		else if(e->key() == Qt::Key_Space)
 		{
@@ -275,7 +275,7 @@ protected:
 			std::string name;
 			Vector3_ posM;
 			const std::vector<Skeleton::Joint>& joints = sk->m_joints;
-			
+
 			for(int i = 0; i < joints.size(); ++i)
 			{
 				Vector3_ pos = sk->m_joint_globalPositions[i];
@@ -301,8 +301,8 @@ protected:
 				}
 			}else{
 				/*if(_selectedJointIndex == joints.size() - 1){
-					_manipulator.reset();
-					_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
+				_manipulator.reset();
+				_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
 				}*/
 			}
 
@@ -341,7 +341,7 @@ private:
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		printOpenGLError();
 
-		
+
 
 		GLfloat light_position0[] = { 0, 30, 50, 1.0 };
 		glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
@@ -357,7 +357,7 @@ private:
 		drawPlane();
 		if(sk != NULL)
 			drawInfo(_selectedJointIndex);
-		
+
 		printOpenGLError();
 		//drawAxis();
 		glColor3f(0.9,0.25,0.55);
@@ -440,15 +440,15 @@ private:
 
 	/*virtual QSize sizeHint () const
 	{
-		return QSize(WIDGETWIDTH,WIDGETHEIGHT);
+	return QSize(WIDGETWIDTH,WIDGETHEIGHT);
 	}
 	virtual QSize minimumSizeHint () const
 	{
-		return QSize(WIDGETWIDTH,WIDGETHEIGHT);
+	return QSize(WIDGETWIDTH,WIDGETHEIGHT);
 	}
 	virtual QSize maxmumSizeHint () const
 	{
-		return QSize(WIDGETWIDTH,WIDGETHEIGHT);
+	return QSize(WIDGETWIDTH,WIDGETHEIGHT);
 	}*/
 
 	void drawIK()
@@ -472,26 +472,26 @@ private:
 				mat[1][3] = 0;
 				mat[2][3] = 0;
 
-			glPushMatrix();
-			//glLoadIdentity();
-			glTranslatef(pos(0),pos(1),pos(2));
-			glPushMatrix();
-			glMultMatrixf(&mat[0][0]);
-			QGLViewer::drawAxis(0.05); // Or any scale
-			glBegin( GL_POINTS);
-			glVertex3f(0,0,0);
-			glEnd();
-			glPopMatrix();
-			glPopMatrix();
+				glPushMatrix();
+				//glLoadIdentity();
+				glTranslatef(pos(0),pos(1),pos(2));
+				glPushMatrix();
+				glMultMatrixf(&mat[0][0]);
+				QGLViewer::drawAxis(0.05); // Or any scale
+				glBegin( GL_POINTS);
+				glVertex3f(0,0,0);
+				glEnd();
+				glPopMatrix();
+				glPopMatrix();
 
-			glColor3f(0.1,0.4,0.4);
-			Etoile::drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.03, 10, 10);
-			int parent = sk->m_joints[i].m_index_parent;
-			if(parent >= 0)
-			{
-				glColor3f(0.1,0.4,0.7);
-				Etoile::drawCylinder_convenient(pos.x(), pos.y(), pos.z(), sk->m_joint_globalPositions[parent].x(), sk->m_joint_globalPositions[parent].y(), sk->m_joint_globalPositions[parent].z() , 0.02, 10);
-			}
+				glColor3f(0.1,0.4,0.4);
+				Etoile::drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.03, 10, 10);
+				int parent = sk->m_joints[i].m_index_parent;
+				if(parent >= 0)
+				{
+					glColor3f(0.1,0.4,0.7);
+					Etoile::drawCylinder_convenient(pos.x(), pos.y(), pos.z(), sk->m_joint_globalPositions[parent].x(), sk->m_joint_globalPositions[parent].y(), sk->m_joint_globalPositions[parent].z() , 0.02, 10);
+				}
 		}
 	}
 
@@ -505,9 +505,8 @@ signals:
 			//sk->m_dim_values[6] = 1;
 			//sk->m_dim_values[11] = 1;
 			//sk->update();
-			
-			QElapsedTimer timer;
-			timer.start();
+
+
 			if(_pSolver != NULL)
 			{
 				std::vector<Vector3_> targets;
@@ -522,11 +521,14 @@ signals:
 						targets.push_back(sk->m_joint_globalPositions[sk->m_endeffectors[i]]);
 					}
 				}
+				QElapsedTimer timer;
+				timer.start();
 				_pSolver->solve(sk, targets);
+				int nano = timer.nsecsElapsed();
+				speed = nano * 0.000001;
 			}
-			int nano = timer.nsecsElapsed();
-			speed = nano * 0.000001;
-			
+
+
 		}
 
 public:
