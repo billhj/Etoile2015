@@ -88,15 +88,12 @@ void Skeleton::buildJacobian(const std::vector<int>& endeffectors, MatrixX_& m_j
 		}
 		currentEnd = &m_joints[currentEnd->m_index_parent];
 		Dim* currentDim = &m_dims[currentEnd->m_dims.back()];
-		m_jacobian(i * 3 + 0, currentDim->m_idx) = 1;
-		m_jacobian(i * 3 + 1, currentDim->m_idx) = 1;
-		m_jacobian(i * 3 + 2, currentDim->m_idx) = 1;
-		while(currentDim->m_idx > m_startDim4IK)
+		while(currentDim->m_idx > m_startDim4IK - 1)
 		{
-			currentDim = &m_dims[currentDim->m_lastIdx];
 			m_jacobian(i * 3 + 0, currentDim->m_idx) = 1;
 			m_jacobian(i * 3 + 1, currentDim->m_idx) = 1;
 			m_jacobian(i * 3 + 2, currentDim->m_idx) = 1;
+			currentDim = &m_dims[currentDim->m_lastIdx];
 		}
 	}
 }
