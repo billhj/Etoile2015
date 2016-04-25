@@ -14,8 +14,8 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 
 	
 	bvh.loadFromBVHFile("example1.bvh");
-	bvh.m_skeleton.m_endeffectors.pop_back();
-	bvh.m_skeleton.m_endeffectors.pop_back();
+	//bvh.m_skeleton.m_endeffectors.pop_back();
+	//bvh.m_skeleton.m_endeffectors.pop_back();
 	bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
 	bvh.m_skeleton.buildJacobian(bvh.m_skeleton.m_endeffectors, bvh.m_skeleton.m_jacobian);
 	bvh.m_skeleton.update();
@@ -35,11 +35,10 @@ void BVHApp::addMenu()
 {
 	QMenuBar* bar = this->menuBar();
 	QMenu* ik = bar->addMenu("IK");
-	QAction* MS = ik->addAction("JacobianCov");
-	QAction* CCD = ik->addAction(":)");
-	QAction* PI = ik->addAction("JacobianPseudoInverse");
-	QAction* TRS = ik->addAction("JacobianTranspose");
-	QAction* DLS = ik->addAction("JacobianDLS");
+	QAction* jc = ik->addAction("JacobianCov");
+	QAction* jdls = ik->addAction("JacobianDLS");
+	QAction* jpi = ik->addAction("JacobianPseudoInverse");
+	QAction* jt = ik->addAction("JacobianTranspose");
 	connect(ik, SIGNAL(triggered(QAction*)), this, SLOT(applyIKAction(QAction*)));
 
 	QMenu* help = bar->addMenu("Help");
@@ -55,23 +54,19 @@ void BVHApp::applyIKAction(QAction* action)
 	QString t = action->text();
 	if(t.toStdString() == "JacobianCov")
 	{
-		//_pIKWidget->setIKSolver(new Etoile::JacobianCov(_pIKWidget->getIKSolver()->getMaxNumberOfTries()));
-	}
-	else if(t.toStdString() == ":)")
-	{
-		//_pIKWidget->setIKSolver(new Etoile::JacobianDLSSVDSolver(_pIKWidget->getIKSolver()->getMaxNumberOfTries()));
-	}
-	else if(t.toStdString() == "JacobianPseudoInverse")
-	{
-		//_pIKWidget->setIKSolver(new Etoile::JacobianPseudoInverseSolver(_pIKWidget->getIKSolver()->getMaxNumberOfTries()));
-	}
-	else if(t.toStdString() == "JacobianTranspose")
-	{
-		//_pIKWidget->setIKSolver(new Etoile::JacobianTransposeSolver(_pIKWidget->getIKSolver()->getMaxNumberOfTries()));
+		_pIKWidget->_pSolver = (new JacobianCov(_pIKWidget->_pSolver->getMaxNumberOfTries()));
 	}
 	else if(t.toStdString() == "JacobianDLS")
 	{
-		//_pIKWidget->setIKSolver(new Etoile::JacobianDLSSolver(_pIKWidget->getIKSolver()->getMaxNumberOfTries()));
+		_pIKWidget->_pSolver = (new JacobianDLSSolver(_pIKWidget->_pSolver->getMaxNumberOfTries()));
+	}
+	else if(t.toStdString() == "JacobianPseudoInverse")
+	{
+		_pIKWidget->_pSolver = (new JacobianPseudoInverse(_pIKWidget->_pSolver->getMaxNumberOfTries()));
+	}
+	else if(t.toStdString() == "JacobianTranspose")
+	{
+		_pIKWidget->_pSolver = (new JacobianTranspose(_pIKWidget->_pSolver->getMaxNumberOfTries()));
 	}
 	std::cout<<"now using : " <<t.toStdString()<<std::endl;
 }
@@ -95,12 +90,12 @@ void BVHApp::openUsage()
 
 void BVHApp::setMaxIterationsNb(int i)
 {
-	//_pIKWidget->getIKSolver()->setMaxNumberOfTries(i);
+	_pIKWidget->_pSolver->setMaxNumberOfTries(i);
 }
 
 void BVHApp::setDistanceThreshold(double d)
 {
-	//_pIKWidget->getIKSolver()->setTargetThreshold(d);
+	_pIKWidget->_pSolver->setTargetThreshold(d);
 }
 
 void BVHApp::updateCombobox()

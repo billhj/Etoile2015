@@ -24,6 +24,9 @@
 #include "renderer/OpenGL/glfunctions.h"
 #include <QElapsedTimer>
 #include "JacobianDLSSolver.h"
+#include "JacobianCov.h"
+#include "JacobianPseudoInverse.h"
+#include "JacobianTranspose.h"
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
@@ -155,7 +158,7 @@ protected:
 	{
 		if (e->key() == Qt::Key_F5)
 		{
-			
+			sk->resetValues();
 		}
 		else if (e->key() == Qt::Key_F6)
 		{
@@ -215,37 +218,37 @@ protected:
 			QMenu menu( this );
 			std::map<QAction*, int> menuMap;
 			menuMap[menu.addAction("JacobianCov")] = 1;
-			menuMap[menu.addAction(":)")] = 2;
+			menuMap[menu.addAction("JacobianDLSSolver")] = 2;
 			menuMap[menu.addAction("PseudoInverse")] = 3;
 			menuMap[menu.addAction("Transpose")] = 4;
-			menuMap[menu.addAction("DLS")] = 5;
+			//menuMap[menu.addAction("DLS")] = 5;
 
 			menu.setMouseTracking(true);
 			QAction* action = menu.exec(event->globalPos());
 			if(action!= NULL)
 			{
 				int id = (menuMap.find(action)->second);
-				//int maxnb_iterations = _pSolver->getMaxNumberOfTries();
-				//if(id == 1)
-				//{
-				//	if(_pSolver != NULL) delete _pSolver;
-				//	_pSolver = new Etoile::JacobianCov(maxnb_iterations);
-				//}
-				//else if(id == 2)
-				//{
-				//	if(_pSolver != NULL) delete _pSolver;
-				//	_pSolver = new Etoile::JacobianDLSSVDSolver(maxnb_iterations);
-				//}
-				//else if(id == 3)
-				//{
-				//	if(_pSolver != NULL) delete _pSolver;
-				//	_pSolver = new Etoile::JacobianPseudoInverseSolver(maxnb_iterations);
-				//}
-				//else if(id == 4)
-				//{
-				//	if(_pSolver != NULL) delete _pSolver;
-				//	_pSolver = new Etoile::JacobianTransposeSolver(maxnb_iterations);
-				//}
+				int maxnb_iterations = _pSolver->getMaxNumberOfTries();
+				if(id == 1)
+				{
+					if(_pSolver != NULL) delete _pSolver;
+					_pSolver = new JacobianCov(maxnb_iterations);
+				}
+				else if(id == 2)
+				{
+					if(_pSolver != NULL) delete _pSolver;
+					_pSolver = new JacobianDLSSolver(maxnb_iterations);
+				}
+				else if(id == 3)
+				{
+					if(_pSolver != NULL) delete _pSolver;
+					_pSolver = new JacobianPseudoInverse(maxnb_iterations);
+				}
+				else if(id == 4)
+				{
+					if(_pSolver != NULL) delete _pSolver;
+					_pSolver = new JacobianTranspose(maxnb_iterations);
+				}
 				//else if(id == 5)
 				//{
 				//	if(_pSolver != NULL) delete _pSolver;
@@ -491,7 +494,7 @@ signals:
 			//sk->m_dim_values[6] = 1;
 			//sk->m_dim_values[11] = 1;
 			//sk->update();
-			sk->resetValues();
+			
 			QElapsedTimer timer;
 			timer.start();
 			if(_pSolver != NULL)

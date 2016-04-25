@@ -74,6 +74,15 @@
     <ClCompile Include="JacobianDLSSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JacobianCov.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JacobianPseudoInverse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JacobianTranspose.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="BVHApp.h">
@@ -112,6 +121,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JacobianDLSSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JacobianCov.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JacobianPseudoInverse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JacobianTranspose.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
