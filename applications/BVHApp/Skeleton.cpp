@@ -73,8 +73,9 @@ void Skeleton::resetValues()
 	update();
 }
 
-void Skeleton::buildJacobian(const std::vector<int>& endeffectors, MatrixX_& m_jacobian)
+void Skeleton::buildJacobian(const std::vector<int>& endeffectors, MatrixX_& m_jacobian, int startDim)
 {
+	m_startDim4IK = startDim;
 	int columnDim = m_dims.size();
 	int rowDim = endeffectors.size() * 3;
 	m_jacobian = MatrixX_::Zero(rowDim, columnDim);
@@ -90,7 +91,7 @@ void Skeleton::buildJacobian(const std::vector<int>& endeffectors, MatrixX_& m_j
 		m_jacobian(i * 3 + 0, currentDim->m_idx) = 1;
 		m_jacobian(i * 3 + 1, currentDim->m_idx) = 1;
 		m_jacobian(i * 3 + 2, currentDim->m_idx) = 1;
-		while(currentDim->m_idx > 3)
+		while(currentDim->m_idx > m_startDim4IK)
 		{
 			currentDim = &m_dims[currentDim->m_lastIdx];
 			m_jacobian(i * 3 + 0, currentDim->m_idx) = 1;

@@ -136,7 +136,8 @@ struct Skeleton
 	}
 
 
-	void buildJacobian(const std::vector<int>& endeffectors, MatrixX_& m_jacobian);
+	void buildJacobian(const std::vector<int>& endeffectors, MatrixX_& m_jacobian, int startDim = 6);
+	int m_startDim4IK;
 
 	std::vector<Joint> m_joints;
 	std::vector<Vector3_, Eigen::aligned_allocator<Vector3_> > m_joint_offsets;
@@ -162,7 +163,7 @@ struct Skeleton
 	//virtual void read(std::istream& in);
 
 	void draw(int type);
-
+	
 public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };

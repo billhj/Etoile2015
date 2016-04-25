@@ -85,13 +85,14 @@ void BVHApp::openBVH()
 	if(name.isEmpty()) return;
 	bvh = BVH();
 	bool b = bvh.loadFromBVHFile(name.toStdString());
-	//bvh.m_skeleton.m_endeffectors.pop_back();
-	//bvh.m_skeleton.m_endeffectors.pop_back();`
+	
 	if(b)
 	{
 		//bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
 		//bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
 		bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
+		bvh.m_skeleton.m_endeffectors.pop_back();
+		bvh.m_skeleton.m_endeffectors.pop_back();
 		bvh.m_skeleton.buildJacobian(bvh.m_skeleton.m_endeffectors, bvh.m_skeleton.m_jacobian);
 		bvh.m_skeleton.update();
 		_pIKWidget->sk = &bvh.m_skeleton;

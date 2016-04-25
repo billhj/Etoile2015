@@ -22,7 +22,7 @@ void JacobianDLSSolver::solveOneStep(Skeleton* chain, std::vector<Vector3_>& tar
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
 
-		for(unsigned int j = 6; j < chain->m_dims.size(); ++j)
+		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{
 			if(chain->m_jacobian(ei * 3 + 0, j) < 0.1) continue;
 
@@ -54,7 +54,7 @@ void JacobianDLSSolver::solveOneStep(Skeleton* chain, std::vector<Vector3_>& tar
 	VectorX_ dR = jacobianTranspose * ( jtj + lamdaI * m_dampling).inverse() * distance;
 
 
-	for(int i = 6; i < chain->m_dims.size(); ++i)
+	for(int i = chain->m_startDim4IK; i < chain->m_dims.size(); ++i)
 	{
 		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
 	}
