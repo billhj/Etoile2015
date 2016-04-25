@@ -1,9 +1,4 @@
-/*
- * Ball.h
- *
- *  Created on: Oct 16, 2015
- *      Author: Jing
- */
+
 
 #ifndef BALL_H_
 #define BALL_H_

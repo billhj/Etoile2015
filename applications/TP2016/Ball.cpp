@@ -1,9 +1,3 @@
-/*
-* Ball.cpp
-*
-*  Created on: Oct 16, 2015
-*      Author: Jing
-*/
 
 #include "Ball.h"
 #include "Collider.h"

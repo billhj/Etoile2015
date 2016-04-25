@@ -13,12 +13,12 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 	this->setWindowTitle("SkeletonViewer");
 
 	
-	bvh.loadFromBVHFile("Example1.bvh");
-	bvh.saveToBVHFile("Example2.bvh");
+	bvh.loadFromBVHFile("example1.bvh");
+	bvh.saveToBVHFile("example2.bvh");
 	bvh.m_skeleton.buildJacobian(bvh.m_skeleton.m_endeffectors, bvh.m_skeleton.m_jacobian);
 	bvh.m_skeleton.update();
 	_pIKWidget->sk = &bvh.m_skeleton;
-	std::cout<<bvh.m_skeleton.m_jacobian<<std::endl;
+	//std::cout<<bvh.m_skeleton.m_jacobian<<std::endl;
 
 	connect(ui.spinBox, SIGNAL(valueChanged(int)), this, SLOT(setMaxIterationsNb(int)));
 	connect(ui.doubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setDistanceThreshold(double)));

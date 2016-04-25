@@ -36,7 +36,7 @@ class SkeletonWidget : public QGLViewer
 		//static const int WIDGETWIDTH = 800, WIDGETHEIGHT = 600;
 public:
 	int framesNb;
-	SkeletonWidget(QMainWindow* parent = 0): _pParent(parent), _scaleFactor(2), _selectedJointIndex(-1)
+	SkeletonWidget(QMainWindow* parent = 0): _pParent(parent), _scaleFactor(5), _selectedJointIndex(-1)
 	{
 		framesNb = 0;
 		sk = NULL;
@@ -72,7 +72,7 @@ public:
 		glPushMatrix();
 		glTranslatef(pos(0),pos(1),pos(2));
 		glMultMatrixf(&mat[0][0]);
-		QGLViewer::drawAxis(3); // Or any scale
+		QGLViewer::drawAxis(8); // Or any scale
 		glPopMatrix();
 
 		glLineWidth(0.3);
@@ -101,7 +101,7 @@ public:
 		//_board.draw();
 		glColor3f(0.1,0.1,0.1);
 		glRotated(90,1,0,0);
-		drawGrid(100.0,20);		
+		drawGrid(500.0,40);		
 		glPopMatrix();
 	}
 
@@ -389,8 +389,8 @@ private:
 
 		qglviewer::Camera *cam = this->camera();
 		cam->setSceneCenter(qglviewer::Vec(0,0,0));
-		cam->setSceneRadius(100);
-		cam->setPosition(qglviewer::Vec(0,20,50));
+		cam->setSceneRadius(500);
+		cam->setPosition(qglviewer::Vec(0,20,180));
 
 		this->setMouseTracking(true);
 
@@ -461,7 +461,7 @@ private:
 			glTranslatef(pos(0),pos(1),pos(2));
 			glPushMatrix();
 			glMultMatrixf(&mat[0][0]);
-			QGLViewer::drawAxis(2); // Or any scale
+			QGLViewer::drawAxis(6); // Or any scale
 			glBegin( GL_POINTS);
 			glVertex3f(0,0,0);
 			glEnd();
@@ -469,12 +469,12 @@ private:
 			glPopMatrix();
 
 			glColor3f(0.1,0.4,0.4);
-			Etoile::drawSphere_convenient(pos.x(), pos.y(), pos.z(), 0.8, 10, 10);
+			Etoile::drawSphere_convenient(pos.x(), pos.y(), pos.z(), 3.8, 10, 10);
 			int parent = sk->m_joints[i].m_index_parent;
 			if(parent >= 0)
 			{
 				glColor3f(0.1,0.4,0.7);
-				Etoile::drawCylinder_convenient(pos.x(), pos.y(), pos.z(), sk->m_joint_globalPositions[parent].x(), sk->m_joint_globalPositions[parent].y(), sk->m_joint_globalPositions[parent].z() , 0.5, 10);
+				Etoile::drawCylinder_convenient(pos.x(), pos.y(), pos.z(), sk->m_joint_globalPositions[parent].x(), sk->m_joint_globalPositions[parent].y(), sk->m_joint_globalPositions[parent].z() , 2.8, 10);
 			}
 		}
 	}
