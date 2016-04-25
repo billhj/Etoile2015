@@ -173,7 +173,7 @@
 
 		std::string line;
 		std::string keyWrd;
-		float x,y,z;
+		double x,y,z;
 		int dim;
 		Skeleton::Joint* current;
 
@@ -311,7 +311,7 @@
 		int parent = m_index.size() > 0 ? m_index.top() : -1;
 		std::string line;
 		std::string keyWrd;
-		float x,y,z;
+		double x,y,z;
 		Skeleton::Joint* current;
 
 		{
@@ -412,6 +412,14 @@
 			for(int j = 0; j < dimSize; ++j)
 			{
 				stream >> frame.m_values[j];
+				if(j < 3)
+				{
+					frame.m_values[j] = frame.m_values[j] * 0.01;
+				}
+				else
+				{
+					frame.m_values[j] = frame.m_values[j] * 3.14159265 / 180.0;
+				}
 			}
 		}
 	}

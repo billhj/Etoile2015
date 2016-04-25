@@ -27,6 +27,7 @@
 #include "JacobianCov.h"
 #include "JacobianPseudoInverse.h"
 #include "JacobianTranspose.h"
+#include "BVH.h"
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
@@ -57,7 +58,6 @@ public:
 	void drawInfo(int currentJoint)
 	{
 		if(currentJoint < 0) return;
-
 		Matrix3_ matrix = sk->m_joint_globalOrientations[currentJoint];
 		Vector3_ pos = sk->m_joint_globalPositions[currentJoint];
 		float mat[4][4];
@@ -328,7 +328,13 @@ protected:
 private:
 	virtual void draw()
 	{
-		
+		if(animationframes.size() > 0 && sk != NULL)
+		{
+			sk->m_dim_values = animationframes[0].m_values;
+			animationframes.erase(animationframes.begin());
+			sk->update();
+		}
+
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		printOpenGLError();
 
@@ -342,10 +348,12 @@ private:
 
 		printOpenGLError();
 
-		drawIK();
+		if(sk != NULL)
+			drawIK();
 		//drawBox();
 		drawPlane();
-		drawInfo(_selectedJointIndex);
+		if(sk != NULL)
+			drawInfo(_selectedJointIndex);
 		
 		printOpenGLError();
 		//drawAxis();
@@ -535,4 +543,5 @@ public:
 	int number_bones;
 	Etoile::Vec3f _original;
 	double speed;
+	std::vector<Frame> animationframes;
 };

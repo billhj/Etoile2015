@@ -14,44 +14,44 @@
 
 #include "Skeleton.h"
 
-	struct Frame
+struct Frame
+{
+	std::vector<double> m_values;
+};
+
+struct BVH
+{
+	Skeleton m_skeleton;
+	std::vector<Frame> m_frames;
+	float m_frametime; 
+	int m_frameNb;
+public:
+	BVH(){}
+	BVH(BVH& bvh)
 	{
-		std::vector<float> m_values;
-	};
+		m_frames = bvh.m_frames;
+		m_frameNb = bvh.m_frameNb;
+		m_frametime = bvh.m_frametime;
+		m_skeleton = bvh.m_skeleton;
+	}
 
-	struct BVH
-	{
-		Skeleton m_skeleton;
-		std::vector<Frame> m_frames;
-		float m_frametime; 
-		int m_frameNb;
-	public:
-		BVH(){}
-		BVH(BVH& bvh)
-		{
-			m_frames = bvh.m_frames;
-			m_frameNb = bvh.m_frameNb;
-			m_frametime = bvh.m_frametime;
-			m_skeleton = bvh.m_skeleton;
-		}
+	bool loadFromBVHFile(const std::string& filepath);
+	bool saveToBVHFile(const std::string& filepath);
+	void changeOrderToZYX();
 
-		bool loadFromBVHFile(const std::string& filepath);
-		bool saveToBVHFile(const std::string& filepath);
-		void changeOrderToZYX();
+	bool loadTextFile(const std::string& filepath);
+	bool saveTextFile(const std::string& filepath);
 
-		bool loadTextFile(const std::string& filepath);
-		bool saveTextFile(const std::string& filepath);
+private:
+	void trimString( std::string& string);
+	void read(std::istream& in);
+	void readJoint(std::istream& in, const std::string& name);
+	void readEnd(std::istream& in, const std::string& name);
+	void readLine(std::istream& in, std::string& line);
+	void readFrames(std::istream& in);
 
-	private:
-		void trimString( std::string& string);
-		void read(std::istream& in);
-		void readJoint(std::istream& in, const std::string& name);
-		void readEnd(std::istream& in, const std::string& name);
-		void readLine(std::istream& in, std::string& line);
-		void readFrames(std::istream& in);
-
-		void write(std::ostream& out);
-		std::string m_filepath;
-		std::stack<int> m_index;
-	};
+	void write(std::ostream& out);
+	std::string m_filepath;
+	std::stack<int> m_index;
+};
 

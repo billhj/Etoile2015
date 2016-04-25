@@ -18,6 +18,8 @@ public slots:
 	void openUsage();
 	void setMaxIterationsNb(int);
 	void setDistanceThreshold(double);
+	void openBVH();
+	void playBVH();
 	void updateCombobox();
 private:
 	Ui::BVHAppClass ui;

@@ -61,27 +61,34 @@ struct Skeleton
 
 	void updateDim(int idx)
 	{
+		if(idx < 3)
+		{
+			if(idx == 0)
+			{
+				m_dim_globalPositions[0] = m_dim_localTranslations[0] + m_dim_axis[0] * m_dim_values[0];
+				return;
+			}
+
+			Dim& dim = m_dims[idx];
+			m_dim_globalPositions[dim.m_idx] = m_dim_globalPositions[dim.m_lastIdx] + m_dim_localTranslations[dim.m_idx] + m_dim_axis[idx] * m_dim_values[idx];
+			return;
+		}
+
 		updateDimLocalRotation(idx);
 		Dim& dim = m_dims[idx];
-		if(dim.m_lastIdx >= 0)
-		{
-			m_dim_globalPositions[dim.m_idx] = m_dim_globalPositions[dim.m_lastIdx] + m_dim_globalOrientations[dim.m_lastIdx] * m_dim_localTranslations[dim.m_idx];
-			m_dim_globalOrientations[dim.m_idx] = m_dim_globalOrientations[dim.m_lastIdx] * m_dim_localRotations[dim.m_idx];	
-		}
-		else
-		{
-			m_dim_globalPositions[dim.m_idx] = m_dim_localTranslations[dim.m_idx] + Vector3_(m_dim_values[0], m_dim_values[1], m_dim_values[2]);
-			m_dim_globalOrientations[dim.m_idx] = m_dim_localRotations[dim.m_idx];
-		}
+	
+		m_dim_globalPositions[dim.m_idx] = m_dim_globalPositions[dim.m_lastIdx] + m_dim_globalOrientations[dim.m_lastIdx] * m_dim_localTranslations[dim.m_idx];
+		m_dim_globalOrientations[dim.m_idx] = m_dim_globalOrientations[dim.m_lastIdx] * m_dim_localRotations[dim.m_idx];	
+	
 	}
 
-	///*void updateAllDims()
-	//{
-	//	for(unsigned int i = 0; i < m_dims.size(); ++i)
-	//	{
-	//		updateDim(i);
-	//	}
-	//}*/
+	void updateAllDims()
+	{
+		for(unsigned int i = 0; i < m_dims.size(); ++i)
+		{
+			updateDim(i);
+		}
+	}
 
 	void updateJoint(int idx)
 	{
@@ -90,7 +97,7 @@ struct Skeleton
 		for(unsigned int i = 0; i < current.m_dims.size(); ++i)
 		{
 			Dim& dim = m_dims[current.m_dims[i]];
-			updateDim(dim.m_idx);
+			updateDim(dim.m_idx);	
 			temp = temp * m_dim_localRotations[dim.m_idx];	
 		}
 		m_joint_localRotations[idx] = temp;
@@ -99,7 +106,8 @@ struct Skeleton
 		{
 			m_joint_globalOrientations[idx] = m_dim_globalOrientations[current.m_dims[last]];
 			m_joint_globalPositions[idx] = m_dim_globalPositions[current.m_dims[last]];
-		}else
+		}
+		else
 		{
 			m_joint_globalOrientations[idx] = m_joint_globalOrientations[current.m_index_parent];
 			m_joint_globalPositions[idx] = m_joint_globalPositions[current.m_index_parent] + m_joint_globalOrientations[idx] * m_joint_offsets[idx];

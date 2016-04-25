@@ -13,13 +13,7 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 	this->setWindowTitle("SkeletonViewer");
 
 	
-	bvh.loadFromBVHFile("example1.bvh");
-	//bvh.m_skeleton.m_endeffectors.pop_back();
-	//bvh.m_skeleton.m_endeffectors.pop_back();
-	bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
-	bvh.m_skeleton.buildJacobian(bvh.m_skeleton.m_endeffectors, bvh.m_skeleton.m_jacobian);
-	bvh.m_skeleton.update();
-	_pIKWidget->sk = &bvh.m_skeleton;
+	
 	//std::cout<<bvh.m_skeleton.m_jacobian<<std::endl;
 
 	connect(ui.spinBox, SIGNAL(valueChanged(int)), this, SLOT(setMaxIterationsNb(int)));
@@ -34,12 +28,20 @@ BVHApp::~BVHApp()
 void BVHApp::addMenu()
 {
 	QMenuBar* bar = this->menuBar();
+	QMenu* file = bar->addMenu("File");
+	QAction* openBVH = file->addAction("BVH");
+	connect(openBVH, SIGNAL(triggered()), this, SLOT(openBVH()));
+
 	QMenu* ik = bar->addMenu("IK");
 	QAction* jc = ik->addAction("JacobianCov");
 	QAction* jdls = ik->addAction("JacobianDLS");
 	QAction* jpi = ik->addAction("JacobianPseudoInverse");
 	QAction* jt = ik->addAction("JacobianTranspose");
 	connect(ik, SIGNAL(triggered(QAction*)), this, SLOT(applyIKAction(QAction*)));
+
+	QMenu* anim = bar->addMenu("Animation");
+	QAction* playbvh = anim->addAction("playBVH");
+	connect(playbvh, SIGNAL(triggered()), this, SLOT(playBVH()));
 
 	QMenu* help = bar->addMenu("Help");
 	QAction* usage = help->addAction("How to use");
@@ -69,6 +71,30 @@ void BVHApp::applyIKAction(QAction* action)
 		_pIKWidget->_pSolver = (new JacobianTranspose(_pIKWidget->_pSolver->getMaxNumberOfTries()));
 	}
 	std::cout<<"now using : " <<t.toStdString()<<std::endl;
+}
+
+void BVHApp::openBVH()
+{
+	QString name = QFileDialog::getOpenFileName(this, tr("Open File"),"",tr("File (*.bvh)"));
+	if(name.isEmpty()) return;
+	bvh = BVH();
+	bool b = bvh.loadFromBVHFile(name.toStdString());
+	//bvh.m_skeleton.m_endeffectors.pop_back();
+	//bvh.m_skeleton.m_endeffectors.pop_back();`
+	if(b)
+	{
+		//bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
+		//bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
+		bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
+		bvh.m_skeleton.buildJacobian(bvh.m_skeleton.m_endeffectors, bvh.m_skeleton.m_jacobian);
+		bvh.m_skeleton.update();
+		_pIKWidget->sk = &bvh.m_skeleton;
+	}
+}
+
+void BVHApp::playBVH()
+{
+	_pIKWidget->animationframes = bvh.m_frames;
 }
 
 void BVHApp::openAbout()
