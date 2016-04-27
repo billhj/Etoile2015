@@ -1,4 +1,5 @@
-<UI version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>BVHAppClass</class>
  <widget class="QMainWindow" name="BVHAppClass">
   <property name="geometry">
@@ -338,173 +339,29 @@
     </widget>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="Timeline">
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QTTimeLineWidget" name="timelinewidget"/>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QTTimeLineWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QTTimeLineWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
-  <include location="IKApplication.qrc"/>
+  <include location="BVHApp.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>zMin</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>setZMin(double)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>500</x>
-     <y>225</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>comboBox</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>changeComboboxItem(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>515</x>
-     <y>195</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>zMax</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>setZMax(double)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>570</x>
-     <y>225</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>yMax</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>setYMax(double)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>570</x>
-     <y>255</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>yMin</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>setYMin(double)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>500</x>
-     <y>255</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>xMax</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>setXMax(double)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>570</x>
-     <y>285</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>xMin</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>setXMin(double)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>500</x>
-     <y>285</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lamdaZ</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>setLamdaZ(double)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>627</x>
-     <y>225</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>338</x>
-     <y>203</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lamdaY</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>setLamdaY(double)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>627</x>
-     <y>255</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>338</x>
-     <y>203</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>lamdaX</sender>
-   <signal>valueChanged(double)</signal>
-   <receiver>IKApplicationClass</receiver>
-   <slot>setLamdaX(double)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>627</x>
-     <y>285</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>338</x>
-     <y>203</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>changeComboboxItem(int)</slot>
   <slot>setZMin(double)</slot>
@@ -517,4 +374,4 @@
   <slot>setLamdaY(double)</slot>
   <slot>setLamdaX(double)</slot>
  </slots>
-</UI>
+</ui>

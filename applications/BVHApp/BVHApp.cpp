@@ -11,13 +11,12 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 	this->setCentralWidget(_pIKWidget);
 	addMenu();
 	this->setWindowTitle("SkeletonViewer");
-
-	
 	
 	//std::cout<<bvh.m_skeleton.m_jacobian<<std::endl;
 
 	connect(ui.spinBox, SIGNAL(valueChanged(int)), this, SLOT(setMaxIterationsNb(int)));
 	connect(ui.doubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setDistanceThreshold(double)));
+	connect(ui.timelinewidget, SIGNAL(activeFrameChanged(int)), this, SLOT(frameIndexChanged(int)));
 }
 
 BVHApp::~BVHApp()
@@ -101,27 +100,35 @@ void BVHApp::openBVH()
 
 void BVHApp::playBVH()
 {
-	_pIKWidget->animationframes.clear();
-	_pIKWidget->animationframes = bvh.m_frames;
-	_pIKWidget->bvhstep = 1;
+	//_pIKWidget->animationframes.clear();
+	//_pIKWidget->animationframes = bvh.m_frames;
+	ui.timelinewidget->startTimer();
 }
 
 void BVHApp::stopBVH()
 {
-	_pIKWidget->animationframes.clear();
+	ui.timelinewidget->stopTimer();
 }
 
 void BVHApp::accBVH()
 {
-	_pIKWidget->bvhstep++;
+	ui.timelinewidget->setSpeed(ui.timelinewidget->getSpeed() + 1);
 }
 
 void BVHApp::deaccBVH()
 {
-	_pIKWidget->bvhstep--;
-	if(_pIKWidget->bvhstep < 0)
+	ui.timelinewidget->setSpeed(ui.timelinewidget->getSpeed() - 1);
+	if(ui.timelinewidget->getSpeed() <= 0) ui.timelinewidget->setSpeed(0);
+}
+
+void BVHApp::frameIndexChanged(int index)
+{
+	_pIKWidget->animationframes.clear();
+	if(bvh.m_frames.size() > index && index > 0)
+		_pIKWidget->animationframes.push_back(bvh.m_frames[index]);
+	else if(index < 0)
 	{
-		_pIKWidget->bvhstep = 0;
+		bvh.m_skeleton.resetValues();
 	}
 }
 
