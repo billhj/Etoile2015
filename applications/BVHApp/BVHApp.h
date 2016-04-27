@@ -25,9 +25,11 @@ public slots:
 	void stopBVH();
 	void updateCombobox();
 	void frameIndexChanged(int);
+	void changeMode(bool);
 private:
 	Ui::BVHAppClass ui;
 	SkeletonWidget* _pIKWidget;
+	bool mode;
 };
 
 #endif // BVHAPP_H

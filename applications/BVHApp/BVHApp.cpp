@@ -17,6 +17,7 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 	connect(ui.spinBox, SIGNAL(valueChanged(int)), this, SLOT(setMaxIterationsNb(int)));
 	connect(ui.doubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setDistanceThreshold(double)));
 	connect(ui.timelinewidget, SIGNAL(activeFrameChanged(int)), this, SLOT(frameIndexChanged(int)));
+	mode = false;
 }
 
 BVHApp::~BVHApp()
@@ -43,10 +44,15 @@ void BVHApp::addMenu()
 	QAction* stopbvh = anim->addAction("stopBVH");
 	QAction* accbvh = anim->addAction("+");
 	QAction* deaccbvh = anim->addAction("-");
+	anim->addSeparator();
+	QAction* mode = anim->addAction("generatingmode");
+	mode->setCheckable(true);
 	connect(playbvh, SIGNAL(triggered()), this, SLOT(playBVH()));
 	connect(stopbvh, SIGNAL(triggered()), this, SLOT(stopBVH()));
 	connect(accbvh, SIGNAL(triggered()), this, SLOT(accBVH()));
 	connect(deaccbvh, SIGNAL(triggered()), this, SLOT(deaccBVH()));
+	connect(mode, SIGNAL(toggled(bool)), this, SLOT(changeMode(bool)));
+	mode->setChecked(false);
 
 	QMenu* help = bar->addMenu("Help");
 	QAction* usage = help->addAction("How to use");
@@ -123,13 +129,26 @@ void BVHApp::deaccBVH()
 
 void BVHApp::frameIndexChanged(int index)
 {
-	_pIKWidget->animationframes.clear();
-	if(bvh.m_frames.size() > index && index > 0)
-		_pIKWidget->animationframes.push_back(bvh.m_frames[index]);
-	else if(index < 0)
+	if(!mode)
 	{
+		_pIKWidget->animationframes.clear();
+		if(bvh.m_frames.size() > index && index > 0)
+			_pIKWidget->animationframes.push_back(bvh.m_frames[index]);
+		else if(index < 0)
+		{
+			bvh.m_skeleton.resetValues();
+		}
+	}
+	else
+	{
+		_pIKWidget->animationframes.clear();
 		bvh.m_skeleton.resetValues();
 	}
+}
+
+void BVHApp::changeMode(bool b)
+{
+	mode = b;
 }
 
 void BVHApp::openAbout()
