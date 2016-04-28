@@ -26,6 +26,7 @@ public slots:
 	void updateCombobox();
 	void frameIndexChanged(int);
 	void changeMode(bool);
+	void changeDamping(double);
 private:
 	Ui::BVHAppClass ui;
 	SkeletonWidget* _pIKWidget;

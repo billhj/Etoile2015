@@ -17,6 +17,8 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 	connect(ui.spinBox, SIGNAL(valueChanged(int)), this, SLOT(setMaxIterationsNb(int)));
 	connect(ui.doubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(setDistanceThreshold(double)));
 	connect(ui.timelinewidget, SIGNAL(activeFrameChanged(int)), this, SLOT(frameIndexChanged(int)));
+	connect(ui.damping1, SIGNAL(valueChanged(double)), this, SLOT(changeDamping(double)));
+	connect(ui.damping2, SIGNAL(valueChanged(double)), this, SLOT(changeDamping(double)));
 	mode = false;
 }
 
@@ -149,6 +151,25 @@ void BVHApp::frameIndexChanged(int index)
 void BVHApp::changeMode(bool b)
 {
 	mode = b;
+}
+
+void BVHApp::changeDamping(double)
+{
+	{
+		JacobianCov* solver = dynamic_cast<JacobianCov*>(_pIKWidget->_pSolver);
+		if(solver != NULL)
+		{
+			solver->m_dampling1 = ui.damping1->value();
+			solver->m_dampling2 = ui.damping2->value();
+		}
+	}
+	{
+		JacobianDLSSolver* solver = dynamic_cast<JacobianDLSSolver*>(_pIKWidget->_pSolver);
+		if(solver != NULL)
+		{
+			solver->m_dampling = ui.damping1->value();
+		}
+	}
 }
 
 void BVHApp::openAbout()

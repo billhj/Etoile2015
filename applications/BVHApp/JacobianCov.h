@@ -10,7 +10,7 @@ struct TargetGaussian
 
 class JacobianCov : public IKSolver
 {
-	double m_dampling;
+	
 	MatrixX_ m_cov;
 	MatrixX_ m_invcov;
 	VectorX_ m_mu;
@@ -18,9 +18,11 @@ class JacobianCov : public IKSolver
 	std::vector<TargetGaussian> m_gaussians;
 
 public:
+	double m_dampling1;
+	double m_dampling2;
 	virtual std::string getIKSolverName() {return "JacobianCov";}
 	JacobianCov(int maxTries = 50, double targetThreshold = 0.05, double stepweight= 0.5, double dampling = 0.01): IKSolver(maxTries, targetThreshold, stepweight),
-		m_dampling(dampling),m_defined(false){ loadGaussianFromFile("gaussian.txt");}
+		m_dampling1(dampling),m_dampling2(dampling),m_defined(false){ loadGaussianFromFile("gaussian.txt");}
 
 	~JacobianCov(void);
 	bool loadGaussianFromFile(const std::string&);
