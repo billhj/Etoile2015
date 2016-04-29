@@ -346,6 +346,9 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="decimals">
+      <number>5</number>
+     </property>
      <property name="singleStep">
       <double>0.001000000000000</double>
      </property>
@@ -361,6 +364,9 @@
        <width>62</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="decimals">
+      <number>5</number>
      </property>
      <property name="singleStep">
       <double>0.001000000000000</double>

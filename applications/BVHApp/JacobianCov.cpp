@@ -16,11 +16,11 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	VectorX_ distance(jacobian.rows());
 
 #ifdef USINGCOV
-	VectorX_ rotation = VectorX_::Zero(chain->m_dims.size());
+	/*VectorX_ rotation = VectorX_::Zero(chain->m_dims.size());
 	for(int i = 0; i < chain->m_dims.size(); ++i)
 	{
 		rotation[i] = chain->m_dim_values[i];
-	}
+	}*/
 
 	if(!m_defined)
 	{
@@ -30,7 +30,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 		m_invcov = m_cov.inverse();
 		m_defined = true;
 	}
-	similarIndex(chain->m_dim_values);
+	similarIndex(last_state);
 #endif
 
 	for(int ei = 0; ei < chain->m_endeffectors.size(); ++ei)
@@ -42,7 +42,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 		distance(ei * 3 + 0) = dis(0);
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
-		for(unsigned int j = 0; j < 3; ++j)
+		/*for(unsigned int j = 0; j < 3; ++j)
 		{
 			Skeleton::Dim& dim = chain->m_dims[j];
 			Vector3_ axis = chain->m_dim_axis[dim.m_idx];
@@ -52,10 +52,10 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 				axis = chain->m_dim_globalOrientations[lastDim] * axis;
 			}
 			Vector3_ axisXYZgradient = axis;
-			jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
-			jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
-			jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
-		}
+			jacobian(ei * 3 + 0, j) = axisXYZgradient(0) * 0.00001;
+			jacobian(ei * 3 + 1, j) = axisXYZgradient(1) * 0.00001;
+			jacobian(ei * 3 + 2, j) = axisXYZgradient(2) * 0.00001;
+		}*/
 
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{
@@ -87,7 +87,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	MatrixX_  jtj = jacobianTranspose * jacobian;
 	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
 	MatrixX_ a =  (2 * jtj  + m_dampling1*lamdaI + m_dampling2 * m_invcov).inverse();
-	MatrixX_ b = (2 * jacobianTranspose * distance +  m_dampling2 * 0.01 * m_invcov * (m_mu - rotation));
+	MatrixX_ b = (2 * jacobianTranspose * distance +  m_dampling2 * m_invcov * (m_mu - last_state));
 	VectorX_ dR = a * b;
 #else
 	MatrixX_ jacobianTranspose = jacobian.transpose();
@@ -96,13 +96,20 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	VectorX_ dR = jacobianTranspose * ( jtj + lamdaI * m_dampling1).inverse() * distance;
 #endif
 
-	for(int i = 0; i < 3; ++i)
+	/*for(int i = 0; i < 3; ++i)
 	{
 		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
+		last_state[i] = chain->m_dim_values[i];//dR[i];
+	}*/
+	/*for(int i = 3; i < 6; ++i)
+	{
+		last_state[i] = dR[i];
 	}
+*/
 	for(int i = chain->m_startDim4IK; i < chain->m_dims.size(); ++i)
 	{
 		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
+		last_state[i] = chain->m_dim_values[i];
 	}
 	chain->update();
 
@@ -189,7 +196,6 @@ bool JacobianCov::loadGaussianFromFile(const std::string& filepath)
 		}
 	}
 
-
 	in.close();
 #if defined(_DEBUG) || defined(DEBUG)
 	std::cout<< "[gaussian] : loading is successful "<<std::endl;
@@ -198,13 +204,13 @@ bool JacobianCov::loadGaussianFromFile(const std::string& filepath)
 }
 
 
-int JacobianCov::similarIndex(std::vector<double> rpos)
+int JacobianCov::similarIndex(VectorX_ pos)
 {
-	VectorX_ pos = VectorX_::Zero(rpos.size());
+	/*VectorX_ pos = VectorX_::Zero(rpos.size());
 	for(unsigned int i = 6; i < rpos.size(); ++i)
 	{
 		pos[i] = rpos[i];
-	}
+	}*/
 
 	int idx = -1;
 	double minNorm = 99999999999;
@@ -220,7 +226,7 @@ int JacobianCov::similarIndex(std::vector<double> rpos)
 		}
 	}
 
-	m_invcov = m_gaussians[idx].m_invcov;
+	m_invcov = m_gaussians[idx].m_invcov;// MatrixX_::Identity(66,66) * 0.001;
 	m_mu = m_gaussians[idx].m_mu;
 	std::cout<<"idx:           "<<idx<<std::endl;
 	return idx;
