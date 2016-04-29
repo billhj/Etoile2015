@@ -42,6 +42,20 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 		distance(ei * 3 + 0) = dis(0);
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
+		for(unsigned int j = 0; j < 3; ++j)
+		{
+			Skeleton::Dim& dim = chain->m_dims[j];
+			Vector3_ axis = chain->m_dim_axis[dim.m_idx];
+			int lastDim = dim.m_lastIdx;
+			if(lastDim >= 0)
+			{
+				axis = chain->m_dim_globalOrientations[lastDim] * axis;
+			}
+			Vector3_ axisXYZgradient = axis;
+			jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
+			jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
+			jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
+		}
 
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{
@@ -82,7 +96,10 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	VectorX_ dR = jacobianTranspose * ( jtj + lamdaI * m_dampling1).inverse() * distance;
 #endif
 
-
+	for(int i = 0; i < 3; ++i)
+	{
+		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
+	}
 	for(int i = chain->m_startDim4IK; i < chain->m_dims.size(); ++i)
 	{
 		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
@@ -193,7 +210,9 @@ int JacobianCov::similarIndex(std::vector<double> rpos)
 	double minNorm = 99999999999;
 	for(unsigned int i = 0; i < m_gaussians.size(); ++i)
 	{
-		double current = (m_gaussians[i].m_mu - pos).norm();
+		VectorX_ diff = m_gaussians[i].m_mu - pos;
+		diff[2] = 0;
+		double current = diff.norm();
 		if(current < minNorm)
 		{
 			idx = i;
@@ -203,5 +222,6 @@ int JacobianCov::similarIndex(std::vector<double> rpos)
 
 	m_invcov = m_gaussians[idx].m_invcov;
 	m_mu = m_gaussians[idx].m_mu;
+	std::cout<<"idx:           "<<idx<<std::endl;
 	return idx;
 }
