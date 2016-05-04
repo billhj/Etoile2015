@@ -86,8 +86,9 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	MatrixX_ jacobianTranspose = jacobian.transpose();
 	MatrixX_  jtj = jacobianTranspose * jacobian;
 	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
-	MatrixX_ a =  (2 * jtj  + m_dampling1*lamdaI + m_dampling2 * m_invcov).inverse();
-	MatrixX_ b = (2 * jacobianTranspose * distance +  m_dampling2 * m_invcov * (m_mu - last_state));
+	double dampling2 = m_dampling2 * distance.norm();
+	MatrixX_ a =  (2 * jtj  + m_dampling1*lamdaI + dampling2* m_invcov).inverse();
+	MatrixX_ b = (2 * jacobianTranspose * distance +  dampling2 * m_invcov * (m_mu - last_state)/ (m_mu - last_state).norm());
 	VectorX_ dR = a * b;
 #else
 	MatrixX_ jacobianTranspose = jacobian.transpose();
