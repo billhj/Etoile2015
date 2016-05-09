@@ -42,7 +42,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 		distance(ei * 3 + 0) = dis(0);
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
-		/*for(unsigned int j = 0; j < 3; ++j)
+		for(unsigned int j = 0; j < 3; ++j)
 		{
 			Skeleton::Dim& dim = chain->m_dims[j];
 			Vector3_ axis = chain->m_dim_axis[dim.m_idx];
@@ -55,7 +55,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 			jacobian(ei * 3 + 0, j) = axisXYZgradient(0) * 0.00001;
 			jacobian(ei * 3 + 1, j) = axisXYZgradient(1) * 0.00001;
 			jacobian(ei * 3 + 2, j) = axisXYZgradient(2) * 0.00001;
-		}*/
+		}
 
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{
@@ -97,11 +97,11 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	VectorX_ dR = jacobianTranspose * ( jtj + lamdaI * m_dampling1).inverse() * distance;
 #endif
 
-	/*for(int i = 0; i < 3; ++i)
+	for(int i = 0; i < 3; ++i)
 	{
-		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
-		last_state[i] = chain->m_dim_values[i];//dR[i];
-	}*/
+		chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
+		last_state[i] = 0;// chain->m_dim_values[i];//dR[i];
+	}
 	/*for(int i = 3; i < 6; ++i)
 	{
 		last_state[i] = dR[i];
