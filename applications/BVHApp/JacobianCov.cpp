@@ -52,9 +52,9 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 				axis = chain->m_dim_globalOrientations[lastDim] * axis;
 			}
 			Vector3_ axisXYZgradient = axis;
-			jacobian(ei * 3 + 0, j) = axisXYZgradient(0) * 0.00001;
-			jacobian(ei * 3 + 1, j) = axisXYZgradient(1) * 0.00001;
-			jacobian(ei * 3 + 2, j) = axisXYZgradient(2) * 0.00001;
+			jacobian(ei * 3 + 0, j) = axisXYZgradient(0) * 0.1;
+			jacobian(ei * 3 + 1, j) = axisXYZgradient(1) * 0.1;
+			jacobian(ei * 3 + 2, j) = axisXYZgradient(2) * 0.1;
 		}
 
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
