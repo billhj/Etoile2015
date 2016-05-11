@@ -156,6 +156,7 @@ struct Skeleton
 	std::vector<Vector3_, Eigen::aligned_allocator<Vector3_> > m_dim_axis;
 	std::string m_name;
 
+	//joint idx for endeffector
 	std::vector<int> m_endeffectors;
 	MatrixX_ m_jacobian;
 

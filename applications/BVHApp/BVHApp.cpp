@@ -235,5 +235,28 @@ void BVHApp::saveGenerateSequence()
 
 void BVHApp::generateSequence()
 {
+	std::vector<std::vector<Vector3_>> targets;
+	for(unsigned int i = 0; i < bvh.m_frames.size(); ++i)
+	{
+		std::vector<double>& f = bvh.m_frames[i].m_values;
+		bvh.m_skeleton.m_dim_values = f;
+		bvh.m_skeleton.update();
 
+		std::vector<Vector3_> target;
+		for(unsigned int j = 0; j < bvh.m_skeleton.m_endeffectors.size(); ++j)
+		{
+			int idx = bvh.m_skeleton.m_endeffectors[j];
+			target.push_back(bvh.m_skeleton.m_joint_globalPositions[idx]);
+		}
+		targets.push_back(target);
+		//
+	}
+
+	bvh.m_skeleton.resetValues();
+	_generatedFrame.resize(targets.size());
+	for(unsigned int i = 0; i < targets.size(); ++i)
+	{
+		_pIKWidget->_pSolver->solve(&(bvh.m_skeleton), targets[i]);
+		_generatedFrame[i].m_values = bvh.m_skeleton.m_dim_values;
+	}
 }
