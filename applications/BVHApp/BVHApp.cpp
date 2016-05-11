@@ -48,12 +48,14 @@ void BVHApp::addMenu()
 	QAction* deaccbvh = anim->addAction("-");
 	anim->addSeparator();
 	QAction* mode = anim->addAction("generatingmode");
+	QAction* saveBVH = anim->addAction("saveBVH");
 	mode->setCheckable(true);
 	connect(playbvh, SIGNAL(triggered()), this, SLOT(playBVH()));
 	connect(stopbvh, SIGNAL(triggered()), this, SLOT(stopBVH()));
 	connect(accbvh, SIGNAL(triggered()), this, SLOT(accBVH()));
 	connect(deaccbvh, SIGNAL(triggered()), this, SLOT(deaccBVH()));
 	connect(mode, SIGNAL(toggled(bool)), this, SLOT(changeMode(bool)));
+	connect(saveBVH, SIGNAL(triggered()), this, SLOT(saveGenerateSequence()));
 	mode->setChecked(false);
 
 	QMenu* help = bar->addMenu("Help");
@@ -140,11 +142,23 @@ void BVHApp::frameIndexChanged(int index)
 		{
 			bvh.m_skeleton.resetValues();
 		}
+		else
+		{
+			bvh.m_skeleton.resetValues();
+		}
 	}
 	else
 	{
 		_pIKWidget->animationframes.clear();
-		bvh.m_skeleton.resetValues();
+		if(_generatedFrame.size() > index && index > 0)
+			_pIKWidget->animationframes.push_back(_generatedFrame[index]);
+		else if(index < 0)
+		{
+			bvh.m_skeleton.resetValues();
+		}else
+		{
+			bvh.m_skeleton.resetValues();
+		}
 	}
 }
 
@@ -208,3 +222,11 @@ void BVHApp::updateCombobox()
 	}*/
 }
 
+
+void BVHApp::saveGenerateSequence()
+{
+	if(!mode) return;
+	std::vector<Frame> temp = bvh.m_frames;
+	bvh.m_frames = _generatedFrame;
+	bvh.saveToBVHFile("generatedBVH.bvh");
+}

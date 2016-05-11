@@ -27,10 +27,12 @@ public slots:
 	void frameIndexChanged(int);
 	void changeMode(bool);
 	void changeDamping(double);
+	void saveGenerateSequence();
 private:
 	Ui::BVHAppClass ui;
 	SkeletonWidget* _pIKWidget;
 	bool mode;
+	std::vector<Frame> _generatedFrame;
 };
 
 #endif // BVHAPP_H
