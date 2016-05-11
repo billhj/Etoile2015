@@ -42,7 +42,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 		distance(ei * 3 + 0) = dis(0);
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
-		for(unsigned int j = 0; j < 3; ++j)
+		/*for(unsigned int j = 0; j < 3; ++j)
 		{
 			Skeleton::Dim& dim = chain->m_dims[j];
 			Vector3_ axis = chain->m_dim_axis[dim.m_idx];
@@ -55,7 +55,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 			jacobian(ei * 3 + 0, j) = axisXYZgradient(0) * 0.1;
 			jacobian(ei * 3 + 1, j) = axisXYZgradient(1) * 0.1;
 			jacobian(ei * 3 + 2, j) = axisXYZgradient(2) * 0.1;
-		}
+		}*/
 
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{
@@ -270,6 +270,6 @@ int JacobianCov::similarIndex(VectorX_ pos)
 
 	m_invcov = m_gaussians[idx].m_invcov;// MatrixX_::Identity(66,66) * 0.001;
 	m_mu = m_gaussians[idx].m_mu;
-	std::cout<<"idx:           "<<idx<<std::endl;
+	//std::cout<<"idx:           "<<idx<<std::endl;
 	return idx;
 }

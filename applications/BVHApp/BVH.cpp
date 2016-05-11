@@ -511,7 +511,16 @@
 			Frame& frame = m_frames[i];
 			for(int j = 0; j < frame.m_values.size(); ++j)
 			{
-				out<< frame.m_values[j] <<"  ";
+				double value = 0;
+				if(j < 3)
+				{
+					value = frame.m_values[j] * 0.01;
+				}
+				else
+				{
+					value = frame.m_values[j] * 3.14159265 / 180.0;
+				}
+				out<< value <<"  ";
 			}
 			out<<"\n";
 		}

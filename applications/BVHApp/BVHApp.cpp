@@ -227,10 +227,15 @@ void BVHApp::updateCombobox()
 
 void BVHApp::saveGenerateSequence()
 {
-	if(!mode) return;
-	std::vector<Frame> temp = bvh.m_frames;
-	bvh.m_frames = _generatedFrame;
-	bvh.saveToBVHFile("generatedBVH.bvh");
+	if(!mode) 
+	{
+		bvh.saveToBVHFile("originalBVH_BVHAPP.bvh");
+	}else
+	{
+		std::vector<Frame> temp = bvh.m_frames;
+		bvh.m_frames = _generatedFrame;
+		bvh.saveToBVHFile("generatedBVH_BVHAPP.bvh");
+	}
 }
 
 void BVHApp::generateSequence()
@@ -239,6 +244,12 @@ void BVHApp::generateSequence()
 	for(unsigned int i = 0; i < bvh.m_frames.size(); ++i)
 	{
 		std::vector<double>& f = bvh.m_frames[i].m_values;
+		f[0] = 0;
+		f[1] = 0;
+		f[2] = 0;
+		f[3] = 0;
+		f[4] = 0;
+		f[5] = 0;
 		bvh.m_skeleton.m_dim_values = f;
 		bvh.m_skeleton.update();
 
