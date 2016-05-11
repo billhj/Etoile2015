@@ -48,6 +48,7 @@ void BVHApp::addMenu()
 	QAction* deaccbvh = anim->addAction("-");
 	anim->addSeparator();
 	QAction* mode = anim->addAction("generatingmode");
+	QAction* generate = anim->addAction("generate");
 	QAction* saveBVH = anim->addAction("saveBVH");
 	mode->setCheckable(true);
 	connect(playbvh, SIGNAL(triggered()), this, SLOT(playBVH()));
@@ -55,6 +56,7 @@ void BVHApp::addMenu()
 	connect(accbvh, SIGNAL(triggered()), this, SLOT(accBVH()));
 	connect(deaccbvh, SIGNAL(triggered()), this, SLOT(deaccBVH()));
 	connect(mode, SIGNAL(toggled(bool)), this, SLOT(changeMode(bool)));
+	connect(generate, SIGNAL(triggered()), this, SLOT(generateSequence()));
 	connect(saveBVH, SIGNAL(triggered()), this, SLOT(saveGenerateSequence()));
 	mode->setChecked(false);
 
@@ -100,8 +102,8 @@ void BVHApp::openBVH()
 		//bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
 		//bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
 		//bvh.m_skeleton.m_endeffectors.erase(bvh.m_skeleton.m_endeffectors.begin());
-		bvh.m_skeleton.m_endeffectors.pop_back();
-		bvh.m_skeleton.m_endeffectors.pop_back();
+		//bvh.m_skeleton.m_endeffectors.pop_back();
+		//bvh.m_skeleton.m_endeffectors.pop_back();
 		bvh.m_skeleton.buildJacobian(bvh.m_skeleton.m_endeffectors, bvh.m_skeleton.m_jacobian);
 		bvh.m_skeleton.update();
 		_pIKWidget->sk = &bvh.m_skeleton;
@@ -229,4 +231,9 @@ void BVHApp::saveGenerateSequence()
 	std::vector<Frame> temp = bvh.m_frames;
 	bvh.m_frames = _generatedFrame;
 	bvh.saveToBVHFile("generatedBVH.bvh");
+}
+
+void BVHApp::generateSequence()
+{
+
 }
