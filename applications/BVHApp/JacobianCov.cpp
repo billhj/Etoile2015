@@ -128,6 +128,47 @@ void trimString( std::string& _string)
 		_string = _string.substr( start, end-start+1 );
 }
 
+void JacobianCov::loadConfigFile()
+{
+	std::fstream in("jacobiancov.conf", std::ios_base::in );
+	if (!in.is_open() || !in.good())
+	{
+		std::cerr << "[jacobiancov] : cannot not open file "
+			<< std::endl;
+		return;
+	}
+#if defined(_DEBUG) || defined(DEBUG)
+	std::cout<< "[jacobiancov] : start loading : " <<std::endl;
+#endif
+
+	std::string line;
+	while( in && !in.eof() )
+	{
+		//lineIndex++;
+		std::getline(in,line);
+		if ( in.bad() ){
+			std::cout << "  Warning! Could not read file properly! BVH part: skeleton"<<std::endl;
+		}
+
+		trimString(line);
+		if ( line.size() == 0 || line[0] == '#' || isspace(line[0]) || line.empty() ) 
+		{
+			continue;
+		}
+
+		std::string file;
+		std::stringstream stream(line);
+		stream >> file;
+		bool bt = loadGaussianFromFile(file);
+		if(bt) break;
+	}
+
+	in.close();
+#if defined(_DEBUG) || defined(DEBUG)
+	std::cout<< "[gaussian] : loading is successful "<<std::endl;
+#endif
+}
+
 bool JacobianCov::loadGaussianFromFile(const std::string& filepath)
 {
 	std::fstream in( filepath.c_str(), std::ios_base::in );

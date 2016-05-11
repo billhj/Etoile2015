@@ -24,12 +24,14 @@ public:
 	JacobianCov(int maxTries = 50, double targetThreshold = 0.05, double stepweight= 0.5, double dampling = 0.01): IKSolver(maxTries, targetThreshold, stepweight),
 		m_dampling1(dampling),m_dampling2(dampling),m_defined(false)
 	{ 
-		loadGaussianFromFile("gaussian10.txt");
+		loadConfigFile();
+		//loadGaussianFromFile("gaussian10.txt");
 		last_state = VectorX_::Zero(m_gaussians.back().m_mu.size());
 	}
 
 	~JacobianCov(void);
 	bool loadGaussianFromFile(const std::string&);
+	void loadConfigFile();
 	void setParameters(MatrixX_ incov, VectorX_ mu)
 	{
 		m_invcov = incov;
