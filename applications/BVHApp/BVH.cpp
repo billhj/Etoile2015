@@ -514,11 +514,11 @@
 				double value = 0;
 				if(j < 3)
 				{
-					value = frame.m_values[j] * 0.01;
+					value = frame.m_values[j] * 100;
 				}
 				else
 				{
-					value = frame.m_values[j] * 3.14159265 / 180.0;
+					value = frame.m_values[j] * 180.0 / 3.14159265;
 				}
 				out<< value <<"  ";
 			}

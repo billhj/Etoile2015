@@ -11,7 +11,7 @@ protected:
 	double m_stepweight;
 public:
 	virtual std::string getIKSolverName() = 0;
-	inline IKSolver(int maxTries = 50, double targetThreshold = 0.005, double stepweight= 0.5)
+	inline IKSolver(int maxTries = 50, double targetThreshold = 0.01, double stepweight= 0.5)
 		:m_maxTries(maxTries),
 		m_targetThreshold(targetThreshold), m_stepweight(stepweight)
 	{ 

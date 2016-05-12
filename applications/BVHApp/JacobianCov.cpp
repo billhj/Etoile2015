@@ -1,5 +1,5 @@
 #include "JacobianCov.h"
-
+#include <ctime>
 #define USINGCOV
 
 JacobianCov::~JacobianCov(void)
@@ -86,7 +86,14 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	MatrixX_ jacobianTranspose = jacobian.transpose();
 	MatrixX_  jtj = jacobianTranspose * jacobian;
 	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
-	double dampling2 = m_dampling2 * distance.norm();
+
+	/*double weighta =  distance.norm();
+	weighta = weighta * weighta;
+	double weightb = (last_state - m_mu).transpose() * m_invcov * (last_state - m_mu);
+	double weight = weighta / weightb;
+	std::cout <<"w: "<<weightb << "  "<<weight << std::endl;
+	double dampling2 = m_dampling2 * weight;*/
+	double dampling2 = m_dampling2;// *  distance.norm();//pow(distance.norm(), 2);
 	MatrixX_ a =  (2 * jtj  + m_dampling1*lamdaI + dampling2* m_invcov).inverse();
 	MatrixX_ b = (2 * jacobianTranspose * distance +  dampling2 * m_invcov * (m_mu - last_state)/ (m_mu - last_state).norm());
 	VectorX_ dR = a * b;
@@ -160,7 +167,7 @@ void JacobianCov::loadConfigFile()
 		std::stringstream stream(line);
 		stream >> file;
 		bool bt = loadGaussianFromFile(file);
-		if(bt) break;
+		//if(bt) break;
 	}
 
 	in.close();
@@ -253,6 +260,7 @@ int JacobianCov::similarIndex(VectorX_ pos)
 	{
 		pos[i] = rpos[i];
 	}*/
+	clock_t time = clock();
 
 	int idx = -1;
 	double minNorm = 99999999999;
@@ -267,6 +275,10 @@ int JacobianCov::similarIndex(VectorX_ pos)
 			minNorm = current;
 		}
 	}
+
+	time = clock() - time;
+	int ms = double(time) / CLOCKS_PER_SEC * 1000;
+	std::cout<<"timee elapsed for 10 cluster: "<<ms<<std::endl;
 
 	m_invcov = m_gaussians[idx].m_invcov;// MatrixX_::Identity(66,66) * 0.001;
 	m_mu = m_gaussians[idx].m_mu;

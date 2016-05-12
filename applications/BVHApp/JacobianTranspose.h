@@ -5,7 +5,7 @@ class JacobianTranspose : public IKSolver
 	double m_dampling;
 public:
 	virtual std::string getIKSolverName() {return "JacobianTranspose";}
-	JacobianTranspose(int maxTries = 50, double targetThreshold = 0.05, double stepweight= 0.5, double dampling = 0.1): IKSolver(maxTries, targetThreshold, stepweight),
+	JacobianTranspose(int maxTries = 50, double targetThreshold = 0.01, double stepweight= 0.5, double dampling = 0.1): IKSolver(maxTries, targetThreshold, stepweight),
 		m_dampling(dampling){}
 
 	~JacobianTranspose(void);
