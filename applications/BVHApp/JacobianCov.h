@@ -1,12 +1,6 @@
 #pragma once
 #include "iksolver.h"
-
-struct TargetGaussian
-{
-	MatrixX_ m_cov;
-	MatrixX_ m_invcov;
-	VectorX_ m_mu;
-};
+//#include "GaussianProcess.h"
 
 class JacobianCov : public IKSolver
 {
@@ -15,7 +9,8 @@ class JacobianCov : public IKSolver
 	MatrixX_ m_invcov;
 	VectorX_ m_mu;
 	bool m_defined;
-	std::vector<TargetGaussian> m_gaussians;
+	
+	//GaussianProcess m_gp;
 	VectorX_ last_state;
 public:
 	double m_dampling1;
@@ -24,14 +19,9 @@ public:
 	JacobianCov(int maxTries = 50, double targetThreshold = 0.01, double stepweight= 0.5, double dampling = 0.01): IKSolver(maxTries, targetThreshold, stepweight),
 		m_dampling1(dampling),m_dampling2(dampling),m_defined(false)
 	{ 
-		loadConfigFile();
-		//loadGaussianFromFile("gaussian10.txt");
-		last_state = VectorX_::Zero(m_gaussians.back().m_mu.size());
 	}
 
 	~JacobianCov(void);
-	bool loadGaussianFromFile(const std::string&);
-	void loadConfigFile();
 	void setParameters(MatrixX_ incov, VectorX_ mu)
 	{
 		m_invcov = incov;
@@ -40,6 +30,6 @@ public:
 	}
 	virtual void solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets) override;
 
-	int similarIndex(VectorX_ pos);
+	//void similarIndex(VectorX_ pos);
 };
 

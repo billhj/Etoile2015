@@ -28,6 +28,7 @@
 #include "JacobianPseudoInverse.h"
 #include "JacobianTranspose.h"
 #include "BVH.h"
+#include "GaussianProcess.h"
 
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
@@ -506,7 +507,9 @@ signals:
 
 			if(_pSolver != NULL)
 			{
+
 				std::vector<Vector3_> targets;
+				VectorX_ t = VectorX_::Zero(sk->m_endeffectors.size() * 3);
 				for(unsigned int i = 0 ; i < sk->m_endeffectors.size(); ++i)
 				{
 					if(sk->m_endeffectors[i] == _selectedJointIndex)
@@ -517,7 +520,18 @@ signals:
 					{
 						targets.push_back(sk->m_joint_globalPositions[sk->m_endeffectors[i]]);
 					}
+					t(i * 3) = targets[i](0);
+					t(i * 3 + 1) = targets[i](1);
+					t(i * 3 + 2) = targets[i](2);
 				}
+				JacobianCov* sol = dynamic_cast<JacobianCov*>(_pSolver);
+				if(sol != NULL)
+				{
+					TargetGaussian tg = m_gp.computeASample(t);
+					sol->setParameters(tg.m_invcov, tg.m_mu);
+				}
+
+
 				QElapsedTimer timer;
 				timer.start();
 				_pSolver->solve(sk, targets);
@@ -546,4 +560,6 @@ public:
 	Etoile::Vec3f _original;
 	double speed;
 	std::vector<Frame> animationframes;
+
+	GaussianProcess m_gp;
 };

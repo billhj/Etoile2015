@@ -107,6 +107,7 @@ void BVHApp::openBVH()
 		bvh.m_skeleton.buildJacobian(bvh.m_skeleton.m_endeffectors, bvh.m_skeleton.m_jacobian);
 		bvh.m_skeleton.update();
 		_pIKWidget->sk = &bvh.m_skeleton;
+		_pIKWidget->m_gp.setSK(_pIKWidget->sk);
 	}
 }
 

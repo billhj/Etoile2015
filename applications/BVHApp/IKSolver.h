@@ -25,6 +25,7 @@ public:
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		clock_t time = clock();
 #endif
+		//chain->resetValues();
 		chain->update();
 		double distance = 0;
 		for(int i = 0; i < chain->m_endeffectors.size(); ++i)

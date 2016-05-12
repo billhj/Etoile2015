@@ -10,7 +10,26 @@ JacobianCov::~JacobianCov(void)
 
 void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 {
+	/*for(int i = 0; i < m_mu.size(); ++i){
+		chain->m_dim_values[i] = m_mu(i);
+	}*/
 	chain->update();
+	//return;
+	last_state = VectorX_::Zero(chain->m_dim_values.size());
+	for(int i = 0; i < 3; ++i)
+	{
+		last_state[i] = 0;// chain->m_dim_values[i];//dR[i];
+	}
+	/*for(int i = 3; i < 6; ++i)
+	{
+		last_state[i] = dR[i];
+	}
+*/
+	for(int i = chain->m_startDim4IK; i < chain->m_dims.size(); ++i)
+	{
+		last_state[i] = chain->m_dim_values[i];
+	}
+
 	int tries = 0;
 	MatrixX_ jacobian = chain->m_jacobian;
 	VectorX_ distance(jacobian.rows());
@@ -30,7 +49,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 		m_invcov = m_cov.inverse();
 		m_defined = true;
 	}
-	similarIndex(last_state);
+	//similarIndex(last_state);
 #endif
 
 	for(int ei = 0; ei < chain->m_endeffectors.size(); ++ei)
@@ -93,9 +112,9 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	double weight = weighta / weightb;
 	std::cout <<"w: "<<weightb << "  "<<weight << std::endl;
 	double dampling2 = m_dampling2 * weight;*/
-	double dampling2 = m_dampling2;// *  distance.norm();//pow(distance.norm(), 2);
-	MatrixX_ a =  (2 * jtj  + m_dampling1*lamdaI + dampling2* m_invcov).inverse();
-	MatrixX_ b = (2 * jacobianTranspose * distance +  dampling2 * m_invcov * (m_mu - last_state)/ (m_mu - last_state).norm());
+	double dampling = m_dampling2;//* pow(distance.norm(), 2);
+	MatrixX_ a =  (2 * jtj  + m_dampling1*lamdaI + dampling* m_invcov).inverse();
+	MatrixX_ b = (2 * jacobianTranspose * distance +  dampling * m_invcov * (m_mu - last_state));
 	VectorX_ dR = a * b;
 #else
 	MatrixX_ jacobianTranspose = jacobian.transpose();
@@ -107,7 +126,6 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	for(int i = 0; i < 3; ++i)
 	{
 		chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
-		last_state[i] = 0;// chain->m_dim_values[i];//dR[i];
 	}
 	/*for(int i = 3; i < 6; ++i)
 	{
@@ -117,171 +135,47 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	for(int i = chain->m_startDim4IK; i < chain->m_dims.size(); ++i)
 	{
 		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
-		last_state[i] = chain->m_dim_values[i];
 	}
 	chain->update();
 
 }
 
-void trimString( std::string& _string) 
-{
-	// Trim Both leading and trailing spaces
-	size_t start = _string.find_first_not_of(" \t\r\n");
-	size_t end   = _string.find_last_not_of(" \t\r\n");
-
-	if(( std::string::npos == start ) || ( std::string::npos == end))
-		_string = "";
-	else
-		_string = _string.substr( start, end-start+1 );
-}
-
-void JacobianCov::loadConfigFile()
-{
-	std::fstream in("jacobiancov.conf", std::ios_base::in );
-	if (!in.is_open() || !in.good())
-	{
-		std::cerr << "[jacobiancov] : cannot not open file "
-			<< std::endl;
-		return;
-	}
-#if defined(_DEBUG) || defined(DEBUG)
-	std::cout<< "[jacobiancov] : start loading : " <<std::endl;
-#endif
-
-	std::string line;
-	while( in && !in.eof() )
-	{
-		//lineIndex++;
-		std::getline(in,line);
-		if ( in.bad() ){
-			std::cout << "  Warning! Could not read file properly! BVH part: skeleton"<<std::endl;
-		}
-
-		trimString(line);
-		if ( line.size() == 0 || line[0] == '#' || isspace(line[0]) || line.empty() ) 
-		{
-			continue;
-		}
-
-		std::string file;
-		std::stringstream stream(line);
-		stream >> file;
-		bool bt = loadGaussianFromFile(file);
-		//if(bt) break;
-	}
-
-	in.close();
-#if defined(_DEBUG) || defined(DEBUG)
-	std::cout<< "[gaussian] : loading is successful "<<std::endl;
-#endif
-}
-
-bool JacobianCov::loadGaussianFromFile(const std::string& filepath)
-{
-	std::fstream in( filepath.c_str(), std::ios_base::in );
-
-	if (!in.is_open() || !in.good())
-	{
-		std::cerr << "[gaussian] : cannot not open file "
-			<< filepath
-			<< std::endl;
-		return false;
-	}
-#if defined(_DEBUG) || defined(DEBUG)
-	std::cout<< "[gaussian] : start loading : "<< filepath <<std::endl;
-#endif
 
 
-	std::string line;
-	while( in && !in.eof() )
-	{
-		//lineIndex++;
-		std::getline(in,line);
-		if ( in.bad() ){
-			std::cout << "  Warning! Could not read file properly! BVH part: skeleton"<<std::endl;
-		}
-
-		trimString(line);
-		if ( line.size() == 0 || line[0] == '#' || isspace(line[0]) || line.empty() ) 
-		{
-			continue;
-		}
-
-		int index;
-		int dim;
-		std::stringstream stream(line);
-		stream >> index;
-		if(!stream.fail())
-		{
-			stream >> dim;
-			TargetGaussian tg;
-			m_gaussians.push_back(tg);
-			TargetGaussian& tgref = m_gaussians.back();
-			tgref.m_mu = VectorX_::Zero(dim);
-			tgref.m_cov = MatrixX_::Zero(dim, dim);
-
-			double value = 0;
-			std::getline(in,line);
-			std::stringstream stream2(line);
-			for(unsigned int n = 0; n < dim; ++n)
-			{
-				stream2 >> value;
-				tgref.m_mu[n] = value;
-			}
-
-			value = 0;
-			std::getline(in,line);
-			std::stringstream stream3(line);
-			for(unsigned int w = 0; w < dim; ++w)
-			{
-				for(unsigned int h = 0; h < dim; ++h)
-				{
-					stream3 >> value;
-					tgref.m_cov(w, h) = value;
-				}
-			}
-			tgref.m_invcov = (tgref.m_cov + MatrixX_::Identity(dim, dim) * 0.000001).inverse();
-
-		}
-	}
-
-	in.close();
-#if defined(_DEBUG) || defined(DEBUG)
-	std::cout<< "[gaussian] : loading is successful "<<std::endl;
-#endif
-	return true;
-}
+//void JacobianCov::similarIndex(VectorX_ pos)
+//{
+//	TargetGaussian tg = m_gp.computeASample(pos);
+//	m_invcov = tg.m_invcov;// MatrixX_::Identity(66,66) * 0.001;
+//	m_mu = tg.m_mu;
+//	//clock_t time = clock();
+//	//int idx = -1;
+//	//if(false){
+//	//	
+//	//	double minNorm = 99999999999;
+//	//	for(unsigned int i = 0; i < m_gaussians.size(); ++i)
+//	//	{
+//	//		VectorX_ diff = m_gaussians[i].m_mu - pos;
+//	//		diff[2] = 0;
+//	//		double current = diff.norm();
+//	//		if(current < minNorm)
+//	//		{
+//	//			idx = i;
+//	//			minNorm = current;
+//	//		}
+//	//	}
+//
+//	//	m_invcov = m_gaussians[idx].m_invcov;// MatrixX_::Identity(66,66) * 0.001;
+//	//	m_mu = m_gaussians[idx].m_mu;
+//	//}else
+//	//{
+//	//	m_mu = pos;
+//	//	//m_invcov = m_gp.computeASample(pos);
+//	//	idx = 0;
+//	//}
+//
+//	//time = clock() - time;
+//	//int ms = double(time) / CLOCKS_PER_SEC * 1000;
+//	//std::cout<<"timee elapsed for 10 cluster: "<<ms<<std::endl;
+//}
 
 
-int JacobianCov::similarIndex(VectorX_ pos)
-{
-	/*VectorX_ pos = VectorX_::Zero(rpos.size());
-	for(unsigned int i = 6; i < rpos.size(); ++i)
-	{
-		pos[i] = rpos[i];
-	}*/
-	clock_t time = clock();
-
-	int idx = -1;
-	double minNorm = 99999999999;
-	for(unsigned int i = 0; i < m_gaussians.size(); ++i)
-	{
-		VectorX_ diff = m_gaussians[i].m_mu - pos;
-		diff[2] = 0;
-		double current = diff.norm();
-		if(current < minNorm)
-		{
-			idx = i;
-			minNorm = current;
-		}
-	}
-
-	time = clock() - time;
-	int ms = double(time) / CLOCKS_PER_SEC * 1000;
-	std::cout<<"timee elapsed for 10 cluster: "<<ms<<std::endl;
-
-	m_invcov = m_gaussians[idx].m_invcov;// MatrixX_::Identity(66,66) * 0.001;
-	m_mu = m_gaussians[idx].m_mu;
-	//std::cout<<"idx:           "<<idx<<std::endl;
-	return idx;
-}
