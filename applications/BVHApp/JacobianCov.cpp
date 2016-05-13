@@ -110,12 +110,13 @@ void JacobianCov::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
 	weighta = weighta * weighta;
 	double weightb = (last_state - m_mu).transpose() * m_invcov * (last_state - m_mu);
 	double weight = weighta / weightb;
-	std::cout <<"w: "<<weightb << "  "<<weight << std::endl;
-	double dampling2 = m_dampling2 * weight;*/
-	double dampling = m_dampling2;//* pow(distance.norm(), 2);
+	std::cout <<"w: "<<weightb << "  "<<weight << std::endl;*/
+	//double dampling = m_dampling2;// * weight;
+	double dampling = m_dampling2 * pow(distance.norm(), 2);
 	MatrixX_ a =  (2 * jtj  + m_dampling1*lamdaI + dampling* m_invcov).inverse();
-	MatrixX_ b = (2 * jacobianTranspose * distance +  dampling * m_invcov * (m_mu - last_state));
+	MatrixX_ b = (2 * jacobianTranspose * distance +  dampling * m_invcov * (m_mu - last_state) );
 	VectorX_ dR = a * b;
+	//std::cout<<dR<<std::endl;
 #else
 	MatrixX_ jacobianTranspose = jacobian.transpose();
 	MatrixX_ jtj = jacobian * jacobianTranspose;

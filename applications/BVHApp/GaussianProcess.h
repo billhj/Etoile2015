@@ -35,13 +35,14 @@ public:
 	void computeGP();
 	double kernel(VectorX_ x1, VectorX_ x2)
 	{
+		//return exp( -pow((x1 - x2).norm(), 2));
 		return exp( -(x1 - x2).norm());
 	}
 
 	void buildK();
 	TargetGaussian computeASample(const VectorX_& x);
 	
-
+	void test(TargetGaussian&);
 
 };
 

@@ -65,14 +65,69 @@ TargetGaussian GaussianProcess::computeASample(const VectorX_& target)
 		kt(i) = kernel(target, m_gaussians[i].targets);
 	}
 	VectorX_ v = kt.transpose() * m_k_inverse;
-	tg.m_invcov = MatrixX_::Zero(m_gaussians[0].m_invcov.rows(), m_gaussians[0].m_invcov.cols());
+	//std::cout<<v.norm()<<std::endl;
+	int dim = m_gaussians[0].m_cov.rows();
+	tg.m_invcov = MatrixX_::Zero(dim, dim);
+	tg.m_cov = MatrixX_::Zero(dim, dim);
 	tg.m_mu = VectorX_::Zero(m_gaussians[0].m_mu.size());
+	//double weight = 0;
 	for(unsigned int i = 0 ; i < v.size(); ++i)
 	{
-		tg.m_invcov = tg.m_invcov + v(i) * m_gaussians[i].m_invcov;
-		tg.m_mu = tg.m_mu + v(i) * m_gaussians[i].m_mu;
+		double v0 = v(i);
+		//weight += v0;
+		tg.m_invcov = tg.m_invcov +  m_gaussians[i].m_invcov * v0;
+		tg.m_cov = tg.m_cov +  m_gaussians[i].m_cov * v0;
+		//std::cout<< tg.m_invcov <<std::endl;
+		tg.m_mu = tg.m_mu + m_gaussians[i].m_mu  * v0;
+		/*for(unsigned int j = 0 ; j < dim; ++j)
+		{
+			if(m_gaussians[i].m_invcov(j,j) < 0)
+			{
+				std::cout<< "GP: invcov  diag negative "<<i <<" "<<j <<std::endl;
+			}
+		}*/
 	}
+	
+	for(unsigned int j = 0 ; j < dim; ++j)
+	{
+			if(tg.m_invcov(j,j) < 0)
+			{
+				std::cout<< "GP: invcov  diag negative tg invcov " <<" "<<j <<" "<<tg.m_invcov(j,j) <<std::endl;
+			}
+
+			if(tg.m_cov(j,j) < 0)
+			{
+				std::cout<< "GP: invcov  diag negative tg cov " <<" "<<j <<" "<<tg.m_cov(j,j)<<std::endl;
+				//tg.m_cov(j,j) = 0.0000001;
+			}
+	}
+	//tg.m_invcov = tg.m_cov.inverse();
+
+	/*for(unsigned int j = 0 ; j < dim; ++j)
+	{
+			if(tg.m_invcov(j,j) < 0)
+			{
+				std::cout<< "GP: invcov  diag negative tg invcov " <<" "<<j <<" "<<tg.m_invcov(j,j) <<std::endl;
+			}
+	}*/
+	//tg.m_invcov = tg.m_invcov;
+	//test(tg);
 	return tg;
+}
+
+void GaussianProcess::test(TargetGaussian& tg)
+{
+	std::ofstream out;
+	out.open("cov.txt");
+	out<<tg.m_invcov<<std::endl;
+	out<<std::endl;
+	for(unsigned int i = 0 ; i < m_gaussians.size(); ++i)
+	{
+		out<<m_gaussians[i].m_invcov<<std::endl;
+		out<<std::endl;
+	}
+
+	out.close();
 }
 
 void trimString( std::string& _string) 
@@ -171,6 +226,7 @@ bool GaussianProcess::loadGaussianFromFile(const std::string& filepath)
 			TargetGaussian& tgref = m_gaussians.back();
 			tgref.m_mu = VectorX_::Zero(dim);
 			tgref.m_cov = MatrixX_::Zero(dim, dim);
+			tgref.m_invcov = MatrixX_::Zero(dim, dim);
 
 			double value = 0;
 			std::getline(in,line);
@@ -192,7 +248,21 @@ bool GaussianProcess::loadGaussianFromFile(const std::string& filepath)
 					tgref.m_cov(w, h) = value;
 				}
 			}
-			tgref.m_invcov = (tgref.m_cov + MatrixX_::Identity(dim, dim) * 0.000001).inverse();
+
+			//tgref.m_cov = tgref.m_cov + MatrixX_::Identity(dim, dim) * 0.1;
+
+			value = 0;
+			std::getline(in,line);
+			std::stringstream stream4(line);
+			for(unsigned int w = 0; w < dim; ++w)
+			{
+				for(unsigned int h = 0; h < dim; ++h)
+				{
+					stream4 >> value;
+					tgref.m_invcov(w, h) = value;
+				}
+			}
+			//tgref.m_invcov = (tgref.m_cov + MatrixX_::Identity(dim, dim) * 0.000001).inverse();
 
 		}
 	}
