@@ -6,7 +6,7 @@ JacobianTranspose::~JacobianTranspose(void)
 }
 
 
-void JacobianTranspose::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
+void JacobianTranspose::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& targets)
 {
 	chain->update();
 	int tries = 0;

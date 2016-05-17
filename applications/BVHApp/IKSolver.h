@@ -18,9 +18,9 @@ public:
 	}
 
 
-	virtual void solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets) = 0;
+	virtual void solveOneStep(Skeleton* chain, const std::vector<Vector3_>& targets) = 0;
 
-	virtual bool solve(Skeleton* chain, std::vector<Vector3_>& targets)
+	virtual bool solve(Skeleton* chain, const std::vector<Vector3_>& targets)
 	{
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		clock_t time = clock();

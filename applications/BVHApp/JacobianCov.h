@@ -28,7 +28,7 @@ public:
 		m_mu = mu;
 		m_defined = true;
 	}
-	virtual void solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets) override;
+	virtual void solveOneStep(Skeleton* chain, const std::vector<Vector3_>& targets) override;
 
 	//void similarIndex(VectorX_ pos);
 };

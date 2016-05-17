@@ -87,7 +87,8 @@ TargetGaussian GaussianProcess::computeASample(const VectorX_& target)
 			}
 		}*/
 	}
-	
+#if( defined( _DEBUG ) || defined( DEBUG ) )
+
 	for(unsigned int j = 0 ; j < dim; ++j)
 	{
 			if(tg.m_invcov(j,j) < 0)
@@ -101,6 +102,7 @@ TargetGaussian GaussianProcess::computeASample(const VectorX_& target)
 				//tg.m_cov(j,j) = 0.0000001;
 			}
 	}
+#endif
 	//tg.m_invcov = tg.m_cov.inverse();
 
 	/*for(unsigned int j = 0 ; j < dim; ++j)

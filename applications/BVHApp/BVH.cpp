@@ -223,7 +223,7 @@
 //					std::cout<<"CHANNELS" <<std::endl;
 //#endif
 					stream >> dim;
-					current = m_skeleton.addJoint(parent, dim, Vector3_(x * 0.01, y * 0.01, z * 0.01), name);
+					current = m_skeleton.addJoint(parent, dim, Vector3_(x * scale, y * scale, z * scale), name);
 					current->m_level = m_index.size();
 					//m_skeleton.m_dim_localTranslations[current->m_dims[0]] = Vector3_(x, y, z);
 
@@ -344,7 +344,7 @@
 					stream >> y;
 					stream >> z;
 
-					current = m_skeleton.addJoint(parent, 0, Vector3_(x * 0.01, y * 0.01, z * 0.01), name);
+					current = m_skeleton.addJoint(parent, 0, Vector3_(x * scale, y * scale, z * scale), name);
 					current->m_level = m_index.size();
 					m_skeleton.m_endeffectors.push_back(current->m_index_parent);
 				}
@@ -414,7 +414,7 @@
 				stream >> frame.m_values[j];
 				if(j < 3)
 				{
-					frame.m_values[j] = frame.m_values[j] * 0.01;
+					frame.m_values[j] = frame.m_values[j] * scale;
 				}
 				else
 				{
@@ -457,7 +457,7 @@
 		Skeleton::Joint& current = m_skeleton.m_joints[0];
 		out<<"ROOT "<<current.m_name<<"\n";
 		out<<"{\n";
-		out<<incent<<"OFFSET "<<m_skeleton.m_joint_offsets[current.m_index][0]<<" "<<m_skeleton.m_joint_offsets[current.m_index][1]<<" "<<m_skeleton.m_joint_offsets[current.m_index][2]<<"\n";
+		out<<incent<<"OFFSET "<<m_skeleton.m_joint_offsets[current.m_index][0]/scale<<" "<<m_skeleton.m_joint_offsets[current.m_index][1]/scale<<" "<<m_skeleton.m_joint_offsets[current.m_index][2]/scale<<"\n";
 		out<<incent<<"CHANNELS "<<current.m_dof<<" ";
 		for(int j = 0; j < current.m_dof; ++j)
 		{
@@ -474,7 +474,7 @@
 			{
 				out<< std::string(current.m_level,'\t')  <<"JOINT "<<current.m_name<<"\n";
 				out<< std::string(current.m_level,'\t')  <<"{\n";
-				out<< std::string(current.m_level,'\t')  <<incent<<"OFFSET "<<m_skeleton.m_joint_offsets[current.m_index][0]<<" "<<m_skeleton.m_joint_offsets[current.m_index][1]<<" "<<m_skeleton.m_joint_offsets[current.m_index][2]<<"\n";
+				out<< std::string(current.m_level,'\t')  <<incent<<"OFFSET "<<m_skeleton.m_joint_offsets[current.m_index][0]/scale<<" "<<m_skeleton.m_joint_offsets[current.m_index][1]/scale<<" "<<m_skeleton.m_joint_offsets[current.m_index][2]/scale<<"\n";
 				out<< std::string(current.m_level,'\t')  <<incent<<"CHANNELS "<<current.m_dof<<" ";
 				for(int j = 0; j < current.m_dof; ++j)
 				{
@@ -485,7 +485,7 @@
 			{
 				out<< std::string(current.m_level,'\t')  <<"End "<<current.m_name<<"\n";
 				out<< std::string(current.m_level,'\t')  <<"{\n";
-				out<< std::string(current.m_level,'\t')  <<incent<<"OFFSET "<<m_skeleton.m_joint_offsets[current.m_index][0]<<" "<<m_skeleton.m_joint_offsets[current.m_index][1]<<" "<<m_skeleton.m_joint_offsets[current.m_index][2]<<"\n";
+				out<< std::string(current.m_level,'\t')  <<incent<<"OFFSET "<<m_skeleton.m_joint_offsets[current.m_index][0]/scale<<" "<<m_skeleton.m_joint_offsets[current.m_index][1]/scale<<" "<<m_skeleton.m_joint_offsets[current.m_index][2]/scale<<"\n";
 				out<< std::string(current.m_level,'\t')  <<"}\n";
 
 				while(parent >= 0)
@@ -514,7 +514,7 @@
 				double value = 0;
 				if(j < 3)
 				{
-					value = frame.m_values[j] * 100;
+					value = frame.m_values[j] / scale;
 				}
 				else
 				{

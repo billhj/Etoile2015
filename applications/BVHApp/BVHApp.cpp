@@ -241,12 +241,25 @@ void BVHApp::saveGenerateSequence()
 {
 	if(!mode) 
 	{
+		std::vector<Frame> temp = bvh.m_frames;
+		for(unsigned int i = 0; i < bvh.m_frames.size(); ++i)
+		{
+			std::vector<double>& f = bvh.m_frames[i].m_values;
+			f[0] = 0;
+			f[1] = 0;
+			f[2] = 0;
+			f[3] = 0;
+			f[4] = 0;
+			f[5] = 0;
+		}
 		bvh.saveToBVHFile("originalBVH_BVHAPP.bvh");
+		bvh.m_frames = temp;
 	}else
 	{
 		std::vector<Frame> temp = bvh.m_frames;
 		bvh.m_frames = _generatedFrame;
 		bvh.saveToBVHFile("generatedBVH_BVHAPP.bvh");
+		bvh.m_frames = temp;
 	}
 }
 
@@ -279,7 +292,35 @@ void BVHApp::generateSequence()
 	_generatedFrame.resize(targets.size());
 	for(unsigned int i = 0; i < targets.size(); ++i)
 	{
-		_pIKWidget->_pSolver->solve(&(bvh.m_skeleton), targets[i]);
+		std::vector<Vector3_>& target = targets[i];
+		{
+			VectorX_ t = VectorX_::Zero(target.size() * 3);
+			for(unsigned int j = 0 ; j < target.size(); ++j)
+			{
+				Matrix3_ orientation = bvh.m_skeleton.m_joint_globalOrientations[0];
+				Vector3_ pos = bvh.m_skeleton.m_joint_globalPositions[0];
+				Vector3_ cur = orientation.transpose() * (target[j] - pos);
+				t(j * 3) = cur(0);
+				t(j * 3 + 1) = cur(1);
+				t(j * 3 + 2) = cur(2);
+			}
+			JacobianCov* sol = dynamic_cast<JacobianCov*>(_pIKWidget->_pSolver);
+			if(sol != NULL)
+			{
+				TargetGaussian tg = _pIKWidget->m_gp.computeASample(t);
+				sol->setParameters(tg.m_invcov, tg.m_mu);
+			}
+
+			GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pIKWidget->_pSolver);
+			if(sol2 != NULL)
+			{
+				TargetGaussian tg = _pIKWidget->m_gp.computeASample(t);
+				sol2->setParameters(tg.m_mu);
+			}
+		
+		}
+
+		_pIKWidget->_pSolver->solve(&(bvh.m_skeleton), target);
 		_generatedFrame[i].m_values = bvh.m_skeleton.m_dim_values;
 	}
 }

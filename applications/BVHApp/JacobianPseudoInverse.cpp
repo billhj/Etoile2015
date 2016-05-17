@@ -6,7 +6,7 @@ JacobianPseudoInverse::~JacobianPseudoInverse(void)
 }
 
 
-void JacobianPseudoInverse::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
+void JacobianPseudoInverse::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& targets)
 {
 	chain->update();
 	int tries = 0;

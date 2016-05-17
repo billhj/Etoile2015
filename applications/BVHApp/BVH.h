@@ -25,6 +25,7 @@ struct BVH
 	std::vector<Frame> m_frames;
 	float m_frametime; 
 	int m_frameNb;
+	double scale;
 public:
 	BVH(){}
 	BVH(BVH& bvh)
@@ -33,6 +34,7 @@ public:
 		m_frameNb = bvh.m_frameNb;
 		m_frametime = bvh.m_frametime;
 		m_skeleton = bvh.m_skeleton;
+		scale = 0.01;
 	}
 
 	bool loadFromBVHFile(const std::string& filepath);

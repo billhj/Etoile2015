@@ -9,6 +9,6 @@ public:
 		m_dampling(dampling){}
 
 	~JacobianDLSSolver(void);
-	virtual void solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets) override;
+	virtual void solveOneStep(Skeleton* chain, const std::vector<Vector3_>& targets) override;
 };
 

@@ -6,7 +6,7 @@ JacobianDLSSolver::~JacobianDLSSolver(void)
 }
 
 
-void JacobianDLSSolver::solveOneStep(Skeleton* chain, std::vector<Vector3_>& targets)
+void JacobianDLSSolver::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& targets)
 {
 	chain->update();
 	int tries = 0;
@@ -21,7 +21,7 @@ void JacobianDLSSolver::solveOneStep(Skeleton* chain, std::vector<Vector3_>& tar
 		distance(ei * 3 + 0) = dis(0);
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
-		for(unsigned int j = 0; j < 3; ++j)
+		/*for(unsigned int j = 0; j < 3; ++j)
 		{
 			Skeleton::Dim& dim = chain->m_dims[j];
 			Vector3_ axis = chain->m_dim_axis[dim.m_idx];
@@ -34,7 +34,7 @@ void JacobianDLSSolver::solveOneStep(Skeleton* chain, std::vector<Vector3_>& tar
 			jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
 			jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
 			jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
-		}
+		}*/
 
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{
@@ -67,10 +67,10 @@ void JacobianDLSSolver::solveOneStep(Skeleton* chain, std::vector<Vector3_>& tar
 	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
 	VectorX_ dR = jacobianTranspose * ( jtj + lamdaI * m_dampling).inverse() * distance;
 
-	for(int i = 0; i < 3; ++i)
+	/*for(int i = 0; i < 3; ++i)
 	{
 		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
-	}
+	}*/
 	for(int i = chain->m_startDim4IK; i < chain->m_dims.size(); ++i)
 	{
 		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
