@@ -27,6 +27,7 @@
 #include "JacobianCov.h"
 #include "JacobianPseudoInverse.h"
 #include "JacobianTranspose.h"
+#include "GPIKsolver.h"
 #include "BVH.h"
 #include "GaussianProcess.h"
 
@@ -229,6 +230,7 @@ protected:
 			menuMap[menu.addAction("JacobianDLSSolver")] = 2;
 			menuMap[menu.addAction("PseudoInverse")] = 3;
 			menuMap[menu.addAction("Transpose")] = 4;
+			menuMap[menu.addAction("GaussianProcess")] = 5;
 			//menuMap[menu.addAction("DLS")] = 5;
 
 			menu.setMouseTracking(true);
@@ -255,6 +257,11 @@ protected:
 				{
 					if(_pSolver != NULL) delete _pSolver;
 					_pSolver = new JacobianTranspose(m_parameter.max_iterations, m_parameter.distance_threshold, m_parameter.damping1);
+				}
+				else if(id == 5)
+				{
+					if(_pSolver != NULL) delete _pSolver;
+					_pSolver = new GPIKsolver();
 				}
 				//else if(id == 5)
 				//{
@@ -526,15 +533,25 @@ signals:
 					{
 						targets.push_back(sk->m_joint_globalPositions[sk->m_endeffectors[i]]);
 					}
-					t(i * 3) = targets[i](0);
-					t(i * 3 + 1) = targets[i](1);
-					t(i * 3 + 2) = targets[i](2);
+					Matrix3_ orientation =sk->m_joint_globalOrientations[0];
+					Vector3_ pos = sk->m_joint_globalPositions[0];
+					Vector3_ cur = orientation.transpose() * (targets[i] - pos);
+					t(i * 3) = cur(0);
+					t(i * 3 + 1) = cur(1);
+					t(i * 3 + 2) = cur(2);
 				}
 				JacobianCov* sol = dynamic_cast<JacobianCov*>(_pSolver);
 				if(sol != NULL)
 				{
 					TargetGaussian tg = m_gp.computeASample(t);
 					sol->setParameters(tg.m_invcov, tg.m_mu);
+				}
+
+				GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pSolver);
+				if(sol2 != NULL)
+				{
+					TargetGaussian tg = m_gp.computeASample(t);
+					sol2->setParameters(tg.m_mu);
 				}
 
 

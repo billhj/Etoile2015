@@ -95,6 +95,9 @@
     <ClCompile Include="GaussianProcess.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GPIKsolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="BVHApp.h">
@@ -154,6 +157,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GaussianProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GPIKsolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

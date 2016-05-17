@@ -45,6 +45,7 @@ void BVHApp::addMenu()
 	QAction* jdls = ik->addAction("JacobianDLS");
 	QAction* jpi = ik->addAction("JacobianPseudoInverse");
 	QAction* jt = ik->addAction("JacobianTranspose");
+	QAction* gp = ik->addAction("GaussianProcess");
 	connect(ik, SIGNAL(triggered(QAction*)), this, SLOT(applyIKAction(QAction*)));
 
 	QMenu* anim = bar->addMenu("Animation");
@@ -92,6 +93,10 @@ void BVHApp::applyIKAction(QAction* action)
 	else if(t.toStdString() == "JacobianTranspose")
 	{
 		_pIKWidget->_pSolver = (new JacobianTranspose(_pIKWidget->m_parameter.max_iterations, _pIKWidget->m_parameter.distance_threshold, _pIKWidget->m_parameter.damping1));
+	}
+	else if(t.toStdString() == "GaussianProcess")
+	{
+		_pIKWidget->_pSolver = new GPIKsolver();
 	}
 	std::cout<<"now using : " <<t.toStdString()<<std::endl;
 }
