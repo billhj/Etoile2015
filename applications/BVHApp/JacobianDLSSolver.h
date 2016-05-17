@@ -5,7 +5,7 @@ class JacobianDLSSolver : public IKSolver
 public:
 	double m_dampling;
 	virtual std::string getIKSolverName() {return "JacobianDLSSolver";}
-	JacobianDLSSolver(int maxTries = 50, double targetThreshold = 0.01, double stepweight= 0.5, double dampling = 0.01): IKSolver(maxTries, targetThreshold, stepweight),
+	JacobianDLSSolver(int maxTries = 50, double targetThreshold = 0.01,double dampling = 0.01): IKSolver(maxTries, targetThreshold),
 		m_dampling(dampling){}
 
 	~JacobianDLSSolver(void);

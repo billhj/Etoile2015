@@ -16,8 +16,8 @@ public:
 	double m_dampling1;
 	double m_dampling2;
 	virtual std::string getIKSolverName() {return "JacobianCov";}
-	JacobianCov(int maxTries = 50, double targetThreshold = 0.01, double stepweight= 0.5, double dampling = 0.01): IKSolver(maxTries, targetThreshold, stepweight),
-		m_dampling1(dampling),m_dampling2(dampling),m_defined(false)
+	JacobianCov(int maxTries = 50, double targetThreshold = 0.01, double dampling = 0.01, double dampling2 = 0.01): IKSolver(maxTries, targetThreshold),
+		m_dampling1(dampling),m_dampling2(dampling2),m_defined(false)
 	{ 
 	}
 

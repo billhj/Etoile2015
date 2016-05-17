@@ -20,6 +20,12 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 	connect(ui.damping1, SIGNAL(valueChanged(double)), this, SLOT(changeDamping(double)));
 	connect(ui.damping2, SIGNAL(valueChanged(double)), this, SLOT(changeDamping(double)));
 	mode = false;
+
+	_pIKWidget->m_parameter.distance_threshold = ui.doubleSpinBox->value();
+	_pIKWidget->m_parameter.max_iterations = ui.spinBox->value();
+	_pIKWidget->m_parameter.damping1 = ui.damping1->value();
+	_pIKWidget->m_parameter.damping2 = ui.damping2->value();
+	_pIKWidget->_pSolver = (new JacobianDLSSolver(_pIKWidget->m_parameter.max_iterations, _pIKWidget->m_parameter.distance_threshold, _pIKWidget->m_parameter.damping1));
 }
 
 BVHApp::~BVHApp()
@@ -73,19 +79,19 @@ void BVHApp::applyIKAction(QAction* action)
 	QString t = action->text();
 	if(t.toStdString() == "JacobianCov")
 	{
-		_pIKWidget->_pSolver = (new JacobianCov(_pIKWidget->_pSolver->getMaxNumberOfTries()));
+		_pIKWidget->_pSolver = (new JacobianCov(_pIKWidget->m_parameter.max_iterations, _pIKWidget->m_parameter.distance_threshold, _pIKWidget->m_parameter.damping1, _pIKWidget->m_parameter.damping2));
 	}
 	else if(t.toStdString() == "JacobianDLS")
 	{
-		_pIKWidget->_pSolver = (new JacobianDLSSolver(_pIKWidget->_pSolver->getMaxNumberOfTries()));
+		_pIKWidget->_pSolver = (new JacobianDLSSolver(_pIKWidget->m_parameter.max_iterations, _pIKWidget->m_parameter.distance_threshold, _pIKWidget->m_parameter.damping1));
 	}
 	else if(t.toStdString() == "JacobianPseudoInverse")
 	{
-		_pIKWidget->_pSolver = (new JacobianPseudoInverse(_pIKWidget->_pSolver->getMaxNumberOfTries()));
+		_pIKWidget->_pSolver = (new JacobianPseudoInverse(_pIKWidget->m_parameter.max_iterations, _pIKWidget->m_parameter.distance_threshold, _pIKWidget->m_parameter.damping1));
 	}
 	else if(t.toStdString() == "JacobianTranspose")
 	{
-		_pIKWidget->_pSolver = (new JacobianTranspose(_pIKWidget->_pSolver->getMaxNumberOfTries()));
+		_pIKWidget->_pSolver = (new JacobianTranspose(_pIKWidget->m_parameter.max_iterations, _pIKWidget->m_parameter.distance_threshold, _pIKWidget->m_parameter.damping1));
 	}
 	std::cout<<"now using : " <<t.toStdString()<<std::endl;
 }

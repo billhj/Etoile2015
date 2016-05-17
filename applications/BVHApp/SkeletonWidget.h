@@ -34,6 +34,14 @@
 #define GL_MULTISAMPLE  0x809D
 #endif
 
+struct SolverParamter
+{
+	int max_iterations;
+	double distance_threshold;
+	double damping1;
+	double damping2;
+};
+
 
 class SkeletonWidget : public QGLViewer
 {
@@ -49,7 +57,6 @@ public:
 		speed = 0;
 		_manipulator.reset();
 		_manipulator.setOrigine(qglviewer::Vec(0, 0, 0));
-		_pSolver = new JacobianDLSSolver();
 	}
 
 	~SkeletonWidget(){}
@@ -229,26 +236,25 @@ protected:
 			if(action!= NULL)
 			{
 				int id = (menuMap.find(action)->second);
-				int maxnb_iterations = _pSolver->getMaxNumberOfTries();
 				if(id == 1)
 				{
 					if(_pSolver != NULL) delete _pSolver;
-					_pSolver = new JacobianCov(maxnb_iterations);
+					_pSolver = new JacobianCov(m_parameter.max_iterations, m_parameter.distance_threshold, m_parameter.damping1, m_parameter.damping2);
 				}
 				else if(id == 2)
 				{
 					if(_pSolver != NULL) delete _pSolver;
-					_pSolver = new JacobianDLSSolver(maxnb_iterations);
+					_pSolver = new JacobianDLSSolver(m_parameter.max_iterations, m_parameter.distance_threshold, m_parameter.damping1);
 				}
 				else if(id == 3)
 				{
 					if(_pSolver != NULL) delete _pSolver;
-					_pSolver = new JacobianPseudoInverse(maxnb_iterations);
+					_pSolver = new JacobianPseudoInverse(m_parameter.max_iterations, m_parameter.distance_threshold, m_parameter.damping1);
 				}
 				else if(id == 4)
 				{
 					if(_pSolver != NULL) delete _pSolver;
-					_pSolver = new JacobianTranspose(maxnb_iterations);
+					_pSolver = new JacobianTranspose(m_parameter.max_iterations, m_parameter.distance_threshold, m_parameter.damping1);
 				}
 				//else if(id == 5)
 				//{
@@ -562,4 +568,5 @@ public:
 	std::vector<Frame> animationframes;
 
 	GaussianProcess m_gp;
+	SolverParamter m_parameter;
 };
