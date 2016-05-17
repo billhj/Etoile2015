@@ -27,14 +27,14 @@ struct BVH
 	int m_frameNb;
 	double scale;
 public:
-	BVH(){}
+	BVH(){scale = 0.01;}
 	BVH(BVH& bvh)
 	{
 		m_frames = bvh.m_frames;
 		m_frameNb = bvh.m_frameNb;
 		m_frametime = bvh.m_frametime;
 		m_skeleton = bvh.m_skeleton;
-		scale = 0.01;
+		scale = bvh.scale;
 	}
 
 	bool loadFromBVHFile(const std::string& filepath);
