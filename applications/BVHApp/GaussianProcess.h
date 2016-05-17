@@ -1,3 +1,10 @@
+/**
+* Copyright(C) 2009-2012                
+* @author Jing HUANG
+* @file GaussianProcess.h
+* @brief 
+* @date 1/2/2011
+*/
 #pragma once
 #include <vector>
 #include <Eigen/Dense>

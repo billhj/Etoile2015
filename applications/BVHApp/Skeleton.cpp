@@ -1,3 +1,10 @@
+/**
+* Copyright(C) 2009-2012                
+* @author Jing HUANG
+* @file Skeleton.cpp
+* @brief 
+* @date 1/2/2011
+*/
 #include "Skeleton.h"
 
 

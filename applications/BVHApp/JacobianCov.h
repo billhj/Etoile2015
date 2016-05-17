@@ -1,3 +1,10 @@
+/**
+* Copyright(C) 2009-2012                
+* @author Jing HUANG
+* @file JacobianCov.h
+* @brief 
+* @date 1/2/2011
+*/
 #pragma once
 #include "iksolver.h"
 //#include "GaussianProcess.h"

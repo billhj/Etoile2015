@@ -1,3 +1,10 @@
+/**
+* Copyright(C) 2009-2012                
+* @author Jing HUANG
+* @file JacobianCov.cpp
+* @brief 
+* @date 1/2/2011
+*/
 #include "JacobianCov.h"
 #include <ctime>
 #define USINGCOV
