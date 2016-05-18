@@ -23,6 +23,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 	chain->update();
 	//return;
 	last_state = VectorX_::Zero(chain->m_dim_values.size());
+
 	for(int i = 0; i < 3; ++i)
 	{
 		last_state[i] = 0;// chain->m_dim_values[i];//dR[i];
@@ -68,6 +69,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 		distance(ei * 3 + 0) = dis(0);
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
+#ifdef USING_ROOT
 		for(unsigned int j = 0; j < 3; ++j)
 		{
 			Skeleton::Dim& dim = chain->m_dims[j];
@@ -82,7 +84,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 			jacobian(ei * 3 + 1, j) = axisXYZgradient(1) ;//* 0.1;
 			jacobian(ei * 3 + 2, j) = axisXYZgradient(2) ;//* 0.1;
 		}
-
+#endif USING_ROOT
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{
 			if(chain->m_jacobian(ei * 3 + 0, j) < 0.1) continue;
@@ -130,11 +132,12 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
 	VectorX_ dR = jacobianTranspose * ( jtj + lamdaI * m_dampling1).inverse() * distance;
 #endif
-
+#ifdef USING_ROOT
 	for(int i = 0; i < 3; ++i)
 	{
 		chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
 	}
+#endif USING_ROOT
 	/*for(int i = 3; i < 6; ++i)
 	{
 		last_state[i] = dR[i];

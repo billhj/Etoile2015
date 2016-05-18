@@ -9,7 +9,7 @@
 #include <vector>
 #include "Skeleton.h"
 #include <ctime>
-
+#define USING_ROOT
 class IKSolver
 {
 protected:
