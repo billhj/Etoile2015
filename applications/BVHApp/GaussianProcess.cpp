@@ -104,11 +104,11 @@ TargetGaussian GaussianProcess::computeASample(const VectorX_& target)
 				std::cout<< "GP: invcov  diag negative tg invcov " <<" "<<j <<" "<<tg.m_invcov(j,j) <<std::endl;
 			}
 
-			if(tg.m_cov(j,j) < 0)
-			{
-				std::cout<< "GP: invcov  diag negative tg cov " <<" "<<j <<" "<<tg.m_cov(j,j)<<std::endl;
-				//tg.m_cov(j,j) = 0.0000001;
-			}
+			//if(tg.m_cov(j,j) < 0)
+			//{
+			//	std::cout<< "GP: invcov  diag negative tg cov " <<" "<<j <<" "<<tg.m_cov(j,j)<<std::endl;
+			//	//tg.m_cov(j,j) = 0.0000001;
+			//}
 	}
 #endif
 	//tg.m_invcov = tg.m_cov.inverse();

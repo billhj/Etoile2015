@@ -126,6 +126,7 @@ void BVHApp::openBVH()
 		bvh.m_skeleton.update();
 		_pIKWidget->sk = &bvh.m_skeleton;
 		_pIKWidget->m_gp.setSK(_pIKWidget->sk);
+		_pIKWidget->pos = bvh.m_skeleton.m_dim_values;
 	}
 }
 
@@ -158,7 +159,12 @@ void BVHApp::frameIndexChanged(int index)
 	if(index>=0)
 	{
 		_pIKWidget->pos = (bvh.m_frames[index].m_values);
+	}else
+	{
+		bvh.m_skeleton.resetValues();
+		_pIKWidget->pos = bvh.m_skeleton.m_dim_values;
 	}
+
 	if(!mode)
 	{
 		_pIKWidget->animationframes.clear();
