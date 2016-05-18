@@ -75,7 +75,7 @@ TargetGaussian GaussianProcess::computeASample(const VectorX_& target)
 	//std::cout<<v.norm()<<std::endl;
 	int dim = m_gaussians[0].m_cov.rows();
 	tg.m_invcov = MatrixX_::Zero(dim, dim);
-	tg.m_cov = MatrixX_::Zero(dim, dim);
+	//tg.m_cov = MatrixX_::Zero(dim, dim);
 	tg.m_mu = VectorX_::Zero(m_gaussians[0].m_mu.size());
 	//double weight = 0;
 	for(unsigned int i = 0 ; i < v.size(); ++i)
@@ -83,7 +83,7 @@ TargetGaussian GaussianProcess::computeASample(const VectorX_& target)
 		double v0 = v(i);
 		//weight += v0;
 		tg.m_invcov = tg.m_invcov +  m_gaussians[i].m_invcov * v0;
-		tg.m_cov = tg.m_cov +  m_gaussians[i].m_cov * v0;
+		//tg.m_cov = tg.m_cov +  m_gaussians[i].m_cov * v0;
 		//std::cout<< tg.m_invcov <<std::endl;
 		tg.m_mu = tg.m_mu + m_gaussians[i].m_mu  * v0;
 		/*for(unsigned int j = 0 ; j < dim; ++j)
@@ -94,6 +94,7 @@ TargetGaussian GaussianProcess::computeASample(const VectorX_& target)
 			}
 		}*/
 	}
+	
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 
 	for(unsigned int j = 0 ; j < dim; ++j)

@@ -16,6 +16,8 @@ protected:
 	int m_maxTries;
 	double m_targetThreshold;
 	double m_stepweight;
+
+	double finalDis;
 public:
 	virtual std::string getIKSolverName() = 0;
 	inline IKSolver(int maxTries = 50, double targetThreshold = 0.01)
@@ -55,14 +57,19 @@ public:
 
 #if( defined( _DEBUG ) || defined( DEBUG ) )
 		time = clock() - time;
-		int ms = double(time) / CLOCKS_PER_SEC * 1000;
+		double ms = double(time) / CLOCKS_PER_SEC * 1000;
 		std::cout<<"timee elapsed: "<<ms<<std::endl;
 		std::cout<<"iterations: "<<tries<< " distance: "<<distance<<std::endl;
 #endif
+		finalDis = distance;
 		//chain->update();
 		return true;
 	}
 
+	double getDistance()
+	{
+		return finalDis;
+	}
 
 	inline double getSingleStepValue() const
 	{

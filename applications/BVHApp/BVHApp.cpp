@@ -154,6 +154,9 @@ void BVHApp::deaccBVH()
 
 void BVHApp::frameIndexChanged(int index)
 {
+	_pIKWidget->_frameIdx = index;
+	if(index>=0)
+		_pIKWidget->pos = &(bvh.m_frames[index].m_values);
 	if(!mode)
 	{
 		_pIKWidget->animationframes.clear();
@@ -210,7 +213,7 @@ void BVHApp::changeDamping(double)
 void BVHApp::openAbout()
 {
 	QMessageBox msgBox;
-	msgBox.setText(" IKViewer \n Copyright(C) 2009-2012 \n author: ");
+	msgBox.setText(" IKViewer \n Copyright(C) 2009-2016 \n author: Jing HUANG");
 	//msgBox.setInformativeText("Do you want to save your changes?");
 	//msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 	//msgBox.setDefaultButton(QMessageBox::Save);
@@ -220,7 +223,7 @@ void BVHApp::openAbout()
 void BVHApp::openUsage()
 {
 	QMessageBox msgBox;
-	msgBox.setText(" IKViewer \n Copyright(C) 2009-2012 \n author: \n 1: Shift + Right_Mouse: select the joint or two end effectors (wrist) \n 2: use the manipulator to apply IK");
+	msgBox.setText(" IKViewer \n Copyright(C) 2009-2016 \n author: \n 1: double click Right_Mouse: select the joint or two end effectors (wrist) \n 2: use the manipulator to apply IK");
 	int ret = msgBox.exec();
 }
 
@@ -246,6 +249,8 @@ void BVHApp::updateCombobox()
 
 void BVHApp::saveGenerateSequence()
 {
+	QString fileName = QFileDialog::getSaveFileName(this,
+    tr("Save"), "./", tr("BVH Files (*.bvh)"));
 	if(!mode) 
 	{
 		std::vector<Frame> temp = bvh.m_frames;
@@ -259,13 +264,13 @@ void BVHApp::saveGenerateSequence()
 			f[4] = 0;
 			f[5] = 0;
 		}
-		bvh.saveToBVHFile("originalBVH_BVHAPP.bvh");
+		bvh.saveToBVHFile(fileName.toStdString());
 		bvh.m_frames = temp;
 	}else
 	{
 		std::vector<Frame> temp = bvh.m_frames;
 		bvh.m_frames = _generatedFrame;
-		bvh.saveToBVHFile("generatedBVH_BVHAPP.bvh");
+		bvh.saveToBVHFile(fileName.toStdString());
 		bvh.m_frames = temp;
 	}
 }
@@ -295,8 +300,12 @@ void BVHApp::generateSequence()
 		//
 	}
 
+	double dis = 0;
 	bvh.m_skeleton.resetValues();
 	_generatedFrame.resize(targets.size());
+	QElapsedTimer timer;
+	timer.start();
+
 	for(unsigned int i = 0; i < targets.size(); ++i)
 	{
 		std::vector<Vector3_>& target = targets[i];
@@ -328,6 +337,28 @@ void BVHApp::generateSequence()
 		}
 
 		_pIKWidget->_pSolver->solve(&(bvh.m_skeleton), target);
+		dis += _pIKWidget->_pSolver->getDistance();
 		_generatedFrame[i].m_values = bvh.m_skeleton.m_dim_values;
 	}
+		
+	int nano = timer.nsecsElapsed();
+	double speed = nano * 0.000001;
+
+	dis/= targets.size();
+	std::cout<<"Solver: "<< _pIKWidget->_pSolver->getIKSolverName()<<std::endl;
+	std::cout<<"Sequence: "<<bvh.name()<<  " size: "<< targets.size() <<" frames  " << speed <<" msc"<< " tdistance: "<<dis<<std::endl;
+	double error = 0;
+	double it = 0;
+	for(unsigned int i = 0; i < bvh.m_frames.size(); ++i)
+	{
+		std::vector<double>& f = bvh.m_frames[i].m_values;
+		std::vector<double>& f1 = _generatedFrame[i].m_values;
+		for(unsigned int j = 6; j < _generatedFrame[i].m_values.size(); ++j)
+		{
+			error += abs(f[j] - f1[j]);
+			it = it + 1;
+		}
+	}
+	error /= it;
+	std::cout<< "msn: "<<error<<std::endl;
 }

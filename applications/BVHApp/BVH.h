@@ -43,7 +43,7 @@ public:
 
 	bool loadTextFile(const std::string& filepath);
 	bool saveTextFile(const std::string& filepath);
-
+	std::string name(){return m_filepath;}
 private:
 	void trimString( std::string& string);
 	void read(std::istream& in);

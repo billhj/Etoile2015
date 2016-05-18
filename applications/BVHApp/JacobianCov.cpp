@@ -37,7 +37,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 		last_state[i] = chain->m_dim_values[i];
 	}
 
-	int tries = 0;
+	//int tries = 0;
 	MatrixX_ jacobian = chain->m_jacobian;
 	VectorX_ distance(jacobian.rows());
 
@@ -48,14 +48,14 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 		rotation[i] = chain->m_dim_values[i];
 	}*/
 
-	if(!m_defined)
+	/*if(!m_defined)
 	{
 		m_mu = VectorX_::Zero(chain->m_dims.size());
 		VectorX_ variance = VectorX_::Zero(chain->m_dims.size());
 		m_cov = MatrixX_::Identity(chain->m_dims.size(), chain->m_dims.size());
 		m_invcov = m_cov.inverse();
 		m_defined = true;
-	}
+	}*/
 	//similarIndex(last_state);
 #endif
 
@@ -68,7 +68,7 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 		distance(ei * 3 + 0) = dis(0);
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
-		/*for(unsigned int j = 0; j < 3; ++j)
+		for(unsigned int j = 0; j < 3; ++j)
 		{
 			Skeleton::Dim& dim = chain->m_dims[j];
 			Vector3_ axis = chain->m_dim_axis[dim.m_idx];
@@ -78,10 +78,10 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 				axis = chain->m_dim_globalOrientations[lastDim] * axis;
 			}
 			Vector3_ axisXYZgradient = axis;
-			jacobian(ei * 3 + 0, j) = axisXYZgradient(0) * 0.1;
-			jacobian(ei * 3 + 1, j) = axisXYZgradient(1) * 0.1;
-			jacobian(ei * 3 + 2, j) = axisXYZgradient(2) * 0.1;
-		}*/
+			jacobian(ei * 3 + 0, j) = axisXYZgradient(0) ;//* 0.1;
+			jacobian(ei * 3 + 1, j) = axisXYZgradient(1) ;//* 0.1;
+			jacobian(ei * 3 + 2, j) = axisXYZgradient(2) ;//* 0.1;
+		}
 
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{

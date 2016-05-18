@@ -219,6 +219,55 @@ protected:
 		else
 			QGLViewer::mouseMoveEvent(event);
 	}
+	void mouseDoubleClickEvent (QMouseEvent * event)
+	{
+		float minScreenDistance = 10000;
+		if(sk!=NULL)
+		{
+			// select one mass
+			qglviewer::Camera *cam = this->camera();
+			int x = event->x();
+			int y = event->y();
+			
+
+			int i = 0;
+			std::string name;
+			Vector3_ posM;
+			const std::vector<Skeleton::Joint>& joints = sk->m_joints;
+
+			for(int i = 0; i < joints.size(); ++i)
+			{
+				Vector3_ pos = sk->m_joint_globalPositions[i];
+				qglviewer::Vec screenPos = cam->projectedCoordinatesOf(qglviewer::Vec(pos[0],pos[1],pos[2]));
+				double dis = Etoile::Vec2d(   Etoile::Vec2d(screenPos[0] , screenPos[1]) - Etoile::Vec2d(x , y)   ).length();
+				if( dis < minScreenDistance )
+				{
+					minScreenDistance = dis;
+					_selectedJointIndex = i;
+					name = sk->m_joints[i].m_name;
+					posM = pos;
+				}
+			}
+			std::cout<<"selected Joint: " << name<<std::endl;
+			if(sk)
+			{
+				for(int i = 0; i < sk->m_endeffectors.size(); ++i)
+				{
+					if(_selectedJointIndex == sk->m_endeffectors[i])
+					{
+						_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
+					}
+				}
+			}else{
+				/*if(_selectedJointIndex == joints.size() - 1){
+				_manipulator.reset();
+				_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
+				}*/
+			}
+		}
+		//if(minScreenDistance > 1)
+			//QGLViewer::mouseDoubleClickEvent(event);
+	}
 
 	void mousePressEvent(QMouseEvent* event)
 	{
@@ -275,53 +324,17 @@ protected:
 				//std::cout<<"now using : " <<_pSolver->getIKSolverName() <<std::endl;
 			}
 		}
-		else if ((event->modifiers() & Qt::ShiftModifier))
+		else if ((event->modifiers() /*& Qt::ShiftModifier*/))
 		{
 
-			// select one mass
-			qglviewer::Camera *cam = this->camera();
-			int x = event->x();
-			int y = event->y();
-			float minScreenDistance = 10000;
 
-			int i = 0;
-			std::string name;
-			Vector3_ posM;
-			const std::vector<Skeleton::Joint>& joints = sk->m_joints;
-
-			for(int i = 0; i < joints.size(); ++i)
-			{
-				Vector3_ pos = sk->m_joint_globalPositions[i];
-				qglviewer::Vec screenPos = cam->projectedCoordinatesOf(qglviewer::Vec(pos[0],pos[1],pos[2]));
-				double dis = Etoile::Vec2d(   Etoile::Vec2d(screenPos[0] , screenPos[1]) - Etoile::Vec2d(x , y)   ).length();
-				if( dis < minScreenDistance )
-				{
-					minScreenDistance = dis;
-					_selectedJointIndex = i;
-					name = sk->m_joints[i].m_name;
-					posM = pos;
-				}
-			}
-			std::cout<<"selected Joint: " << name<<std::endl;
-			if(sk)
-			{
-				for(int i = 0; i < sk->m_endeffectors.size(); ++i)
-				{
-					if(_selectedJointIndex == sk->m_endeffectors[i])
-					{
-						_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
-					}
-				}
-			}else{
-				/*if(_selectedJointIndex == joints.size() - 1){
-				_manipulator.reset();
-				_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
-				}*/
-			}
 
 		}
 		else
+		{
+
 			QGLViewer::mousePressEvent(event);
+		}
 	}
 
 	void mouseReleaseEvent(QMouseEvent* event)
@@ -373,7 +386,7 @@ private:
 		//drawAxis();
 		glColor3f(0.9,0.25,0.55);
 		QFont serifFont("Times", 10, QFont::Bold);
-		drawText((int)30, (int)25, QString(" shift + right_mouse : choose one joint !"), serifFont);
+		drawText((int)30, (int)25, QString(" double click : choose one joint !"), serifFont);
 
 		glPushMatrix();
 		_manipulator.draw();
@@ -517,7 +530,7 @@ signals:
 			//sk->m_dim_values[11] = 1;
 			//sk->update();
 
-
+			if(sk==NULL) return;
 			if(_pSolver != NULL)
 			{
 
@@ -545,6 +558,14 @@ signals:
 				{
 					TargetGaussian tg = m_gp.computeASample(t);
 					sol->setParameters(tg.m_invcov, tg.m_mu);
+					if(_frameIdx >= 0)
+					{
+						sk->m_dim_values = *pos;
+						sk->update();
+					}else
+					{
+						sk->resetValues();
+					}
 				}
 
 				GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pSolver);
@@ -573,7 +594,7 @@ public:
 
 	unsigned int _fps;
 	double _scaleFactor;
-
+	std::vector<double> * pos;
 	Etoile::glDrawFunctions _glDrawFunctions;
 
 	Etoile::SimpleManipulator _manipulator;
