@@ -561,7 +561,7 @@ signals:
 					if(_frameIdx >= 0)
 					{
 						sk->m_dim_values = pos;
-						std::cout<<pos.size()<<std::endl;
+						//std::cout<<pos.size()<<std::endl;
 						sk->update();
 					}else
 					{
