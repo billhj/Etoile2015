@@ -560,7 +560,7 @@ signals:
 					sol->setParameters(tg.m_invcov, tg.m_mu);
 					if(_frameIdx >= 0)
 					{
-						sk->m_dim_values = *pos;
+						sk->m_dim_values = pos;
 						sk->update();
 					}else
 					{
@@ -594,7 +594,7 @@ public:
 
 	unsigned int _fps;
 	double _scaleFactor;
-	std::vector<double> * pos;
+	std::vector<double> pos;
 	Etoile::glDrawFunctions _glDrawFunctions;
 
 	Etoile::SimpleManipulator _manipulator;

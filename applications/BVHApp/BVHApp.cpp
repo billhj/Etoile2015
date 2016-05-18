@@ -156,7 +156,9 @@ void BVHApp::frameIndexChanged(int index)
 {
 	_pIKWidget->_frameIdx = index;
 	if(index>=0)
-		_pIKWidget->pos = &(bvh.m_frames[index].m_values);
+	{
+		_pIKWidget->pos = (bvh.m_frames[index].m_values);
+	}
 	if(!mode)
 	{
 		_pIKWidget->animationframes.clear();
@@ -280,7 +282,7 @@ void BVHApp::generateSequence()
 	std::vector<std::vector<Vector3_>> targets;
 	for(unsigned int i = 0; i < bvh.m_frames.size(); ++i)
 	{
-		std::vector<double>& f = bvh.m_frames[i].m_values;
+		std::vector<double> f = bvh.m_frames[i].m_values;
 		f[0] = 0;
 		f[1] = 0;
 		f[2] = 0;
