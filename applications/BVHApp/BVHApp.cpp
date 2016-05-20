@@ -329,7 +329,6 @@ void BVHApp::generateSequence()
 
 	for(unsigned int i = 0; i < targets.size(); ++i)
 	{
-		
 		std::vector<Vector3_>& target = targets[i];
 		{
 			VectorX_ t = VectorX_::Zero(target.size() * 3);
@@ -349,8 +348,6 @@ void BVHApp::generateSequence()
 				sol->setParameters(tg.m_invcov, tg.m_mu);
 			}
 
-					QElapsedTimer timer;
-	timer.start();
 			GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pIKWidget->_pSolver);
 			if(sol2 != NULL)
 			{
@@ -358,20 +355,14 @@ void BVHApp::generateSequence()
 				TargetGaussian tg = _pIKWidget->m_gp.computeASample(t);
 				sol2->setMU(tg.m_mu);
 			}
-					qint64 nano = timer.nsecsElapsed();
-				double speed = nano * 0.000001;
-	std::cout<<i<<" "<<speed<<std::endl;
 			JacobianDLSSolver* sol3 = dynamic_cast<JacobianDLSSolver*>(_pIKWidget->_pSolver);
 			if(sol3 != NULL)
 			{
 					_pIKWidget->sk->resetRotationValues();
 			}
-		
 		}
 
 		_pIKWidget->_pSolver->solve(&(bvh.m_skeleton), target);
-
-
 		dis += _pIKWidget->_pSolver->getDistance();
 		_generatedFrame[i].m_values = bvh.m_skeleton.m_dim_values;
 	}

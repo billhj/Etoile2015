@@ -537,8 +537,7 @@ signals:
 			if(sk==NULL) return;
 			if(_pSolver != NULL)
 			{
-				QElapsedTimer timer;
-				timer.start();
+				
 				std::vector<Vector3_> targets;
 				VectorX_ t = VectorX_::Zero(sk->m_endeffectors.size() * 3);
 				for(unsigned int i = 0 ; i < sk->m_endeffectors.size(); ++i)
@@ -558,6 +557,8 @@ signals:
 					t(i * 3 + 1) = cur(1);
 					t(i * 3 + 2) = cur(2);
 				}
+				QElapsedTimer timer;
+				timer.start();
 				JacobianCov* sol = dynamic_cast<JacobianCov*>(_pSolver);
 				if(sol != NULL)
 				{
