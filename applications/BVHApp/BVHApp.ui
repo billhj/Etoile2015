@@ -401,6 +401,19 @@
       <string>damping2</string>
      </property>
     </widget>
+    <widget class="QCheckBox" name="usingRoot">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>130</y>
+       <width>70</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>usingRoot</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QDockWidget" name="Timeline">

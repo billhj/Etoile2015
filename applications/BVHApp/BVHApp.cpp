@@ -32,7 +32,10 @@ BVHApp::BVHApp(QWidget *parent, Qt::WFlags flags)
 	_pIKWidget->m_parameter.max_iterations = ui.spinBox->value();
 	_pIKWidget->m_parameter.damping1 = ui.damping1->value();
 	_pIKWidget->m_parameter.damping2 = ui.damping2->value();
+	_pIKWidget->m_parameter.usingroot = ui.usingRoot->isChecked();
 	_pIKWidget->_pSolver = (new JacobianDLSSolver(_pIKWidget->m_parameter.max_iterations, _pIKWidget->m_parameter.distance_threshold, _pIKWidget->m_parameter.damping1));
+	_pIKWidget->_pSolver->setRootActive(_pIKWidget->m_parameter.usingroot);
+	connect(ui.usingRoot, SIGNAL(stateChanged(int)), this, SLOT(setRoot(int)));
 }
 
 BVHApp::~BVHApp()
@@ -82,6 +85,12 @@ void BVHApp::addMenu()
 	updateCombobox();
 }
 
+void BVHApp::setRoot(int b)
+{
+	_pIKWidget->m_parameter.usingroot = ui.usingRoot->isChecked();
+	_pIKWidget->_pSolver->setRootActive(_pIKWidget->m_parameter.usingroot);
+}
+
 void BVHApp::applyIKAction(QAction* action)
 {
 	QString t = action->text();
@@ -103,8 +112,10 @@ void BVHApp::applyIKAction(QAction* action)
 	}
 	else if(t.toStdString() == "GaussianProcess")
 	{
-		_pIKWidget->_pSolver = new GPIKsolver();
+		if(_pIKWidget->sk==NULL) return;
+		_pIKWidget->_pSolver = new GPIKsolver(_pIKWidget->sk);
 	}
+	_pIKWidget->_pSolver->setRootActive(_pIKWidget->m_parameter.usingroot);
 	std::cout<<"now using : " <<t.toStdString()<<std::endl;
 }
 
@@ -338,8 +349,7 @@ void BVHApp::generateSequence()
 			GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pIKWidget->_pSolver);
 			if(sol2 != NULL)
 			{
-				TargetGaussian tg = _pIKWidget->m_gp.computeASample(t);
-				sol2->setParameters(tg.m_mu);
+				sol2->computeASample(t);
 			}
 		
 		}

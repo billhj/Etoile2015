@@ -36,6 +36,7 @@ public slots:
 	void changeDamping(double);
 	void saveGenerateSequence();
 	void generateSequence();
+	void setRoot(int);
 private:
 	Ui::BVHAppClass ui;
 	SkeletonWidget* _pIKWidget;

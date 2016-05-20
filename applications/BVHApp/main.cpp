@@ -4,6 +4,7 @@
 
 int main(int argc, char *argv[])
 {
+	Eigen::initParallel();
 	QApplication a(argc, argv);
 	QGLFormat glf = QGLFormat::defaultFormat();
     glf.setSampleBuffers(true);

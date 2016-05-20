@@ -81,18 +81,9 @@ TargetGaussian GaussianProcess::computeASample(const VectorX_& target)
 	for(unsigned int i = 0 ; i < v.size(); ++i)
 	{
 		double v0 = v(i);
-		//weight += v0;
+
 		tg.m_invcov = tg.m_invcov +  m_gaussians[i].m_invcov * v0;
-		//tg.m_cov = tg.m_cov +  m_gaussians[i].m_cov * v0;
-		//std::cout<< tg.m_invcov <<std::endl;
 		tg.m_mu = tg.m_mu + m_gaussians[i].m_mu  * v0;
-		/*for(unsigned int j = 0 ; j < dim; ++j)
-		{
-			if(m_gaussians[i].m_invcov(j,j) < 0)
-			{
-				std::cout<< "GP: invcov  diag negative "<<i <<" "<<j <<std::endl;
-			}
-		}*/
 	}
 	
 #if( defined( _DEBUG ) || defined( DEBUG ) )

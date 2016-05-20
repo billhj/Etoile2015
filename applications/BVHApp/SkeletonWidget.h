@@ -41,6 +41,7 @@ struct SolverParamter
 	double distance_threshold;
 	double damping1;
 	double damping2;
+	bool usingroot;
 };
 
 
@@ -309,9 +310,11 @@ protected:
 				}
 				else if(id == 5)
 				{
+					if(sk==NULL) return;
 					if(_pSolver != NULL) delete _pSolver;
-					_pSolver = new GPIKsolver();
+					_pSolver = new GPIKsolver(sk);
 				}
+				_pSolver->setRootActive(m_parameter.usingroot);
 				//else if(id == 5)
 				//{
 				//	if(_pSolver != NULL) delete _pSolver;
@@ -560,22 +563,26 @@ signals:
 					sol->setParameters(tg.m_invcov, tg.m_mu);
 					if(_frameIdx >= 0)
 					{
-						sk->m_dim_values = pos;
+						//sk->m_dim_values = pos;
 						//std::cout<<pos.size()<<std::endl;
 						sk->update();
 					}else
 					{
-						sk->resetValues();
+						//sk->resetValues();
 					}
 				}
 
 				GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pSolver);
 				if(sol2 != NULL)
 				{
-					TargetGaussian tg = m_gp.computeASample(t);
-					sol2->setParameters(tg.m_mu);
+					sol2->computeASample(t);
 				}
 
+				JacobianDLSSolver* sol3 = dynamic_cast<JacobianDLSSolver*>(_pSolver);
+				if(sol != NULL)
+				{
+					sk->resetValues();
+				}
 
 				QElapsedTimer timer;
 				timer.start();

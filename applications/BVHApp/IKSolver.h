@@ -18,12 +18,14 @@ protected:
 	double m_stepweight;
 
 	double finalDis;
+	bool m_activeRoot;
 public:
 	virtual std::string getIKSolverName() = 0;
 	inline IKSolver(int maxTries = 50, double targetThreshold = 0.01)
 		:m_maxTries(maxTries),
 		m_targetThreshold(targetThreshold), m_stepweight(0.5)
 	{ 
+		m_activeRoot = false;
 	}
 
 
@@ -129,5 +131,10 @@ public:
 			//}
 		}
 		return value;
+	}
+
+	void setRootActive(bool bo)
+	{
+		m_activeRoot = bo;
 	}
 };

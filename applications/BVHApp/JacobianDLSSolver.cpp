@@ -28,22 +28,23 @@ void JacobianDLSSolver::solveOneStep(Skeleton* chain, const std::vector<Vector3_
 		distance(ei * 3 + 0) = dis(0);
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
-#ifdef USING_ROOT
-		for(unsigned int j = 0; j < 3; ++j)
+		if(m_activeRoot)
 		{
-			Skeleton::Dim& dim = chain->m_dims[j];
-			Vector3_ axis = chain->m_dim_axis[dim.m_idx];
-			int lastDim = dim.m_lastIdx;
-			if(lastDim >= 0)
+			for(unsigned int j = 0; j < 3; ++j)
 			{
-				axis = chain->m_dim_globalOrientations[lastDim] * axis;
+				Skeleton::Dim& dim = chain->m_dims[j];
+				Vector3_ axis = chain->m_dim_axis[dim.m_idx];
+				int lastDim = dim.m_lastIdx;
+				if(lastDim >= 0)
+				{
+					axis = chain->m_dim_globalOrientations[lastDim] * axis;
+				}
+				Vector3_ axisXYZgradient = axis;
+				jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
+				jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
+				jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
 			}
-			Vector3_ axisXYZgradient = axis;
-			jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
-			jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
-			jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
 		}
-#endif USING_ROOT
 
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{
@@ -64,7 +65,7 @@ void JacobianDLSSolver::solveOneStep(Skeleton* chain, const std::vector<Vector3_
 				axis = chain->m_dim_globalOrientations[lastDim] * axis;
 			}
 			Vector3_ axisXYZgradient = axis.cross(boneVector);
-		
+
 			jacobian(ei * 3 + 0, j) = axisXYZgradient(0);
 			jacobian(ei * 3 + 1, j) = axisXYZgradient(1);
 			jacobian(ei * 3 + 2, j) = axisXYZgradient(2);
@@ -75,12 +76,13 @@ void JacobianDLSSolver::solveOneStep(Skeleton* chain, const std::vector<Vector3_
 	MatrixX_ jtj = jacobian * jacobianTranspose;
 	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
 	VectorX_ dR = jacobianTranspose * ( jtj + lamdaI * m_dampling).inverse() * distance;
-#ifdef USING_ROOT
-	for(int i = 0; i < 3; ++i)
+	if(m_activeRoot)
 	{
-		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
+		for(int i = 0; i < 3; ++i)
+		{
+			chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);
+		}
 	}
-#endif
 	for(int i = chain->m_startDim4IK; i < chain->m_dims.size(); ++i)
 	{
 		chain->m_dim_values[i] = castPiRange(chain->m_dim_values[i] + dR[i]);

@@ -69,22 +69,25 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 		distance(ei * 3 + 0) = dis(0);
 		distance(ei * 3 + 1) = dis(1);
 		distance(ei * 3 + 2) = dis(2);
-#ifdef USING_ROOT
-		for(unsigned int j = 0; j < 3; ++j)
+
+		if(m_activeRoot)
 		{
-			Skeleton::Dim& dim = chain->m_dims[j];
-			Vector3_ axis = chain->m_dim_axis[dim.m_idx];
-			int lastDim = dim.m_lastIdx;
-			if(lastDim >= 0)
+			for(unsigned int j = 0; j < 3; ++j)
 			{
-				axis = chain->m_dim_globalOrientations[lastDim] * axis;
+				Skeleton::Dim& dim = chain->m_dims[j];
+				Vector3_ axis = chain->m_dim_axis[dim.m_idx];
+				int lastDim = dim.m_lastIdx;
+				if(lastDim >= 0)
+				{
+					axis = chain->m_dim_globalOrientations[lastDim] * axis;
+				}
+				Vector3_ axisXYZgradient = axis;
+				jacobian(ei * 3 + 0, j) = axisXYZgradient(0) ;//* 0.1;
+				jacobian(ei * 3 + 1, j) = axisXYZgradient(1) ;//* 0.1;
+				jacobian(ei * 3 + 2, j) = axisXYZgradient(2) ;//* 0.1;
 			}
-			Vector3_ axisXYZgradient = axis;
-			jacobian(ei * 3 + 0, j) = axisXYZgradient(0) ;//* 0.1;
-			jacobian(ei * 3 + 1, j) = axisXYZgradient(1) ;//* 0.1;
-			jacobian(ei * 3 + 2, j) = axisXYZgradient(2) ;//* 0.1;
 		}
-#endif USING_ROOT
+
 		for(unsigned int j = chain->m_startDim4IK; j < chain->m_dims.size(); ++j)
 		{
 			if(chain->m_jacobian(ei * 3 + 0, j) < 0.1) continue;
@@ -132,12 +135,15 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 	MatrixX_ lamdaI = MatrixX_::Identity(jtj.rows(), jtj.cols());
 	VectorX_ dR = jacobianTranspose * ( jtj + lamdaI * m_dampling1).inverse() * distance;
 #endif
-#ifdef USING_ROOT
-	for(int i = 0; i < 3; ++i)
+
+	if(m_activeRoot)
 	{
-		chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
+		for(int i = 0; i < 3; ++i)
+		{
+			chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
+		}
 	}
-#endif USING_ROOT
+
 	/*for(int i = 3; i < 6; ++i)
 	{
 		last_state[i] = dR[i];
