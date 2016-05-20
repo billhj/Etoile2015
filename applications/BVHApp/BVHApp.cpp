@@ -114,6 +114,7 @@ void BVHApp::applyIKAction(QAction* action)
 	{
 		if(_pIKWidget->sk==NULL) return;
 		_pIKWidget->_pSolver = new GPIKsolver(_pIKWidget->sk);
+		_pIKWidget->_pSolver->setMaxNumberOfTries(1);
 	}
 	_pIKWidget->_pSolver->setRootActive(_pIKWidget->m_parameter.usingroot);
 	std::cout<<"now using : " <<t.toStdString()<<std::endl;
@@ -322,11 +323,13 @@ void BVHApp::generateSequence()
 	double dis = 0;
 	bvh.m_skeleton.resetValues();
 	_generatedFrame.resize(targets.size());
+
 	QElapsedTimer timer;
 	timer.start();
 
 	for(unsigned int i = 0; i < targets.size(); ++i)
 	{
+		
 		std::vector<Vector3_>& target = targets[i];
 		{
 			VectorX_ t = VectorX_::Zero(target.size() * 3);
@@ -346,22 +349,35 @@ void BVHApp::generateSequence()
 				sol->setParameters(tg.m_invcov, tg.m_mu);
 			}
 
+					QElapsedTimer timer;
+	timer.start();
 			GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pIKWidget->_pSolver);
 			if(sol2 != NULL)
 			{
-				sol2->computeASample(t);
+				//sol2->computeASample(t);
+				TargetGaussian tg = _pIKWidget->m_gp.computeASample(t);
+				sol2->setMU(tg.m_mu);
+			}
+					qint64 nano = timer.nsecsElapsed();
+				double speed = nano * 0.000001;
+	std::cout<<i<<" "<<speed<<std::endl;
+			JacobianDLSSolver* sol3 = dynamic_cast<JacobianDLSSolver*>(_pIKWidget->_pSolver);
+			if(sol3 != NULL)
+			{
+					_pIKWidget->sk->resetRotationValues();
 			}
 		
 		}
 
 		_pIKWidget->_pSolver->solve(&(bvh.m_skeleton), target);
+
+
 		dis += _pIKWidget->_pSolver->getDistance();
 		_generatedFrame[i].m_values = bvh.m_skeleton.m_dim_values;
 	}
 		
-	int nano = timer.nsecsElapsed();
+	qint64 nano = timer.nsecsElapsed();
 	double speed = nano * 0.000001;
-
 	dis/= targets.size();
 	std::cout<<"Solver: "<< _pIKWidget->_pSolver->getIKSolverName()<<std::endl;
 	std::cout<<"Sequence: "<<bvh.name()<<  " size: "<< targets.size() <<" frames  " << speed <<" msc"<< " tdistance: "<<dis<<std::endl;

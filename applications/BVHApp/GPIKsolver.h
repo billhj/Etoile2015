@@ -17,7 +17,7 @@ class GPIKsolver :
 	MatrixX_ m_k;
 	MatrixX_ m_k_inverse;
 public:
-	GPIKsolver(Skeleton* sk);
+	GPIKsolver(Skeleton* sk = NULL);
 	~GPIKsolver(void);
 	virtual std::string getIKSolverName() {return "GaussianProcess";}
 	virtual void solveOneStep(Skeleton* chain, const std::vector<Vector3_>& targets) override;
@@ -25,6 +25,12 @@ public:
 	{
 		loadPoses("poses.txt");
 	}
+
+	void setMU(const VectorX_& mu)
+	{
+		m_mu = mu;
+	}
+
 	bool loadPoses(const std::string&  filepath);
 	void setSK(Skeleton* sk);
 	void computeGP();

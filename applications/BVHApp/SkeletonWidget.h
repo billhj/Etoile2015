@@ -313,6 +313,7 @@ protected:
 					if(sk==NULL) return;
 					if(_pSolver != NULL) delete _pSolver;
 					_pSolver = new GPIKsolver(sk);
+					_pSolver->setMaxNumberOfTries(1);
 				}
 				_pSolver->setRootActive(m_parameter.usingroot);
 				//else if(id == 5)
@@ -536,7 +537,8 @@ signals:
 			if(sk==NULL) return;
 			if(_pSolver != NULL)
 			{
-
+				QElapsedTimer timer;
+				timer.start();
 				std::vector<Vector3_> targets;
 				VectorX_ t = VectorX_::Zero(sk->m_endeffectors.size() * 3);
 				for(unsigned int i = 0 ; i < sk->m_endeffectors.size(); ++i)
@@ -575,19 +577,20 @@ signals:
 				GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pSolver);
 				if(sol2 != NULL)
 				{
-					sol2->computeASample(t);
+					//sol2->computeASample(t);
+					TargetGaussian tg = m_gp.computeASample(t);
+					sol2->setMU(tg.m_mu);
 				}
 
 				JacobianDLSSolver* sol3 = dynamic_cast<JacobianDLSSolver*>(_pSolver);
-				if(sol != NULL)
+				if(sol3 != NULL)
 				{
-					sk->resetValues();
+					sk->resetRotationValues();
 				}
 
-				QElapsedTimer timer;
-				timer.start();
+				
 				_pSolver->solve(sk, targets);
-				int nano = timer.nsecsElapsed();
+				qint64 nano = timer.nsecsElapsed();
 				speed = nano * 0.000001;
 			}
 

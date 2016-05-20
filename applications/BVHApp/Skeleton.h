@@ -59,6 +59,7 @@ struct Skeleton
 
 	void reset();
 	void resetValues();
+	void resetRotationValues();
 
 	void updateDimLocalRotation(int idx)
 	{

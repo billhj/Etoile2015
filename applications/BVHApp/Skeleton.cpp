@@ -80,6 +80,16 @@ void Skeleton::resetValues()
 	update();
 }
 
+void Skeleton::resetRotationValues()
+{
+	
+	for(int i = 3; i < m_dims.size();++i)
+	{
+		m_dim_values[i] = 0;
+	}
+	update();
+}
+
 void Skeleton::buildJacobian(const std::vector<int>& endeffectors, MatrixX_& m_jacobian, int startDim)
 {
 	m_startDim4IK = startDim;

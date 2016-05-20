@@ -10,9 +10,10 @@
 
 GPIKsolver::GPIKsolver(Skeleton* sk)
 {
-	loadConfig();
+	//loadConfig();
 	if(sk != NULL)
 		setSK(sk);
+	m_maxTries = 1;
 }
 
 
@@ -32,7 +33,7 @@ void GPIKsolver::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& targ
 void GPIKsolver::setSK(Skeleton* sk)
 {
 	m_sk = sk;
-	computeGP();
+	//computeGP();
 }
 
 void GPIKsolver::computeGP()
@@ -72,6 +73,7 @@ void GPIKsolver::buildK()
 		}
 	}
 	m_k_inverse = m_k.inverse();
+	m_mu = VectorX_::Zero(size);
 }
 
 void GPIKsolver::computeASample(const VectorX_& target)
@@ -83,7 +85,8 @@ void GPIKsolver::computeASample(const VectorX_& target)
 	}
 	VectorX_ v = kt.transpose() * m_k_inverse;
 
-	m_mu = VectorX_::Zero(m_mus[0].size());
+	int dim = m_mus[0].size();
+	m_mu = VectorX_::Zero(dim);
 	//double weight = 0;
 	for(unsigned int i = 0 ; i < v.size(); ++i)
 	{
@@ -126,7 +129,7 @@ bool GPIKsolver::loadPoses(const std::string&  filepath)
 	int dim = 0;
 	stream >> dim;
 	int idx = 0; 
-	while( in && !in.eof() && idx < 2000)
+	while( in && !in.eof())
 	{
 		//lineIndex++;
 		std::getline(in,line);
@@ -151,7 +154,15 @@ bool GPIKsolver::loadPoses(const std::string&  filepath)
 		m_mus.push_back(mu);
 		++idx;
 	}
-
+	double max = 100;
+	double step = m_mus.size() / max;
+	std::vector<VectorX_> mus;
+	for(double i = 0; i < m_mus.size(); i += step)
+	{
+		mus.push_back(m_mus[int(i)]);
+	}
+	m_mus = mus;
+	std::cout<<m_mus.size()<<std::endl;
 	in.close();
 #if defined(_DEBUG) || defined(DEBUG)
 	std::cout<< "[GP] : loading is successful "<<std::endl;
