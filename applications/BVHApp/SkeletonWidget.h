@@ -59,6 +59,10 @@ public:
 		speed = 0;
 		_manipulator.reset();
 		_manipulator.setOrigine(qglviewer::Vec(0, 0, 0));
+		endeffectorIndex = -1;
+		showTraj = true;
+		mode = -1;
+		windowSize = 100;
 	}
 
 	~SkeletonWidget(){}
@@ -229,7 +233,7 @@ protected:
 			qglviewer::Camera *cam = this->camera();
 			int x = event->x();
 			int y = event->y();
-			
+
 
 			int i = 0;
 			std::string name;
@@ -257,6 +261,7 @@ protected:
 					if(_selectedJointIndex == sk->m_endeffectors[i])
 					{
 						_manipulator.setOrigine(qglviewer::Vec(posM.x(), posM.y(), posM.z()));
+						endeffectorIndex = i;
 					}
 				}
 			}else{
@@ -267,7 +272,7 @@ protected:
 			}
 		}
 		//if(minScreenDistance > 1)
-			//QGLViewer::mouseDoubleClickEvent(event);
+		//QGLViewer::mouseDoubleClickEvent(event);
 	}
 
 	void mousePressEvent(QMouseEvent* event)
@@ -357,6 +362,27 @@ protected:
 	}
 
 private:
+	void drawTraj()
+	{
+		if(!showTraj) return;
+		glPointSize(4);
+		glBegin( GL_POINTS );
+		glColor3f( 0.95f, 0.207, 0.031f );
+
+		for(unsigned int i = 0; i < animationframes.size(); ++i)
+		{
+			if(endeffectorIndex >=0 && endeffectorIndex < animationframes[i].m_targets.size())
+			{
+				if( abs(int(i - _frameIdx)) - windowSize < 0 )
+				{
+					Vector3_ t = animationframes[i].m_targets[endeffectorIndex];
+					glVertex3f( t[0], t[1], t[2]);
+				}
+			}
+		}
+		glEnd();
+	}
+
 	virtual void draw()
 	{
 		if(_frameIdx > 0 && _frameIdx < animationframes.size() && sk != NULL)
@@ -365,9 +391,9 @@ private:
 			//animationframes.erase(animationframes.begin());
 			sk->update();
 		}/*else if(sk != NULL)
-		{
-			sk->resetValues();
-		}*/
+		 {
+		 sk->resetValues();
+		 }*/
 
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		printOpenGLError();
@@ -388,7 +414,7 @@ private:
 		drawPlane();
 		if(sk != NULL)
 			drawInfo(_selectedJointIndex);
-
+		drawTraj();
 		printOpenGLError();
 		//drawAxis();
 		glColor3f(0.9,0.25,0.55);
@@ -405,7 +431,7 @@ private:
 			drawText((int)600, (int)40, QString("Max Iterations: %1").arg(_pSolver->getMaxNumberOfTries()), serifFont);
 			drawText((int)600, (int)55, QString("Distance Threshold: %1").arg(_pSolver->getTargetThreshold()), serifFont);
 
-			drawText((int)600, (int)70, QString("solve Time: %1 msc").arg(speed), serifFont);
+			//drawText((int)600, (int)70, QString("solve Time: %1 msc").arg(speed), serifFont);
 		}
 	}
 
@@ -538,9 +564,26 @@ signals:
 			//sk->update();
 
 			if(sk==NULL) return;
+			if(mode == 2)
+			{
+				for(unsigned int i = 0; i < animationframes.size(); ++i)
+				{
+					if(endeffectorIndex >=0 && endeffectorIndex < animationframes[i].m_targets.size())
+					{
+						int dif = abs(int(i - _frameIdx));
+						if( dif - windowSize < 0 )
+						{
+							Vector3_ t = originalframes[i].m_targets[endeffectorIndex];
+							Vector3_ current = Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z);
+							animationframes[i].m_targets[endeffectorIndex] = (t * dif + current *(windowSize - dif)) / (double) (windowSize);
+						}
+					}
+				}
+			}
+
 			if(_pSolver != NULL)
 			{
-				
+
 				std::vector<Vector3_> targets;
 				VectorX_ t = VectorX_::Zero(sk->m_endeffectors.size() * 3);
 				for(unsigned int i = 0 ; i < sk->m_endeffectors.size(); ++i)
@@ -548,6 +591,7 @@ signals:
 					if(sk->m_endeffectors[i] == _selectedJointIndex)
 					{
 						targets.push_back(Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z));	
+						endeffectorIndex = i;
 					}
 					else
 					{
@@ -592,11 +636,19 @@ signals:
 					sk->resetRotationValues();
 				}
 
-				
+
 				_pSolver->solve(sk, targets);
 				qint64 nano = timer.nsecsElapsed();
 				speed = nano * 0.000001;
+				if(mode == 2)
+				{
+					animationframes[_frameIdx].m_values = sk->m_dim_values;
+					
+				}
+
+
 			}
+
 
 
 		}
@@ -606,7 +658,7 @@ public:
 	int _selectedJointIndex;
 	bool _useConstraints;
 	int _frameIdx;
-
+	bool showTraj;
 	unsigned int _fps;
 	double _scaleFactor;
 	//std::vector<double> pos;
@@ -619,7 +671,11 @@ public:
 	Etoile::Vec3f _original;
 	double speed;
 	std::vector<Frame> animationframes;
+	std::vector<Frame> originalframes;
 
 	GaussianProcess m_gp;
 	SolverParamter m_parameter;
+	int endeffectorIndex;
+	int mode;
+	int windowSize;
 };
