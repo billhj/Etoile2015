@@ -17,6 +17,7 @@
 struct Frame
 {
 	std::vector<double> m_values;
+	std::vector<Vector3_> m_targets;
 };
 
 struct BVH

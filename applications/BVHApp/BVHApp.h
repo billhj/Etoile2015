@@ -32,16 +32,22 @@ public slots:
 	void stopBVH();
 	void updateCombobox();
 	void frameIndexChanged(int);
-	void changeMode(bool);
+	
 	void changeDamping(double);
 	void saveGenerateSequence();
 	void generateSequence();
 	void setRoot(int);
+	void setMode0(){mode = 0;changeMode();}
+	void setMode1(){mode = 1;changeMode();}
+	void setMode2(){mode = 2;changeMode();}
+	void setMode3(){mode = 3;changeMode();}
+	void changeMode();
 private:
 	Ui::BVHAppClass ui;
 	SkeletonWidget* _pIKWidget;
-	bool mode;
+	int mode;
 	std::vector<Frame> _generatedFrame;
+	QActionGroup* actionGroup;
 };
 
 #endif // BVHAPP_H

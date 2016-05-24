@@ -64,18 +64,42 @@ void BVHApp::addMenu()
 	QAction* accbvh = anim->addAction("+");
 	QAction* deaccbvh = anim->addAction("-");
 	anim->addSeparator();
-	QAction* mode = anim->addAction("generatingmode");
-	QAction* generate = anim->addAction("generate");
-	QAction* saveBVH = anim->addAction("saveBVH");
-	mode->setCheckable(true);
+	
+	
 	connect(playbvh, SIGNAL(triggered()), this, SLOT(playBVH()));
 	connect(stopbvh, SIGNAL(triggered()), this, SLOT(stopBVH()));
 	connect(accbvh, SIGNAL(triggered()), this, SLOT(accBVH()));
 	connect(deaccbvh, SIGNAL(triggered()), this, SLOT(deaccBVH()));
-	connect(mode, SIGNAL(toggled(bool)), this, SLOT(changeMode(bool)));
+
+
+	QAction* normalmode = anim->addAction("Normal");
+	QAction* sequencemode = anim->addAction("sequenceRegenerating");
+	QAction* sequenceEditMode = anim->addAction("sequentialEditing");
+	QAction* postureEditMode = anim->addAction("postureEditing");
+
+	actionGroup = new QActionGroup(this);
+	actionGroup->addAction(normalmode);
+    actionGroup->addAction(sequencemode);
+    actionGroup->addAction(sequenceEditMode);
+	actionGroup->addAction(postureEditMode);
+
+	QAction* generate = anim->addAction("generate");
+	QAction* saveBVH = anim->addAction("saveBVH");
+	
+	normalmode->setCheckable(true);
+	sequencemode->setCheckable(true);
+	sequenceEditMode->setCheckable(true);
+	postureEditMode->setCheckable(true);
+	normalmode->setChecked(true);
+	//connect(actionGroup, SIGNAL(triggered(QAction *)), this, SLOT(changeMode(QAction *)));
+	connect(normalmode, SIGNAL(triggered()), this, SLOT(setMode0()));
+	connect(sequencemode, SIGNAL(triggered()), this, SLOT(setMode1()));
+	connect(sequenceEditMode, SIGNAL(triggered()), this, SLOT(setMode2()));
+	connect(postureEditMode, SIGNAL(triggered()), this, SLOT(setMode3()));
 	connect(generate, SIGNAL(triggered()), this, SLOT(generateSequence()));
 	connect(saveBVH, SIGNAL(triggered()), this, SLOT(saveGenerateSequence()));
-	mode->setChecked(false);
+	
+
 
 	QMenu* help = bar->addMenu("Help");
 	QAction* usage = help->addAction("How to use");
@@ -84,6 +108,7 @@ void BVHApp::addMenu()
 	connect(usage, SIGNAL(triggered()), this, SLOT(openUsage()));
 	updateCombobox();
 }
+
 
 void BVHApp::setRoot(int b)
 {
@@ -138,7 +163,7 @@ void BVHApp::openBVH()
 		bvh.m_skeleton.update();
 		_pIKWidget->sk = &bvh.m_skeleton;
 		_pIKWidget->m_gp.setSK(_pIKWidget->sk);
-		_pIKWidget->pos = bvh.m_skeleton.m_dim_values;
+		_pIKWidget->animationframes = bvh.m_frames;
 	}
 }
 
@@ -170,14 +195,14 @@ void BVHApp::frameIndexChanged(int index)
 	_pIKWidget->_frameIdx = index;
 	if(index>=0)
 	{
-		_pIKWidget->pos = (bvh.m_frames[index].m_values);
+		//_pIKWidget->pos = (bvh.m_frames[index].m_values);
 	}else
 	{
 		bvh.m_skeleton.resetValues();
-		_pIKWidget->pos = bvh.m_skeleton.m_dim_values;
+		//_pIKWidget->pos = bvh.m_skeleton.m_dim_values;
 	}
 
-	if(!mode)
+	/*if(!mode)
 	{
 		_pIKWidget->animationframes.clear();
 		if(bvh.m_frames.size() > index && index > 0)
@@ -203,12 +228,25 @@ void BVHApp::frameIndexChanged(int index)
 		{
 			bvh.m_skeleton.resetValues();
 		}
-	}
+	}*/
 }
 
-void BVHApp::changeMode(bool b)
+void BVHApp::changeMode()
 {
-	mode = b;
+	if(mode == 0)
+	{
+		_pIKWidget->animationframes = bvh.m_frames;
+	}
+	else if(mode == 1)
+	{
+		_pIKWidget->animationframes = _generatedFrame;
+	}else if(mode == 2)
+	{
+
+	}else if(mode == 3)
+	{
+		_pIKWidget->animationframes.clear();
+	}
 }
 
 void BVHApp::changeDamping(double)
@@ -386,4 +424,12 @@ void BVHApp::generateSequence()
 	}
 	error /= it;
 	std::cout<< "msn: "<<error<<std::endl;
+	if(!mode)
+	{
+		_pIKWidget->animationframes = bvh.m_frames;
+	}
+	else
+	{
+		_pIKWidget->animationframes = _generatedFrame;
+	}
 }

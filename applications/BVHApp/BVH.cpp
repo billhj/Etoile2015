@@ -421,6 +421,13 @@
 					frame.m_values[j] = frame.m_values[j] * 3.14159265 / 180.0;
 				}
 			}
+			m_skeleton.m_dim_values = frame.m_values;
+			m_skeleton.update();
+			for(unsigned int j = 0; j < m_skeleton.m_endeffectors.size(); ++j)
+			{
+				int idx = m_skeleton.m_endeffectors[j];
+				frame.m_targets.push_back(m_skeleton.m_joint_globalPositions[idx]);
+			}
 		}
 	}
 

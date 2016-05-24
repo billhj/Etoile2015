@@ -359,12 +359,15 @@ protected:
 private:
 	virtual void draw()
 	{
-		if(animationframes.size() > 0 && sk != NULL)
+		if(_frameIdx > 0 && _frameIdx < animationframes.size() && sk != NULL)
 		{
-			sk->m_dim_values = animationframes[0].m_values;
-			animationframes.erase(animationframes.begin());
+			sk->m_dim_values = animationframes[_frameIdx].m_values;
+			//animationframes.erase(animationframes.begin());
 			sk->update();
-		}
+		}/*else if(sk != NULL)
+		{
+			sk->resetValues();
+		}*/
 
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		printOpenGLError();
@@ -606,7 +609,7 @@ public:
 
 	unsigned int _fps;
 	double _scaleFactor;
-	std::vector<double> pos;
+	//std::vector<double> pos;
 	Etoile::glDrawFunctions _glDrawFunctions;
 
 	Etoile::SimpleManipulator _manipulator;
