@@ -141,6 +141,10 @@ void JacobianCov::solveOneStep(Skeleton* chain, const std::vector<Vector3_>& tar
 		for(int i = 0; i < 3; ++i)
 		{
 			chain->m_dim_values[i] = chain->m_dim_values[i] + dR[i];
+			if(abs(dR[i]) > 0.2 )
+			{
+				std::cout<<dR[i] <<std::endl;
+			}
 		}
 	}
 

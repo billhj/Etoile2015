@@ -49,7 +49,7 @@ class SkeletonWidget : public QGLViewer
 {
 	Q_OBJECT
 
-		//static const int WIDGETWIDTH = 800, WIDGETHEIGHT = 600;
+		static const int WIDGETWIDTH = 1024, WIDGETHEIGHT = 768;
 public:
 	int framesNb;
 	SkeletonWidget(QMainWindow* parent = 0): _pParent(parent), _scaleFactor(5), _selectedJointIndex(-1)
@@ -62,7 +62,7 @@ public:
 		endeffectorIndex = -1;
 		showTraj = true;
 		mode = -1;
-		windowSize = 100;
+		windowSize = 50;
 	}
 
 	~SkeletonWidget(){}
@@ -428,7 +428,7 @@ private:
 		if(_pSolver != NULL)
 		{
 			drawText((int)600, (int)25, QString(_pSolver->getIKSolverName().c_str()), serifFont);
-			drawText((int)600, (int)40, QString("Max Iterations: %1").arg(_pSolver->getMaxNumberOfTries()), serifFont);
+			//drawText((int)600, (int)40, QString("Max Iterations: %1").arg(_pSolver->getMaxNumberOfTries()), serifFont);
 			drawText((int)600, (int)55, QString("Distance Threshold: %1").arg(_pSolver->getTargetThreshold()), serifFont);
 
 			//drawText((int)600, (int)70, QString("solve Time: %1 msc").arg(speed), serifFont);
@@ -495,7 +495,7 @@ private:
 		//_pSolver = new Etoile::JacobianDLSSolver();
 	}
 
-	/*virtual QSize sizeHint () const
+	virtual QSize sizeHint () const
 	{
 	return QSize(WIDGETWIDTH,WIDGETHEIGHT);
 	}
@@ -506,7 +506,7 @@ private:
 	virtual QSize maxmumSizeHint () const
 	{
 	return QSize(WIDGETWIDTH,WIDGETHEIGHT);
-	}*/
+	}
 
 	void drawIK()
 	{
@@ -566,6 +566,7 @@ signals:
 			if(sk==NULL) return;
 			if(mode == 2)
 			{
+				Vector3_ diffPosition = Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z) - animationframes[_frameIdx].m_targets[endeffectorIndex];
 				for(unsigned int i = 0; i < animationframes.size(); ++i)
 				{
 					if(endeffectorIndex >=0 && endeffectorIndex < animationframes[i].m_targets.size())
@@ -573,9 +574,8 @@ signals:
 						int dif = abs(int(i - _frameIdx));
 						if( dif - windowSize < 0 )
 						{
-							Vector3_ t = originalframes[i].m_targets[endeffectorIndex];
-							Vector3_ current = Vector3_(_manipulator.getPosition().x, _manipulator.getPosition().y, _manipulator.getPosition().z);
-							animationframes[i].m_targets[endeffectorIndex] = (t * dif + current *(windowSize - dif)) / (double) (windowSize);
+							Vector3_ t = animationframes[i].m_targets[endeffectorIndex];
+							animationframes[i].m_targets[endeffectorIndex] = t  + diffPosition *(windowSize - dif) / (double) (windowSize);
 						}
 					}
 				}

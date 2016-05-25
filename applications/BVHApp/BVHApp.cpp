@@ -213,7 +213,7 @@ void BVHApp::frameIndexChanged(int index)
 			{
 				bvh.m_skeleton.m_dim_values = bvh.m_frames[index].m_values;
 				bvh.m_skeleton.update();
-			
+				//std::cout<<index<< " 1 "<<bvh.m_skeleton.m_dim_values[0]<<" "<<bvh.m_skeleton.m_dim_values[1] <<" "<<bvh.m_skeleton.m_dim_values[2]<<std::endl;
 				std::vector<Vector3_>& target = _pIKWidget->animationframes[index].m_targets;
 				{
 					VectorX_ t = VectorX_::Zero(target.size() * 3);
@@ -231,23 +231,25 @@ void BVHApp::frameIndexChanged(int index)
 					{
 						TargetGaussian tg = _pIKWidget->m_gp.computeASample(t);
 						sol->setParameters(tg.m_invcov, tg.m_mu);
-					}
+					}else{
 
-					GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pIKWidget->_pSolver);
-					if(sol2 != NULL)
-					{
-						//sol2->computeASample(t);
-						TargetGaussian tg = _pIKWidget->m_gp.computeASample(t);
-						sol2->setMU(tg.m_mu);
-					}
-					JacobianDLSSolver* sol3 = dynamic_cast<JacobianDLSSolver*>(_pIKWidget->_pSolver);
-					if(sol3 != NULL)
-					{
-						_pIKWidget->sk->resetRotationValues();
+						GPIKsolver* sol2 = dynamic_cast<GPIKsolver*>(_pIKWidget->_pSolver);
+						if(sol2 != NULL)
+						{
+							//sol2->computeASample(t);
+							TargetGaussian tg = _pIKWidget->m_gp.computeASample(t);
+							sol2->setMU(tg.m_mu);
+						}
+						JacobianDLSSolver* sol3 = dynamic_cast<JacobianDLSSolver*>(_pIKWidget->_pSolver);
+						if(sol3 != NULL)
+						{
+							_pIKWidget->sk->resetRotationValues();
+						}
 					}
 					//bvh.m_skeleton.resetNotRootRotationValues();
 					_pIKWidget->_pSolver->solve(&(bvh.m_skeleton), target);
 					_pIKWidget->animationframes[index].m_values = bvh.m_skeleton.m_dim_values;
+					//std::cout<<index<< " 2 "<<bvh.m_skeleton.m_dim_values[0]<<" "<<bvh.m_skeleton.m_dim_values[1] <<" "<<bvh.m_skeleton.m_dim_values[2]<<std::endl;
 				}
 			}
 
